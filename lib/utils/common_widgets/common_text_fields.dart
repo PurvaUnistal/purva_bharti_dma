@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final TextEditingController controller;
+  final String headingLabel;
   final TextInputType textInputType;
   final int maxLength;
   final Widget suffixIcon;
@@ -20,6 +21,7 @@ class TextFieldWidget extends StatelessWidget {
 
   const TextFieldWidget({Key key,
     this.controller,
+    this.headingLabel,
     this.textInputType,
     this.maxLength,
     this.suffixIcon,
@@ -39,37 +41,47 @@ class TextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-      child: TextFormField(
-        autofillHints: autofillHints,
-        enabled: enabled ?? true,
-        controller: controller,
-        readOnly : readOnly ?? false,
-       // autofocus: true,
-        keyboardType: textInputType ?? TextInputType.text,
-        maxLength: maxLength,
-        validator: validator,
-        textCapitalization:textCapitalization?? TextCapitalization.words,
-        textInputAction: TextInputAction.next,
-        inputFormatters : inputFormatters,
-        decoration: InputDecoration(
-          suffix: suffixIcon,
-          prefixIcon: prefixIcon,
-          hintText: hintText,
-          labelText: labelText ?? "",
-          fillColor: Colors.white,
-          contentPadding: EdgeInsets.all(15.0),
-          hintStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-            hintTextDirection: TextDirection.ltr,
-          labelStyle: TextStyle(fontSize: 14.0),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(width: 1, style: BorderStyle.none,),
+      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0,right: 12),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(headingLabel??"",style:TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
+            ),
           ),
-        ),
-          onChanged: onChanged,
-          onTap: onTap,
+          TextFormField(
+            autofillHints: autofillHints,
+            enabled: enabled ?? true,
+            controller: controller,
+            readOnly : readOnly ?? false,
+           // autofocus: true,
+            keyboardType: textInputType ?? TextInputType.text,
+            maxLength: maxLength,
+            validator: validator,
+            textCapitalization:textCapitalization?? TextCapitalization.words,
+            textInputAction: TextInputAction.next,
+            inputFormatters : inputFormatters,
+            decoration: InputDecoration(
+              suffix: suffixIcon,
+              prefixIcon: prefixIcon,
+              hintText: hintText,
+              labelText: labelText ?? "",
+              fillColor: Colors.white,
+              hintStyle: TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.normal, fontSize: 12),
+              labelStyle: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.normal, fontSize: 12),
+              //isDense: true,
+              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+              border: OutlineInputBorder(),
+            ),
+              onChanged: onChanged,
+              onTap: onTap,
 
+          ),
+        ],
       ),
     );
   }

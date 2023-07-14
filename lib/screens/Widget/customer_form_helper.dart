@@ -17,6 +17,7 @@ class CustomerFormHelper{
       String propertyClassId,
       String houseNumberController,
       String localityController,
+      String streetNameController,
       String townController,
       String district,
       String pinCodeController,
@@ -81,7 +82,10 @@ class CustomerFormHelper{
             CustomToast.showToast("Please enter the house number");
             return false;
          } else if (localityController == ""){
-            CustomToast.showToast("Please enter the locality");
+            CustomToast.showToast("Please enter the colony/society/apartment");
+            return false;
+         } else if (streetNameController == ""){
+            CustomToast.showToast("Please enter the street name");
             return false;
          } else if (district == "0"){
             CustomToast.showToast("Please select the district");
@@ -127,6 +131,9 @@ class CustomerFormHelper{
             return false;
          } else if (customerIfscCode == ""){
             CustomToast.showToast("Please enter the customer IFSC code");
+            return false;
+         } else if (customerBankAdd == ""){
+            CustomToast.showToast("Please enter the customer back address");
             return false;
          } else if (depositAmount == ""){
             CustomToast.showToast("Please select deposit Type");

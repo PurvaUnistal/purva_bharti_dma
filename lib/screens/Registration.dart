@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
 import 'package:http/http.dart' as http;
 import '../ExportFile/export_file.dart';
 
@@ -102,6 +103,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
   void initState() {
     super.initState();
     serverApi = ServerApi();
+    _download(context);
     initConnectivity();
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
@@ -118,148 +120,129 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              GlobalConstants.DMA_Page,
-              style: TextStyle(fontSize: 16),
-            ),
-            automaticallyImplyLeading: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.settings_power,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  _exitApp(context);
-                },
-              )
-            ],
-          ),
-          body: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            //0xFF0077bd
-                            InkWell(
-                                child: Container(
-                                  margin: EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
-                                  height: 60,
-                                  width: 100,
-                                  color: Colors.white70,
-                                  child: Card(
-                                    elevation: 10,
-                                    color: _checkInBtnStatus ? Colors.green : Colors.red,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Text("MOBILE DATA",
-                                              textAlign: TextAlign.center, style: new TextStyle(color: Colors.white, fontSize: 14.0, fontFamily: 'Montserrat', fontWeight: FontWeight.bold)),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                onTap: () => {
-                                      //  showAlertDialog(context),
-                                      // autoPress();
-                                    }),
-                            InkWell(
-                              child: Container(
-                                height: 60,
-                                width: 100,
-                                //color: Color(0xFFc9c9c9),
-                                margin: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
-                                child: Card(
-                                  elevation: 10,
-                                  color: _checkOutBtnStatus ? Colors.green : Colors.red,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text("WI-FI", textAlign: TextAlign.center, style: new TextStyle(color: Colors.white, fontSize: 14.0, fontFamily: 'Montserrat', fontWeight: FontWeight.bold))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                child: Container(
-                                  height: 60,
-                                  width: 100,
-                                  //color: Color(0xFFc9c9c9),
-                                  margin: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
-                                  child: Card(
-                                    elevation: 10,
-                                    color: _checkOutBtnboth ? Colors.green : Colors.red,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text("UPDATE ", textAlign: TextAlign.center, style: new TextStyle(color: Colors.white, fontSize: 14.0, fontFamily: 'Montserrat', fontWeight: FontWeight.bold))
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                onTap: () async {
-                                  print("_checkInBtnStatus$_checkInBtnStatus");
-                                  if (_checkOutBtnboth.toString().contains("true")) {
-                                    _download(context);
-                                    //     license = true;
-                                  } else {
-                                    EasyLoading.showError("ERROR!!!!!\n INTERNET CONNECTION"); //drop down pr jao
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      getBody
-                    ],
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(50),
+            child: CustomAppBar(
+              titleAppBar: GlobalConstants.DMA_Page,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.settings_power,
+                    color: Colors.white,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Column(
-                      children: [
-                        Text("Version 1"),
-                        Text("Date 04-07-2023"),
+                  onPressed: () {
+                    _exitApp(context);
+                  },
+                )
+              ],
+            ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        _buildBox(
+                          color: _checkInBtnStatus ? Colors.green : Colors.red,
+                          textTitle: "MOBILE DATA"
+                        ),
+                        _buildBox(
+                            color: _checkOutBtnboth ? Colors.green : Colors.red,
+                            textTitle: "WI-FI"
+                        ),
+                        _buildBox(
+                            color: _checkOutBtnStatus ? Colors.green : Colors.red,
+                            textTitle: "UPDATE",
+                          onTap: () async {
+                            print("_checkInBtnStatus$_checkInBtnStatus");
+                            if (_checkOutBtnboth.toString().contains("true")) {
+                              _download(context);
+                             } else {
+                              EasyLoading.showError("ERROR!!!!!\n INTERNET CONNECTION"); //drop down pr jao
+                            }
+                          },
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(
+                      height: 12,
+                    ),
+                    _buildCardButton(),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Version : 1,",
+                      style: TextStyle(
+                      color: Colors.blue.shade900,
+                      fontWeight: FontWeight.bold
+                    ),
+                    ),
+                    Text("Schema : ${schema},",
+                      style: TextStyle(
+                    color: Colors.blue.shade900,
+                        fontWeight: FontWeight.bold
+                    ),),
+                    Text("Date : 12-07-2023",
+                      style: TextStyle(
+                          color: Colors.blue.shade900,
+                          fontWeight: FontWeight.bold
+                      ),),
+                  ],
+                ),
+              ],
+            ),
           )),
     );
-    // );
   }
 
+  Widget _buildBox({Color color, String textTitle, Function onTap}){
+    return InkWell(
+      onTap:onTap ,
+      child: Card(
+        elevation: 10,
+        color: color,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(textTitle,
+              textAlign: TextAlign.center,
+              style: new TextStyle(
+                  color: Colors.white,
+                  fontSize: 12.0,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold
+              )
+          ),
+        ),
+      ),
+    );
+  }
   get _itemList {
     List<Widget> list = [];
-    list.add(listItem("", "Customer Registration Form", icon: Icons.picture_in_picture, click: () {
-    //  showView(MainRegisterPage());
-      showView(MainRegisterPageUpdate());
-    }));
-    list.add(listItem("", "View and Sync Records", icon: Icons.receipt, click: () {
-      showView(CustomerRecord());
-    }));
+    list.add(
+        listItem(
+            title: "Customer Registration Form",
+            icon: Icons.picture_in_picture,
+            onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => MainRegisterPageUpdate()))
+    )
+    );
+    list.add(
+        listItem(
+            title:"View and Sync Records",
+            icon: Icons.receipt,
+            onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => CustomerRecord()))
+        )
+    );
     return list;
   }
 
-  listItem(step, title, {icon, color, Function click}) {
+  listItem({icon,title, Function onTap}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -267,35 +250,22 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
         child: Card(
           elevation: 8,
           child: InkWell(
-            onTap: () {
-              if (click != null) click.call();
-            },
+            onTap: onTap,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 icon != null
                     ? Container(
                         padding: EdgeInsets.all(11),
                         margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.grey)),
-                        child: new Icon(
-                          icon,
-                          color: color ?? Theme.of(context).primaryColor,
-                        ),
+                        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.red)),
+                        child: new Icon(icon,),
                         alignment: Alignment.centerLeft,
                       )
                     : Container(),
                 Text(
                   title,
                   style: TextStyle(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                Container(
-                  height: 10,
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  child: Text(step, style: TextStyle(color: Colors.blue, fontStyle: FontStyle.italic), textAlign: TextAlign.end),
+                 textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -304,27 +274,71 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
       ),
     );
   }
+  final List<String> titleList = <String>['Customer Registration Form', 'View and Sync Records'];
+  final List<IconData> iconList = <IconData>[Icons.picture_in_picture,Icons.receipt];
+  Widget _buildCardButton() {
+    return Card(
+      shape: Border(
+          left: BorderSide(color: Colors.blue.shade900, width: 15)
+      ),
+      elevation: 5,
+      shadowColor: Colors.lightBlueAccent,
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 7),
+        child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _itemList.length,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              return _itemList[index];
+            }
+            ),
+       /* child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _itemList.length,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 90,
+                  child: Card(
+                    elevation: 8,
+                    child: InkWell(
+                      onTap: () {
+                     //   if (click != null) click.call();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          iconList != null
+                              ? Container(
+                            padding: EdgeInsets.all(11),
+                            margin: EdgeInsets.all(5),
+                            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.red)),
+                            child: new Icon(
+                              iconList as IconData,
+                              color: Colors.blue.shade900,
+                            ),
+                            alignment: Alignment.centerLeft,
+                          )
+                              : Container(),
+                          Text(
+                            titleList as String,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
 
-  get getBody {
-    return Column(
-      children: [
-        Card(
-          shape: Border(left: BorderSide(color: Colors.blue, width: 15)),
-          elevation: 5,
-          shadowColor: Colors.lightBlueAccent,
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 7),
-            child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _itemList.length,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  return _itemList[index];
-                }),
-          ),
-        ),
-      ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+        ),*/
+      ),
     );
   }
 
@@ -337,16 +351,16 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
+                    _getLoggedOut();
+                  },
+                  child: Text('Yes'),
+                ),
+                TextButton(
+                  onPressed: () {
                     print("you choose no");
                     Navigator.of(context).pop(false);
                   },
                   child: Text('No'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _getLoggedOut();
-                  },
-                  child: Text('Yes'),
                 ),
               ],
             );
@@ -430,12 +444,13 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     getAllDistrictApi();
   }
 
-  String schema, token;
+  String schema, token ;
   getSharedPrefer() async {
     SharedPreferences prefs  = await SharedPreferences.getInstance();
     setState(() {
       schema = prefs.getString(GlobalConstants.schema);
       token = prefs.getString(GlobalConstants.token);
+      print("schema------------->"+schema);
     });
   }
 

@@ -34,6 +34,33 @@ class ApiHelper{
       return Api.error;
     }
   }
+
+
+
+  static Future<dynamic> postDataWithFile({ String url, var body, String filePath}) async {
+    try{
+      Uri uri =  Uri.parse( baseUrl+url);
+      print(url);
+      print(body.toString());
+      var uploadFile = await MultipartFile.fromPath("PHOTO", filePath);
+      var request = new MultipartRequest("POST", uri);
+      request.files.add(uploadFile);
+      request.fields.addAll(body);
+      var response = await request.send();
+      if(response.statusCode == 200){
+        var responseData = await response.stream.toBytes();
+        var result = json.decode(String.fromCharCodes(responseData));
+        print(result.toString());
+        return result;
+      } else{
+        return Api.error;
+      }
+    }catch(e){
+      CustomToast.showToast(e.toString());
+      return Api.error;
+    }
+  }
 }
+
 
 enum Api{error}

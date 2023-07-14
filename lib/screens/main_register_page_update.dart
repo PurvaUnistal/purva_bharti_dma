@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
+import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../ExportFile/export_file.dart';
@@ -11,6 +13,7 @@ class MainRegisterPageUpdate extends StatefulWidget {
   State<StatefulWidget> createState() {
     return MainRegisterPageUpdateState();
   }
+
 }
 
 class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
@@ -53,13 +56,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   String _isInterestedId = '';
   String schemeTypeLabel = '';
 
-  Box<DataModel> dataBox;
+  Box<SaveCustomerRegistrationOfflineModel> customerRegistrationBox;
 
-  List localList;
+
   bool error = false;
   String dateAndTime = '';
-
-  bool checkAuto = false;
   bool fDepositeSiteCheck = false;
   bool fDepositeDate = false;
 
@@ -93,7 +94,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   @override
   void initState() {
+
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    getLocalData();
     serverApi = ServerApi();
     firstNameController.addListener(()=> removeSpace(firstNameController));
     middleNameController.addListener(()=> removeSpace(middleNameController));
@@ -102,6 +105,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     reasonController.addListener(()=> removeSpace(reasonController));
     emailIdController.addListener(()=> removeSpace(emailIdController));
     localityController.addListener(()=> removeSpace(localityController));
+    streetNameController.addListener(()=> removeSpace(streetNameController));
     townController.addListener(()=> removeSpace(townController));
     landmarkController.addListener(()=> removeSpace(landmarkController));
     IFSCController.addListener(()=> removeSpace(IFSCController));
@@ -119,33 +123,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     uploadDoc2BackSidePhotoController = PhotoController();
     uploadAdd3Photo = PhotoController();
     uploadDoc3BackSidePhoto = PhotoController();
-    dataBox = Hive.box<DataModel>(dataBoxName);
+
+
+    customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(saveCustRegDataBoxName);
     if (widget.customer == null) {
       editedCustomer = Customer();
     } else {
       editedCustomer = Customer.fromMap(widget.customer.toMap());
     }
-    fetchLabels();
-    fetchDistrict();
-    fetchChargeAreaList();
-    interestedDorpdownList();
-    _getPropertyCategory();
-    _getPropertyClass();
-    _getSocietyAllow();
-    _getResidentStatus();
-    _getExistingCookingFuel();
-    _getGuardianType();
-    _getIdProofArray();
-    _getAddressProofArray();
-    _getKycProofArray();
-    _getBank();
-    _getBank2();
-    _getBillingModeList();
-    _getAcceptConversionPolicyList();
-    _getAcceptExtraFittingCostList();
-    _getMdeOfDeposite();
-    _getInitialDepositeStatusList();
-    _getAllDepositScheme();
     super.initState();
   }
 
@@ -158,21 +143,17 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   @override
   Widget buildView(BuildContext context) {
     return Scaffold(
-        appBar:AppBar(
-          backgroundColor: Colors.blue,
-          automaticallyImplyLeading: false,
-          centerTitle:true,
-          title: GestureDetector(
-            onTap: (){
-              Navigator.push(context,MaterialPageRoute(builder: (context) => RegistrationForm()));
-            },
-            child: Row(
-              children: [
-                Icon(Icons.arrow_back_ios,size: 24, color:Colors.white),
-                SizedBox(width: 10,),
-                Text('Customer Input')
-              ],
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: CustomAppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_rounded),
+              onPressed: (){
+                Navigator.push(context,MaterialPageRoute(builder: (context) => RegistrationForm()));
+              },
             ),
+            titleAppBar: "Customer Input",
+            actions: [],
           ),
         ),
         body: _buildLayout()
@@ -211,6 +192,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   TextEditingController reasonController = TextEditingController();
   TextEditingController emailIdController = TextEditingController();
   TextEditingController localityController = TextEditingController();
+  TextEditingController  streetNameController = TextEditingController();
   TextEditingController townController = TextEditingController();
   TextEditingController houseNumberController = TextEditingController();
   TextEditingController pinCodeController = TextEditingController();
@@ -334,12 +316,45 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   List<DropdownMenuItem<String>> _residentDropdownItems = ([]);
   String _residentStatusValue = '';
-  String dma_id = "";
+  String dmaId = "";
+  String dmaUserName = "";
   String schema = "";
+  SharedPreferences prefs;
+
+  getLocalData() async {
+    prefs = await SharedPreferences.getInstance();
+    schema = prefs.getString(GlobalConstants.schema);
+    dmaId = prefs.getString(GlobalConstants.id);
+    dmaUserName = prefs.getString(GlobalConstants.name);
+    fetchLabels();
+    fetchDistrict();
+    fetchChargeAreaList();
+    interestedDorpdownList();
+    _getPropertyCategory();
+    _getPropertyClass();
+    _getSocietyAllow();
+    _getResidentStatus();
+    _getExistingCookingFuel();
+    _getGuardianType();
+    _getIdProofArray();
+    _getAddressProofArray();
+    _getKycProofArray();
+    _getBank();
+    _getBank2();
+    _getBillingModeList();
+    _getAcceptConversionPolicyList();
+    _getAcceptExtraFittingCostList();
+    _getMdeOfDeposite();
+    _getInitialDepositeStatusList();
+    _getAllDepositScheme();
 
 
 
-//  castbyphone cbp;
+
+
+
+
+  }
 
   PhotoController consentPhoto = PhotoController();
   PhotoController chequePhoto = PhotoController();
@@ -364,734 +379,866 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
 
   _buildLayout(){
-    return Form(
-      key: formGlobalKey,
-      child: ListView(
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-        children: <Widget>[
-          _interestedDropDown(),
-          _conversionPolicyDropDown(),
-          _fittingCostDropDown(),
-          _isInterestedId == '1' ? _mdpeDropdown() : Container(),
-          _isInterestedId == '0' ? _reasonInterestedWidget() : Container(),
-          _chargeAreaDropDown(),
-          _areaDropDown(),
-          _mobileWidget(),
-          _firstNameWidget(),
-          _middleWidget(),
-          _lastNameWidget(),
-          _guardianTypeDropDown(),
-          _guardianNameWidget(),
-          _emailWidget(),
-          _isInterestedId == '1' ? _propertyCategoryDropDown() : Container(),
-          _isInterestedId == '1' ? _propertyClassDropDown() : Container(),
-          _houseNumberWidget(),
-          _localityWidget(),
-          _townWidget(),
-          _districtWidget(),
-          _pinCodeWidget(),
-          _isInterestedId == '1' ? _residentStatusDropdownWidget() : Container(),
-          _isInterestedId == '1' ? _noKitchenWidget() : Container(),
-          _isInterestedId == '1' ? _noBathroomWidget() : Container(),
-          _isInterestedId == '1' ? _fuelDropdownWidget() : Container(),
-          _isInterestedId == '1' ? _noFamilyWidget(): Container(),
-          _locationWidget(),
-          _isInterestedId == '1' ? _landmarkWidget() : Container(),
-          _buildCardWidget(text:AppStrings.idProofHeading),
-          _docTypeDropDown(),
-          _idProofNoWidget(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _frontImageWidget(),
-              _backImageWidget()
-            ],
-          ),
-          _buildCardWidget(text:AppStrings.ownershipProofHeading),
-          getDropDown2(),
-          _ownerProofNoWidget(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _electricBillFrontImgWidget(),
-              _electricBillBackImgWidget(),
-            ],
-          ),
-          _buildCardWidget(text:AppStrings.nocLabel),
-          getDropDown3(),
-          _nocProofNoWidget(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _nocFrontImageWidget(),
-              _nocBackImageWidget(),
-            ],
-          ),
-          _buildCardWidget(text:AppStrings.customerConsentLabel),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _consentImageWidget(),
-              _cancelChqImageWidget(),
-            ],
-          ),
-          _billModeDropDown(),
-          _customerBankDropDown(),
-          _customerBackNoWidget(),
-          _customerIFSCCodeWidget(),
-          _customerBankAddWidget(),
-          _buildCardWidget(text:AppStrings.securityDepositLabel),
-          _depositStatusDropDown(),
-          _depositStatusId != "1" ? _reasonDepositStatusWidget() : Container(),
-          _modeDepositDropDown(),
-          getdepositTypeDropDown(),
-          _depositAmountWidget(),
-          Visibility(
-            visible: true,
-            child: Column(
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Form(
+        key: formGlobalKey,
+        child: Column(
+          children: <Widget>[
+            _interestedDropDown(),
+            _conversionPolicyDropDown(),
+            _fittingCostDropDown(),
+            _isInterestedId == '1' ? _mdpeDropdown() : Container(),
+            _isInterestedId == '0' ? _reasonInterestedWidget() : Container(),
+            _chargeAreaDropDown(),
+            _areaDropDown(),
+            _mobileWidget(),
+            _firstNameWidget(),
+            _middleWidget(),
+            _lastNameWidget(),
+            _guardianTypeDropDown(),
+            _guardianNameWidget(),
+            _emailWidget(),
+            _isInterestedId == '1' ? _propertyCategoryDropDown() : Container(),
+            _isInterestedId == '1' ? _propertyClassDropDown() : Container(),
+            _houseNumberWidget(),
+            _apartmentWidget(),
+            _streetNameWidget(),
+            _townWidget(),
+            _districtWidget(),
+            _pinCodeWidget(),
+            _isInterestedId == '1' ? _residentStatusDropdownWidget() : Container(),
+            _isInterestedId == '1' ? _noKitchenWidget() : Container(),
+            _isInterestedId == '1' ? _noBathroomWidget() : Container(),
+            _isInterestedId == '1' ? _fuelDropdownWidget() : Container(),
+            _isInterestedId == '1' ? _noFamilyWidget(): Container(),
+            _locationWidget(),
+            _isInterestedId == '1' ? _landmarkWidget() : Container(),
+            _buildCardWidget(text:AppStrings.identificationProofLabel),
+            _docTypeDropDown(),
+            _idProofNoWidget(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Visibility(
-                  visible: isDepositCheq,
-                  child: Column(
-                    children: [
-                      _chqNoWidget(),
-                      _depositDateWidget(),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: isDepositCheq,
-                  child: _bankNameDropDown(),
-                ),
-                Visibility(
-                  visible: isDepositCheq,
-                  child: Column(
-                    children: [
-                      _backNameWidget(),
-                      _micrCodeWidget(),
-                      _chequeImageWidget(),
-                    ],
-                  ),
-                )
+                _frontImageWidget(),
+                _backImageWidget()
               ],
             ),
-          ),
-          TextButton(
-            child: Text("Preview"),
-            onPressed: () async {
-              var textFieldValidationCheck = CustomerFormHelper.textFieldValidationCheck(
-                titleLocation : latitudeController.text.trim().toString(),
-                acceptConversionPolicyValueId : __acceptConversionPolicyValueId,
-                acceptExtraFittingCostValueId : __acceptExtraFittingCostValueId,
-                chargeAreaType: chargeAreaId,
-                areaTypeId: _areaTypeId,
-                mobileNoController: mobileNoController.text.toString(),
-                firstNameController: firstNameController.text.toString(),
-                lastNameController: lastNameController.text.toString(),
-                guardianNameController: guardianNameController.text.toString(),
-                propertyTypeId : _propertyTypeId,
-                propertyClassId: _propertyClassId,
-                houseNumberController: houseNumberController.text.toString(),
-                localityController: localityController.text.toString(),
-                district:getAllDistrictId,
-                pinCodeController: pinCodeController.text.toString(),
-                noOfKitchen: kitchenController.text.toString(),
-                noOfBathroom: bathroomController.text.toString(),
-                cookInFuelValue:cookInFuelValue,
-                noOfFamilyMembers:familyMemController.text.toString() ,
-                addressProofNo: _idProofDropDownValue.title,
-                idProofNo: idProofNoController.text.toString(),
-                idFrontImage: AppStrings.frontImage,
-                idBackImage: AppStrings.backImage,
-                consentImage: AppStrings.profileImage7,
-                customerBankName: _bankValue,
-                customerAccNo: customerAccountNum.text.trim().toString(),
-                customerIfscCode: IFSCController.text.trim().toString(),
-                customerBankAdd:"" ,
-                modeOfDeposit:_modeOfDeposit,
-                chequeNo:_modeOfDeposit == "1" ?chqNOController.text.trim().toString() : "",
-                chequeDate: _modeOfDeposit == "1" ? initDepDateController.text.trim().toString() : "",
-                bankName:_bankValue2,
-                bankAccNo: bankAccNoController.text.trim().toString(),
-                depositAmount:AppStrings.depositAmount,
-                micrCode: _modeOfDeposit == "1" ? mICRCodeController.text.trim().toString() : "",
-                chequePhoto: _modeOfDeposit == "1"? AppStrings.profileImage9 :null,
-                mdpeValue: _mdpeValue,
-                residentStatusValue: _residentStatusValue,
-              );
-              if(textFieldValidationCheck == true){
-                showDialog(
-                    context: context, builder :(context){
-                  return  Container(
-                    color:Colors.white,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          _buildRow(
-                            leading: AppStrings.interestedLabel,
-                            trailing: _isInterestedItem.title,
-                          ),
-                          _buildRow(
-                            leading: AppStrings.reasonLabel,
-                            trailing: reasonController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.chargeAreaLabel,
-                            trailing:chargeAreaType.title ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.areaLabel,
-                            trailing:_areaType.title ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.mobileNoLabel,
-                            trailing:mobileNoController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.firstNameLabel,
-                            trailing:firstNameController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.middleNameLabel,
-                            trailing:middleNameController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.lastNameLabel,
-                            trailing:lastNameController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.guardianTypeLabel,
-                            trailing:guardianTypeValue ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.guardianNameLabel,
-                            trailing:guardianNameController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.emailAddressLabel,
-                            trailing:emailIdController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.propertyCategoryLabel,
-                            trailing:_categoryType.title ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.propertyClassLabel,
-                            trailing:_propertyClassType.title ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.houseNumberLabel,
-                            trailing:houseNumberController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.localityLabel,
-                            trailing:localityController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.townLabel,
-                            trailing:townController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.pinCodeLabel,
-                            trailing:pinCodeController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.districtLabel,
-                            trailing:getAllDistrictType.title ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.mdpeAllowLabel,
-                            trailing:_mdpeValue ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.residentStatusLabel,
-                            trailing:_residentStatusValue ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.noOfKitchenLabel,
-                            trailing:kitchenController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.noOfBathroomLabel,
-                            trailing:bathroomController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.existingCookingFuelLabel,
-                            trailing: cookInFuelValue ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.noOfFamilyMembersLabel,
-                            trailing: familyMemController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.latitudeLabel,
-                            trailing: latitudeController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.longitudeLabel,
-                            trailing: longitudeController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.landmarkLabel,
-                            trailing: landmarkController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.idProofHeading,
-                            trailing: _idProofDropDownValue.title ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.idProofNo,
-                            trailing:idProofNoController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.billingModeLabel,
-                            trailing:__billingModeValue.title.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.customerAccountNoLabel,
-                            trailing: customerAccountNum.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.customerIfscCodeLabel,
-                            trailing: IFSCController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.conversionPolicyLabel,
-                            trailing: __acceptConversionPolicyValue.title ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.fittingCostLabel,
-                            trailing: __acceptExtraFittingCostValue.title ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.depositStatusLabel,
-                            trailing: __depositStatusValue.title ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.modeOfDepositLabel,
-                            trailing: __modeDepositValue.title ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.depositTypeLabel,
-                            trailing: AppStrings.depositName.toString()?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.depositAmountControllerLabel,
-                            trailing: depositAmountController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.chqNoLabel,
-                            trailing: chqNOController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.depositDateLabel,
-                            trailing: initDepDateController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.customerBankNameLabel,
-                            trailing: _bankValue.toString() ?? "-",
-                          ),
-                          Visibility(
-                            visible: checkONLine,
-                            child: Column(
-                              children: [
-                                Divider(),
-                                _buildRow(
-                                  leading: AppStrings.accountNoLabel,
-                                  trailing: bankAccNoController.text.toString() ?? "-",
-                                ),
-                                _buildRow(
-                                  leading: AppStrings.bankNameLabel,
-                                  trailing: _bankValue2.toString() ?? "-",
-                                ),
-                                _buildRow(
-                                  leading: AppStrings.mICRCodeLabel,
-                                  trailing:mICRCodeController.text.toString() ?? "-",
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    _imageNameWidget(imageName: AppStrings.idFrontImgSide),
-                                    Padding(
-                                        padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                        child: AppStrings.frontImage == null? AppStrings.frontImagePath.isEmpty
-                                            ? _dottedBorder(
-                                            onTap: () {
-                                              _showPicker(context,meterPhotoController);
-                                            }
-                                        ) : _preNetworkImage(
-                                          networkImage: AppStrings.frontImagePath,
-                                          imageFile: AppStrings.frontImage,
-                                        )
-                                        : _preFileImage(
-                                          fileImage: AppStrings.frontImage,
-                                          imageFilePath: AppStrings.frontImage
-                                        )
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    _imageNameWidget(imageName: AppStrings.idBackImgSide),
-                                    Padding(
-                                        padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                        child: AppStrings.backImage == null? AppStrings.backImagePath.isEmpty
-                                            ? _dottedBorder(
-                                            onTap: () {
-                                              _showPicker2(context,meterPhotoController2);
-                                            }
-                                        )
-                                            : _preNetworkImage(
-                                                networkImage: AppStrings.backImagePath,
-                                                imageFile: AppStrings.backImage,
-                                             )
-                                            : _preFileImage(
-                                                fileImage: AppStrings.backImage,
-                                                imageFilePath: AppStrings.backImage
-                                        )
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment:MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    _imageNameWidget(imageName: AppStrings.electricBillFrontImg),
-                                    Padding(
-                                        padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                        child: AppStrings.profileImage3 == null? AppStrings.profileImagePath3 .isEmpty
-                                            ? _dottedBorder(
-                                                 onTap: () {
-                                                   _showPicker3( context, meterPhotoController3);
-                                                        }
-                                               )
-                                            : _preNetworkImage(
-                                                 networkImage:AppStrings.profileImagePath3,
-                                                 imageFile: AppStrings.profileImage3,
-                                               )
-                                            : _preFileImage(
-                                                 fileImage: AppStrings.profileImage3,
-                                                 imageFilePath: AppStrings.profileImage3
-                                               )
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
-                                    Padding(
-                                        padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                        child: AppStrings.electricBillBackImg == null ? AppStrings.electricBillBackImgPath.isEmpty
-                                            ? _dottedBorder(
-                                            onTap: () {
-                                              _showPicker4(context,meterPhotoController4);
-                                            }
-                                        )
-                                            : _preNetworkImage(
-                                          networkImage: AppStrings.electricBillBackImgPath,
-                                          imageFile: AppStrings.electricBillBackImg,
-                                        )
-                                            : _preFileImage(
-                                            fileImage: AppStrings.electricBillBackImg,
-                                            imageFilePath: AppStrings.electricBillBackImg
-                                        )
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment:MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    _imageNameWidget(imageName: AppStrings.doc3FrontImgSide),
-                                    Padding(
-                                        padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                        child: AppStrings.profileImage5 == null? AppStrings.profileImagePath5.isEmpty
-                                            ? _dottedBorder(
-                                            onTap: () {
-                                              _showPicker5(context, meterPhotoController5);
-                                            }
-                                        )
-                                            : _preNetworkImage(
-                                          networkImage: AppStrings.profileImagePath5,
-                                          imageFile: AppStrings.profileImage5,
-                                        )
-                                            : _preFileImage(
-                                            fileImage: AppStrings.profileImage5,
-                                            imageFilePath: AppStrings.profileImage5
-                                        )
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    _imageNameWidget(imageName: AppStrings.doc3BackImgSide),
-                                    Padding(
-                                        padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                        child: AppStrings.profileImage6 == null? AppStrings.profileImagePath6.isEmpty
-                                            ? _dottedBorder(
-                                            onTap: () {
-                                              _showPicker6(context, meterPhotoController6);
-                                            }
-                                        )
-                                            : _preNetworkImage(
-                                          networkImage: AppStrings.profileImagePath6,
-                                          imageFile: AppStrings.profileImage6,
-                                        )
-                                            : _preFileImage(
-                                            fileImage: AppStrings.profileImage6,
-                                            imageFilePath: AppStrings.profileImage6
-                                        )
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment:MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
-                                    Padding(
-                                        padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                        child: AppStrings.profileImage7 == null? AppStrings.profileImagePath7.isEmpty
-                                            ? _dottedBorder(
-                                            onTap: () {
-                                              _showPicker7(context,meterPhotoController7);
-                                            }
-                                        )
-                                            : _preNetworkImage(
-                                          networkImage: AppStrings.profileImagePath7,
-                                          imageFile: AppStrings.profileImage7,
-                                        )
-                                            : _preFileImage(
-                                            fileImage: AppStrings.profileImage7,
-                                            imageFilePath: AppStrings.profileImage7
-                                        )
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
-                                    Padding(
-                                        padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                        child: AppStrings.profileImage8 == null? AppStrings.profileImagePath8.isEmpty
-                                            ? _dottedBorder(
-                                            onTap: () {
-                                              _showPicker8(context, meterPhotoController8);
-                                            }
-                                        )
-                                            : _preNetworkImage(
-                                          networkImage: AppStrings.profileImagePath8,
-                                          imageFile: AppStrings.profileImage8,
-                                        )
-                                            : _preFileImage(
-                                            fileImage: AppStrings.profileImage8,
-                                            imageFilePath: AppStrings.profileImage8
-                                        )
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment:MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-                                    Padding(
-                                        padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                        child: AppStrings.profileImage9 == null? AppStrings.profileImagePath9.isEmpty
-                                            ? _dottedBorder(
-                                            onTap: () {
-                                              _showPicker9(context,meterPhotoController9);
-                                            }
-                                        )
-                                            : _preNetworkImage(
-                                          networkImage:AppStrings.profileImagePath9,
-                                          imageFile:AppStrings.profileImage9,
-                                        )
-                                            : _preFileImage(
-                                            fileImage: AppStrings.profileImage9,
-                                            imageFilePath: AppStrings.profileImage9
-                                        )
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceAround,
-                            children: [
-                              ElevatedButton(
-                                child: Text("SAVE ",style: TextStyle(fontSize: 20),
-                                ),
-                                onPressed: () {
-                                  DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-                                  dateAndTime = dateFormat.format(DateTime.now());
-                                  log("dateAndTime --> $dateAndTime");
-                                  var now = new DateTime.now();
-                                  var formatter = new DateFormat('yyyy-MM-dd');
-                                  AppStrings.formattedTime = DateFormat('kk:mm:a').format(now);
-                                  AppStrings.formattedDate = formatter.format(now);
-                                  File path1,path2,path3,path4,path5, path6,path7,path8,path9;
-                                  if (AppStrings.frontImage != null) {
-                                    path1 = File(AppStrings.frontImage.path.toString());
-                                  }
-                                  if (AppStrings.backImage != null) {
-                                    path2 = File(AppStrings.backImage.path.toString());
-                                  }
-                                  if (AppStrings.profileImage3 != null) {
-                                    path3 = File(AppStrings.profileImage3.path.toString());
-                                  }
-                                  if (AppStrings.electricBillBackImg != null) {
-                                    path4 = File(AppStrings.electricBillBackImg.path.toString());
-                                  }
-
-                                  if (AppStrings.profileImage5 != null) {
-                                    path5 = File(AppStrings.profileImage5.path.toString());
-                                  }
-                                  if (AppStrings.profileImage6 != null) {
-                                    path6 = File( AppStrings.profileImage6.path.toString());
-                                  }
-                                  if (AppStrings.profileImage7 != null) {
-                                    path7 = File(AppStrings.profileImage7.path.toString());
-                                  }
-
-                                  if (AppStrings.profileImage8 != null) {
-                                    path8 = File(AppStrings.profileImage8.path.toString());
-                                  }
-                                  if (AppStrings.profileImage9 != null) {
-                                    path9 = File(AppStrings.profileImage9.path.toString());
-                                  }
-
-                                  DataModel data = DataModel(
-                                    crteresterd: _isInterestedId,
-                                    crarea_id: _areaTypeId,
-                                    crmobile: mobileNoController.text.toString(),
-                                    crfirstname:firstNameController.text.toString(),
-                                    crmiddlename:middleNameController.text.toString(),
-                                    crLastName: lastNameController.text,
-                                    crFather: guardianTypeValue,
-                                    crGuardian:guardianNameController.text.toString(),
-                                    crEmail: emailIdController.text.toString(),
-                                    crPropertyCategory: _propertyTypeId,
-                                    crPropertyClass: _propertyClassId,
-                                    crHouseNumber:houseNumberController.text.toString(),
-                                    crLocality:localityController.text.toString(),
-                                    crTown: townController.text.toString(),
-                                    crPincode: pinCodeController.text.toString(),
-                                    crDistrict:getAllDistrictId,
-                                    crMDPE:_mdpeValue == 'Yes' ? '1' : '0',
-                                    crResidentStatus:_residentStatusValue,
-                                    crNOOFKitcen:kitchenController.text.toString(),
-                                    crNoBathroom: bathroomController.text,
-                                    crExitingCookingFuel:cookInFuelValue,
-                                    crFamilyMember: familyMemController.text.toString(),
-                                    crLat: latitudeController.text.toString(),
-                                    crLog: longitudeController.text.toString(),
-                                    crRemarks: landmarkController.text.toString(),
-                                    KYCDocument1:_idProofDropDownValueId,
-                                    KYCDocument1NumberText:idProofNoController.text.toString(),
-                                    KycImageForSide: path1.toString(),
-                                    KycImageBackSide: path2.toString(),
-                                    IMGElectricbillF: path3.toString(),
-                                    ImgOwnerElectricbillE: path4.toString(),
-                                    imgdoc3: path5.toString(),
-                                    imgdocback3: path6.toString(),
-                                    imgConsentPhoto: path7.toString(),
-                                    cancelCheckPhoto: path8.toString(),
-                                    imgCheckPhoto: path9.toString(),
-                                    KYCNOCFSide:_kycProofDropDownValueId,
-                                    KYCNOCEndSide:nocProofNoController.text.toString(),
-                                    KycBill:_addressProofDropDownValueId,
-                                    KYCID:ownershipController.text.toString(),
-                                    cusBillingMode:__billingModeValueId,cusAccountNumber:customerAccountNum.text,
-                                    cusIFSCCode: IFSCController.text.toString(),
-                                    cusBankAdrress:bank_address.text.toString(),
-                                    conversionPolicy:__acceptConversionPolicyValueId,
-                                    extraFillingCost:__acceptExtraFittingCostValueId,
-                                    IDDeposteStatus:_depositStatusId.toString(),
-                                    IDMODEofDeposite: _modeOfDeposit,
-                                    IDScheemType: schemeId,
-                                    IDDepositeAmount:depositAmountController.text.toString(),
-                                    IDCheckNumber:chqNOController.text.toString(),
-                                    IDcheckDate: initDepDateController.text.toString(),
-                                    cusBankName: _bankValue==null ? '': _bankValue,
-                                    IDcheckBankName: _bankValue2 == null ? "" : _bankValue2,
-                                    IDcheckBankAccountNumber:bankAccNoController.text.toString(),
-                                    dt: initDepDateController.text.toString(),
-                                    DateandTime: dateAndTime.toString(),
-                                    MICR: mICRCodeController.text.toString(),
-                                  );
-                                  var mmm = dataBox.length;
-                                  if(mmm<=50) {
-                                    dataBox.add(data);
-                                    EasyLoading.showSuccess('Great Success! \n Record Save');
-                                    Navigator.push(context,MaterialPageRoute(builder:(context) => RegistrationForm()),);
-                                  }
-                                  else {
-                                    EasyLoading.showError('Error !!!! \n Please Uploade Previous record');
-                                  }
-                                },
-                              ),
-                              ElevatedButton(
-                                child: Text("EDIT",style: TextStyle(fontSize: 20),
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context, false);
-                                },
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+            _buildCardWidget(text:AppStrings.ownershipProofHeading),
+            getDropDown2(),
+            _ownerProofNoWidget(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _electricBillFrontImgWidget(),
+                _electricBillBackImgWidget(),
+              ],
+            ),
+            _buildCardWidget(text:AppStrings.nocLabel),
+            getDropDown3(),
+            _nocProofNoWidget(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _nocFrontImageWidget(),
+                _nocBackImageWidget(),
+              ],
+            ),
+            _buildCardWidget(text:AppStrings.customerConsentLabel),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _consentImageWidget(),
+                _cancelChqImageWidget(),
+              ],
+            ),
+            _billModeDropDown(),
+            _customerBankDropDown(),
+            _customerBackNoWidget(),
+            _customerIFSCCodeWidget(),
+            _customerBankAddWidget(),
+            Text("=============================================="),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 12.0, top: 12, right: 15),
+                  child: Text(AppStrings.securityDepositLabel),
+                ),
+                Flexible(child: _depositStatusDropDown())
+              ],
+            ),
+            _depositStatusId != "1" ? _reasonDepositStatusWidget() : Container(),
+            _modeDepositDropDown(),
+            getdepositTypeDropDown(),
+            _depositAmountWidget(),
+            Visibility(
+              visible: true,
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: isDepositCheq,
+                    child: Column(
+                      children: [
+                        _chqNoWidget(),
+                        _depositDateWidget(),
+                      ],
                     ),
+                  ),
+                  Visibility(
+                    visible: isDepositCheq,
+                    child: _bankNameDropDown(),
+                  ),
+                  Visibility(
+                    visible: isDepositCheq,
+                    child: Column(
+                      children: [
+                        _backNameWidget(),
+                        _micrCodeWidget(),
+                        _chequeImageWidget(),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            TextButton(
+              child: Text("Preview"),
+              onPressed: () async {
+                var textFieldValidationCheck = CustomerFormHelper.textFieldValidationCheck(
+                  titleLocation : latitudeController.text.trim().toString(),
+                  acceptConversionPolicyValueId : __acceptConversionPolicyValueId,
+                  acceptExtraFittingCostValueId : __acceptExtraFittingCostValueId,
+                  chargeAreaType: chargeAreaId,
+                  areaTypeId: _areaTypeId,
+                  mobileNoController: mobileNoController.text.toString(),
+                  firstNameController: firstNameController.text.toString(),
+                  lastNameController: lastNameController.text.toString(),
+                  guardianNameController: guardianNameController.text.toString(),
+                  propertyTypeId : _propertyTypeId,
+                  propertyClassId: _propertyClassId,
+                  houseNumberController: houseNumberController.text.toString(),
+                  localityController: localityController.text.toString(),
+                  streetNameController: streetNameController.text.toString(),
+                  district:getAllDistrictId,
+                  pinCodeController: pinCodeController.text.toString(),
+                  noOfKitchen: kitchenController.text.toString(),
+                  noOfBathroom: bathroomController.text.toString(),
+                  cookInFuelValue:cookInFuelValue,
+                  noOfFamilyMembers:familyMemController.text.toString() ,
+                  addressProofNo: _idProofDropDownValue.title,
+                  idProofNo: idProofNoController.text.toString(),
+                  idFrontImage: AppStrings.frontImage,
+                  idBackImage: AppStrings.backImage,
+                  consentImage: AppStrings.consentPhoto,
+                  customerBankName: _bankValue,
+                  customerAccNo: customerAccountNum.text.trim().toString(),
+                  customerIfscCode: IFSCController.text.trim().toString(),
+                  customerBankAdd:bank_address.text.trim().toString(),
+                  modeOfDeposit:_modeOfDeposit,
+                  chequeNo:_modeOfDeposit == "1" ?chqNOController.text.trim().toString() : "",
+                  chequeDate: _modeOfDeposit == "1" ? initDepDateController.text.trim().toString() : "",
+                  bankName:_bankValue2,
+                  bankAccNo: bankAccNoController.text.trim().toString(),
+                  depositAmount:AppStrings.depositAmount,
+                  micrCode: _modeOfDeposit == "1" ? mICRCodeController.text.trim().toString() : "",
+                  chequePhoto: _modeOfDeposit == "1"? AppStrings.chqPhoto :null,
+                  mdpeValue: _mdpeValue,
+                  residentStatusValue: _residentStatusValue,
+                );
+                if(textFieldValidationCheck == true){
+                  showDialog(
+                      context: context, builder :(context){
+                    return  Container(
+                      color:Colors.white,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            _buildRow(
+                              leading: AppStrings.interestedLabel,
+                              trailing: _isInterestedItem.title,
+                            ),
+                            _buildRow(
+                              leading: AppStrings.reasonLabel,
+                              trailing: reasonController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.chargeAreaLabel,
+                              trailing:chargeAreaType.title ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.areaLabel,
+                              trailing:_areaType.title ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.mobileNoLabel,
+                              trailing:mobileNoController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.firstNameLabel,
+                              trailing:firstNameController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.middleNameLabel,
+                              trailing:middleNameController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.lastNameLabel,
+                              trailing:lastNameController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.guardianTypeLabel,
+                              trailing:guardianTypeValue ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.guardianNameLabel,
+                              trailing:guardianNameController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.emailAddressLabel,
+                              trailing:emailIdController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.propertyCategoryLabel,
+                              trailing:_categoryType.title ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.propertyClassLabel,
+                              trailing:_propertyClassType.title ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.houseNumberLabel,
+                              trailing:houseNumberController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.apartmentLabel,
+                              trailing:localityController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.streetNameLabel,
+                              trailing:streetNameController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.townLabel,
+                              trailing:townController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.pinCodeLabel,
+                              trailing:pinCodeController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.districtLabel,
+                              trailing:getAllDistrictType.title ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.mdpeAllowLabel,
+                              trailing:_mdpeValue ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.residentStatusLabel,
+                              trailing:_residentStatusValue ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.noOfKitchenLabel,
+                              trailing:kitchenController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.noOfBathroomLabel,
+                              trailing:bathroomController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.existingCookingFuelLabel,
+                              trailing: cookInFuelValue ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.noOfFamilyMembersLabel,
+                              trailing: familyMemController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.latitudeLabel,
+                              trailing: latitudeController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.longitudeLabel,
+                              trailing: longitudeController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.landmarkLabel,
+                              trailing: landmarkController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.identificationProofLabel,
+                              trailing: _idProofDropDownValue.title ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.idProofNo,
+                              trailing:idProofNoController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.billingModeLabel,
+                              trailing:__billingModeValue.title.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.customerAccountNoLabel,
+                              trailing: customerAccountNum.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.customerIfscCodeLabel,
+                              trailing: IFSCController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.conversionPolicyLabel,
+                              trailing: __acceptConversionPolicyValue.title ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.fittingCostLabel,
+                              trailing: __acceptExtraFittingCostValue.title ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.depositStatusLabel,
+                              trailing: __depositStatusValue.title ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.modeOfDepositLabel,
+                              trailing: __modeDepositValue.title ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.depositTypeLabel,
+                              trailing: AppStrings.depositName.toString()?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.depositAmountControllerLabel,
+                              trailing: depositAmountController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.chqNoLabel,
+                              trailing: chqNOController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.depositDateLabel,
+                              trailing: initDepDateController.text.toString() ?? "-",
+                            ),
+                            _buildRow(
+                              leading: AppStrings.customerBankNameLabel,
+                              trailing: _bankValue.toString() ?? "-",
+                            ),
+                            Visibility(
+                              visible: checkONLine,
+                              child: Column(
+                                children: [
+                                  Divider(),
+                                  _buildRow(
+                                    leading: AppStrings.accountNoLabel,
+                                    trailing: bankAccNoController.text.toString() ?? "-",
+                                  ),
+                                  _buildRow(
+                                    leading: AppStrings.bankNameLabel,
+                                    trailing: _bankValue2.toString() ?? "-",
+                                  ),
+                                  _buildRow(
+                                    leading: AppStrings.mICRCodeLabel,
+                                    trailing:mICRCodeController.text.toString() ?? "-",
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    children: [
+                                      _imageNameWidget(imageName: AppStrings.idFrontImgSide),
+                                      Padding(
+                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
+                                          child: AppStrings.frontImage == null? AppStrings.frontImagePath.isEmpty
+                                              ? _dottedBorder(
+                                              onTap: () {
+                                                _showPicker(context,meterPhotoController);
+                                              }
+                                          ) : _preNetworkImage(
+                                            networkImage: AppStrings.frontImagePath,
+                                            imageFile: AppStrings.frontImage,
+                                          )
+                                              : _preFileImage(
+                                              fileImage: AppStrings.frontImage,
+                                              imageFilePath: AppStrings.frontImage
+                                          )
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      _imageNameWidget(imageName: AppStrings.idBackImgSide),
+                                      Padding(
+                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
+                                          child: AppStrings.backImage == null? AppStrings.backImagePath.isEmpty
+                                              ? _dottedBorder(
+                                              onTap: () {
+                                                _showPicker2(context,meterPhotoController2);
+                                              }
+                                          )
+                                              : _preNetworkImage(
+                                            networkImage: AppStrings.backImagePath,
+                                            imageFile: AppStrings.backImage,
+                                          )
+                                              : _preFileImage(
+                                              fileImage: AppStrings.backImage,
+                                              imageFilePath: AppStrings.backImage
+                                          )
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    children: [
+                                      _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
+                                      Padding(
+                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
+                                          child: AppStrings.electricBillFrontImg == null? AppStrings.electricBillFrontImgPath.isEmpty
+                                              ? _dottedBorder(
+                                              onTap: () {
+                                                _showPicker3( context, meterPhotoController3);
+                                              }
+                                          )
+                                              : _preNetworkImage(
+                                            networkImage:AppStrings.electricBillFrontImgPath,
+                                            imageFile: AppStrings.electricBillFrontImg,
+                                          )
+                                              : _preFileImage(
+                                              fileImage: AppStrings.electricBillFrontImg,
+                                              imageFilePath: AppStrings.electricBillFrontImg
+                                          )
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
+                                      Padding(
+                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
+                                          child: AppStrings.electricBillBackImg == null ? AppStrings.electricBillBackImgPath.isEmpty
+                                              ? _dottedBorder(
+                                              onTap: () {
+                                                _showPicker4(context,meterPhotoController4);
+                                              }
+                                          )
+                                              : _preNetworkImage(
+                                            networkImage: AppStrings.electricBillBackImgPath,
+                                            imageFile: AppStrings.electricBillBackImg,
+                                          )
+                                              : _preFileImage(
+                                              fileImage: AppStrings.electricBillBackImg,
+                                              imageFilePath: AppStrings.electricBillBackImg
+                                          )
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    children: [
+                                      _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
+                                      Padding(
+                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
+                                          child: AppStrings.nocFrontImg == null? AppStrings.nocFrontImgPath.isEmpty
+                                              ? _dottedBorder(
+                                              onTap: () {
+                                                _showPicker5(context, meterPhotoController5);
+                                              }
+                                          )
+                                              : _preNetworkImage(
+                                            networkImage: AppStrings.nocFrontImgPath,
+                                            imageFile: AppStrings.nocFrontImg,
+                                          )
+                                              : _preFileImage(
+                                              fileImage: AppStrings.nocFrontImg,
+                                              imageFilePath: AppStrings.nocFrontImg
+                                          )
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
+                                      Padding(
+                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
+                                          child: AppStrings.nocBackImg == null? AppStrings.nocBackImgPath.isEmpty
+                                              ? _dottedBorder(
+                                              onTap: () {
+                                                _showPicker6(context, meterPhotoController6);
+                                              }
+                                          )
+                                              : _preNetworkImage(
+                                            networkImage: AppStrings.nocBackImgPath,
+                                            imageFile: AppStrings.nocBackImg,
+                                          )
+                                              : _preFileImage(
+                                              fileImage: AppStrings.nocBackImg,
+                                              imageFilePath: AppStrings.nocBackImg
+                                          )
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    children: [
+                                      _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
+                                      Padding(
+                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
+                                          child: AppStrings.consentPhoto == null? AppStrings.consentPhotoPath.isEmpty
+                                              ? _dottedBorder(
+                                              onTap: () {
+                                                _showPicker7(context,meterPhotoController7);
+                                              }
+                                          )
+                                              : _preNetworkImage(
+                                            networkImage: AppStrings.consentPhotoPath,
+                                            imageFile: AppStrings.consentPhoto,
+                                          )
+                                              : _preFileImage(
+                                              fileImage: AppStrings.consentPhoto,
+                                              imageFilePath: AppStrings.consentPhoto
+                                          )
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
+                                      Padding(
+                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
+                                          child: AppStrings.chqCancelledPhoto == null? AppStrings.chqCancelledPhotoPath.isEmpty
+                                              ? _dottedBorder(
+                                              onTap: () {
+                                                _showPicker8(context, meterPhotoController8);
+                                              }
+                                          )
+                                              : _preNetworkImage(
+                                            networkImage: AppStrings.chqCancelledPhotoPath,
+                                            imageFile: AppStrings.chqCancelledPhoto,
+                                          )
+                                              : _preFileImage(
+                                              fileImage: AppStrings.chqCancelledPhoto,
+                                              imageFilePath: AppStrings.chqCancelledPhoto
+                                          )
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    children: [
+                                      _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
+                                      Padding(
+                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
+                                          child: AppStrings.chqPhoto == null? AppStrings.chqPhotoPath.isEmpty
+                                              ? _dottedBorder(
+                                              onTap: () {
+                                                _showPicker9(context,meterPhotoController9);
+                                              }
+                                          )
+                                              : _preNetworkImage(
+                                            networkImage:AppStrings.chqPhotoPath,
+                                            imageFile:AppStrings.chqPhoto,
+                                          )
+                                              : _preFileImage(
+                                              fileImage: AppStrings.chqPhoto,
+                                              imageFilePath: AppStrings.chqPhoto
+                                          )
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceAround,
+                              children: [
+                                ElevatedButton(
+
+                                  onPressed: () {
+                                    storeRecords();
+                                  },
+                                  child: Text("SAVE ",style: TextStyle(fontSize: 20),
+
+                                  ),
+                                /*  onPressed: () {
+                                    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+                                    dateAndTime = dateFormat.format(DateTime.now());
+                                    log("dateAndTime --> $dateAndTime");
+                                    var now = new DateTime.now();
+                                    var formatter = new DateFormat('yyyy-MM-dd');
+                                    AppStrings.formattedTime = DateFormat('kk:mm:a').format(now);
+                                    AppStrings.formattedDate = formatter.format(now);
+                                    File path1,path2,path3,path4,path5, path6,path7,path8,path9;
+                                    if (AppStrings.frontImage != null) {
+                                      path1 = File(AppStrings.frontImage.path.toString());
+                                    }
+                                    if (AppStrings.backImage != null) {
+                                      path2 = File(AppStrings.backImage.path.toString());
+                                    }
+                                    if (AppStrings.electricBillFrontImg != null) {
+                                      path3 = File(AppStrings.electricBillFrontImg.path.toString());
+                                    }
+                                    if (AppStrings.electricBillBackImg != null) {
+                                      path4 = File(AppStrings.electricBillBackImg.path.toString());
+                                    }
+
+                                    if (AppStrings.nocFrontImg != null) {
+                                      path5 = File(AppStrings.nocFrontImg.path.toString());
+                                    }
+                                    if (AppStrings.nocBackImg != null) {
+                                      path6 = File( AppStrings.nocBackImg.path.toString());
+                                    }
+                                    if (AppStrings.consentPhoto != null) {
+                                      path7 = File(AppStrings.consentPhoto.path.toString());
+                                    }
+
+                                    if (AppStrings.chqCancelledPhoto != null) {
+                                      path8 = File(AppStrings.chqCancelledPhoto.path.toString());
+                                    }
+                                    if (AppStrings.chqPhoto != null) {
+                                      path9 = File(AppStrings.chqPhoto.path.toString());
+                                    }
+
+                                    DataModel data = DataModel(
+                                      crteresterd: _isInterestedId,
+                                      crarea_id: _areaTypeId,
+                                      crmobile: mobileNoController.text.toString(),
+                                      crfirstname:firstNameController.text.toString(),
+                                      crmiddlename:middleNameController.text.toString(),
+                                      crLastName: lastNameController.text,
+                                      crFather: guardianTypeValue,
+                                      crGuardian:guardianNameController.text.toString(),
+                                      crEmail: emailIdController.text.toString(),
+                                      crPropertyCategory: _propertyTypeId,
+                                      crPropertyClass: _propertyClassId,
+                                      crHouseNumber:houseNumberController.text.toString(),
+                                      crLocality:localityController.text.toString(),
+                                      //   crLocality:streetNameController.text.toString(),
+                                      crTown: townController.text.toString(),
+                                      crPincode: pinCodeController.text.toString(),
+                                      crDistrict:getAllDistrictId,
+                                      crMDPE:_mdpeValue == 'Yes' ? '1' : '0',
+                                      crResidentStatus:_residentStatusValue,
+                                      crNOOFKitcen:kitchenController.text.toString(),
+                                      crNoBathroom: bathroomController.text,
+                                      crExitingCookingFuel:cookInFuelValue,
+                                      crFamilyMember: familyMemController.text.toString(),
+                                      crLat: latitudeController.text.toString(),
+                                      crLog: longitudeController.text.toString(),
+                                      crRemarks: landmarkController.text.toString(),
+                                      KYCDocument1:_idProofDropDownValueId,
+                                      KYCDocument1NumberText:idProofNoController.text.toString(),
+                                      KycImageForSide: path1.toString(),
+                                      KycImageBackSide: path2.toString(),
+                                      IMGElectricbillF: path3.toString(),
+                                      ImgOwnerElectricbillE: path4.toString(),
+                                      imgdoc3: path5.toString(),
+                                      imgdocback3: path6.toString(),
+                                      imgConsentPhoto: path7.toString(),
+                                      cancelCheckPhoto: path8.toString(),
+                                      imgCheckPhoto: path9.toString(),
+                                      KYCNOCFSide:_kycProofDropDownValueId,
+                                      KYCNOCEndSide:nocProofNoController.text.toString(),
+                                      KycBill:_addressProofDropDownValueId,
+                                      KYCID:ownershipController.text.toString(),
+                                      cusBillingMode:__billingModeValueId,
+                                      cusAccountNumber:customerAccountNum.text,
+                                      cusIFSCCode: IFSCController.text.toString(),
+                                      cusBankAdrress:bank_address.text.toString(),
+                                      conversionPolicy:__acceptConversionPolicyValueId,
+                                      extraFillingCost:__acceptExtraFittingCostValueId,
+                                      IDDeposteStatus:_depositStatusId.toString(),
+                                      IDMODEofDeposite: _modeOfDeposit,
+                                      IDScheemType: schemeId,
+                                      IDDepositeAmount:depositAmountController.text.toString(),
+                                      IDCheckNumber:chqNOController.text.toString(),
+                                      IDcheckDate: initDepDateController.text.toString(),
+                                      cusBankName: _bankValue==null ? '': _bankValue,
+                                      IDcheckBankName: _bankValue2 == null ? "" : _bankValue2,
+                                      IDcheckBankAccountNumber:bankAccNoController.text.toString(),
+                                      dt: initDepDateController.text.toString(),
+                                      DateandTime: dateAndTime.toString(),
+                                      MICR: mICRCodeController.text.toString(),
+                                    );
+                                    var mmm = dataBox.length;
+                                    if(mmm<=50) {
+                                      dataBox.add(data);
+                                      EasyLoading.showSuccess('Great Success! \n Record Save');
+                                      Navigator.push(context,MaterialPageRoute(builder:(context) => RegistrationForm()),);
+                                    }
+                                    else {
+                                      EasyLoading.showError('Error !!!! \n Please Uploade Previous record');
+                                    }
+                                  },*/
+                                ),
+                                ElevatedButton(
+                                  child: Text("EDIT",style: TextStyle(fontSize: 20),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context, false);
+                                  },
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
                   );
                 }
-                );
-              }
 
 
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 
- Widget _interestedDropDown(){
+  storeRecords(){
+    File frontImageFile,
+        backImageFile,
+        electricBillFrontImgFile ,
+        electricBillBackImgFile,
+        nocFrontImgFile,
+        nocBackImgFile,
+        consentPhotoFile, chqCancelledPhotoFile,chqPhotoFile;
+    if (AppStrings.frontImage != null) {
+      frontImageFile = File(AppStrings.frontImage.path);
+    }
+    if (AppStrings.backImage != null) {
+      backImageFile = File(AppStrings.backImage.path);
+    }
+    if (AppStrings.electricBillFrontImg != null) {
+      electricBillFrontImgFile = File(AppStrings.electricBillFrontImg.path);
+    }
+    if (AppStrings.electricBillBackImg != null) {
+      electricBillBackImgFile = File(AppStrings.electricBillBackImg.path);
+    }
+
+    if (AppStrings.nocFrontImg != null) {
+      nocFrontImgFile = File(AppStrings.nocFrontImg.path);
+    }
+    if (AppStrings.nocBackImg != null) {
+      nocBackImgFile = File( AppStrings.nocBackImg.path);
+    }
+    if (AppStrings.consentPhoto != null) {
+      consentPhotoFile = File(AppStrings.consentPhoto.path);
+    }
+
+    if (AppStrings.chqCancelledPhoto != null) {
+      chqCancelledPhotoFile = File(AppStrings.chqCancelledPhoto.path);
+    }
+    if (AppStrings.chqPhoto != null) {
+      chqPhotoFile = File(AppStrings.chqPhoto.path);
+    }
+    SaveCustomerRegistrationOfflineModel data = SaveCustomerRegistrationOfflineModel(
+      interested: _isInterestedId,
+      areaId: _areaTypeId,
+      mobileNumber: mobileNoController.text.toString(),
+      firstName:firstNameController.text.toString(),
+      middleName:middleNameController.text.toString(),
+      lastName: lastNameController.text,
+      guardianType: guardianTypeValue,
+      guardianName:guardianNameController.text.toString(),
+      emailId: emailIdController.text.toString(),
+      propertyCategoryId: _propertyTypeId,
+      propertyClassId: _propertyClassId,
+      houseNumber:houseNumberController.text.toString(),
+      locality:localityController.text.toString(),
+      //   crLocality:streetNameController.text.toString(),
+      town: townController.text.toString(),
+      pinCode: pinCodeController.text.toString(),
+      districtId:getAllDistrictId,
+      societyAllowedMdpe:_mdpeValue == 'Yes' ? '1' : '0',
+      residentStatus:_residentStatusValue,
+      noOfKitchen:kitchenController.text.toString(),
+      noOfBathroom: bathroomController.text,
+      existingCookingFuel:cookInFuelValue,
+      noOfFamilyMembers: familyMemController.text.toString(),
+      latitude: latitudeController.text.toString(),
+      longitude: longitudeController.text.toString(),
+      remarks: landmarkController.text.toString(),
+      kycDocument1:_idProofDropDownValueId,
+      kycDocument1Number:idProofNoController.text.toString(),
+      documentUploads1: frontImageFile.toString(),
+      backSide1: backImageFile.toString(),
+      documentUploads2: electricBillFrontImgFile.toString(),
+      backSide2: electricBillBackImgFile.toString(),
+      documentUploads3: nocFrontImgFile.toString(),
+      backSide3: nocBackImgFile.toString(),
+      customerConsent: consentPhotoFile.toString(),
+      canceledCheque: chqCancelledPhotoFile.toString(),
+      chequePhoto: chqPhotoFile.toString(),
+      kycDocument3:_kycProofDropDownValueId,
+      kycDocument3Number:nocProofNoController.text.toString(),
+      kycDocument2:_addressProofDropDownValueId,
+      kycDocument2Number:ownershipController.text.toString(),
+   //   cusBillingMode:__billingModeValueId,
+      bankAccountNumber:customerAccountNum.text,
+      bankIfscCode: IFSCController.text.toString(),
+      bankAddress:bank_address.text.toString(),
+      acceptConversionPolicy:__acceptConversionPolicyValueId,
+      acceptExtraFittingCost:__acceptExtraFittingCostValueId,
+      initialDepositeStatus:_depositStatusId.toString(),
+      modeOfDeposite: _modeOfDeposit,
+      depositeType: schemeId,
+      initialAmount:depositAmountController.text.toString(),
+      chequeNumber:chqNOController.text.toString(),
+      initialDepositeDate: initDepDateController.text.toString(),
+      nameOfBank: _bankValue==null ? '': _bankValue,
+      payementBankName: _bankValue2 == null ? "" : _bankValue2,
+      chequeBankAccount:bankAccNoController.text.toString(),
+      micr: mICRCodeController.text.toString(),
+      schema: schema,
+      dmaUserName: dmaUserName,
+      dmaUserId:dmaId ,
+    );
+    var mmm =  customerRegistrationBox.length;
+    if(mmm<=50) {
+      customerRegistrationBox.add(data);
+      EasyLoading.showSuccess('Great Success! \n Record Save');
+      Navigator.push(context,MaterialPageRoute(builder:(context) => RegistrationForm()),);
+    }
+    else {
+      EasyLoading.showError('Error !!!! \n Please Uploade Previous record');
+    }
+  }
+
+  Widget _interestedDropDown(){
     return ReusedDropDownOptionItem(
       textLabel:AppStrings.interestedLabel,
       hint: AppStrings.interestedLabel,
@@ -1162,10 +1309,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _reasonInterestedWidget(){
     return TextFieldWidget(
       enabled: true,
+      headingLabel:AppStrings.reasonLabel,
       textInputType : TextInputType.text,
       controller: reasonController,
       hintText:AppStrings.reasonLabel,
-      labelText: AppStrings.reasonLabel,
     );
   }
 
@@ -1207,13 +1354,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _mobileWidget(){
     return TextFieldWidget(
-        labelText: AppStrings.mobileNoLabel,
+        headingLabel:AppStrings.mobileNoLabel,
         hintText: AppStrings.mobileNoLabel,
         controller:mobileNoController,
         textInputType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
         maxLength: 10,
-        suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+        suffixIcon: AppStrings.isMobile == true
+            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+            : Icon(Icons.info,color: Colors.red),
         validator: (value){
           if(value.isEmpty){
             return "Please enter Mobile Number";
@@ -1225,21 +1374,23 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged:(v){
           formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 9 ? checkAuto = false : checkAuto = true);
+          setState(()=> v.length <= 9 ? AppStrings.isMobile = false : AppStrings.isMobile = true);
         }
     );
   }
 
   Widget _firstNameWidget(){
     return  TextFieldWidget(
-      labelText: AppStrings.firstNameLabel,
+      headingLabel:AppStrings.firstNameLabel,
       hintText:AppStrings.firstNameLabel,
       controller:firstNameController,
       textInputType: TextInputType.text,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]")),
       ],
-      suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+      suffixIcon: AppStrings.isFirst == true
+          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+          : Icon(Icons.info,color: Colors.red),
       validator: (value){
         if(value.isEmpty|| !RegExp(r'^[a-z A-Z]+$').hasMatch(value)){
           return "Enter First Name";
@@ -1251,14 +1402,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       onChanged:(v){
         v = firstNameController.text.trim().toString();
         formGlobalKey.currentState.validate();
-        setState(()=> v.length <= 2 ? checkAuto = false : checkAuto = true);
+        setState(()=> v.length <= 2 ? AppStrings.isFirst = false : AppStrings.isFirst = true);
       },
     );
   }
 
   Widget _middleWidget(){
     return TextFieldWidget(
-      labelText:AppStrings.middleNameLabel,
+      headingLabel:AppStrings.middleNameLabel,
       hintText:AppStrings.middleNameLabel,
       controller:middleNameController,
       textInputType: TextInputType.text,
@@ -1268,12 +1419,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _lastNameWidget(){
     return  TextFieldWidget(
-      labelText: AppStrings.lastNameLabel,
+      headingLabel:AppStrings.lastNameLabel,
       hintText:AppStrings.lastNameLabel,
       controller:lastNameController,
       textInputType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
-      suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+      suffixIcon: AppStrings.isLast == true
+          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+          : Icon(Icons.info,color: Colors.red),
       validator: (value){
         if(value.isEmpty ||!RegExp(r'^[a-z A-Z]+$').hasMatch(value)){
           return "Enter Last Name";
@@ -1282,7 +1435,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       },
       onChanged:(v){
         formGlobalKey.currentState.validate();
-        setState(()=> v.length <= 2 ? checkAuto = false : checkAuto = true);
+        setState(()=> v.length <= 2 ? AppStrings.isLast = false : AppStrings.isLast = true);
       },
     );
   }
@@ -1301,12 +1454,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _guardianNameWidget(){
     return TextFieldWidget(
-      labelText: AppStrings.guardianNameLabel,
+      headingLabel:AppStrings.guardianNameLabel,
       hintText: AppStrings.guardianNameLabel,
       controller:guardianNameController,
       textInputType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
-      suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+      suffixIcon: AppStrings.isGuardian == true
+          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+          : Icon(Icons.info,color: Colors.red),
       validator: (value){
         if(value.isEmpty){
           return "Please enter Guardian name";
@@ -1319,14 +1474,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       },
       onChanged:(v){
         formGlobalKey.currentState.validate();
-        setState(()=> v.length <= 2 ? checkAuto = false : checkAuto = true);
+        setState(()=> v.length <= 2 ? AppStrings.isGuardian = false : AppStrings.isGuardian = true);
       },
     );
   }
 
   Widget _emailWidget(){
     return  TextFieldWidget(
-      labelText: AppStrings.emailAddressLabel,
+      headingLabel:AppStrings.emailAddressLabel,
       hintText: AppStrings.emailAddressLabel,
       controller:emailIdController,
       textCapitalization :TextCapitalization.none,
@@ -1336,16 +1491,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter your emailAddress.';
-        } else if (!RegExp(
-            r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
-            .hasMatch(value)) {
+        } else if (!RegExp(r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$").hasMatch(value)) {
           return 'Please enter a valid Email';
         }
         return null;
 
       },
       onChanged:(v){
-        formGlobalKey.currentState.validate();
+        //  formGlobalKey.currentState.validate();
       },
     );
   }
@@ -1385,7 +1538,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _depositAmountWidget(){
     return TextFieldWidget(
       enabled: false,
-      labelText: AppStrings.depositAmountControllerLabel,
+      headingLabel:AppStrings.depositAmountControllerLabel,
       hintText: AppStrings.depositAmountControllerLabel,
       controller:depositAmountController,
       textInputType: TextInputType.number,
@@ -1406,7 +1559,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 /*_depositTypeLabel*/
   getdepositTypeDropDown() {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1415,6 +1568,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
               child: DropdownButtonFormField<DepositItem>(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
                 ),
                 items: _propertyDropdownItemsDeposit,
                 value: _depositCategoryType,
@@ -1470,7 +1624,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   getDepositDetailButton(title, {alignment}) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
       child: Column(
           crossAxisAlignment: alignment ?? CrossAxisAlignment.start,
           children: [
@@ -1510,11 +1664,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _houseNumberWidget(){
     return TextFieldWidget(
-      labelText: AppStrings.houseNumberLabel,
+      headingLabel:AppStrings.houseNumberLabel,
       hintText: AppStrings.houseNumberLabel,
       controller:houseNumberController,
-      textInputType: TextInputType.number,
-      suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+      textInputType: TextInputType.text,
+      suffixIcon: AppStrings.isHouseNo == true
+          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+          : Icon(Icons.info,color: Colors.red),
       validator: (value){
         if(value.isEmpty){
           return "Please enter House Number";
@@ -1524,35 +1680,59 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       onTap: (){},
       onChanged:(v){
         formGlobalKey.currentState.validate();
-        setState(()=> v.length >= 1 ? checkAuto = true : checkAuto = false);
+        setState(()=> v.length >= 1 ? AppStrings.isHouseNo = true : AppStrings.isHouseNo = false);
       },
     );
   }
 
-  Widget  _localityWidget(){
+  Widget  _apartmentWidget(){
     return TextFieldWidget(
-      labelText:AppStrings.addressLabel,
+      headingLabel:AppStrings.addressLabel,
       hintText: AppStrings.addressLabel,
       controller:localityController,
       textInputType: TextInputType.text,
-      suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+      suffixIcon: AppStrings.isAddress == true
+          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+          : Icon(Icons.info,color: Colors.red),
       validator: (value){
         if(value.isEmpty){
-          return "Please enter the locality";
+          return "Please enter Colony/Society/Apartment";
         }
         return null;
       },
       onTap: (){},
       onChanged:(v){
         formGlobalKey.currentState.validate();
-        setState(()=> v.length > 1 ? checkAuto = true : checkAuto = false);
+        setState(()=> v.length > 1 ?  AppStrings.isAddress = true :  AppStrings.isAddress = false);
+      },
+    );
+  }
+  Widget  _streetNameWidget(){
+    return TextFieldWidget(
+      headingLabel:AppStrings.streetNameLabel,
+      hintText: AppStrings.addressLabel,
+      controller:streetNameController,
+      textInputType: TextInputType.text,
+      suffixIcon: AppStrings.isAddress == true
+          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+          : Icon(Icons.info,color: Colors.red),
+      validator: (value){
+        if(value.isEmpty){
+          return "Please enter street name";
+        }
+        return null;
+      },
+      onTap: (){},
+      onChanged:(v){
+        formGlobalKey.currentState.validate();
+        setState(()=> v.length > 1 ?  AppStrings.isAddress = true :  AppStrings.isAddress = false);
       },
     );
   }
 
   Widget _townWidget(){
     return TextFieldWidget(
-        labelText: AppStrings.townLabel,
+        headingLabel:AppStrings.townLabel,
         hintText: AppStrings.townLabel,
         controller:townController,
         textInputType: TextInputType.name,
@@ -1578,12 +1758,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _pinCodeWidget(){
     return  TextFieldWidget(
-        labelText: AppStrings.pinCodeLabel,
+        headingLabel:AppStrings.pinCodeLabel,
         hintText:AppStrings.pinCodeLabel,
         controller:pinCodeController,
         textInputType: TextInputType.number,
         maxLength: 6,
-        suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+        suffixIcon:  AppStrings.isPinCode == true
+            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+            : Icon(Icons.info,color: Colors.red),
         validator: (value){
           if(value.isEmpty){
             return "Please enter Pin Number";
@@ -1596,14 +1778,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onTap: (){},
         onChanged:(v){
           formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 5 ? checkAuto = false : checkAuto = true);
+          setState(()=> v.length <= 5 ? AppStrings.isPinCode = false : AppStrings.isPinCode = true);
         }
     );
   }
 
   Widget _noKitchenWidget(){
     return  TextFieldWidget(
-      labelText:AppStrings.noOfKitchenLabel,
+      headingLabel:AppStrings.noOfKitchenLabel,
       hintText: AppStrings.noOfKitchenLabel,
       controller:kitchenController,
       textInputType: TextInputType.number,
@@ -1613,7 +1795,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _noBathroomWidget(){
     return TextFieldWidget(
-      labelText:AppStrings.noOfBathroomLabel,
+      headingLabel:AppStrings.noOfBathroomLabel,
       hintText: AppStrings.noOfBathroomLabel,
       controller:bathroomController,
       textInputType: TextInputType.number,
@@ -1623,7 +1805,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _noFamilyWidget(){
     return  TextFieldWidget(
-      labelText:AppStrings.noOfFamilyMembersLabel,
+      headingLabel:AppStrings.noOfFamilyMembersLabel,
       hintText: AppStrings.noOfFamilyMembersLabel,
       controller:familyMemController,
       textInputType: TextInputType.number,
@@ -1633,46 +1815,43 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
 
   Widget _locationWidget(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 0.0),
-          child: Container(
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(AppStrings.locationCoordinatesLabel,style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),),
+        Flexible(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 12.0,top: 8),
+              child: TextButton(
+                child: new Text(AppStrings.getLocationLabel),
+                onPressed: () async{
+                  Position position = await _getCurrentLocation();
+                  //  AppStrings.locationLat ='${position.latitude} ';
+                  //  AppStrings.locationLong = '${position.longitude}';
+                  latitudeController.text =position.latitude.toStringAsFixed(3);
+                  longitudeController.text = position.longitude.toStringAsFixed(3);
+                },
+              ),
             ),
           ),
         ),
-        TextFieldWidget(
-          enabled: false,
-          labelText: AppStrings.locationLat,
-          hintText: AppStrings.locationLat,
-          controller:latitudeController,
+        Flexible(
+            child: TextFieldWidget(
+              enabled: false,
+              headingLabel:AppStrings.locationLat,
+              hintText: AppStrings.locationLat,
+              controller:latitudeController,
+            )
         ),
-        TextFieldWidget(
-          enabled: false,
-          labelText: AppStrings.locationLong,
-          hintText: AppStrings.locationLong,
-          controller:longitudeController,
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 10.0),
-          child: Column(
-              crossAxisAlignment:  CrossAxisAlignment.start,
-              children: [
-                ElevatedButton(
-                  child: new Text(AppStrings.getLocationLabel),
-                  onPressed: ()async{
-                    Position position = await _getCurrentLocation();
-                    AppStrings.locationLat ='${position.latitude} ';
-                    AppStrings.locationLong = '${position.longitude}';
-                    latitudeController.text ='${position.latitude} ';
-                    longitudeController.text = '${position.longitude}';
-                  },
-                ),
-              ]),
+        Flexible(
+          child: TextFieldWidget(
+            enabled: false,
+            headingLabel:AppStrings.locationLong,
+            hintText: AppStrings.locationLong,
+            controller:longitudeController,
+          ),
         ),
       ],
     );
@@ -1680,7 +1859,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _landmarkWidget(){
     return TextFieldWidget(
-      labelText: AppStrings.landmarkLabel,
+      headingLabel:AppStrings.landmarkLabel,
       hintText: AppStrings.landmarkLabel,
       controller: landmarkController,
       textInputType  : TextInputType.text,
@@ -1729,12 +1908,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _backNameWidget() {
     return TextFieldWidget(
         maxLength: 20,
-        labelText: AppStrings.customerAccountNoLabel,
+        headingLabel:AppStrings.customerAccountNoLabel,
         hintText: AppStrings.customerAccountNoLabel,
         controller: bankAccNoController,
         textInputType: TextInputType.text,
-        suffixIcon: checkAuto == true ? Icon(
-          Icons.check_circle_sharp, color: Colors.green,) : Icon(Icons.info,),
+        suffixIcon: AppStrings.isBankAccNo == true
+            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            : Icon(Icons.info,color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter bank account number";
@@ -1746,20 +1926,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onTap: () {},
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 7 ? checkAuto = false : checkAuto = true);
+          setState(() => v.length <= 7 ? AppStrings.isBankAccNo = false : AppStrings.isBankAccNo = true);
         }
     );
   }
 
   Widget _micrCodeWidget() {
     return TextFieldWidget(
-        labelText: AppStrings.mICRCodeLabel,
+        headingLabel:AppStrings.mICRCodeLabel,
         hintText: AppStrings.mICRCodeLabel,
         maxLength: 9,
         controller: mICRCodeController,
         textInputType: TextInputType.number,
-        suffixIcon: checkAuto == true ? Icon(
-          Icons.check_circle_sharp, color: Colors.green,) : Icon(Icons.info,),
+        suffixIcon: AppStrings.isMICRCode == true
+            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            : Icon(Icons.info,color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter MICR Code";
@@ -1772,7 +1953,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onTap: () {},
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 8 ? checkAuto = false : checkAuto = true);
+          setState(() => v.length <= 8 ?  AppStrings.isMICRCode  = false :  AppStrings.isMICRCode  = true);
         }
     );
   }
@@ -1784,20 +1965,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.profileImage9 == null ? AppStrings.profileImagePath9.isEmpty
+          child: AppStrings.chqPhoto == null ? AppStrings.chqPhotoPath.isEmpty
               ? _dottedBorder(
               onTap: () => _showPicker9(context, meterPhotoController9)
           )
               : _networkImageWidget(
-              networkImage: AppStrings.profileImagePath9,
+              networkImage: AppStrings.chqPhotoPath,
               onPressed: () {
-                setState(() => AppStrings.profileImagePath9 = "");
+                setState(() => AppStrings.chqPhotoPath = "");
               }
           )
               : _fileImageWidget(
-              fileImage: AppStrings.profileImage9,
+              fileImage: AppStrings.chqPhoto,
               onPressed: () {
-                setState(() => AppStrings.profileImage9 = null);
+                setState(() => AppStrings.chqPhoto = null);
               }
           ),
         ),
@@ -1863,23 +2044,23 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _electricBillFrontImgWidget() {
     return Column(
       children: [
-        _imageNameWidget(imageName: AppStrings.electricBillFrontImg),
+        _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.profileImage3 == null ? AppStrings.profileImagePath3.isEmpty
+          child: AppStrings.electricBillFrontImg == null ? AppStrings.electricBillFrontImgPath.isEmpty
               ? _dottedBorder(
               onTap: () => _showPicker3(context, meterPhotoController3)
           )
               : _networkImageWidget(
-              networkImage: AppStrings.profileImagePath3,
+              networkImage: AppStrings.electricBillFrontImgPath,
               onPressed: () {
-                setState(() => AppStrings.profileImagePath3 = "");
+                setState(() => AppStrings.electricBillFrontImgPath = "");
               }
           )
               : _fileImageWidget(
-              fileImage: AppStrings.profileImage3,
+              fileImage: AppStrings.electricBillFrontImg,
               onPressed: () {
-                setState(() => AppStrings.profileImage3 = null);
+                setState(() => AppStrings.electricBillFrontImg = null);
               }
           ),
         ),
@@ -1917,12 +2098,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _nocProofNoWidget(){
     return   TextFieldWidget(
-        labelText: AppStrings.nocProofNoLabel,
+        headingLabel:AppStrings.nocProofNoLabel,
         hintText: AppStrings.nocProofNoLabel,
         controller:nocProofNoController,
         textInputType: TextInputType.text,
         maxLength: 20,
-        suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+        /*suffixIcon: AppStrings.isNoc  == true
+            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+            : Icon(Icons.info,color: Colors.red),
         validator: (value){
           if(value.isEmpty){
             return "Please enter NOC Proof Number";
@@ -1932,31 +2115,31 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onTap: (){},
         onChanged:(v){
           formGlobalKey.currentState.validate();
-          setState(()=> v.length > 2 ? checkAuto = false : checkAuto = true);
-        }
+          setState(()=> v.length > 2 ? AppStrings.isNoc  = false : AppStrings.isNoc  = true);
+        }*/
     );
   }
 
   Widget _nocFrontImageWidget(){
     return Column(
       children: [
-        _imageNameWidget(imageName: AppStrings.doc3FrontImgSide),
+        _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.profileImage5 == null ? AppStrings.profileImagePath5.isEmpty
+          child: AppStrings.nocFrontImg == null ? AppStrings.nocFrontImgPath.isEmpty
               ? _dottedBorder(
               onTap:()=>  _showPicker5(context,  meterPhotoController5)
           )
               : _networkImageWidget(
-              networkImage:AppStrings.profileImagePath5 ,
+              networkImage:AppStrings.nocFrontImgPath ,
               onPressed:(){
-                setState(()=> AppStrings.profileImagePath5 = "");
+                setState(()=> AppStrings.nocFrontImgPath = "");
               }
           )
               : _fileImageWidget(
-              fileImage: AppStrings.profileImage5,
+              fileImage: AppStrings.nocFrontImg,
               onPressed: () {
-                setState(() => AppStrings.profileImage5 = null);
+                setState(() => AppStrings.nocFrontImg = null);
               }
           ),
         ),
@@ -1967,23 +2150,23 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _nocBackImageWidget(){
     return Column(
       children: [
-        _imageNameWidget(imageName: AppStrings.doc3BackImgSide),
+        _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.profileImage6 == null ? AppStrings.profileImagePath6.isEmpty
+          child: AppStrings.nocBackImg == null ? AppStrings.nocBackImgPath.isEmpty
               ? _dottedBorder(
             onTap:()=>  _showPicker6(context, meterPhotoController6),
           )
               : _networkImageWidget(
-              networkImage: AppStrings.profileImagePath6 ,
+              networkImage: AppStrings.nocBackImgPath ,
               onPressed:(){
-                setState(()=> AppStrings.profileImagePath6 = "");
+                setState(()=> AppStrings.nocBackImgPath = "");
               }
           )
               : _fileImageWidget(
-              fileImage: AppStrings.profileImage6,
+              fileImage: AppStrings.nocBackImg,
               onPressed: () {
-                setState(() => AppStrings.profileImage6 = null);
+                setState(() => AppStrings.nocBackImg = null);
               }
           ),
         ),
@@ -1997,20 +2180,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child:AppStrings.profileImage7 == null ? AppStrings.profileImagePath7.isEmpty
+          child:AppStrings.consentPhoto == null ? AppStrings.consentPhotoPath.isEmpty
               ? _dottedBorder(
             onTap:()=>  _showPicker7(context, meterPhotoController7),
           )
               : _networkImageWidget(
-              networkImage: AppStrings.profileImagePath7,
+              networkImage: AppStrings.consentPhotoPath,
               onPressed:(){
-                setState(()=> AppStrings.profileImagePath7 = "");
+                setState(()=> AppStrings.consentPhotoPath = "");
               }
           )
               : _fileImageWidget(
-              fileImage: AppStrings.profileImage7,
+              fileImage: AppStrings.consentPhoto,
               onPressed: () {
-                setState(() => AppStrings.profileImage7 = null);
+                setState(() => AppStrings.consentPhoto = null);
               }
           ),
         ),
@@ -2024,20 +2207,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.profileImage8 == null ? AppStrings.profileImagePath8.isEmpty
+          child: AppStrings.chqCancelledPhoto == null ? AppStrings.chqCancelledPhotoPath.isEmpty
               ? _dottedBorder(
             onTap:()=> _showPicker8(context, meterPhotoController8),
           )
               : _networkImageWidget(
-              networkImage:AppStrings.profileImagePath8,
+              networkImage:AppStrings.chqCancelledPhotoPath,
               onPressed:(){
-                setState(()=> AppStrings.profileImagePath8 = "");
+                setState(()=> AppStrings.chqCancelledPhotoPath = "");
               }
           )
               : _fileImageWidget(
-              fileImage: AppStrings.profileImage8,
+              fileImage: AppStrings.chqCancelledPhoto,
               onPressed: () {
-                setState(() => AppStrings.profileImage8 = null);
+                setState(() => AppStrings.chqCancelledPhoto = null);
               }
           ),
         ),
@@ -2048,24 +2231,39 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _idProofNoWidget(){
     return TextFieldWidget(
-      labelText: AppStrings.idProofNo,
+      headingLabel:AppStrings.idProofNo,
       hintText: AppStrings.idProofNo,
       controller:idProofNoController,
       textInputType: TextInputType.text,
       maxLength: 20,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[a-zA-Z-0-9\u0900-\u097F]",))],
+        suffixIcon: AppStrings.isIdProofNo  == true
+            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+            : Icon(Icons.info,color: Colors.red),
+        validator: (value){
+          if(value.isEmpty){
+            return "Please enter id proof no";
+          }
+          return null;
+        },
+        onChanged:(v){
+          formGlobalKey.currentState.validate();
+          setState(()=> v.length <= 1 ? AppStrings.isIdProofNo = false : AppStrings.isIdProofNo = true);
+        }
     );
   }
 
   Widget _ownerProofNoWidget(){
     return TextFieldWidget(
-        labelText: AppStrings.ownershipProofNo,
+        headingLabel:AppStrings.ownershipProofNo,
         hintText: AppStrings.ownershipProofNo,
         controller:ownershipController,
         textInputType: TextInputType.text,
         maxLength: 20,
-        suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+       /* suffixIcon: AppStrings.isOwnershipProofNo  == true
+            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+            : Icon(Icons.info,color: Colors.red),
         validator: (value){
           if(value.isEmpty){
             return "Please enter Ownership Proof No";
@@ -2074,27 +2272,24 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged:(v){
           formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 1 ? checkAuto = false : checkAuto = true);
-        }
+          setState(()=> v.length <= 1 ? AppStrings.isOwnershipProofNo = false : AppStrings.isOwnershipProofNo = true);
+        }*/
     );
   }
 
   Widget getDropDown2() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 10.0),
-      child: ReusedDropDownOptionItem(
-        textLabel:AppStrings.docTypeLabel,
-        hint: AppStrings.docTypeLabel,
-        items: _addressProofDropdownItems,
-        value: _addressProofDropDownValue,
-        onChanged: (OptionItem value) {
-          log(value.id);
-          setState(() {
-            _addressProofDropDownValueId = value.id;
-            _addressProofDropDownValue = value;
-          });
-        },
-      ),
+    return ReusedDropDownOptionItem(
+      textLabel:AppStrings.docTypeLabel,
+      hint: AppStrings.docTypeLabel,
+      items: _addressProofDropdownItems,
+      value: _addressProofDropDownValue,
+      onChanged: (OptionItem value) {
+        log(value.id);
+        setState(() {
+          _addressProofDropDownValueId = value.id;
+          _addressProofDropDownValue = value;
+        });
+      },
     );
   }
 
@@ -2152,12 +2347,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _customerBackNoWidget(){
     return TextFieldWidget(
-        labelText:AppStrings.customerAccountNoLabel,
+        headingLabel:AppStrings.customerAccountNoLabel,
+       // labelText:AppStrings.customerAccountNoLabel,
         hintText: AppStrings.customerAccountNoLabel,
         controller:customerAccountNum,
         textInputType: TextInputType.text,
         maxLength: 20,
-        suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+        suffixIcon: AppStrings.isCustAccNo == true
+            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+            : Icon(Icons.info,color: Colors.red),
         validator: (value){
           if(value.isEmpty){
             return "Please enter Customer Account Number";
@@ -2168,19 +2366,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged:(v){
           formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 16 ? checkAuto = false : checkAuto = true);
+          setState(()=> v.length <= 16 ? AppStrings.isCustAccNo = false : AppStrings.isCustAccNo = true);
         }
     );
   }
 
   Widget _customerIFSCCodeWidget(){
     return TextFieldWidget(
-        labelText: AppStrings.customerIfscCodeLabel,
+        headingLabel:AppStrings.customerIfscCodeLabel,
         hintText: AppStrings.customerIfscCodeLabel,
         controller:IFSCController,
         textInputType: TextInputType.text,
         maxLength: 11,
-        suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+        suffixIcon: AppStrings.isCustIfscCode == true
+            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+            : Icon(Icons.info,color: Colors.red),
         validator: (value){
           if(value.isEmpty){
             return "Please enter Customer Ifsc Code";
@@ -2191,18 +2391,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged:(v){
           formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 10 ? checkAuto = false : checkAuto = true);
+          setState(()=> v.length <= 10 ? AppStrings.isCustIfscCode = false : AppStrings.isCustIfscCode = true);
         }
     );
   }
 
   Widget _customerBankAddWidget(){
     return TextFieldWidget(
-      labelText: AppStrings.customerBankAddress,
+      headingLabel:AppStrings.customerBankAddress,
       hintText: AppStrings.customerBankAddress,
       controller:bank_address,
       textInputType: TextInputType.text,
-      suffixIcon: checkAuto == true ? Icon(Icons.check_circle_sharp,color: Colors.green,): Icon(Icons.info,),
+      suffixIcon: AppStrings.isCustBankAdd == true
+          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
+          : Icon(Icons.info,color: Colors.red),
       validator: (value){
         if(value.isEmpty){
           return "Please enter the customer bank address";
@@ -2212,14 +2414,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       onTap: (){},
       onChanged:(v){
         formGlobalKey.currentState.validate();
-        setState(()=> v.length > 1 ? checkAuto = true : checkAuto = false);
+        setState(()=> v.length > 1 ? AppStrings.isCustBankAdd = true : AppStrings.isCustBankAdd = false);
       },
     );
   }
 
   Widget _depositStatusDropDown(){
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.depositStatusLabel,
+      textLabel:"",
       hint: AppStrings.depositStatusLabel,
       items: dropListDepositStatusList,
       value: __depositStatusValue,
@@ -2237,7 +2439,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _reasonDepositStatusWidget(){
     return TextFieldWidget(
-      labelText: AppStrings.reasonLabel,
+      headingLabel:AppStrings.reasonLabel,
       hintText: AppStrings.reasonLabel,
       controller:reasonNoController,
       textInputType: TextInputType.text,
@@ -2281,7 +2483,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _chqNoWidget(){
     return TextFieldWidget(
-      labelText: AppStrings.chqNoLabel,
+      headingLabel:AppStrings.chqNoLabel,
       hintText: AppStrings.chqNoLabel,
       controller:chqNOController,
       maxLength: 5,
@@ -2291,7 +2493,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _depositDateWidget(){
     return TextFieldWidget(
-      labelText: AppStrings.depositDateLabel,
+      prefixIcon:Icon(Icons.calendar_today),
       hintText:  AppStrings.depositDateLabel,
       controller:initDepDateController,
       readOnly : true,
@@ -2321,19 +2523,24 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Widget _buildCardWidget({String text}){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15.0),
-        child: Card(
-          shape: Border(left: BorderSide(color: Colors.blue, width: 15)),
-          elevation: 5,
-          shadowColor: Colors.lightBlueAccent,
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-            child: Text(text),
-          ),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Card(
+        shape: Border(
+          left: BorderSide(color: Colors.red, width: 15),
+          right: BorderSide(color: Colors.blue.shade900, width: 15),
+        ),
+        elevation: 5,
+        shadowColor: Colors.lightBlueAccent,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 5),
+          child: Text(text,textAlign: TextAlign.center, style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+
+          ),),
         ),
       ),
     );
@@ -2379,10 +2586,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Widget _imageNameWidget({String imageName}){
-    return Card(
-        elevation: 5,
-        shadowColor: Colors.white,
-        color: Colors.blue,
+    return Container(
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: <Color>[Colors.red, Colors.blue.shade900]
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(imageName,style: TextStyle(color: Colors.white),),
@@ -2519,9 +2732,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> fetchDistrict() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    schema = prefs.getString(GlobalConstants.schema);
-    List dataChargeList = json.decode(prefs.getString(GlobalConstants.AllDistrict));
+    var resAllDistrict = prefs.getString(GlobalConstants.AllDistrict);
+    List dataChargeList = json.decode(resAllDistrict);
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length, (i) => DropdownMenuItem(
       value: OptionItem(id: dataChargeList[i]['id'], title: dataChargeList[i]['district_name']),
@@ -2535,9 +2747,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> fetchArea(String id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    schema = prefs.getString(GlobalConstants.schema);
-    List dataList = json.decode(prefs.getString(GlobalConstants.area));
+    var resArea = prefs.getString(GlobalConstants.area);
+    List dataList = json.decode(resArea);
     List<DropdownMenuItem<OptionItem>> menuItems = [];
     for(int i=0; i< dataList.length; i++) {
       if(dataList[i]['charge_area_id'] == id) {
@@ -2554,9 +2765,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> fetchChargeAreaList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    schema = prefs.getString(GlobalConstants.schema);
-    List dataChargeList = json.decode(prefs.getString(GlobalConstants.chargeAreaName));
+    var resChargeAreaName = prefs.getString(GlobalConstants.chargeAreaName);
+    List dataChargeList = json.decode(resChargeAreaName);
     //   _toastMsg(dataList.toString());
     log(dataChargeList.toString());
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
@@ -2575,11 +2785,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> interestedDorpdownList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    schema = prefs.getString(GlobalConstants.schema);
-    var res = prefs.getString(GlobalConstants.Interested);
-    schema = prefs.getString(GlobalConstants.schema);
-    final decoded = jsonDecode(res) as Map;
+    var resInterested = prefs.getString(GlobalConstants.Interested);
+    final decoded = jsonDecode(resInterested) as Map;
     decoded.forEach((k, v) {
       dropListModelInterested.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -2593,10 +2800,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getSocietyAllow() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    schema = prefs.getString(GlobalConstants.schema);
-    var res = prefs.getString(GlobalConstants.sociaty_allow);
-    final decoded = jsonDecode(res) as Map;
+    var resSociatyAllow = prefs.getString(GlobalConstants.sociaty_allow);
+    final decoded = jsonDecode(resSociatyAllow) as Map;
     decoded.forEach((k, v) {
       _mdpeDropdownItems.add(DropdownMenuItem(
         value: v,
@@ -2608,11 +2813,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getExistingCookingFuel() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    schema = prefs.getString(GlobalConstants.schema);
-    var res = prefs.getString(GlobalConstants.CookingFuel);
-    schema = prefs.getString(GlobalConstants.schema);
-    final decoded = jsonDecode(res) as Map;
+    var  resCookingFuel = prefs.getString(GlobalConstants.CookingFuel);
+    final decoded = jsonDecode(resCookingFuel) as Map;
     for (final name in decoded.values) {
       _cookingFuelDropdownItems.add(DropdownMenuItem(
         value: name,
@@ -2624,10 +2826,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getGuardianType() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    schema = prefs.getString(GlobalConstants.schema);
-    var res = prefs.getString(GlobalConstants.GuardianType);
-    final decoded = jsonDecode(res) as Map;
+    var resGuardianType = prefs.getString(GlobalConstants.GuardianType);
+    final decoded = jsonDecode(resGuardianType) as Map;
     for (final name in decoded.values) {
       guardianTypeDropdownItems.add(DropdownMenuItem(
         value: name,
@@ -2640,10 +2840,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getResidentStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    schema = prefs.getString(GlobalConstants.schema);
-    var res = prefs.getString(GlobalConstants.ResidentStatus);
-    final decoded = jsonDecode(res) as Map;
+    var resResidentStatus = prefs.getString(GlobalConstants.ResidentStatus);
+    final decoded = jsonDecode(resResidentStatus) as Map;
     for (final name in decoded.values) {
       _residentDropdownItems.add(DropdownMenuItem(
         value: name,
@@ -2655,9 +2853,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getPropertyCategory() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    schema = prefs.getString(GlobalConstants.schema);
-    List dataList = json.decode(prefs.getString(GlobalConstants.PropertyCategory));
+    var resPropertyCategory = prefs.getString(GlobalConstants.PropertyCategory);
+    List dataList = json.decode(resPropertyCategory);
     List<DropdownMenuItem<OptionItem>> menuItems = [];
     menuItems.add(DropdownMenuItem(
       value: OptionItem(id: '0', title:'Select Property Category'),
@@ -2665,9 +2862,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     ));
     menuItems = List.generate(
       dataList.length, (i) => DropdownMenuItem(
-        value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
-        child: Text("${dataList[i]['name']}"),
-      ),
+      value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
+      child: Text("${dataList[i]['name']}"),
+    ),
     );
     if (!mounted) return;
     setState(() {
@@ -2678,14 +2875,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getPropertyClass() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    schema = prefs.getString(GlobalConstants.schema);
-    List dataList = json.decode(prefs.getString(GlobalConstants.propertyclass));
+    var resPropertyClass = prefs.getString(GlobalConstants.propertyclass);
+    List dataList = json.decode(resPropertyClass);
     List<DropdownMenuItem<OptionItem>> menuItems = [];
     menuItems = List.generate(dataList.length, (i) => DropdownMenuItem(
-        value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
-        child: Text("${dataList[i]['name']}"),
-      ),
+      value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
+      child: Text("${dataList[i]['name']}"),
+    ),
     );
     if (!mounted) return;
     setState(() {
@@ -2696,10 +2892,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getIdProofArray() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var res = prefs.getString(GlobalConstants.IdentityProof);
-    schema = prefs.getString(GlobalConstants.schema);
-    final decoded = jsonDecode(res) as Map;
+    var resIdentityProof = prefs.getString(GlobalConstants.IdentityProof);
+    final decoded = jsonDecode(resIdentityProof) as Map;
     decoded.forEach((k, v) {
       _idProofDropdownItems.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -2712,9 +2906,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getAddressProofArray() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var res = prefs.getString(GlobalConstants.OwnershipProof);
-    final decoded = jsonDecode(res) as Map;
+    var resOwnershipProof = prefs.getString(GlobalConstants.OwnershipProof);
+    final decoded = jsonDecode(resOwnershipProof) as Map;
     decoded.forEach((k, v) {
       _addressProofDropdownItems.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -2727,10 +2920,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getKycProofArray() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var res = prefs.getString(GlobalConstants.KycDoc);
-    schema = prefs.getString(GlobalConstants.schema);
-    final decoded = jsonDecode(res) as Map;
+    var resKycDoc = prefs.getString(GlobalConstants.KycDoc);
+    final decoded = jsonDecode(resKycDoc) as Map;
     decoded.forEach((k, v) {
       _kycProofDropdownItems.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -2744,31 +2935,27 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getBank() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var response = prefs.getString(GlobalConstants.AllBanks);
-    log("getBankGetBank---> ${prefs.getString(GlobalConstants.AllBanks)}");
-    final decoded = (jsonDecode(response) as List<dynamic>).cast<String>();
+    var resAllBanks = prefs.getString(GlobalConstants.AllBanks);
+    final decoded = (jsonDecode(resAllBanks) as List<dynamic>).cast<String>();
+    log("getBankGetBank---> $resAllBanks");
     setState(() {
       _bankDropdownItems = decoded;
     });
   }
 
   Future<void> _getBank2() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var response = prefs.getString(GlobalConstants.AllBanks);
-    log("getBankGetBank2--> ${prefs.getString(GlobalConstants.AllBanks)}");
-    final decoded = (jsonDecode(response) as List<dynamic>).cast<String>();
+    var resAllBanks = prefs.getString(GlobalConstants.AllBanks);
+    final decoded = (jsonDecode(resAllBanks) as List<dynamic>).cast<String>();
+    log("getBankGetBank2--> $resAllBanks");
     setState(() {
       _bankDropdownItems2 = decoded;
     });
   }
 
   Future<void> _getBillingModeList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final response = prefs.getString(GlobalConstants.Ebilling);
-    schema = prefs.getString(GlobalConstants.schema);
-    log("Ebilling --> $response");
-    final decoded = jsonDecode(response) as Map;
+    var resEbilling = prefs.getString(GlobalConstants.Ebilling);
+    final decoded = jsonDecode(resEbilling) as Map;
+    log("Ebilling --> $resEbilling");
     decoded.forEach((k, v) {
       _billingModeList.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -2782,10 +2969,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getAcceptConversionPolicyList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final response = prefs.getString(GlobalConstants.ConversionPolicy);
-    schema = prefs.getString(GlobalConstants.schema);
-    final decoded = jsonDecode(response) as Map;
+    var resConversionPolicy = prefs.getString(GlobalConstants.ConversionPolicy);
+    final decoded = jsonDecode(resConversionPolicy) as Map;
     decoded.forEach((k, v) {
       _acceptConversionPolicyList.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -2798,10 +2983,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getAcceptExtraFittingCostList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final response = prefs.getString(GlobalConstants.ExtraFittingCost);
-    schema = prefs.getString(GlobalConstants.schema);
-    final decoded = jsonDecode(response) as Map;
+    var resExtraFittingCost = prefs.getString(GlobalConstants.ExtraFittingCost);
+    final decoded = jsonDecode(resExtraFittingCost) as Map;
     decoded.forEach((k, v) {
       _acceptExtraFittingCostList.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -2814,10 +2997,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getMdeOfDeposite() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final response = prefs.getString(GlobalConstants.MdeOfDeposite);
-    schema = prefs.getString(GlobalConstants.schema);
-    final decoded = jsonDecode(response) as Map;
+   var resMdeOfDeposite = prefs.getString(GlobalConstants.MdeOfDeposite);
+    final decoded = jsonDecode(resMdeOfDeposite) as Map;
     decoded.forEach((k, v) {
       dropListModeOfDepositList.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -2849,11 +3030,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getInitialDepositeStatusList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final response = prefs.getString(GlobalConstants.DepositeStatus);
-    schema = prefs.getString(GlobalConstants.schema);
-    log("_getInitialDepositeStatusList$response");
-    final decoded = jsonDecode(response) as Map;
+    var resDepositeStatus = prefs.getString(GlobalConstants.DepositeStatus);
+    final decoded = jsonDecode(resDepositeStatus) as Map;
+    log("_getInitialDepositeStatusList$resDepositeStatus");
     decoded.forEach((k, v) {
       dropListDepositStatusList.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -2867,9 +3046,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getAllDepositScheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final response = prefs.getString(GlobalConstants.SchemeType);
-    List dataList = json.decode(response);
+    var resSchemeType = prefs.getString(GlobalConstants.SchemeType);
+    List dataList = json.decode(resSchemeType);
     List<DropdownMenuItem<DepositItem>> menuItems = [];
     List<DropdownMenuItem<DepositItem>> menuItems2 = [];
     menuItems.add(DropdownMenuItem(
@@ -2948,9 +3126,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     if (!mounted) return;
 
   }
+
+
   ConnectivityResult connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   Future<void> initConnectivity() async {
     ConnectivityResult result;
     // Platform messages may fail, so we use a try/catch PlatformException.
@@ -3262,7 +3443,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Future getProfilePhoto() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 1000,maxWidth: 1000,  imageQuality: 100);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
     final pickedImageFile = File(pickedFile.path);
     setState(() {
       AppStrings.frontImage = pickedImageFile;
@@ -3271,7 +3452,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   getImageGallery(PhotoController controller,) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 1000, maxWidth: 1000,imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
       final pickedImageFile = File(pickedFile.path);
       setState(() {
         AppStrings.frontImage = pickedImageFile;
@@ -3284,7 +3465,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Future getProfilePhoto2() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
     final pickedImageFile = File(pickedFile.path);
     setState(() {
       AppStrings.backImage = pickedImageFile;
@@ -3293,7 +3474,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   getImageGallery2(PhotoController controller) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
       final pickedImageFile = File(pickedFile.path);
       setState(() {
         AppStrings.backImage = pickedImageFile;
@@ -3306,26 +3487,26 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Future getProfilePhoto3() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery, maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery, maxHeight: 1000,maxWidth: 1000,imageQuality: 1);
     final pickedImageFile = File(pickedFile.path);
     setState(() {
-      AppStrings.profileImage3 = pickedImageFile;
+      AppStrings.electricBillFrontImg = pickedImageFile;
     });
   }
   getImageGallery3(PhotoController controller) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
 
     final pickedImageFile = File(pickedFile.path);
     setState(() {
-      AppStrings.profileImage3 = pickedImageFile;
-      log("pickedImageFile3-->" + AppStrings.profileImage3.toString());
+      AppStrings.electricBillFrontImg = pickedImageFile;
+      log("pickedImageFile3-->" + AppStrings.electricBillFrontImg.toString());
     });
   }
 
   Future getProfilePhoto4() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 1000, maxWidth: 1000,imageQuality: 100);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
     final pickedImageFile = File(pickedFile.path);
     setState(() {
       AppStrings.electricBillBackImg = pickedImageFile;
@@ -3334,7 +3515,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   getImageGallery4(PhotoController controller,) async {
     try  {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera, maxWidth: 1000, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 480,maxWidth: 640,imageQuality: 1);
       final pickedImageFile = File(pickedFile.path);
       setState(() {
         AppStrings.electricBillBackImg = pickedImageFile;
@@ -3346,7 +3527,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Future getProfilePhoto5() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
     var asd = File(pickedFile.path);
     final bytes = asd.readAsBytesSync().lengthInBytes;
     final kb = bytes / 1024;
@@ -3356,7 +3537,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     } else{
       setState(() {
         if (pickedFile != null) {
-          AppStrings.profileImage5 = File(pickedFile.path);
+          AppStrings.nocFrontImg = File(pickedFile.path);
         } else {
           log('No image selected.');
         }
@@ -3366,11 +3547,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   getImageGallery5(PhotoController controller) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
       final pickedImageFile = File(pickedFile.path);
       setState(() {
-        AppStrings.profileImage5 = pickedImageFile;
-        log("pickedImageFile5-->" +AppStrings.profileImage5.toString());
+        AppStrings.nocFrontImg = pickedImageFile;
+        log("pickedImageFile5-->" +AppStrings.nocFrontImg.toString());
       });
     }catch(e){
       log(e);
@@ -3379,7 +3560,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Future getProfilePhoto6() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
     var asd = File(pickedFile.path);
     final bytes = asd.readAsBytesSync().lengthInBytes;
     final kb = bytes / 1024;
@@ -3390,7 +3571,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     } else {
       setState(() {
         if (pickedFile != null) {
-          AppStrings.profileImage6 = File(pickedFile.path);
+          AppStrings.nocBackImg = File(pickedFile.path);
         } else {
           log('No image selected.');
         }
@@ -3400,12 +3581,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   getImageGallery6(PhotoController controller,) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
 
       final pickedImageFile = File(pickedFile.path);
       setState(() {
-        AppStrings.profileImage6 = pickedImageFile;
-        log("pickedImageFile6-->" +AppStrings.profileImage6.toString());
+        AppStrings.nocBackImg = pickedImageFile;
+        log("pickedImageFile6-->" +AppStrings.nocBackImg.toString());
       });
     }catch(e){
       log(e);
@@ -3414,7 +3595,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Future getProfilePhoto7() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery, maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery, maxHeight: 480,maxWidth: 640,imageQuality: 1);
     var asd = File(pickedFile.path);
     final bytes = asd.readAsBytesSync().lengthInBytes;
     final kb = bytes / 1024;
@@ -3425,7 +3606,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     } else {
       setState(() {
         if (pickedFile != null) {
-          AppStrings.profileImage7 = File(pickedFile.path);
+          AppStrings.consentPhoto = File(pickedFile.path);
         } else {
           log('No image selected.');
         }
@@ -3435,11 +3616,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   getImageGallery7(PhotoController controller) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
       final pickedImageFile = File(pickedFile.path);
       setState(() {
-        AppStrings.profileImage7 = pickedImageFile;
-        log("pickedImageFile7-->" +AppStrings.profileImage7.toString());
+        AppStrings.consentPhoto = pickedImageFile;
+        log("pickedImageFile7-->" +AppStrings.consentPhoto.toString());
       });
     } catch(e){
       log(e);
@@ -3448,7 +3629,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Future getProfilePhoto8() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery, maxHeight: 1000, maxWidth: 1000,imageQuality: 100);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery, maxHeight: 480,maxWidth: 640,imageQuality: 1);
     var asd = File(pickedFile.path);
     final bytes = asd.readAsBytesSync().lengthInBytes;
     final kb = bytes / 1024;
@@ -3459,7 +3640,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     } else{
       setState(() {
         if (pickedFile != null) {
-          AppStrings.profileImage8 = File(pickedFile.path);
+          AppStrings.chqCancelledPhoto = File(pickedFile.path);
         } else {
           log('No image selected.');
         }
@@ -3469,11 +3650,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   getImageGallery8(PhotoController controller,) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 1000, maxWidth: 1000,imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
       final pickedImageFile = File(pickedFile.path);
       setState(() {
-        AppStrings.profileImage8 = pickedImageFile;
-        log("pickedImageFile8-->" +AppStrings.profileImage8.toString());
+        AppStrings.chqCancelledPhoto = pickedImageFile;
+        log("pickedImageFile8-->" +AppStrings.chqCancelledPhoto.toString());
       });
     }catch(e){
       log(e);
@@ -3483,11 +3664,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Future getProfilePhoto9() async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
       final pickedImageFile = File(pickedFile.path);
       setState(() {
-        AppStrings.profileImage9 = pickedImageFile;
-        log("pickedImageFile9-->" +AppStrings.profileImage9.toString());
+        AppStrings.chqPhoto = pickedImageFile;
+        log("pickedImageFile9-->" +AppStrings.chqPhoto.toString());
       });
     } catch(e){
       log(e.toString());
@@ -3497,18 +3678,44 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   getImageGallery9(PhotoController controller,) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 1000,maxWidth: 1000,imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
       final pickedImageFile = File(pickedFile.path);
       setState(() {
-        AppStrings.profileImage9 = pickedImageFile;
-        log("pickedImageFile9-->" +AppStrings.profileImage9.toString());
+        AppStrings.chqPhoto = pickedImageFile;
+        log("pickedImageFile9-->" +AppStrings.chqPhoto.toString());
       });
     } catch(e){
       log(e.toString());
     }
   }
+  Future<XFile> compressFile(File file) async {
+    final filePath = file.absolute.path;
 
+    // Create output file path
+    // eg:- "Volume/VM/abcd_out.jpeg"
+    final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+    final splitted = filePath.substring(0, (lastIndex));
+    final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path, outPath,
+      quality: 5,
+    );
 
+    print(file.lengthSync());
+    print(result.length());
+    return result;
+  }
+  File imageFile;
+
+  void getImage({ImageSource source}) async{
+    ImagePicker imagePicker = ImagePicker();
+    final file = await imagePicker.pickImage(source: source);
+    if(file.path != null){
+      setState(() {
+        imageFile = File(file.path);
+      });
+    }
+  }
 }
 
 class PhotoController {

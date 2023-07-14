@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../ExportFile/export_file.dart';
-String dataBoxName="dataBoxName";
+import 'models/save_customer_registration_offline_model.dart';
+
+
+String dataBoxName= "dataBoxName";
+String saveCustRegDataBoxName= "SaveCustRegDataBoxName";
 
 
 Future<void> main() async {
@@ -9,6 +13,8 @@ Future<void> main() async {
   Hive.init(document.path);
   Hive.registerAdapter(DataModelAdapter());
   await Hive.openBox<DataModel>(dataBoxName);
+  Hive.registerAdapter(SaveCustomerRegistrationOfflineModelAdapter());
+  await Hive.openBox<SaveCustomerRegistrationOfflineModel>(saveCustRegDataBoxName);
   runApp(MyApp());
 }
 
@@ -19,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'HPCL',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.blue.shade900,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
      home: SplashScreen(),

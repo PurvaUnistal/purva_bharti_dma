@@ -59,3 +59,4 @@ export 'package:hpcl_app/service/api_client.dart';
 export 'package:password_validated_field/src/requirement_widget.dart';
 export 'package:hpcl_app/screens/splashscreen.dart';
 export 'package:path_provider/path_provider.dart';
+export 'package:flutter_image_compress/flutter_image_compress.dart';

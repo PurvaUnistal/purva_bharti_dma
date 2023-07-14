@@ -11,34 +11,31 @@ class ReusedDropDownString extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Padding(
-      padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0,right: 12),
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.only(top: 10.0, bottom: 5.0),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(textLabel,style:TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-              ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(textLabel,style:TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
             ),
           ),
-          DropdownButtonHideUnderline(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                border: Border.all(
-                    color: Colors.grey, style: BorderStyle.solid, width: 1),
-              ),
-              child: DropdownButton<String>(
-                items: items,
-                value: value,
-                hint: Text(hint,style: TextStyle(color: Colors.black,fontFamily: 'Montserrat',fontWeight: FontWeight.normal),),
-                onChanged: onChanged,
-                isExpanded: true,
-                isDense: true,
+          DropdownButtonFormField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+            ),
+            items: items,
+            value: value,
+            hint: Text(hint,
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 12
               ),
             ),
+            onChanged: onChanged,
+            isExpanded: true,
+            isDense: true,
           ),
         ],
       ),
@@ -59,42 +56,33 @@ class ReusedDropDownOptionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Padding(
-      padding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 10.0),
+      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0,right: 12),
       child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: 10.0, bottom: 5.0),
-            child: Align(
+          children: [
+            Align(
               alignment: Alignment.topLeft,
-              child: Text(textLabel, style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+              child: Text(textLabel, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 12),
               ),
             ),
-          ),
-          DropdownButtonHideUnderline(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                border: Border.all(
-                    color: Colors.grey, style: BorderStyle.solid, width: 1),
+            DropdownButtonFormField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
               ),
-              child: DropdownButton<OptionItem>(
-                items: items,
-                value: value,
-                hint: Text(hint,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.normal),
+              items: items,
+              value: value,
+              hint: Text(hint,
+                style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 12
                 ),
-                onChanged: onChanged,
-                isExpanded: true,
-                isDense: true,
               ),
+              onChanged: onChanged,
+              isExpanded: true,
+              isDense: true,
             ),
-          ),
-        ],
-      ),
+          ]),
     );
   }
 }
