@@ -3,6 +3,7 @@ import 'package:hpcl_app/models/save_customer_registration_model.dart';
 import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
 import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
 import '../ExportFile/export_file.dart';
+import '../HiveDataStore/customer_reg_data_store.dart';
 
 class CustomerRecord extends StatefulWidget {
   @override
@@ -28,17 +29,18 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
 
 
 
-  Box<SaveCustomerRegistrationOfflineModel> customerRegistrationBox;
   List<SaveCustomerRegistrationOfflineModel> customerRegistrationList;
   ApiIntegration apiIntegration;
   SaveCustRegReqModel saveCustRegReqModel;
+
+  final SaveCusRegHiveDataStore dataStore = SaveCusRegHiveDataStore();
+  ValueNotifier<bool> isUpdate = ValueNotifier<bool>(false);
 
   @override
   void initState() {
     apiIntegration = ApiIntegration();
     initConnectivity();
-    customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(saveCustRegDataBoxName);
-    customerRegistrationList = customerRegistrationBox.values.toList();
+    customerRegistrationList = SaveCusRegHiveDataStore.box.values.toList();
     super.initState();
   }
 
@@ -127,11 +129,11 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         }
       }
       for(int i = count-1; i >= 0; i--) {
-        await customerRegistrationBox.deleteAt(i);
+        await dataStore.deleteUser(index: i);
       }
       if(count == customerRegistrationList.length) {
         EasyLoading.showSuccess('Great Success! \n Record Save');
-        await customerRegistrationBox.clear();
+        await SaveCusRegHiveDataStore.box.clear();
       }
       customerRegistrationList.removeRange(0, count);
       await Future.delayed(Duration(seconds: 2));
@@ -185,11 +187,9 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
               SizedBox(height: 15,),
               SingleChildScrollView(
                 child: ValueListenableBuilder(
-                    valueListenable: customerRegistrationBox.listenable(),
-                    builder: (context, box,_) {
-                      return customerRegistrationBox.length == 0 ? Align(
-                        alignment: Alignment.center,
-                          child: Text("NO RECORDS FOUNDS")) :
+                    valueListenable: SaveCusRegHiveDataStore.box.listenable(),
+                    builder: (context, Box box, widget) {
+                      return box.length > 0 ?
                       ListView.builder(
                           shrinkWrap: true,
                           physics: ClampingScrollPhysics(),
@@ -216,7 +216,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                               children: [
                                                 Padding(
                                                   padding: const EdgeInsets.all(0.0),
-                                                  child: Text("RECORDS :${position + 1}",style: appbarHeadingStyle,),
+                                                //  child: Text("RECORDS : ${position + 1}",style: appbarHeadingStyle,),
+                                                  child: Text("Records : ${position + 1}",style: appbarHeadingStyle,),
                                                 ),
                                                 Spacer(),
                                                 checkLoading == false
@@ -224,42 +225,40 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                                     : IconButton(icon: Icon(Icons.sync,color: syncColors, ),
                                                   onPressed: (){},
                                                 ),
-                                                checkLoading==false
-                                                    ? Icon(Icons.delete)
-                                                    : IconButton(
-                                                  icon: Icon(Icons.delete),
-                                                  onPressed: () async {
-                                                    {
-                                                      Widget okButton = TextButton(
-                                                        child: Text("OK"),
-                                                        onPressed: () {
-                                                          Navigator.pop(context, false);
-                                                          customerRegistrationBox.deleteAt(position);
-                                                          //  dataBox.deleteAt(index);
-                                                        },
+                                                InkWell(
+                                                    onTap: ()async{
+                                                      await showDialog(
+                                                        context: context,
+                                                        builder: (context) => AlertDialog(
+                                                            title: Text("HPCL DMA"),
+                                                            content: Text('Are you sure you want to delete ${getStudent.mobileNumber}?'),
+                                                          actions: <Widget>[
+                                                            TextButton(
+                                                              style: ButtonStyle(
+                                                                backgroundColor: MaterialStateProperty.all(Colors.blue.shade900),
+                                                                elevation: MaterialStateProperty.all(3),
+                                                                shadowColor: MaterialStateProperty.all(Colors.blue.shade900), //Defines shadowColor
+                                                              ),
+                                                              onPressed: () {dataStore.deleteUser(index: position);},
+                                                              child: const Text('Yes', style: TextStyle(color: Colors.white),
+                                                              ),
+                                                            ),
+                                                            TextButton(
+                                                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue.shade900),
+                                                                elevation: MaterialStateProperty.all(3),
+                                                                shadowColor: MaterialStateProperty.all(Colors.blue.shade900), //Defines shadowColor
+                                                              ),
+                                                              onPressed: () {Navigator.of(context, rootNavigator: true).pop(); },
+                                                              child: const Text('No',
+                                                                style: TextStyle(color: Colors.white),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       );
-                                                      Widget noButton = TextButton(
-                                                        child: Text("NO"),
-                                                        onPressed: () {
-                                                          Navigator.pop(context, false);
-                                                        },
-                                                      );
-                                                      AlertDialog alert = AlertDialog(
-                                                        title: Text("HPCL DMA"),
-                                                        content: Text("Are you sure delete records ?"),
-                                                        actions: [
-                                                          noButton,
-                                                          okButton,
-                                                        ],
-                                                      );
-                                                      // show the dialog
-                                                      showDialog(context: context,builder: (BuildContextcontext) {
-                                                        return alert;
-                                                      },
-                                                      );
-                                                    }
-                                                  },
-                                                )
+                                                    },
+                                                    child: Icon(Icons.delete,size:30,color: Colors.blue.shade900,)),
+                                                IconButton(onPressed: (){}, icon: Icon(Icons.edit, color: Colors.blue.shade900,))
                                               ],
                                             ),
                                             Divider(),
@@ -296,7 +295,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                 ),
                               ),
                             );
-                          });
+                          })
+                          :const Center(child: Text("No Data Found"));
                     }
                 ),
               ),

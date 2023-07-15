@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hpcl_app/HiveDataStore/customer_reg_data_store.dart';
 import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
 import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
+import 'package:hpcl_app/utils/common_widgets/photo_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../ExportFile/export_file.dart';
+import '../utils/common_widgets/open_image_source.dart';
 
 class MainRegisterPageUpdate extends StatefulWidget {
   final Customer customer;
@@ -124,15 +127,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     uploadAdd3Photo = PhotoController();
     uploadDoc3BackSidePhoto = PhotoController();
 
+    //  customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(saveCustRegDataBoxName);
 
-    customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(saveCustRegDataBoxName);
-    if (widget.customer == null) {
-      editedCustomer = Customer();
-    } else {
-      editedCustomer = Customer.fromMap(widget.customer.toMap());
-    }
+
+
+
     super.initState();
   }
+
+  final SaveCusRegHiveDataStore dataStore = SaveCusRegHiveDataStore();
+  ValueNotifier<bool> isUpdate = ValueNotifier<bool>(false);
 
   @override
   void dispose() {
@@ -991,7 +995,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                                   child: Text("SAVE ",style: TextStyle(fontSize: 20),
 
                                   ),
-                                /*  onPressed: () {
+                                  /*  onPressed: () {
                                     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
                                     dateAndTime = dateFormat.format(DateTime.now());
                                     log("dateAndTime --> $dateAndTime");
@@ -1128,7 +1132,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     );
   }
 
-  storeRecords(){
+  storeRecords({int index}){
     File frontImageFile,
         backImageFile,
         electricBillFrontImgFile ,
@@ -1207,7 +1211,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       kycDocument3Number:nocProofNoController.text.toString(),
       kycDocument2:_addressProofDropDownValueId,
       kycDocument2Number:ownershipController.text.toString(),
-   //   cusBillingMode:__billingModeValueId,
+      //   cusBillingMode:__billingModeValueId,
       bankAccountNumber:customerAccountNum.text,
       bankIfscCode: IFSCController.text.toString(),
       bankAddress:bank_address.text.toString(),
@@ -1227,15 +1231,22 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       dmaUserName: dmaUserName,
       dmaUserId:dmaId ,
     );
-    var mmm =  customerRegistrationBox.length;
-    if(mmm<=50) {
-      customerRegistrationBox.add(data);
-      EasyLoading.showSuccess('Great Success! \n Record Save');
-      Navigator.push(context,MaterialPageRoute(builder:(context) => RegistrationForm()),);
+    if(isUpdate.value){
+      dataStore.updateUser(userModel: data, index: index).then((value){
+        Navigator.pop(context);
+      });
+    } else{
+      var mmm =  SaveCusRegHiveDataStore.box.length;
+      if(mmm<=50) {
+        dataStore.addUser(userModel: data);
+        EasyLoading.showSuccess('Great Success! \n Record Save');
+        Navigator.push(context,MaterialPageRoute(builder:(context) => RegistrationForm()),);
+      }
+      else {
+        EasyLoading.showError('Error !!!! \n Please Uploade Previous record');
+      }
     }
-    else {
-      EasyLoading.showError('Error !!!! \n Please Uploade Previous record');
-    }
+
   }
 
   Widget _interestedDropDown(){
@@ -1990,52 +2001,187 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.idBackImgSide),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.backImage == null ? AppStrings.backImagePath.isEmpty
-              ? _dottedBorder(
-              onTap: () => _showPicker2(context, meterPhotoController2)
-          )
-              : _networkImageWidget(
-              networkImage: AppStrings.backImagePath,
-              onPressed: () {
-                setState(() => AppStrings.backImagePath = "");
-              }
-          )
-              : _fileImageWidget(
-              fileImage: AppStrings.backImage,
-              onPressed: () {
-                setState(() => AppStrings.backImage = null);
-              }
-          ),
+        InkWell(
+            onTap: () => _openEleBackSource(context: context , controller: backImageController),
+            child: backImageController.backImage != null
+                ? _fileImage(
+                fileImage: backImageController.backImage,
+                onPressed: ()=>  backImageController = PhotoController()
+            ) :_localBorderImg()
         ),
       ],
     );
   }
 
+  /////////////////////////////  image 1 ///////////////////////////////////////
+  Future<void> _openFrontImageSource({BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getFrontImage(photoController:controller,imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getFrontImage(photoController:controller,imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+  Future<void> getFrontImage({PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.getImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
+      setState(() {
+        if (pickedFile != null) {
+          if (photoController != null) {
+            photoController.frontImage = File(pickedFile.path);
+          } else {
+            print('No image selected.');
+          }
+        } else {
+          print('No image selected.');
+        }
+      });
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+  Future<void> _openBackImageSource({BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getBackImage(photoController:controller,imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getBackImage(photoController:controller,imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+  Future<void> getBackImage({PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.getImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
+      setState(() {
+        if (pickedFile != null) {
+          if (photoController != null) {
+            photoController.backImage = File(pickedFile.path);
+          } else {
+            print('No image selected.');
+          }
+        } else {
+          print('No image selected.');
+        }
+      });
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+  Future<void> _openEleBillFrontSource({BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getEleBillFrontImage(photoController:controller,imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getEleBillFrontImage(photoController:controller,imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+  Future<void> getEleBillFrontImage({PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.getImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
+      setState(() {
+        if (pickedFile != null) {
+          if (photoController != null) {
+            photoController.electricBillFrontImg = File(pickedFile.path);
+          } else {
+            print('No image selected.');
+          }
+        } else {
+          print('No image selected.');
+        }
+      });
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+  Future<void> _openEleBackSource({BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getEleBackImage(photoController:controller,imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getEleBackImage(photoController:controller,imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+  Future<void> getEleBackImage({PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.getImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
+      setState(() {
+        if (pickedFile != null) {
+          if (photoController != null) {
+            photoController.electricBillBackImg = File(pickedFile.path);
+          } else {
+            print('No image selected.');
+          }
+        } else {
+          print('No image selected.');
+        }
+      });
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+
+
+  PhotoController frontImageController = PhotoController();
+  PhotoController backImageController = PhotoController();
+  PhotoController eleBillFrontImgController = PhotoController();
+  PhotoController eleBillBackImgController = PhotoController();
+  PhotoController image3Controller = PhotoController();
+  PhotoController image4Controller = PhotoController();
+
   Widget _frontImageWidget() {
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.idFrontImgSide),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.frontImage == null
-              ? AppStrings.frontImagePath.isEmpty
-              ? _dottedBorder(
-              onTap: () => _showPicker(context, meterPhotoController)
-          )
-              : _networkImageWidget(
-              networkImage: AppStrings.frontImagePath,
-              onPressed: () {
-                setState(() => AppStrings.frontImagePath = "");
-              }
-          )
-              : _fileImageWidget(
-              fileImage: AppStrings.frontImage,
-              onPressed: () {
-                setState(() => AppStrings.frontImage = null);
-              }
-          ),
+        InkWell(
+            onTap: () => _openFrontImageSource(context: context , controller: frontImageController),
+            child: frontImageController.frontImage != null
+                ? _fileImage(
+                fileImage: frontImageController.frontImage,
+                onPressed: ()=>  frontImageController = PhotoController()
+            ) :_localBorderImg()
         ),
       ],
     );
@@ -2045,26 +2191,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.electricBillFrontImg == null ? AppStrings.electricBillFrontImgPath.isEmpty
-              ? _dottedBorder(
-              onTap: () => _showPicker3(context, meterPhotoController3)
-          )
-              : _networkImageWidget(
-              networkImage: AppStrings.electricBillFrontImgPath,
-              onPressed: () {
-                setState(() => AppStrings.electricBillFrontImgPath = "");
-              }
-          )
-              : _fileImageWidget(
-              fileImage: AppStrings.electricBillFrontImg,
-              onPressed: () {
-                setState(() => AppStrings.electricBillFrontImg = null);
-              }
-          ),
+        InkWell(
+            onTap: () => _openFrontImageSource(context: context , controller: eleBillFrontImgController),
+            child: eleBillFrontImgController.electricBillFrontImg != null
+                ? _fileImage(
+                fileImage: eleBillFrontImgController.electricBillFrontImg,
+                onPressed: ()=>  eleBillFrontImgController = PhotoController()
+            ) :_localBorderImg()
         ),
-
       ],
     );
   }
@@ -2073,24 +2207,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     return  Column(
       children: [
         _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.electricBillBackImg == null ? AppStrings.electricBillBackImgPath.isEmpty
-              ? _dottedBorder(
-              onTap:()=> _showPicker4(context, meterPhotoController4)
-          )
-              : _networkImageWidget(
-              networkImage: AppStrings.electricBillBackImgPath ,
-              onPressed:(){
-                setState(()=> AppStrings.electricBillBackImgPath = "");
-              }
-          )
-              : _fileImageWidget(
-              fileImage: AppStrings.electricBillBackImg,
-              onPressed: () {
-                setState(() => AppStrings.electricBillBackImg = null);
-              }
-          ),
+        InkWell(
+            onTap: () => _openEleBackSource(context: context , controller: eleBillBackImgController),
+            child: eleBillBackImgController.electricBillBackImg != null
+                ? _fileImage(
+                fileImage: eleBillBackImgController.electricBillBackImg,
+                onPressed: ()=>  eleBillBackImgController = PhotoController()
+            ) :_localBorderImg()
         ),
       ],
     );
@@ -2098,12 +2221,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _nocProofNoWidget(){
     return   TextFieldWidget(
-        headingLabel:AppStrings.nocProofNoLabel,
-        hintText: AppStrings.nocProofNoLabel,
-        controller:nocProofNoController,
-        textInputType: TextInputType.text,
-        maxLength: 20,
-        /*suffixIcon: AppStrings.isNoc  == true
+      headingLabel:AppStrings.nocProofNoLabel,
+      hintText: AppStrings.nocProofNoLabel,
+      controller:nocProofNoController,
+      textInputType: TextInputType.text,
+      maxLength: 20,
+      /*suffixIcon: AppStrings.isNoc  == true
             ? Icon(Icons.check_circle_sharp,color: Colors.green,)
             : Icon(Icons.info,color: Colors.red),
         validator: (value){
@@ -2231,13 +2354,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _idProofNoWidget(){
     return TextFieldWidget(
-      headingLabel:AppStrings.idProofNo,
-      hintText: AppStrings.idProofNo,
-      controller:idProofNoController,
-      textInputType: TextInputType.text,
-      maxLength: 20,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z-0-9\u0900-\u097F]",))],
+        headingLabel:AppStrings.idProofNo,
+        hintText: AppStrings.idProofNo,
+        controller:idProofNoController,
+        textInputType: TextInputType.text,
+        maxLength: 20,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z-0-9\u0900-\u097F]",))],
         suffixIcon: AppStrings.isIdProofNo  == true
             ? Icon(Icons.check_circle_sharp,color: Colors.green,)
             : Icon(Icons.info,color: Colors.red),
@@ -2256,12 +2379,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _ownerProofNoWidget(){
     return TextFieldWidget(
-        headingLabel:AppStrings.ownershipProofNo,
-        hintText: AppStrings.ownershipProofNo,
-        controller:ownershipController,
-        textInputType: TextInputType.text,
-        maxLength: 20,
-       /* suffixIcon: AppStrings.isOwnershipProofNo  == true
+      headingLabel:AppStrings.ownershipProofNo,
+      hintText: AppStrings.ownershipProofNo,
+      controller:ownershipController,
+      textInputType: TextInputType.text,
+      maxLength: 20,
+      /* suffixIcon: AppStrings.isOwnershipProofNo  == true
             ? Icon(Icons.check_circle_sharp,color: Colors.green,)
             : Icon(Icons.info,color: Colors.red),
         validator: (value){
@@ -2348,7 +2471,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _customerBackNoWidget(){
     return TextFieldWidget(
         headingLabel:AppStrings.customerAccountNoLabel,
-       // labelText:AppStrings.customerAccountNoLabel,
+        // labelText:AppStrings.customerAccountNoLabel,
         hintText: AppStrings.customerAccountNoLabel,
         controller:customerAccountNum,
         textInputType: TextInputType.text,
@@ -2545,7 +2668,56 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ),
     );
   }
-
+  Widget _localBorderImg(){
+    return CircleAvatar(
+      radius: 41,
+      child: CircleAvatar(
+          radius: 40,
+          backgroundColor: Colors.white,
+          child: ClipRRect(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.asset('assets/images/place_holder.png'),
+            ),
+          )
+      ),
+    );
+  }
+  Widget _fileImage({File fileImage, Function onPressed}){
+    return CircleAvatar(
+      radius: 41,
+      child: CircleAvatar(
+        backgroundImage:FileImage(fileImage),
+        radius: 40,
+        child: Align(
+          alignment: Alignment.center,
+          child: CircleAvatar(
+            backgroundColor: blackColor.withOpacity(0.7),
+            child: IconButton(
+                icon: Icon(Icons.delete_outlined,color: whiteColor.withOpacity(0.7)),
+                onPressed:onPressed
+            ),
+          ),
+        ),
+      ),
+    );
+    /*return CircleAvatar(
+      radius: 41,
+      child: CircleAvatar(
+          radius: 40,
+          backgroundColor: Colors.white,
+          child: ClipRRect(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.file(
+                fileImage,
+                fit: BoxFit.cover,
+              )
+            ),
+          )
+      ),
+    );*/
+  }
   Widget _dottedBorder({Function onTap}){
     return Container(
       alignment: Alignment.topLeft,
@@ -2997,7 +3169,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getMdeOfDeposite() async {
-   var resMdeOfDeposite = prefs.getString(GlobalConstants.MdeOfDeposite);
+    var resMdeOfDeposite = prefs.getString(GlobalConstants.MdeOfDeposite);
     final decoded = jsonDecode(resMdeOfDeposite) as Map;
     decoded.forEach((k, v) {
       dropListModeOfDepositList.add(DropdownMenuItem(
@@ -3170,6 +3342,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ),
     );
   }
+
+
 
   void _showPicker(context, PhotoController photoController) {
     showModalBottomSheet(
@@ -3718,8 +3892,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 }
 
+/*
 class PhotoController {
   File imagePath;
   String imageString = '';
 }
+*/
 

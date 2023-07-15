@@ -142,7 +142,7 @@ TextStyle ItemSubTitleStyle = TextStyle(
 // AppBar Style Start
 TextStyle appbarHeadingStyle = TextStyle(
   color: blackColor,
-  fontSize: 14.0,
+  fontSize: 12.0,
   fontWeight: FontWeight.w800,
 );
 TextStyle appbarSubHeadingStyle = TextStyle(
