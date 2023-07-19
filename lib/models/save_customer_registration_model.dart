@@ -366,12 +366,12 @@ class SaveCustRegReqModel{
   String kycDocument2;
   String kycDocument2Number;
   String kycDocument3;
-  String backSide1;
-  String backSide2;
-  String backSide3;
-  String documentUploads1;
-  String documentUploads2;
-  String documentUploads3;
+  String backSideImg1;
+  String backSideImg2;
+  String backSideImg3;
+  String frontSideImg1;
+  String frontSideImg2;
+  String frontSideImg3;
   String uploadCustomerPhoto;
   String uploadHousePhoto;
   String canceledCheque;
@@ -396,6 +396,7 @@ class SaveCustRegReqModel{
   String acceptConversionPolicy;
   String acceptExtraFittingCost;
   String micr;
+  String buildingNumber;
 
   SaveCustRegReqModel({
     this.areaId,
@@ -410,9 +411,6 @@ class SaveCustRegReqModel{
     this.mobileNumber,
     this.schema,
     this.emailId,
-    this.backSide1,
-    this.backSide2,
-    this.backSide3,
     this.bankAccountNumber,
     this.bankAddress,
     this.bankIfscCode,
@@ -424,9 +422,14 @@ class SaveCustRegReqModel{
     this.districtId,
     this.dmaUserId,
     this.dmaUserName,
-    this.documentUploads1,
-    this.documentUploads2,
-    this.documentUploads3,
+    this.backSideImg1,
+    this.backSideImg2,
+    this.backSideImg3,
+    this.frontSideImg1,
+    this.frontSideImg2,
+    this.frontSideImg3,
+    this.uploadHousePhoto,
+    this.uploadCustomerPhoto,
     this.existingCookingFuel,
     this.guardianName,
     this.guardianType,
@@ -454,9 +457,11 @@ class SaveCustRegReqModel{
     this.residentStatus,
     this.societyAllowedMdpe,
     this.town,
-    this.uploadCustomerPhoto,
-    this.uploadHousePhoto,
     this.kycDocument3Number,
+    this.acceptConversionPolicy,
+    this.acceptExtraFittingCost,
+    this.micr,
+    this.buildingNumber
   });
 
  Map<String, dynamic> toJson() {
@@ -492,12 +497,12 @@ class SaveCustRegReqModel{
       "kyc_document_2": kycDocument2.toString() ?? "",
       "kyc_document_3": kycDocument3.toString() ?? "",
       "kyc_document_2_number": kycDocument2Number.toString() ?? "",
-      "backside1": backSide1.toString() ?? "",
-      "backside2": backSide2.toString() ?? "",
-      "backside3": backSide3.toString() ?? "",
-      "document_uploads_1": documentUploads1.toString() ?? "",
-      "document_uploads_2": documentUploads2.toString() ?? "",
-      "document_uploads_3": documentUploads3.toString() ?? "",
+      "backside1": backSideImg1.toString() ?? "",
+      "backside2": backSideImg2.toString() ?? "",
+      "backside3": backSideImg3.toString() ?? "",
+      "document_uploads_1": frontSideImg1.toString() ?? "",
+      "document_uploads_2": frontSideImg2.toString() ?? "",
+      "document_uploads_3": frontSideImg3.toString() ?? "",
       "upload_customer_photo": uploadCustomerPhoto.toString() ?? "",
       "upload_house_photo": uploadHousePhoto.toString() ?? "",
       "canceled_cheque": canceledCheque.toString() ?? "",
@@ -522,6 +527,7 @@ class SaveCustRegReqModel{
       "accept_conversion_policy": acceptConversionPolicy.toString() ?? "",
       "accept_extra_fitting_cost": acceptExtraFittingCost.toString() ?? "",
       "micr": micr.toString() ?? "",
+      "building_number": buildingNumber.toString() ?? "",
     };
     return map;
   }

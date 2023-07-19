@@ -26,7 +26,8 @@ class ApiIntegration{
     var token = prefs.getString(GlobalConstants.token);
     Map<String, String> headers = { "Authorization": token};
     String url = GlobalConstants.saveCustomerRegistrationOffline;
-    var multipartRequest =  http.MultipartRequest("Post", Uri.parse(url));
+    print("url"+url);
+    var request = await http.MultipartRequest("Post", Uri.parse(url));
     Map<String, String> requestBody = {
       "area_id": saveCustRegReqModel.areaId,
       "mobile_number": saveCustRegReqModel.mobileNumber,
@@ -80,116 +81,110 @@ class ApiIntegration{
       "micr": saveCustRegReqModel.micr ?? "",
     };
     print("requestBody-->"+requestBody.toString());
-    multipartRequest.headers.addAll(headers);
-    multipartRequest.fields.addAll(requestBody);
+    request.headers.addAll(headers);
+    request.fields.addAll(requestBody);
 
-    /*multipartRequest.files.add(await http.MultipartFile.fromPath("backside1", saveCustRegReqModel.backSide1));
-    multipartRequest.files.add(await http.MultipartFile.fromPath("backside2", saveCustRegReqModel.backSide2));
-    multipartRequest.files.add(await http.MultipartFile.fromPath("backside3", saveCustRegReqModel.backSide3));
-    multipartRequest.files.add(await http.MultipartFile.fromPath("document_uploads_1", saveCustRegReqModel.documentUploads1));
-    multipartRequest.files.add(await http.MultipartFile.fromPath("document_uploads_2", saveCustRegReqModel.documentUploads2));
-    multipartRequest.files.add(await http.MultipartFile.fromPath("document_uploads_3", saveCustRegReqModel.documentUploads3));
-    multipartRequest.files.add(await http.MultipartFile.fromPath("upload_customer_photo", saveCustRegReqModel.uploadCustomerPhoto));
-    multipartRequest.files.add(await http.MultipartFile.fromPath("upload_house_photo", saveCustRegReqModel.uploadHousePhoto));
-    multipartRequest.files.add(await http.MultipartFile.fromPath("customer_consent", saveCustRegReqModel.customerConsent));
-    multipartRequest.files.add(await http.MultipartFile.fromPath("canceled_cheque", saveCustRegReqModel.canceledCheque));
-    multipartRequest.files.add(await http.MultipartFile.fromPath("cheque_photo", saveCustRegReqModel.chequePhoto));*/
+ /*   request.files.add(await http.MultipartFile.fromPath("backside1", saveCustRegReqModel.backSideImg1));
+    request.files.add(await http.MultipartFile.fromPath("backside2", saveCustRegReqModel.backSideImg2));
+    request.files.add(await http.MultipartFile.fromPath("backside3", saveCustRegReqModel.backSideImg3));
+    request.files.add(await http.MultipartFile.fromPath("document_uploads_1", saveCustRegReqModel.frontSideImg1));
+    request.files.add(await http.MultipartFile.fromPath("document_uploads_2", saveCustRegReqModel.frontSideImg2));
+    request.files.add(await http.MultipartFile.fromPath("document_uploads_3", saveCustRegReqModel.frontSideImg3));
+    request.files.add(await http.MultipartFile.fromPath("upload_customer_photo", saveCustRegReqModel.uploadCustomerPhoto));
+    request.files.add(await http.MultipartFile.fromPath("upload_house_photo", saveCustRegReqModel.uploadHousePhoto));
+    request.files.add(await http.MultipartFile.fromPath("customer_consent", saveCustRegReqModel.customerConsent));
+    request.files.add(await http.MultipartFile.fromPath("canceled_cheque", saveCustRegReqModel.canceledCheque));
+    request.files.add(await http.MultipartFile.fromPath("cheque_photo", saveCustRegReqModel.chequePhoto));*/
 
-    if (saveCustRegReqModel.backSide1.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath("backside1", saveCustRegReqModel.backSide1);
-      multipartRequest.files.add(rfcFormImage);
+    if (saveCustRegReqModel.backSideImg1.isNotEmpty) {
+      var rfcFormImage = await http.MultipartFile.fromPath("backside1", saveCustRegReqModel.backSideImg1);
+      request.files.add(rfcFormImage);
       print("saveCustRegReqModel.backSide1-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["backside1"] = "";
+      request.fields["backside1"] = "";
     }
-    if (saveCustRegReqModel.backSide2.isNotEmpty) {
-     var rfcFormImage = await http.MultipartFile.fromPath("backside2", saveCustRegReqModel.backSide2);
-      multipartRequest.files.add(rfcFormImage..toString());
+    if (saveCustRegReqModel.backSideImg2.isNotEmpty) {
+     var rfcFormImage = await http.MultipartFile.fromPath("backside2", saveCustRegReqModel.backSideImg2);
+      request.files.add(rfcFormImage..toString());
       print("saveCustRegReqModel.backSide2-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["backside2"] = "";
+      request.fields["backside2"] = "";
     }
-    if (saveCustRegReqModel.backSide3.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath("backside3", saveCustRegReqModel.backSide3);
-      multipartRequest.files.add(rfcFormImage);
+    if (saveCustRegReqModel.backSideImg3.isNotEmpty) {
+      var rfcFormImage = await http.MultipartFile.fromPath("backside3", saveCustRegReqModel.backSideImg3);
+      request.files.add(rfcFormImage);
       print("saveCustRegReqModel.backSide3-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["backside3"] = "";
+      request.fields["backside3"] = "";
     }
-    if (saveCustRegReqModel.documentUploads1.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath("document_uploads_1", saveCustRegReqModel.documentUploads1);
-     multipartRequest.files.add(rfcFormImage);
+    if (saveCustRegReqModel.frontSideImg1.isNotEmpty) {
+      var rfcFormImage = await http.MultipartFile.fromPath("document_uploads_1", saveCustRegReqModel.frontSideImg1);
+     request.files.add(rfcFormImage);
       print("saveCustRegReqModel.documentUploads1-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["document_uploads_1"] = "";
+      request.fields["document_uploads_1"] = "";
     }
-    if (saveCustRegReqModel.documentUploads2.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath("document_uploads_2", saveCustRegReqModel.documentUploads2);
-      multipartRequest.files.add(rfcFormImage);
+    if (saveCustRegReqModel.frontSideImg2.isNotEmpty) {
+      var rfcFormImage = await http.MultipartFile.fromPath("document_uploads_2", saveCustRegReqModel.frontSideImg2);
+      request.files.add(rfcFormImage);
       print("saveCustRegReqModel.documentUploads2-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["document_uploads_2"] = "";
+      request.fields["document_uploads_2"] = "";
     }
-    if (saveCustRegReqModel.documentUploads3.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath("document_uploads_3", saveCustRegReqModel.documentUploads3);
-     multipartRequest.files.add(rfcFormImage);
+    if (saveCustRegReqModel.frontSideImg3.isNotEmpty) {
+      var rfcFormImage = await http.MultipartFile.fromPath("document_uploads_3", saveCustRegReqModel.frontSideImg3);
+     request.files.add(rfcFormImage);
       print("saveCustRegReqModel.documentUploads3,-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["document_uploads_3"] = "";
+      request.fields["document_uploads_3"] = "";
     }
     if (saveCustRegReqModel.uploadCustomerPhoto.isNotEmpty) {
       var rfcFormImage = await http.MultipartFile.fromPath("upload_customer_photo", saveCustRegReqModel.uploadCustomerPhoto);
-    multipartRequest.files.add(rfcFormImage);
+    request.files.add(rfcFormImage);
       print("saveCustRegReqModel.uploadCustomerPhoto-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["upload_customer_photo"] = "";
+      request.fields["upload_customer_photo"] = "";
     }
     if (saveCustRegReqModel.uploadHousePhoto.isNotEmpty) {
       var rfcFormImage = await http.MultipartFile.fromPath("upload_house_photo", saveCustRegReqModel.uploadHousePhoto);
-       multipartRequest.files.add(rfcFormImage);
+       request.files.add(rfcFormImage);
       print("saveCustRegReqModel.uploadHousePhoto-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["upload_house_photo"] = "";
+      request.fields["upload_house_photo"] = "";
     }
     if (saveCustRegReqModel.customerConsent.isNotEmpty) {
       var rfcFormImage = await http.MultipartFile.fromPath("customer_consent", saveCustRegReqModel.customerConsent);
-     multipartRequest.files.add(rfcFormImage);
+     request.files.add(rfcFormImage);
       print("saveCustRegReqModel.customerConsent-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["customer_consent"] = "";
+      request.fields["customer_consent"] = "";
     }
     if (saveCustRegReqModel.canceledCheque.isNotEmpty) {
      var rfcFormImage = await http.MultipartFile.fromPath("canceled_cheque", saveCustRegReqModel.canceledCheque);
-     multipartRequest.files.add(rfcFormImage);
+     request.files.add(rfcFormImage);
       print("saveCustRegReqModel.canceledCheque-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["canceled_cheque"] = "";
+      request.fields["canceled_cheque"] = "";
     }
     if (saveCustRegReqModel.chequePhoto.isNotEmpty) {
       var rfcFormImage = await http.MultipartFile.fromPath("cheque_photo", saveCustRegReqModel.chequePhoto);
-      multipartRequest.files.add(rfcFormImage);
+      request.files.add(rfcFormImage);
       print("saveCustRegReqModel.chequePhoto-->" + rfcFormImage.toString());
     } else {
-      multipartRequest.fields["cheque_photo"] = "";
+      request.fields["cheque_photo"] = "";
     }
-
-
-    var response = await multipartRequest.send();
+    print("Request" + requestBody.toString());
+    try {
+    var response = await request.send();
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
     print("Response-->" + response.toString() + "responseString :" + responseString);
-
-    try {
-      if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
         return SaveCustomerRegistrationModel.fromJson(json.decode(responseString));
       }
-      else {
-        print("Failed");
-        throw Exception('Failed to load data!');
-      }
     } catch(e){
-      print("Failed" +e.toString());
-      throw Exception('Failed to load data!');
+      print("Failed------------>" +e.toString());
+      throw Exception(e.toString());
     }
 
   }

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hpcl_app/HiveDataStore/customer_reg_data_store.dart';
 import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
-import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
 import 'package:hpcl_app/utils/common_widgets/photo_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../ExportFile/export_file.dart';
+import '../utils/common_widgets/custom_app_bar.dart';
 import '../utils/common_widgets/open_image_source.dart';
 
 class MainRegisterPageUpdate extends StatefulWidget {
-  final Customer customer;
-  MainRegisterPageUpdate({this.customer});
+  bool isUpdate;
+  int position=-1;
+  SaveCustomerRegistrationOfflineModel studentModel = null;
+  MainRegisterPageUpdate({this.isUpdate,this.position, this.studentModel});
 
   @override
   State<StatefulWidget> createState() {
@@ -22,7 +24,9 @@ class MainRegisterPageUpdate extends StatefulWidget {
 class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Customer editedCustomer;
   Position position;
-  int gasDepositAmountController, depositTotalAmount = 0, _schemeMonth = 0;
+  int gasDepositAmountController,
+      depositTotalAmount = 0,
+      _schemeMonth = 0;
 
   var wifiBSSID;
   var wifiIP;
@@ -33,105 +37,98 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   List<String> _bankDropdownItems = ([]);
   String _bankValue;
 
-  List data =[];
+  List data = [];
 
   List<String> _bankDropdownItems2 = ([]);
   String _bankValue2;
   List data2 = [];
 
   //Area
-  List<DropdownMenuItem<OptionItem>> _dropdownItems;
-  OptionItem _areaType;
-  String _areaTypeId = '0';
+  List<DropdownMenuItem<OptionItem>> areaItems = [];
+  OptionItem areaTypeValue = OptionItem(id: "", title: "");
 
   //Charge Area
-  List<DropdownMenuItem<OptionItem>> chargeAreaItems;
-  OptionItem chargeAreaType;
-  String chargeAreaId = '0';
+  List<DropdownMenuItem<OptionItem>> chargeAreaItems = [];
+  OptionItem chargeAreaType = OptionItem(id: "", title: "");
 
   //getAllDistrict
-  List<DropdownMenuItem<OptionItem>> getAllDistrictItems;
-  OptionItem getAllDistrictType;
-  String getAllDistrictId = '0';
+  List<DropdownMenuItem<OptionItem>> getAllDistrictItems = [];
+  OptionItem districtValue = OptionItem(id: "", title: "");
 
-  List<DropdownMenuItem<OptionItem>> dropListModelInterested = ([]);
-  OptionItem _isInterestedItem;
+  List<DropdownMenuItem<OptionItem>> dropListModelInterested = [];
+  OptionItem _isInterestedItem = OptionItem(id: "", title: "");
   String _isInterestedId = '';
   String schemeTypeLabel = '';
 
   Box<SaveCustomerRegistrationOfflineModel> customerRegistrationBox;
-
+  List<SaveCustomerRegistrationOfflineModel> customerRegistrationList;
 
   bool error = false;
   String dateAndTime = '';
   bool fDepositeSiteCheck = false;
   bool fDepositeDate = false;
 
+  PhotoController frontImageController = PhotoController();
+  PhotoController backImageController = PhotoController();
+  PhotoController eleBillFrontImgController = PhotoController();
+  PhotoController eleBillBackImgController = PhotoController();
+  PhotoController nocFrontImgController = PhotoController();
+  PhotoController nocBackImgController = PhotoController();
+  PhotoController consentImageController = PhotoController();
+  PhotoController cancelChqImageController = PhotoController();
+  PhotoController chqImgController = PhotoController();
+  var frontImageFile = "",
+      backImageFile = "",
+      electricBillFrontImgFile = "",
+      electricBillBackImgFile = "",
+      nocFrontImgFile = "",
+      nocBackImgFile = "",
+      consentPhotoFile = "",
+      chqCancelledPhotoFile = "",
+      chqPhotoFile = "";
 
 
-  PhotoController meterPhotoController = new PhotoController();
-  PhotoController meterPhotoController2 = new PhotoController();
-  PhotoController meterPhotoController3 = new PhotoController();
-  PhotoController meterPhotoController4 = new PhotoController();
-  PhotoController meterPhotoController5 = new PhotoController();
-  PhotoController meterPhotoController6 = new PhotoController();
-  PhotoController meterPhotoController7 = new PhotoController();
-  PhotoController meterPhotoController8 = new PhotoController();
-  PhotoController meterPhotoController9 = new PhotoController();
-
-  void removeSpace(TextEditingController controller){
-    if(controller.text.trim() == ""){
-      setState(()=> controller.text = "");
+  void removeSpace(TextEditingController controller) {
+    if (controller.text.trim() == "") {
+      setState(() => controller.text = "");
     }
-    print("controller==>"+controller.text);
+    print("controller==>" + controller.text);
   }
 
   String schemeId = '0';
   List<ChargeAreaModel> listChargeArea;
 
   var checkDepositeDate;
-  var checkONLine =true;
+  var checkONLine = true;
   String selectedDropDownValue = "";
   ServerApi serverApi;
 
 
   @override
   void initState() {
-
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     getLocalData();
     serverApi = ServerApi();
-    firstNameController.addListener(()=> removeSpace(firstNameController));
-    middleNameController.addListener(()=> removeSpace(middleNameController));
-    lastNameController.addListener(()=> removeSpace(lastNameController));
-    guardianNameController.addListener(()=> removeSpace(guardianNameController));
-    reasonController.addListener(()=> removeSpace(reasonController));
-    emailIdController.addListener(()=> removeSpace(emailIdController));
-    localityController.addListener(()=> removeSpace(localityController));
-    streetNameController.addListener(()=> removeSpace(streetNameController));
-    townController.addListener(()=> removeSpace(townController));
-    landmarkController.addListener(()=> removeSpace(landmarkController));
-    IFSCController.addListener(()=> removeSpace(IFSCController));
-    bank_address.addListener(()=> removeSpace(bank_address));
-    longitudeController.addListener(()=> removeSpace(longitudeController));
-    latitudeController.addListener(()=> removeSpace(latitudeController));
-    ownershipController.addListener(()=> removeSpace(ownershipController));
-    nocProofNoController.addListener(()=> removeSpace(nocProofNoController));
-    reasonNoController.addListener(()=> removeSpace(reasonNoController));
-    mICRCodeController.addListener(()=> removeSpace(mICRCodeController));
-    initDepDateController.addListener(()=> removeSpace(initDepDateController));
-    uploadDoc1PhotoController = PhotoController();
-    uploadDoc1BacksidePhotoController = PhotoController();
-    uploadDoc2PhotoController = PhotoController();
-    uploadDoc2BackSidePhotoController = PhotoController();
-    uploadAdd3Photo = PhotoController();
-    uploadDoc3BackSidePhoto = PhotoController();
-
-    //  customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(saveCustRegDataBoxName);
-
-
-
-
+    firstNameController.addListener(() => removeSpace(firstNameController));
+    middleNameController.addListener(() => removeSpace(middleNameController));
+    lastNameController.addListener(() => removeSpace(lastNameController));
+    guardianNameController.addListener(() => removeSpace(guardianNameController));
+    reasonController.addListener(() => removeSpace(reasonController));
+    emailIdController.addListener(() => removeSpace(emailIdController));
+    localityController.addListener(() => removeSpace(localityController));
+    streetNameController.addListener(() => removeSpace(streetNameController));
+    townController.addListener(() => removeSpace(townController));
+    landmarkController.addListener(() => removeSpace(landmarkController));
+    IFSCController.addListener(() => removeSpace(IFSCController));
+    bank_address.addListener(() => removeSpace(bank_address));
+    longitudeController.addListener(() => removeSpace(longitudeController));
+    latitudeController.addListener(() => removeSpace(latitudeController));
+    ownershipController.addListener(() => removeSpace(ownershipController));
+    nocProofNoController.addListener(() => removeSpace(nocProofNoController));
+    reasonNoController.addListener(() => removeSpace(reasonNoController));
+    mICRCodeController.addListener(() => removeSpace(mICRCodeController));
+    initDepDateController.addListener(() => removeSpace(initDepDateController));
     super.initState();
   }
 
@@ -146,14 +143,70 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   @override
   Widget buildView(BuildContext context) {
+    if (widget.isUpdate == true) {
+      mobileNoController.text = widget.studentModel.mobileNumber;
+      firstNameController.text = widget.studentModel.firstName;
+      middleNameController.text = widget.studentModel.middleName;
+      lastNameController.text = widget.studentModel.lastName;
+      guardianNameController.text = widget.studentModel.guardianName;
+      reasonController.text = widget.studentModel.residentStatus;
+      emailIdController.text = widget.studentModel.emailId;
+      localityController.text = widget.studentModel.locality;
+      streetNameController.text = widget.studentModel.locality;
+      townController.text = widget.studentModel.town;
+      houseNumberController.text = widget.studentModel.houseNumber;
+      pinCodeController.text = widget.studentModel.pinCode;
+      kitchenController.text = widget.studentModel.noOfKitchen;
+      bathroomController.text = widget.studentModel.noOfBathroom;
+      familyMemController.text = widget.studentModel.noOfFamilyMembers;
+      landmarkController.text = widget.studentModel.reasonForHold;
+      longitudeController.text = widget.studentModel.longitude;
+      latitudeController.text = widget.studentModel.latitude;
+      idProofNoController.text = widget.studentModel.kycDocument1Number;
+      ownershipController.text = widget.studentModel.kycDocument2Number;
+      nocProofNoController.text = widget.studentModel.kycDocument3Number;
+      reasonNoController.text = widget.studentModel.remarks;
+      depositAmountController.text = widget.studentModel.depositeType;
+      chqNOController.text = widget.studentModel.chequeNumber;
+      bankAccNoController.text = widget.studentModel.chequeBankAccount;
+      mICRCodeController.text = widget.studentModel.micr;
+      chqDateController.text = widget.studentModel.chequeNumber;
+      initDepDateController.text = widget.studentModel.initialDepositeDate;
+      customerAccountNum.text = widget.studentModel.bankAccountNumber;
+      IFSCController.text = widget.studentModel.bankIfscCode;
+      bank_address.text = widget.studentModel.bankAddress;
+      _isInterestedId = widget.studentModel.interested;
+      // _mdpeValue == 'Yes' ? '1' : '0' = widget.studentModel.societyAllowedMdpe;
+      _residentStatusValue = widget.studentModel.residentStatus;
+      cookInFuelValue = widget.studentModel.existingCookingFuel;
+      frontImageFile = widget.studentModel.backSide1;
+      electricBillBackImgFile = widget.studentModel.backSide2;
+      nocBackImgFile = widget.studentModel.backSide3;
+      frontImageFile = widget.studentModel.documentUploads1;
+      electricBillFrontImgFile = widget.studentModel.documentUploads2;
+      nocFrontImgFile = widget.studentModel.documentUploads3;
+      consentPhotoFile = widget.studentModel.customerConsent;
+      chqCancelledPhotoFile = widget.studentModel.canceledCheque;
+      chqPhotoFile = widget.studentModel.chequePhoto;
+      //  uploadHousePhoto = widget.studentModel.uploadHousePhoto,
+      //   ownerConsent = widget.studentModel.ownerConsent,
+      //   reasonForHold = widget.studentModel.reasonForHold,
+      _bankValue = widget.studentModel.nameOfBank;
+      _bankValue2 = widget.studentModel.payementBankName;
+      schema = widget.studentModel.schema;
+      dmaUserName = widget.studentModel.dmaUserName;
+      dmaId = widget.studentModel.dmaUserId;
+    }
+
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: CustomAppBar(
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios_rounded),
-              onPressed: (){
-                Navigator.push(context,MaterialPageRoute(builder: (context) => RegistrationForm()));
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => RegistrationForm()));
               },
             ),
             titleAppBar: "Customer Input",
@@ -181,11 +234,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
   }
-
 
 
   TextEditingController mobileNoController = TextEditingController();
@@ -196,7 +250,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   TextEditingController reasonController = TextEditingController();
   TextEditingController emailIdController = TextEditingController();
   TextEditingController localityController = TextEditingController();
-  TextEditingController  streetNameController = TextEditingController();
+  TextEditingController streetNameController = TextEditingController();
   TextEditingController townController = TextEditingController();
   TextEditingController houseNumberController = TextEditingController();
   TextEditingController pinCodeController = TextEditingController();
@@ -220,49 +274,37 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   TextEditingController IFSCController = TextEditingController();
   TextEditingController bank_address = TextEditingController();
 
-  PhotoController uploadDoc1PhotoController;
-  PhotoController uploadDoc1BacksidePhotoController;
-  PhotoController uploadDoc2PhotoController;
-  PhotoController uploadDoc2BackSidePhotoController;
-  PhotoController chqPhoto = PhotoController();
-  PhotoController cancelCheckPhoto = PhotoController();
-  PhotoController uploadAdd3Photo;
-  PhotoController uploadDoc3BackSidePhoto;
-
-  OptionItem _categoryType;
-  OptionItem __depositStatusValue;
-  OptionItem __modeDepositValue;
+  OptionItem categoryValue = OptionItem(id: "", title: "");
+  OptionItem depositStatusValue = OptionItem(id: "", title: "");
+  OptionItem __modeDepositValue = OptionItem(id: "", title: "");
   DepositItem _depositCategoryType;
 
 
 
   List<DropdownMenuItem<OptionItem>> dropListDepositStatusList = ([]);
-  List<DropdownMenuItem<OptionItem>> dropListModeOfDepositList = ([]);
+  List<DropdownMenuItem<OptionItem>> modeOfDepositList = ([]);
   List<DropdownMenuItem<OptionItem>> dropListChoiceStatusList = ([]);
-  List<DropdownMenuItem<OptionItem>> _propertyDropdownItems;
-  List<DropdownMenuItem<DepositItem>> _propertyDropdownItemsDeposit;
-  List<DropdownMenuItem<OptionItem>> _idProofDropdownItems = ([]);
-  List<DropdownMenuItem<OptionItem>> _addressProofDropdownItems = ([]);
+  List<DropdownMenuItem<OptionItem>> propertyCategoryList = [];
+  List<DropdownMenuItem<DepositItem>> _propertyDropdownItemsDeposit = [];
+  List<DropdownMenuItem<OptionItem>> idProofList = [];
+  List<DropdownMenuItem<OptionItem>> _addressProofDropdownItems = [];
   List<DropdownMenuItem<OptionItem>> _kycProofDropdownItems = ([]);
   List<DropdownMenuItem<String>> _cookingFuelDropdownItems = ([]);
-  List<DropdownMenuItem<OptionItem>> _propertyClassDropdownItems;
+  List<DropdownMenuItem<OptionItem>> propertyClassList = [];
   List<DropdownMenuItem<String>> guardianTypeDropdownItems = ([]);
 
   String _depositStatusId = '';
   String _modeOfDeposit = '';
-  String _propertyTypeId = '0';
-  String pCategoryId = '0';
 
   bool isDepositCheq = true;
 
 
-  OptionItem _idProofDropDownValue;
-  String _idProofDropDownValueId = "";
-  OptionItem _addressProofDropDownValue;
+  OptionItem idProofValue = OptionItem(id: "", title: "");
+  OptionItem _addressProofDropDownValue = OptionItem(id: "", title: "");
   String _addressProofDropDownValueId = "";
 
-  OptionItem _kycProofDropDownValue;
-  String _kycProofDropDownValueId = "";
+  OptionItem _kycProofDropDownValue = OptionItem(id: "", title: "");
+ // String _kycProofDropDownValueId = "";
 
   DropListModel dropListModelarea = DropListModel([
     OptionItem(id: "1", title: "A"),
@@ -275,8 +317,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   String cookInFuelValue;
 
 
-  OptionItem _propertyClassType;
-  String _propertyClassId = '0';
+  OptionItem propertyClassValue;
 
 
   OptionItem guardianType;
@@ -351,29 +392,19 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     _getMdeOfDeposite();
     _getInitialDepositeStatusList();
     _getAllDepositScheme();
-
-
-
-
-
-
-
   }
 
   PhotoController consentPhoto = PhotoController();
   PhotoController chequePhoto = PhotoController();
 
-  List<DropdownMenuItem<OptionItem>> _billingModeList = ([]);
-  OptionItem __billingModeValue;
-  String __billingModeValueId;
+  List<DropdownMenuItem<OptionItem>> billingModeList = [];
+  OptionItem billingModeValue = OptionItem(id: "", title: "");
 
-  List<DropdownMenuItem<OptionItem>> _acceptConversionPolicyList = ([]);
-  OptionItem __acceptConversionPolicyValue;
-  String __acceptConversionPolicyValueId;
+  List<DropdownMenuItem<OptionItem>> _acceptConversionPolicyList = [];
+  OptionItem __acceptConversionPolicyValue = OptionItem(id: "", title: "");
 
-  List<DropdownMenuItem<OptionItem>> _acceptExtraFittingCostList = ([]);
-  OptionItem __acceptExtraFittingCostValue;
-  String __acceptExtraFittingCostValueId;
+  List<DropdownMenuItem<OptionItem>> _acceptExtraFittingCostList = [];
+  OptionItem acceptExtraFittingCostValue =  OptionItem(id: "", title: "");
 
   List<ImageSource> values = [];
   DateTime currentDate = DateTime.now();
@@ -382,7 +413,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   final formGlobalKey = GlobalKey<FormState>();
 
 
-  _buildLayout(){
+  _buildLayout() {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Form(
@@ -411,14 +442,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
             _townWidget(),
             _districtWidget(),
             _pinCodeWidget(),
-            _isInterestedId == '1' ? _residentStatusDropdownWidget() : Container(),
+            _isInterestedId == '1'
+                ? _residentStatusDropdownWidget()
+                : Container(),
             _isInterestedId == '1' ? _noKitchenWidget() : Container(),
             _isInterestedId == '1' ? _noBathroomWidget() : Container(),
             _isInterestedId == '1' ? _fuelDropdownWidget() : Container(),
-            _isInterestedId == '1' ? _noFamilyWidget(): Container(),
+            _isInterestedId == '1' ? _noFamilyWidget() : Container(),
             _locationWidget(),
             _isInterestedId == '1' ? _landmarkWidget() : Container(),
-            _buildCardWidget(text:AppStrings.identificationProofLabel),
+            _buildCardWidget(text: AppStrings.identificationProofLabel),
             _docTypeDropDown(),
             _idProofNoWidget(),
             Row(
@@ -428,7 +461,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                 _backImageWidget()
               ],
             ),
-            _buildCardWidget(text:AppStrings.ownershipProofHeading),
+            _buildCardWidget(text: AppStrings.ownershipProofHeading),
             getDropDown2(),
             _ownerProofNoWidget(),
             Row(
@@ -438,7 +471,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                 _electricBillBackImgWidget(),
               ],
             ),
-            _buildCardWidget(text:AppStrings.nocLabel),
+            _buildCardWidget(text: AppStrings.nocLabel),
             getDropDown3(),
             _nocProofNoWidget(),
             Row(
@@ -448,7 +481,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                 _nocBackImageWidget(),
               ],
             ),
-            _buildCardWidget(text:AppStrings.customerConsentLabel),
+            _buildCardWidget(text: AppStrings.customerConsentLabel),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -466,13 +499,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 12.0, top: 12, right: 15),
+                  padding: const EdgeInsets.only(
+                      left: 12.0, top: 12, right: 15),
                   child: Text(AppStrings.securityDepositLabel),
                 ),
                 Flexible(child: _depositStatusDropDown())
               ],
             ),
-            _depositStatusId != "1" ? _reasonDepositStatusWidget() : Container(),
+            _depositStatusId != "1"
+                ? _reasonDepositStatusWidget()
+                : Container(),
             _modeDepositDropDown(),
             getdepositTypeDropDown(),
             _depositAmountWidget(),
@@ -507,623 +543,59 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
               ),
             ),
             TextButton(
-              child: Text("Preview"),
+              child: widget.isUpdate == false ? Text("Preview") : Text("Update"),
               onPressed: () async {
-                var textFieldValidationCheck = CustomerFormHelper.textFieldValidationCheck(
-                  titleLocation : latitudeController.text.trim().toString(),
-                  acceptConversionPolicyValueId : __acceptConversionPolicyValueId,
-                  acceptExtraFittingCostValueId : __acceptExtraFittingCostValueId,
-                  chargeAreaType: chargeAreaId,
-                  areaTypeId: _areaTypeId,
+                var textFieldValidationCheck = CustomerFormHelper
+                    .textFieldValidationCheck(
+                  titleLocation: latitudeController.text.trim().toString(),
+                  acceptConversionPolicyValueId: __acceptConversionPolicyValue.title,
+                  acceptExtraFittingCostValueId: acceptExtraFittingCostValue.title,
+                  chargeAreaType: chargeAreaType.title,
+                  areaTypeId: areaTypeValue.title,
                   mobileNoController: mobileNoController.text.toString(),
                   firstNameController: firstNameController.text.toString(),
                   lastNameController: lastNameController.text.toString(),
-                  guardianNameController: guardianNameController.text.toString(),
-                  propertyTypeId : _propertyTypeId,
-                  propertyClassId: _propertyClassId,
+                  guardianNameController: guardianNameController.text
+                      .toString(),
+                  propertyTypeId: categoryValue.title,
+                  propertyClassId: propertyClassValue.title,
                   houseNumberController: houseNumberController.text.toString(),
                   localityController: localityController.text.toString(),
                   streetNameController: streetNameController.text.toString(),
-                  district:getAllDistrictId,
+                  district: districtValue.id,
                   pinCodeController: pinCodeController.text.toString(),
                   noOfKitchen: kitchenController.text.toString(),
                   noOfBathroom: bathroomController.text.toString(),
-                  cookInFuelValue:cookInFuelValue,
-                  noOfFamilyMembers:familyMemController.text.toString() ,
-                  addressProofNo: _idProofDropDownValue.title,
+                  cookInFuelValue: cookInFuelValue,
+                  noOfFamilyMembers: familyMemController.text.toString(),
+                  addressProofNo: idProofValue.title,
                   idProofNo: idProofNoController.text.toString(),
-                  idFrontImage: AppStrings.frontImage,
-                  idBackImage: AppStrings.backImage,
-                  consentImage: AppStrings.consentPhoto,
+                  idFrontImage: frontImageFile,
+                  idBackImage: backImageFile,
+                  consentImage: consentPhotoFile,
                   customerBankName: _bankValue,
                   customerAccNo: customerAccountNum.text.trim().toString(),
                   customerIfscCode: IFSCController.text.trim().toString(),
-                  customerBankAdd:bank_address.text.trim().toString(),
-                  modeOfDeposit:_modeOfDeposit,
-                  chequeNo:_modeOfDeposit == "1" ?chqNOController.text.trim().toString() : "",
-                  chequeDate: _modeOfDeposit == "1" ? initDepDateController.text.trim().toString() : "",
-                  bankName:_bankValue2,
+                  customerBankAdd: bank_address.text.trim().toString(),
+                  modeOfDeposit: _modeOfDeposit,
+                  chequeNo: _modeOfDeposit == "1" ? chqNOController.text.trim()
+                      .toString() : "",
+                  chequeDate: _modeOfDeposit == "1" ? initDepDateController.text
+                      .trim().toString() : "",
+                  bankName: _bankValue2,
                   bankAccNo: bankAccNoController.text.trim().toString(),
-                  depositAmount:AppStrings.depositAmount,
-                  micrCode: _modeOfDeposit == "1" ? mICRCodeController.text.trim().toString() : "",
-                  chequePhoto: _modeOfDeposit == "1"? AppStrings.chqPhoto :null,
+                  depositAmount: AppStrings.depositAmount,
+                  micrCode: _modeOfDeposit == "1" ? mICRCodeController.text
+                      .trim().toString() : "",
+                  chequePhoto: _modeOfDeposit == "1"
+                      ? chqPhotoFile
+                      : null,
                   mdpeValue: _mdpeValue,
                   residentStatusValue: _residentStatusValue,
                 );
-                if(textFieldValidationCheck == true){
-                  showDialog(
-                      context: context, builder :(context){
-                    return  Container(
-                      color:Colors.white,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            _buildRow(
-                              leading: AppStrings.interestedLabel,
-                              trailing: _isInterestedItem.title,
-                            ),
-                            _buildRow(
-                              leading: AppStrings.reasonLabel,
-                              trailing: reasonController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.chargeAreaLabel,
-                              trailing:chargeAreaType.title ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.areaLabel,
-                              trailing:_areaType.title ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.mobileNoLabel,
-                              trailing:mobileNoController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.firstNameLabel,
-                              trailing:firstNameController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.middleNameLabel,
-                              trailing:middleNameController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.lastNameLabel,
-                              trailing:lastNameController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.guardianTypeLabel,
-                              trailing:guardianTypeValue ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.guardianNameLabel,
-                              trailing:guardianNameController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.emailAddressLabel,
-                              trailing:emailIdController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.propertyCategoryLabel,
-                              trailing:_categoryType.title ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.propertyClassLabel,
-                              trailing:_propertyClassType.title ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.houseNumberLabel,
-                              trailing:houseNumberController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.apartmentLabel,
-                              trailing:localityController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.streetNameLabel,
-                              trailing:streetNameController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.townLabel,
-                              trailing:townController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.pinCodeLabel,
-                              trailing:pinCodeController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.districtLabel,
-                              trailing:getAllDistrictType.title ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.mdpeAllowLabel,
-                              trailing:_mdpeValue ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.residentStatusLabel,
-                              trailing:_residentStatusValue ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.noOfKitchenLabel,
-                              trailing:kitchenController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.noOfBathroomLabel,
-                              trailing:bathroomController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.existingCookingFuelLabel,
-                              trailing: cookInFuelValue ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.noOfFamilyMembersLabel,
-                              trailing: familyMemController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.latitudeLabel,
-                              trailing: latitudeController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.longitudeLabel,
-                              trailing: longitudeController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.landmarkLabel,
-                              trailing: landmarkController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.identificationProofLabel,
-                              trailing: _idProofDropDownValue.title ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.idProofNo,
-                              trailing:idProofNoController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.billingModeLabel,
-                              trailing:__billingModeValue.title.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.customerAccountNoLabel,
-                              trailing: customerAccountNum.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.customerIfscCodeLabel,
-                              trailing: IFSCController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.conversionPolicyLabel,
-                              trailing: __acceptConversionPolicyValue.title ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.fittingCostLabel,
-                              trailing: __acceptExtraFittingCostValue.title ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.depositStatusLabel,
-                              trailing: __depositStatusValue.title ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.modeOfDepositLabel,
-                              trailing: __modeDepositValue.title ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.depositTypeLabel,
-                              trailing: AppStrings.depositName.toString()?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.depositAmountControllerLabel,
-                              trailing: depositAmountController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.chqNoLabel,
-                              trailing: chqNOController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.depositDateLabel,
-                              trailing: initDepDateController.text.toString() ?? "-",
-                            ),
-                            _buildRow(
-                              leading: AppStrings.customerBankNameLabel,
-                              trailing: _bankValue.toString() ?? "-",
-                            ),
-                            Visibility(
-                              visible: checkONLine,
-                              child: Column(
-                                children: [
-                                  Divider(),
-                                  _buildRow(
-                                    leading: AppStrings.accountNoLabel,
-                                    trailing: bankAccNoController.text.toString() ?? "-",
-                                  ),
-                                  _buildRow(
-                                    leading: AppStrings.bankNameLabel,
-                                    trailing: _bankValue2.toString() ?? "-",
-                                  ),
-                                  _buildRow(
-                                    leading: AppStrings.mICRCodeLabel,
-                                    trailing:mICRCodeController.text.toString() ?? "-",
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(
-                                    children: [
-                                      _imageNameWidget(imageName: AppStrings.idFrontImgSide),
-                                      Padding(
-                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                          child: AppStrings.frontImage == null? AppStrings.frontImagePath.isEmpty
-                                              ? _dottedBorder(
-                                              onTap: () {
-                                                _showPicker(context,meterPhotoController);
-                                              }
-                                          ) : _preNetworkImage(
-                                            networkImage: AppStrings.frontImagePath,
-                                            imageFile: AppStrings.frontImage,
-                                          )
-                                              : _preFileImage(
-                                              fileImage: AppStrings.frontImage,
-                                              imageFilePath: AppStrings.frontImage
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      _imageNameWidget(imageName: AppStrings.idBackImgSide),
-                                      Padding(
-                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                          child: AppStrings.backImage == null? AppStrings.backImagePath.isEmpty
-                                              ? _dottedBorder(
-                                              onTap: () {
-                                                _showPicker2(context,meterPhotoController2);
-                                              }
-                                          )
-                                              : _preNetworkImage(
-                                            networkImage: AppStrings.backImagePath,
-                                            imageFile: AppStrings.backImage,
-                                          )
-                                              : _preFileImage(
-                                              fileImage: AppStrings.backImage,
-                                              imageFilePath: AppStrings.backImage
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(
-                                    children: [
-                                      _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
-                                      Padding(
-                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                          child: AppStrings.electricBillFrontImg == null? AppStrings.electricBillFrontImgPath.isEmpty
-                                              ? _dottedBorder(
-                                              onTap: () {
-                                                _showPicker3( context, meterPhotoController3);
-                                              }
-                                          )
-                                              : _preNetworkImage(
-                                            networkImage:AppStrings.electricBillFrontImgPath,
-                                            imageFile: AppStrings.electricBillFrontImg,
-                                          )
-                                              : _preFileImage(
-                                              fileImage: AppStrings.electricBillFrontImg,
-                                              imageFilePath: AppStrings.electricBillFrontImg
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
-                                      Padding(
-                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                          child: AppStrings.electricBillBackImg == null ? AppStrings.electricBillBackImgPath.isEmpty
-                                              ? _dottedBorder(
-                                              onTap: () {
-                                                _showPicker4(context,meterPhotoController4);
-                                              }
-                                          )
-                                              : _preNetworkImage(
-                                            networkImage: AppStrings.electricBillBackImgPath,
-                                            imageFile: AppStrings.electricBillBackImg,
-                                          )
-                                              : _preFileImage(
-                                              fileImage: AppStrings.electricBillBackImg,
-                                              imageFilePath: AppStrings.electricBillBackImg
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(
-                                    children: [
-                                      _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
-                                      Padding(
-                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                          child: AppStrings.nocFrontImg == null? AppStrings.nocFrontImgPath.isEmpty
-                                              ? _dottedBorder(
-                                              onTap: () {
-                                                _showPicker5(context, meterPhotoController5);
-                                              }
-                                          )
-                                              : _preNetworkImage(
-                                            networkImage: AppStrings.nocFrontImgPath,
-                                            imageFile: AppStrings.nocFrontImg,
-                                          )
-                                              : _preFileImage(
-                                              fileImage: AppStrings.nocFrontImg,
-                                              imageFilePath: AppStrings.nocFrontImg
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
-                                      Padding(
-                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                          child: AppStrings.nocBackImg == null? AppStrings.nocBackImgPath.isEmpty
-                                              ? _dottedBorder(
-                                              onTap: () {
-                                                _showPicker6(context, meterPhotoController6);
-                                              }
-                                          )
-                                              : _preNetworkImage(
-                                            networkImage: AppStrings.nocBackImgPath,
-                                            imageFile: AppStrings.nocBackImg,
-                                          )
-                                              : _preFileImage(
-                                              fileImage: AppStrings.nocBackImg,
-                                              imageFilePath: AppStrings.nocBackImg
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(
-                                    children: [
-                                      _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
-                                      Padding(
-                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                          child: AppStrings.consentPhoto == null? AppStrings.consentPhotoPath.isEmpty
-                                              ? _dottedBorder(
-                                              onTap: () {
-                                                _showPicker7(context,meterPhotoController7);
-                                              }
-                                          )
-                                              : _preNetworkImage(
-                                            networkImage: AppStrings.consentPhotoPath,
-                                            imageFile: AppStrings.consentPhoto,
-                                          )
-                                              : _preFileImage(
-                                              fileImage: AppStrings.consentPhoto,
-                                              imageFilePath: AppStrings.consentPhoto
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
-                                      Padding(
-                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                          child: AppStrings.chqCancelledPhoto == null? AppStrings.chqCancelledPhotoPath.isEmpty
-                                              ? _dottedBorder(
-                                              onTap: () {
-                                                _showPicker8(context, meterPhotoController8);
-                                              }
-                                          )
-                                              : _preNetworkImage(
-                                            networkImage: AppStrings.chqCancelledPhotoPath,
-                                            imageFile: AppStrings.chqCancelledPhoto,
-                                          )
-                                              : _preFileImage(
-                                              fileImage: AppStrings.chqCancelledPhoto,
-                                              imageFilePath: AppStrings.chqCancelledPhoto
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(
-                                    children: [
-                                      _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-                                      Padding(
-                                          padding: const EdgeInsets .symmetric(horizontal: 20, vertical: 10),
-                                          child: AppStrings.chqPhoto == null? AppStrings.chqPhotoPath.isEmpty
-                                              ? _dottedBorder(
-                                              onTap: () {
-                                                _showPicker9(context,meterPhotoController9);
-                                              }
-                                          )
-                                              : _preNetworkImage(
-                                            networkImage:AppStrings.chqPhotoPath,
-                                            imageFile:AppStrings.chqPhoto,
-                                          )
-                                              : _preFileImage(
-                                              fileImage: AppStrings.chqPhoto,
-                                              imageFilePath: AppStrings.chqPhoto
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceAround,
-                              children: [
-                                ElevatedButton(
-
-                                  onPressed: () {
-                                    storeRecords();
-                                  },
-                                  child: Text("SAVE ",style: TextStyle(fontSize: 20),
-
-                                  ),
-                                  /*  onPressed: () {
-                                    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-                                    dateAndTime = dateFormat.format(DateTime.now());
-                                    log("dateAndTime --> $dateAndTime");
-                                    var now = new DateTime.now();
-                                    var formatter = new DateFormat('yyyy-MM-dd');
-                                    AppStrings.formattedTime = DateFormat('kk:mm:a').format(now);
-                                    AppStrings.formattedDate = formatter.format(now);
-                                    File path1,path2,path3,path4,path5, path6,path7,path8,path9;
-                                    if (AppStrings.frontImage != null) {
-                                      path1 = File(AppStrings.frontImage.path.toString());
-                                    }
-                                    if (AppStrings.backImage != null) {
-                                      path2 = File(AppStrings.backImage.path.toString());
-                                    }
-                                    if (AppStrings.electricBillFrontImg != null) {
-                                      path3 = File(AppStrings.electricBillFrontImg.path.toString());
-                                    }
-                                    if (AppStrings.electricBillBackImg != null) {
-                                      path4 = File(AppStrings.electricBillBackImg.path.toString());
-                                    }
-
-                                    if (AppStrings.nocFrontImg != null) {
-                                      path5 = File(AppStrings.nocFrontImg.path.toString());
-                                    }
-                                    if (AppStrings.nocBackImg != null) {
-                                      path6 = File( AppStrings.nocBackImg.path.toString());
-                                    }
-                                    if (AppStrings.consentPhoto != null) {
-                                      path7 = File(AppStrings.consentPhoto.path.toString());
-                                    }
-
-                                    if (AppStrings.chqCancelledPhoto != null) {
-                                      path8 = File(AppStrings.chqCancelledPhoto.path.toString());
-                                    }
-                                    if (AppStrings.chqPhoto != null) {
-                                      path9 = File(AppStrings.chqPhoto.path.toString());
-                                    }
-
-                                    DataModel data = DataModel(
-                                      crteresterd: _isInterestedId,
-                                      crarea_id: _areaTypeId,
-                                      crmobile: mobileNoController.text.toString(),
-                                      crfirstname:firstNameController.text.toString(),
-                                      crmiddlename:middleNameController.text.toString(),
-                                      crLastName: lastNameController.text,
-                                      crFather: guardianTypeValue,
-                                      crGuardian:guardianNameController.text.toString(),
-                                      crEmail: emailIdController.text.toString(),
-                                      crPropertyCategory: _propertyTypeId,
-                                      crPropertyClass: _propertyClassId,
-                                      crHouseNumber:houseNumberController.text.toString(),
-                                      crLocality:localityController.text.toString(),
-                                      //   crLocality:streetNameController.text.toString(),
-                                      crTown: townController.text.toString(),
-                                      crPincode: pinCodeController.text.toString(),
-                                      crDistrict:getAllDistrictId,
-                                      crMDPE:_mdpeValue == 'Yes' ? '1' : '0',
-                                      crResidentStatus:_residentStatusValue,
-                                      crNOOFKitcen:kitchenController.text.toString(),
-                                      crNoBathroom: bathroomController.text,
-                                      crExitingCookingFuel:cookInFuelValue,
-                                      crFamilyMember: familyMemController.text.toString(),
-                                      crLat: latitudeController.text.toString(),
-                                      crLog: longitudeController.text.toString(),
-                                      crRemarks: landmarkController.text.toString(),
-                                      KYCDocument1:_idProofDropDownValueId,
-                                      KYCDocument1NumberText:idProofNoController.text.toString(),
-                                      KycImageForSide: path1.toString(),
-                                      KycImageBackSide: path2.toString(),
-                                      IMGElectricbillF: path3.toString(),
-                                      ImgOwnerElectricbillE: path4.toString(),
-                                      imgdoc3: path5.toString(),
-                                      imgdocback3: path6.toString(),
-                                      imgConsentPhoto: path7.toString(),
-                                      cancelCheckPhoto: path8.toString(),
-                                      imgCheckPhoto: path9.toString(),
-                                      KYCNOCFSide:_kycProofDropDownValueId,
-                                      KYCNOCEndSide:nocProofNoController.text.toString(),
-                                      KycBill:_addressProofDropDownValueId,
-                                      KYCID:ownershipController.text.toString(),
-                                      cusBillingMode:__billingModeValueId,
-                                      cusAccountNumber:customerAccountNum.text,
-                                      cusIFSCCode: IFSCController.text.toString(),
-                                      cusBankAdrress:bank_address.text.toString(),
-                                      conversionPolicy:__acceptConversionPolicyValueId,
-                                      extraFillingCost:__acceptExtraFittingCostValueId,
-                                      IDDeposteStatus:_depositStatusId.toString(),
-                                      IDMODEofDeposite: _modeOfDeposit,
-                                      IDScheemType: schemeId,
-                                      IDDepositeAmount:depositAmountController.text.toString(),
-                                      IDCheckNumber:chqNOController.text.toString(),
-                                      IDcheckDate: initDepDateController.text.toString(),
-                                      cusBankName: _bankValue==null ? '': _bankValue,
-                                      IDcheckBankName: _bankValue2 == null ? "" : _bankValue2,
-                                      IDcheckBankAccountNumber:bankAccNoController.text.toString(),
-                                      dt: initDepDateController.text.toString(),
-                                      DateandTime: dateAndTime.toString(),
-                                      MICR: mICRCodeController.text.toString(),
-                                    );
-                                    var mmm = dataBox.length;
-                                    if(mmm<=50) {
-                                      dataBox.add(data);
-                                      EasyLoading.showSuccess('Great Success! \n Record Save');
-                                      Navigator.push(context,MaterialPageRoute(builder:(context) => RegistrationForm()),);
-                                    }
-                                    else {
-                                      EasyLoading.showError('Error !!!! \n Please Uploade Previous record');
-                                    }
-                                  },*/
-                                ),
-                                ElevatedButton(
-                                  child: Text("EDIT",style: TextStyle(fontSize: 20),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context, false);
-                                  },
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                  );
+                if (textFieldValidationCheck == true) {
+                  _showDialog(context: context, index: 0);
                 }
-
-
               },
             ),
           ],
@@ -1132,126 +604,503 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     );
   }
 
-  storeRecords({int index}){
-    File frontImageFile,
-        backImageFile,
-        electricBillFrontImgFile ,
-        electricBillBackImgFile,
-        nocFrontImgFile,
-        nocBackImgFile,
-        consentPhotoFile, chqCancelledPhotoFile,chqPhotoFile;
-    if (AppStrings.frontImage != null) {
-      frontImageFile = File(AppStrings.frontImage.path);
+  _showDialog({BuildContext context, int index}) {
+    return showDialog(
+        context: context, builder: (context,) {
+      return Container(
+        color: Colors.white,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildRow(
+                leading: AppStrings.interestedLabel,
+                trailing: _isInterestedItem.title,
+              ),
+              _buildRow(
+                leading: AppStrings.reasonLabel,
+                trailing: reasonController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.chargeAreaLabel,
+                trailing: chargeAreaType.title ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.areaLabel,
+                trailing: areaTypeValue.title ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.mobileNoLabel,
+                trailing: mobileNoController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.firstNameLabel,
+                trailing: firstNameController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.middleNameLabel,
+                trailing: middleNameController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.lastNameLabel,
+                trailing: lastNameController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.guardianTypeLabel,
+                trailing: guardianTypeValue ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.guardianNameLabel,
+                trailing: guardianNameController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.emailAddressLabel,
+                trailing: emailIdController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.propertyCategoryLabel,
+                trailing: categoryValue.title ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.propertyClassLabel,
+                trailing: propertyClassValue.title ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.houseNumberLabel,
+                trailing: houseNumberController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.apartmentLabel,
+                trailing: localityController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.streetNameLabel,
+                trailing: streetNameController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.townLabel,
+                trailing: townController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.pinCodeLabel,
+                trailing: pinCodeController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.districtLabel,
+                trailing: districtValue.title ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.mdpeAllowLabel,
+                trailing: _mdpeValue ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.residentStatusLabel,
+                trailing: _residentStatusValue ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.noOfKitchenLabel,
+                trailing: kitchenController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.noOfBathroomLabel,
+                trailing: bathroomController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.existingCookingFuelLabel,
+                trailing: cookInFuelValue ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.noOfFamilyMembersLabel,
+                trailing: familyMemController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.latitudeLabel,
+                trailing: latitudeController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.longitudeLabel,
+                trailing: longitudeController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.landmarkLabel,
+                trailing: landmarkController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.identificationProofLabel,
+                trailing: idProofValue.title ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.idProofNo,
+                trailing: idProofNoController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.billingModeLabel,
+                trailing: billingModeValue.title.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.customerAccountNoLabel,
+                trailing: customerAccountNum.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.customerIfscCodeLabel,
+                trailing: IFSCController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.conversionPolicyLabel,
+                trailing: __acceptConversionPolicyValue.title ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.fittingCostLabel,
+                trailing: acceptExtraFittingCostValue.title ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.depositStatusLabel,
+                trailing: depositStatusValue.title ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.modeOfDepositLabel,
+                trailing: __modeDepositValue.title ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.depositTypeLabel,
+                trailing: AppStrings.depositName.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.depositAmountControllerLabel,
+                trailing: depositAmountController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.chqNoLabel,
+                trailing: chqNOController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.depositDateLabel,
+                trailing: initDepDateController.text.toString() ?? "-",
+              ),
+              _buildRow(
+                leading: AppStrings.customerBankNameLabel,
+                trailing: _bankValue.toString() ?? "-",
+              ),
+              Visibility(
+                visible: checkONLine,
+                child: Column(
+                  children: [
+                    Divider(),
+                    _buildRow(
+                      leading: AppStrings.accountNoLabel,
+                      trailing: bankAccNoController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.bankNameLabel,
+                      trailing: _bankValue2.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.mICRCodeLabel,
+                      trailing: mICRCodeController.text.toString() ?? "-",
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        _imageNameWidget(imageName: AppStrings.idFrontImgSide),
+                        frontImageFile == null && frontImageFile.isEmpty
+                            ? InkWell(
+                            onTap: () => _openFrontImageSource(
+                                controller: frontImageController,
+                                context: context),
+                            child: _localBorderImg())
+                            : ImageCircle(
+                          fileImage1: File(frontImageFile),
+                          pathImage: frontImageFile,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        _imageNameWidget(imageName: AppStrings.idBackImgSide),
+                        backImageFile == null && backImageFile.isEmpty
+                            ? InkWell(
+                            onTap: () => _openBackImageSource(
+                                controller: backImageController,
+                                context: context),
+                            child: _localBorderImg())
+                            : ImageCircle(
+                          fileImage1: File(backImageFile),
+                          pathImage: backImageFile,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        _imageNameWidget(imageName: AppStrings
+                            .electricBillFrontImgLabel),
+                        electricBillFrontImgFile == null && electricBillFrontImgFile.isEmpty
+                            ? InkWell(
+                            onTap: () => _openEleBillFrontSource(
+                                controller: eleBillFrontImgController,
+                                context: context),
+                            child: _localBorderImg())
+                            : ImageCircle(
+                          fileImage1: File(electricBillFrontImgFile),
+                          pathImage: electricBillFrontImgFile,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        _imageNameWidget(imageName: AppStrings
+                            .electricBillBackImgLabel),
+                        electricBillBackImgFile == null && electricBillBackImgFile.isEmpty
+                            ? InkWell(
+                            onTap: () => _openEleBackSource(
+                                controller: eleBillBackImgController,
+                                context: context),
+                            child: _localBorderImg())
+                            : ImageCircle(
+                          fileImage1: File(electricBillBackImgFile),
+                          pathImage: electricBillBackImgFile,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        _imageNameWidget(imageName: AppStrings
+                            .nocFrontImgLabel),
+                        nocFrontImgFile == null && nocFrontImgFile.isEmpty
+                            ? InkWell(
+                            onTap: () => _openNocFrontImgSource(
+                                controller: nocFrontImgController,
+                                context: context),
+                            child: _localBorderImg())
+                            : ImageCircle(
+                          fileImage1: File(nocFrontImgFile),
+                          pathImage: nocFrontImgFile,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
+                        nocBackImgFile == null && nocBackImgFile.isEmpty
+                            ? InkWell(
+                            onTap: () => _openNocBackImgSource(
+                                controller: nocBackImgController,
+                                context: context),
+                            child: _localBorderImg())
+                            : ImageCircle(
+                          fileImage1:File(nocBackImgFile),
+                          pathImage: nocBackImgFile,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        _imageNameWidget(imageName: AppStrings
+                            .consentPhotoLabel),
+                        consentPhotoFile == null && consentPhotoFile.isEmpty
+                            ? InkWell(
+                            onTap: () => _openConsentImgSource(
+                                controller: consentImageController,
+                                context: context),
+                            child: _localBorderImg())
+                            : ImageCircle(
+                          fileImage1: File(consentPhotoFile),
+                          pathImage: consentPhotoFile,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        _imageNameWidget(imageName: AppStrings
+                            .chqCancelledPhotoLabel),
+                        chqCancelledPhotoFile == null && chqCancelledPhotoFile.isEmpty
+                            ? InkWell(
+                            onTap: () => _openChqCancelledImgSource(
+                                controller: cancelChqImageController,
+                                context: context),
+                            child: _localBorderImg())
+                            : ImageCircle(
+                            fileImage1: File(chqCancelledPhotoFile),
+                            pathImage: chqCancelledPhotoFile
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
+                        chqPhotoFile == null && chqPhotoFile.isEmpty
+                            ? InkWell(
+                            onTap: () => _openChqImgSource(
+                                controller: chqImgController,
+                                context: context),
+                            child: _localBorderImg())
+                            : ImageCircle(
+                          fileImage1: File(chqPhotoFile),
+                          pathImage:chqPhotoFile,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment:
+                MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: ()  {
+                       storeRecords();
+                    },
+                    child: Text("SAVE ", style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  ElevatedButton(
+                    child: Text("EDIT", style: TextStyle(fontSize: 20),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
     }
-    if (AppStrings.backImage != null) {
-      backImageFile = File(AppStrings.backImage.path);
-    }
-    if (AppStrings.electricBillFrontImg != null) {
-      electricBillFrontImgFile = File(AppStrings.electricBillFrontImg.path);
-    }
-    if (AppStrings.electricBillBackImg != null) {
-      electricBillBackImgFile = File(AppStrings.electricBillBackImg.path);
-    }
+    );
+  }
 
-    if (AppStrings.nocFrontImg != null) {
-      nocFrontImgFile = File(AppStrings.nocFrontImg.path);
-    }
-    if (AppStrings.nocBackImg != null) {
-      nocBackImgFile = File( AppStrings.nocBackImg.path);
-    }
-    if (AppStrings.consentPhoto != null) {
-      consentPhotoFile = File(AppStrings.consentPhoto.path);
-    }
-
-    if (AppStrings.chqCancelledPhoto != null) {
-      chqCancelledPhotoFile = File(AppStrings.chqCancelledPhoto.path);
-    }
-    if (AppStrings.chqPhoto != null) {
-      chqPhotoFile = File(AppStrings.chqPhoto.path);
-    }
+  void  storeRecords() {
     SaveCustomerRegistrationOfflineModel data = SaveCustomerRegistrationOfflineModel(
       interested: _isInterestedId,
-      areaId: _areaTypeId,
+      areaId: areaTypeValue.id,
+      chargeArea: chargeAreaType.id,
       mobileNumber: mobileNoController.text.toString(),
-      firstName:firstNameController.text.toString(),
-      middleName:middleNameController.text.toString(),
+      firstName: firstNameController.text.toString(),
+      middleName: middleNameController.text.toString(),
       lastName: lastNameController.text,
       guardianType: guardianTypeValue,
-      guardianName:guardianNameController.text.toString(),
+      guardianName: guardianNameController.text.toString(),
       emailId: emailIdController.text.toString(),
-      propertyCategoryId: _propertyTypeId,
-      propertyClassId: _propertyClassId,
-      houseNumber:houseNumberController.text.toString(),
-      locality:localityController.text.toString(),
+      propertyCategoryId: categoryValue.id,
+      propertyClassId: propertyClassValue.id,
+      houseNumber: houseNumberController.text.toString(),
+      locality: localityController.text.toString(),
       //   crLocality:streetNameController.text.toString(),
       town: townController.text.toString(),
       pinCode: pinCodeController.text.toString(),
-      districtId:getAllDistrictId,
-      societyAllowedMdpe:_mdpeValue == 'Yes' ? '1' : '0',
-      residentStatus:_residentStatusValue,
-      noOfKitchen:kitchenController.text.toString(),
+      districtId: districtValue.id,
+      societyAllowedMdpe: _mdpeValue == 'Yes' ? '1' : '0',
+      residentStatus: _residentStatusValue,
+      noOfKitchen: kitchenController.text.toString(),
       noOfBathroom: bathroomController.text,
-      existingCookingFuel:cookInFuelValue,
+      existingCookingFuel: cookInFuelValue,
       noOfFamilyMembers: familyMemController.text.toString(),
       latitude: latitudeController.text.toString(),
       longitude: longitudeController.text.toString(),
       remarks: landmarkController.text.toString(),
-      kycDocument1:_idProofDropDownValueId,
-      kycDocument1Number:idProofNoController.text.toString(),
-      documentUploads1: frontImageFile.toString(),
-      backSide1: backImageFile.toString(),
-      documentUploads2: electricBillFrontImgFile.toString(),
-      backSide2: electricBillBackImgFile.toString(),
-      documentUploads3: nocFrontImgFile.toString(),
-      backSide3: nocBackImgFile.toString(),
-      customerConsent: consentPhotoFile.toString(),
-      canceledCheque: chqCancelledPhotoFile.toString(),
-      chequePhoto: chqPhotoFile.toString(),
-      kycDocument3:_kycProofDropDownValueId,
-      kycDocument3Number:nocProofNoController.text.toString(),
-      kycDocument2:_addressProofDropDownValueId,
-      kycDocument2Number:ownershipController.text.toString(),
+      kycDocument1: idProofValue.id,
+      kycDocument1Number: idProofNoController.text.toString(),
+      backSide1: backImageFile,
+      backSide2: electricBillBackImgFile,
+      backSide3: nocBackImgFile,
+      documentUploads1: frontImageFile,
+      documentUploads2: electricBillFrontImgFile,
+      documentUploads3: nocFrontImgFile,
+      customerConsent: consentPhotoFile,
+      canceledCheque: chqCancelledPhotoFile,
+      chequePhoto: chqPhotoFile,
+      uploadCustomerPhoto: "",
+      uploadHousePhoto: "",
+      ownerConsent: "",
+      reasonForHold: "",
+      kycDocument3: _kycProofDropDownValue.id,
+      kycDocument3Number: nocProofNoController.text.toString(),
+      kycDocument2: _addressProofDropDownValueId,
+      kycDocument2Number: ownershipController.text.toString(),
       //   cusBillingMode:__billingModeValueId,
-      bankAccountNumber:customerAccountNum.text,
+      bankAccountNumber: customerAccountNum.text,
       bankIfscCode: IFSCController.text.toString(),
-      bankAddress:bank_address.text.toString(),
-      acceptConversionPolicy:__acceptConversionPolicyValueId,
-      acceptExtraFittingCost:__acceptExtraFittingCostValueId,
-      initialDepositeStatus:_depositStatusId.toString(),
+      bankAddress: bank_address.text.toString(),
+      acceptConversionPolicy: __acceptConversionPolicyValue.id,
+      acceptExtraFittingCost: acceptExtraFittingCostValue.id,
+      initialDepositeStatus: _depositStatusId.toString(),
       modeOfDeposite: _modeOfDeposit,
       depositeType: schemeId,
-      initialAmount:depositAmountController.text.toString(),
-      chequeNumber:chqNOController.text.toString(),
+      initialAmount: depositAmountController.text.toString(),
+      chequeNumber: chqNOController.text.toString(),
       initialDepositeDate: initDepDateController.text.toString(),
-      nameOfBank: _bankValue==null ? '': _bankValue,
+      nameOfBank: _bankValue == null ? '' : _bankValue,
       payementBankName: _bankValue2 == null ? "" : _bankValue2,
-      chequeBankAccount:bankAccNoController.text.toString(),
+      chequeBankAccount: bankAccNoController.text.toString(),
       micr: mICRCodeController.text.toString(),
       schema: schema,
       dmaUserName: dmaUserName,
-      dmaUserId:dmaId ,
+      dmaUserId: dmaId,
     );
-    if(isUpdate.value){
-      dataStore.updateUser(userModel: data, index: index).then((value){
+    if (isUpdate.value) {
+      dataStore.updateUser(userModel: data, index: widget.position).then((value) {
         Navigator.pop(context);
       });
-    } else{
-      var mmm =  SaveCusRegHiveDataStore.box.length;
-      if(mmm<=50) {
+    } else {
+      var mmm = SaveCusRegHiveDataStore.box.length;
+      if (mmm <= 5) {
         dataStore.addUser(userModel: data);
-        EasyLoading.showSuccess('Great Success! \n Record Save');
-        Navigator.push(context,MaterialPageRoute(builder:(context) => RegistrationForm()),);
       }
       else {
         EasyLoading.showError('Error !!!! \n Please Uploade Previous record');
       }
     }
-
+    EasyLoading.showSuccess('Great Success! \n Record Save');
+    //   Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationForm()),);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (_) => RegistrationForm()),
+            (r) => false);
   }
 
-  Widget _interestedDropDown(){
+  Widget _interestedDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.interestedLabel,
+      textLabel: AppStrings.interestedLabel,
       hint: AppStrings.interestedLabel,
       items: dropListModelInterested,
       value: _isInterestedItem,
@@ -1273,39 +1122,35 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     );
   }
 
-  Widget _conversionPolicyDropDown(){
+  Widget _conversionPolicyDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.conversionPolicyLabel,
+      textLabel: AppStrings.conversionPolicyLabel,
       hint: AppStrings.conversionPolicyLabel,
       items: _acceptConversionPolicyList,
       value: __acceptConversionPolicyValue,
       onChanged: (value) {
         setState(() {
-          __acceptConversionPolicyValueId = value.id;
           __acceptConversionPolicyValue = value;
-          log(__acceptConversionPolicyValueId);
         });
       },
     );
   }
 
-  Widget  _fittingCostDropDown(){
+  Widget _fittingCostDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.fittingCostLabel,
+      textLabel: AppStrings.fittingCostLabel,
       hint: AppStrings.fittingCostLabel,
       items: _acceptExtraFittingCostList,
-      value: __acceptExtraFittingCostValue,
+      value: acceptExtraFittingCostValue,
       onChanged: (value) {
         setState(() {
-          __acceptExtraFittingCostValueId = value.id;
-          __acceptExtraFittingCostValue = value;
-          log(__acceptExtraFittingCostValueId);
+          acceptExtraFittingCostValue = value;
         });
       },
     );
   }
 
-  Widget _mdpeDropdown(){
+  Widget _mdpeDropdown() {
     return ReusedDropDownString(
       textLabel: AppStrings.mdpeAllowLabel,
       hint: AppStrings.mdpeAllowLabel,
@@ -1317,145 +1162,144 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     );
   }
 
-  Widget _reasonInterestedWidget(){
+  Widget _reasonInterestedWidget() {
     return TextFieldWidget(
       enabled: true,
-      headingLabel:AppStrings.reasonLabel,
-      textInputType : TextInputType.text,
+      headingLabel: AppStrings.reasonLabel,
+      textInputType: TextInputType.text,
       controller: reasonController,
-      hintText:AppStrings.reasonLabel,
+      hintText: AppStrings.reasonLabel,
     );
   }
 
-  Widget _chargeAreaDropDown(){
+  Widget _chargeAreaDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.chargeAreaLabel,
+      textLabel: AppStrings.chargeAreaLabel,
       hint: AppStrings.chargeAreaLabel,
       items: chargeAreaItems,
       value: chargeAreaType,
       onChanged: (OptionItem value) {
         setState(() {
-          chargeAreaId = value.id;
           chargeAreaType = value;
-          print("chargeAreaType-->"+chargeAreaType.title);
-          _dropdownItems.clear();
-          _areaType = null;
+          areaItems.clear();
+          areaTypeValue = null;
           fetchArea(value.id);
         });
-
       },
     );
   }
 
-  Widget _areaDropDown(){
+  Widget _areaDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.areaLabel,
+      textLabel: AppStrings.areaLabel,
       hint: AppStrings.areaLabel,
-      items: _dropdownItems,
-      value: _areaType,
+      items: areaItems,
+      value: areaTypeValue,
       onChanged: (OptionItem value) {
         setState(() {
-          _areaTypeId = value.id;
-          _areaType = value;
-          print("_areaTypeId--------->"+_areaTypeId);
+          areaTypeValue = value;
         });
       },
     );
   }
 
-  Widget _mobileWidget(){
+  Widget _mobileWidget() {
     return TextFieldWidget(
-        headingLabel:AppStrings.mobileNoLabel,
+        headingLabel: AppStrings.mobileNoLabel,
         hintText: AppStrings.mobileNoLabel,
-        controller:mobileNoController,
+        controller: mobileNoController,
         textInputType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
         maxLength: 10,
         suffixIcon: AppStrings.isMobile == true
-            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-            : Icon(Icons.info,color: Colors.red),
-        validator: (value){
-          if(value.isEmpty){
+            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            : Icon(Icons.info, color: Colors.red),
+        validator: (value) {
+          if (value.isEmpty) {
             return "Please enter Mobile Number";
           }
-          else if(value.length <= 9){
+          else if (value.length <= 9) {
             return 'Mobile Number must be of 10 digit';
           }
           return null;
         },
-        onChanged:(v){
+        onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 9 ? AppStrings.isMobile = false : AppStrings.isMobile = true);
+          setState(() =>
+          v.length <= 9 ? AppStrings.isMobile = false : AppStrings.isMobile =
+          true);
         }
     );
   }
 
-  Widget _firstNameWidget(){
-    return  TextFieldWidget(
-      headingLabel:AppStrings.firstNameLabel,
-      hintText:AppStrings.firstNameLabel,
-      controller:firstNameController,
+  Widget _firstNameWidget() {
+    return TextFieldWidget(
+      headingLabel: AppStrings.firstNameLabel,
+      hintText: AppStrings.firstNameLabel,
+      controller: firstNameController,
       textInputType: TextInputType.text,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]")),
       ],
       suffixIcon: AppStrings.isFirst == true
-          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-          : Icon(Icons.info,color: Colors.red),
-      validator: (value){
-        if(value.isEmpty|| !RegExp(r'^[a-z A-Z]+$').hasMatch(value)){
+          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          : Icon(Icons.info, color: Colors.red),
+      validator: (value) {
+        if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
           return "Enter First Name";
-        } else if(value.length <= 2){
+        } else if (value.length <= 2) {
           return "First Name must be of minimum 2+ Letters";
         }
         return null;
       },
-      onChanged:(v){
+      onChanged: (v) {
         v = firstNameController.text.trim().toString();
         formGlobalKey.currentState.validate();
-        setState(()=> v.length <= 2 ? AppStrings.isFirst = false : AppStrings.isFirst = true);
+        setState(() =>
+        v.length <= 2 ? AppStrings.isFirst = false : AppStrings.isFirst = true);
       },
     );
   }
 
-  Widget _middleWidget(){
+  Widget _middleWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.middleNameLabel,
-      hintText:AppStrings.middleNameLabel,
-      controller:middleNameController,
+      headingLabel: AppStrings.middleNameLabel,
+      hintText: AppStrings.middleNameLabel,
+      controller: middleNameController,
       textInputType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
     );
   }
 
-  Widget _lastNameWidget(){
-    return  TextFieldWidget(
-      headingLabel:AppStrings.lastNameLabel,
-      hintText:AppStrings.lastNameLabel,
-      controller:lastNameController,
+  Widget _lastNameWidget() {
+    return TextFieldWidget(
+      headingLabel: AppStrings.lastNameLabel,
+      hintText: AppStrings.lastNameLabel,
+      controller: lastNameController,
       textInputType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       suffixIcon: AppStrings.isLast == true
-          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-          : Icon(Icons.info,color: Colors.red),
-      validator: (value){
-        if(value.isEmpty ||!RegExp(r'^[a-z A-Z]+$').hasMatch(value)){
+          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          : Icon(Icons.info, color: Colors.red),
+      validator: (value) {
+        if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
           return "Enter Last Name";
         }
         return null;
       },
-      onChanged:(v){
+      onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(()=> v.length <= 2 ? AppStrings.isLast = false : AppStrings.isLast = true);
+        setState(() =>
+        v.length <= 2 ? AppStrings.isLast = false : AppStrings.isLast = true);
       },
     );
   }
 
-  Widget _guardianTypeDropDown(){
-    return  ReusedDropDownString(
+  Widget _guardianTypeDropDown() {
+    return ReusedDropDownString(
       textLabel: AppStrings.guardianTypeLabel,
       onChanged: (String value) {
-        setState(()=>  guardianTypeValue = value);
+        setState(() => guardianTypeValue = value);
       },
       items: guardianTypeDropdownItems,
       value: guardianTypeValue,
@@ -1463,52 +1307,56 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     );
   }
 
-  Widget _guardianNameWidget(){
+  Widget _guardianNameWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.guardianNameLabel,
+      headingLabel: AppStrings.guardianNameLabel,
       hintText: AppStrings.guardianNameLabel,
-      controller:guardianNameController,
+      controller: guardianNameController,
       textInputType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       suffixIcon: AppStrings.isGuardian == true
-          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-          : Icon(Icons.info,color: Colors.red),
-      validator: (value){
-        if(value.isEmpty){
+          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          : Icon(Icons.info, color: Colors.red),
+      validator: (value) {
+        if (value.isEmpty) {
           return "Please enter Guardian name";
-        } else if(!RegExp('.*[A-Z].*').hasMatch(value ?? '')){
+        } else if (!RegExp('.*[A-Z].*').hasMatch(value ?? '')) {
           return 'Input should contain an uppercase letter A-Z.';
-        } else if(value.length <= 2){
+        } else if (value.length <= 2) {
           return "Enter a Guardian name 2+char long";
         }
         return null;
       },
-      onChanged:(v){
+      onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(()=> v.length <= 2 ? AppStrings.isGuardian = false : AppStrings.isGuardian = true);
+        setState(() =>
+        v.length <= 2 ? AppStrings.isGuardian = false : AppStrings.isGuardian =
+        true);
       },
     );
   }
 
-  Widget _emailWidget(){
-    return  TextFieldWidget(
-      headingLabel:AppStrings.emailAddressLabel,
+  Widget _emailWidget() {
+    return TextFieldWidget(
+      headingLabel: AppStrings.emailAddressLabel,
       hintText: AppStrings.emailAddressLabel,
-      controller:emailIdController,
-      textCapitalization :TextCapitalization.none,
-      textInputType : TextInputType.emailAddress,
+      controller: emailIdController,
+      textCapitalization: TextCapitalization.none,
+      textInputType: TextInputType.emailAddress,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),],
+        FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
+      ],
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter your emailAddress.';
-        } else if (!RegExp(r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$").hasMatch(value)) {
+        } else if (!RegExp(
+            r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
+            .hasMatch(value)) {
           return 'Please enter a valid Email';
         }
         return null;
-
       },
-      onChanged:(v){
+      onChanged: (v) {
         //  formGlobalKey.currentState.validate();
       },
     );
@@ -1519,14 +1367,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       textLabel: AppStrings.propertyCategoryLabel,
       onChanged: (OptionItem value) {
         setState(() {
-          _propertyTypeId = value.id;
-          pCategoryId = value.id;
-          log("_propertyTypeId$_propertyTypeId");
-          _categoryType = value;
+          categoryValue = value;
         });
       },
-      items: _propertyDropdownItems,
-      value: _categoryType,
+      items: propertyCategoryList,
+      value: categoryValue,
       hint: 'Select Property Category',
     );
   }
@@ -1536,22 +1381,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       textLabel: AppStrings.propertyClassLabel,
       onChanged: (OptionItem value) {
         setState(() {
-          _propertyClassId = value.id;
-          log("_propertyClassId$_propertyClassId");
-          _propertyClassType = value;
+          propertyClassValue = value;
         });
       },
-      items: _propertyClassDropdownItems,
-      value: _propertyClassType,
+      items: propertyClassList,
+      value: propertyClassValue,
       hint: 'Select Property Class',
     );
   }
-  Widget _depositAmountWidget(){
+
+  Widget _depositAmountWidget() {
     return TextFieldWidget(
       enabled: false,
-      headingLabel:AppStrings.depositAmountControllerLabel,
+      headingLabel: AppStrings.depositAmountControllerLabel,
       hintText: AppStrings.depositAmountControllerLabel,
-      controller:depositAmountController,
+      controller: depositAmountController,
       textInputType: TextInputType.number,
       onChanged: (value) {
         if (value.length > 1) {
@@ -1570,7 +1414,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 /*_depositTypeLabel*/
   getdepositTypeDropDown() {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1593,7 +1437,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                   setState(() {
                     _schemeMonth = value.schememonth;
                     if (_schemeMonth > 0) {
-                      depositAmountController.text = value.firstamount.toString();
+                      depositAmountController.text =
+                          value.firstamount.toString();
                     } else {
                       depositAmountController.text = value.amount.toString();
                     }
@@ -1604,51 +1449,58 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                     AppStrings.schemeType = value.scheme_type;
                     AppStrings.schemeCode = value.scheme_code;
                     AppStrings.depositAmount = value.deposit_amount;
-                    AppStrings.equipmentDepositAmount = value.equipment_deposit_amount;
+                    AppStrings.equipmentDepositAmount =
+                        value.equipment_deposit_amount;
                     AppStrings.interestAmount = value.interest_amount;
                     AppStrings.registrationGST = value.registration_gst;
                     AppStrings.interestTaxAmt = value.interest_tax_amt;
                     AppStrings.totalAmount = value.totalAmount;
                     AppStrings.nextCycleAmount = value.nextCycleAmount;
-                    AppStrings.registrationTaxName = value.registration_tax_name;
+                    AppStrings.registrationTaxName =
+                        value.registration_tax_name;
                     depositTotalAmount = value.total_amount;
                     AppStrings.interestTaxAmt = value.interest_tax_amt;
                     AppStrings.regTax = value.reg_tax;
                     AppStrings.msgSchemeDetail =
                         "Deposit Name = " + AppStrings.depositName +
-                            "\nDeposit Amount = " + AppStrings.depositAmountController.toString() +
-                            "\nSchemeMonth = " +_schemeMonth.toString() +
-                            "\nEquipment Deposit Amount = " + AppStrings.equipmentDepositAmount +
-                            "\nGAS Amount = " +gasDepositAmountController.toString() +
-                            "\nFirst Deposit Amount = " +value.firstamount.toString();
-
+                            "\nDeposit Amount = " +
+                            AppStrings.depositAmountController.toString() +
+                            "\nSchemeMonth = " + _schemeMonth.toString() +
+                            "\nEquipment Deposit Amount = " +
+                            AppStrings.equipmentDepositAmount +
+                            "\nGAS Amount = " +
+                            gasDepositAmountController.toString() +
+                            "\nFirst Deposit Amount = " +
+                            value.firstamount.toString();
                   });
                 },
                 isExpanded: true,
                 isDense: true,
               ),
             ),
-            getDepositDetailButton("Detail",alignment: CrossAxisAlignment.center),
+            getDepositDetailButton(
+                "Detail", alignment: CrossAxisAlignment.center),
           ],
         ));
   }
 
   getDepositDetailButton(title, {alignment}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Column(
           crossAxisAlignment: alignment ?? CrossAxisAlignment.start,
           children: [
             ElevatedButton(
-                child: Text(title,style: TextStyle(color: Colors.white),),
+                child: Text(title, style: TextStyle(color: Colors.white),),
                 onPressed: () {
-                  _showdepositAmountControllerDialog(AppStrings.msgSchemeDetail);
+                  _showdepositAmountControllerDialog(
+                      AppStrings.msgSchemeDetail);
                 }),
           ]),
     );
   }
 
-  _showdepositAmountControllerDialog( String _msg) async {
+  _showdepositAmountControllerDialog(String _msg) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -1673,159 +1525,167 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     );
   }
 
-  Widget _houseNumberWidget(){
+  Widget _houseNumberWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.houseNumberLabel,
+      headingLabel: AppStrings.houseNumberLabel,
       hintText: AppStrings.houseNumberLabel,
-      controller:houseNumberController,
+      controller: houseNumberController,
       textInputType: TextInputType.text,
       suffixIcon: AppStrings.isHouseNo == true
-          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-          : Icon(Icons.info,color: Colors.red),
-      validator: (value){
-        if(value.isEmpty){
+          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          : Icon(Icons.info, color: Colors.red),
+      validator: (value) {
+        if (value.isEmpty) {
           return "Please enter House Number";
         }
         return null;
       },
-      onTap: (){},
-      onChanged:(v){
+      onTap: () {},
+      onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(()=> v.length >= 1 ? AppStrings.isHouseNo = true : AppStrings.isHouseNo = false);
+        setState(() =>
+        v.length >= 1 ? AppStrings.isHouseNo = true : AppStrings.isHouseNo =
+        false);
       },
     );
   }
 
-  Widget  _apartmentWidget(){
+  Widget _apartmentWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.addressLabel,
+      headingLabel: AppStrings.addressLabel,
       hintText: AppStrings.addressLabel,
-      controller:localityController,
+      controller: localityController,
       textInputType: TextInputType.text,
       suffixIcon: AppStrings.isAddress == true
-          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-          : Icon(Icons.info,color: Colors.red),
-      validator: (value){
-        if(value.isEmpty){
+          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          : Icon(Icons.info, color: Colors.red),
+      validator: (value) {
+        if (value.isEmpty) {
           return "Please enter Colony/Society/Apartment";
         }
         return null;
       },
-      onTap: (){},
-      onChanged:(v){
+      onTap: () {},
+      onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(()=> v.length > 1 ?  AppStrings.isAddress = true :  AppStrings.isAddress = false);
+        setState(() =>
+        v.length > 1 ? AppStrings.isAddress = true : AppStrings.isAddress =
+        false);
       },
     );
   }
-  Widget  _streetNameWidget(){
+
+  Widget _streetNameWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.streetNameLabel,
+      headingLabel: AppStrings.streetNameLabel,
       hintText: AppStrings.addressLabel,
-      controller:streetNameController,
+      controller: streetNameController,
       textInputType: TextInputType.text,
       suffixIcon: AppStrings.isAddress == true
-          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-          : Icon(Icons.info,color: Colors.red),
-      validator: (value){
-        if(value.isEmpty){
+          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          : Icon(Icons.info, color: Colors.red),
+      validator: (value) {
+        if (value.isEmpty) {
           return "Please enter street name";
         }
         return null;
       },
-      onTap: (){},
-      onChanged:(v){
+      onTap: () {},
+      onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(()=> v.length > 1 ?  AppStrings.isAddress = true :  AppStrings.isAddress = false);
+        setState(() =>
+        v.length > 1 ? AppStrings.isAddress = true : AppStrings.isAddress =
+        false);
       },
     );
   }
 
-  Widget _townWidget(){
+  Widget _townWidget() {
     return TextFieldWidget(
-        headingLabel:AppStrings.townLabel,
+        headingLabel: AppStrings.townLabel,
         hintText: AppStrings.townLabel,
-        controller:townController,
+        controller: townController,
         textInputType: TextInputType.name,
-        inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))]
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
+        ]
     );
   }
 
-  Widget _districtWidget(){
+  Widget _districtWidget() {
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.districtLabel,
+      textLabel: AppStrings.districtLabel,
       items: getAllDistrictItems,
-      value: getAllDistrictType,
+      value: districtValue,
       hint: AppStrings.districtLabel,
       onChanged: (OptionItem value) {
         setState(() {
-          getAllDistrictId = value.id;
-          getAllDistrictType = value;
+          districtValue = value;
         });
-
       },
     );
   }
 
-  Widget _pinCodeWidget(){
-    return  TextFieldWidget(
-        headingLabel:AppStrings.pinCodeLabel,
-        hintText:AppStrings.pinCodeLabel,
-        controller:pinCodeController,
+  Widget _pinCodeWidget() {
+    return TextFieldWidget(
+        headingLabel: AppStrings.pinCodeLabel,
+        hintText: AppStrings.pinCodeLabel,
+        controller: pinCodeController,
         textInputType: TextInputType.number,
         maxLength: 6,
-        suffixIcon:  AppStrings.isPinCode == true
-            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-            : Icon(Icons.info,color: Colors.red),
-        validator: (value){
-          if(value.isEmpty){
+        suffixIcon: AppStrings.isPinCode == true
+            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            : Icon(Icons.info, color: Colors.red),
+        validator: (value) {
+          if (value.isEmpty) {
             return "Please enter Pin Number";
           }
-          else if(value.length <= 5){
+          else if (value.length <= 5) {
             return 'Pin Number must be of 6 digit';
           }
           return null;
         },
-        onTap: (){},
-        onChanged:(v){
+        onTap: () {},
+        onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 5 ? AppStrings.isPinCode = false : AppStrings.isPinCode = true);
+          setState(() =>
+          v.length <= 5 ? AppStrings.isPinCode = false : AppStrings.isPinCode =
+          true);
         }
     );
   }
 
-  Widget _noKitchenWidget(){
-    return  TextFieldWidget(
-      headingLabel:AppStrings.noOfKitchenLabel,
-      hintText: AppStrings.noOfKitchenLabel,
-      controller:kitchenController,
-      textInputType: TextInputType.number,
-      maxLength: 2,
-    );
-  }
-
-  Widget _noBathroomWidget(){
+  Widget _noKitchenWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.noOfBathroomLabel,
-      hintText: AppStrings.noOfBathroomLabel,
-      controller:bathroomController,
+      headingLabel: AppStrings.noOfKitchenLabel,
+      hintText: AppStrings.noOfKitchenLabel,
+      controller: kitchenController,
       textInputType: TextInputType.number,
       maxLength: 2,
     );
   }
 
-  Widget _noFamilyWidget(){
-    return  TextFieldWidget(
-      headingLabel:AppStrings.noOfFamilyMembersLabel,
-      hintText: AppStrings.noOfFamilyMembersLabel,
-      controller:familyMemController,
+  Widget _noBathroomWidget() {
+    return TextFieldWidget(
+      headingLabel: AppStrings.noOfBathroomLabel,
+      hintText: AppStrings.noOfBathroomLabel,
+      controller: bathroomController,
       textInputType: TextInputType.number,
       maxLength: 2,
-    ) ;
+    );
   }
 
+  Widget _noFamilyWidget() {
+    return TextFieldWidget(
+      headingLabel: AppStrings.noOfFamilyMembersLabel,
+      hintText: AppStrings.noOfFamilyMembersLabel,
+      controller: familyMemController,
+      textInputType: TextInputType.number,
+      maxLength: 2,
+    );
+  }
 
-  Widget _locationWidget(){
+  Widget _locationWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1834,15 +1694,17 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left: 12.0,top: 8),
+              padding: const EdgeInsets.only(left: 12.0, top: 8),
               child: TextButton(
                 child: new Text(AppStrings.getLocationLabel),
-                onPressed: () async{
+                onPressed: () async {
                   Position position = await _getCurrentLocation();
                   //  AppStrings.locationLat ='${position.latitude} ';
                   //  AppStrings.locationLong = '${position.longitude}';
-                  latitudeController.text =position.latitude.toStringAsFixed(3);
-                  longitudeController.text = position.longitude.toStringAsFixed(3);
+                  latitudeController.text =
+                      position.latitude.toStringAsFixed(3);
+                  longitudeController.text =
+                      position.longitude.toStringAsFixed(3);
                 },
               ),
             ),
@@ -1851,29 +1713,29 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         Flexible(
             child: TextFieldWidget(
               enabled: false,
-              headingLabel:AppStrings.locationLat,
+              headingLabel: AppStrings.locationLat,
               hintText: AppStrings.locationLat,
-              controller:latitudeController,
+              controller: latitudeController,
             )
         ),
         Flexible(
           child: TextFieldWidget(
             enabled: false,
-            headingLabel:AppStrings.locationLong,
+            headingLabel: AppStrings.locationLong,
             hintText: AppStrings.locationLong,
-            controller:longitudeController,
+            controller: longitudeController,
           ),
         ),
       ],
     );
   }
 
-  Widget _landmarkWidget(){
+  Widget _landmarkWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.landmarkLabel,
+      headingLabel: AppStrings.landmarkLabel,
       hintText: AppStrings.landmarkLabel,
       controller: landmarkController,
-      textInputType  : TextInputType.text,
+      textInputType: TextInputType.text,
     );
   }
 
@@ -1881,7 +1743,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     return ReusedDropDownString(
       textLabel: AppStrings.existingCookingFuelLabel,
       onChanged: (String value) {
-        setState(() =>  cookInFuelValue = value);
+        setState(() => cookInFuelValue = value);
       },
       items: _cookingFuelDropdownItems,
       value: cookInFuelValue,
@@ -1896,21 +1758,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       value: _residentStatusValue,
       hint: AppStrings.residentStatusLabel,
       onChanged: (String value) {
-        setState(() =>  _residentStatusValue = value);
+        setState(() => _residentStatusValue = value);
       },
-    ) ;
+    );
   }
 
   _docTypeDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.docTypeLabel,
+      textLabel: AppStrings.docTypeLabel,
       hint: AppStrings.docTypeLabel,
-      items: _idProofDropdownItems,
-      value: _idProofDropDownValue,
+      items: idProofList,
+      value: idProofValue,
       onChanged: (OptionItem value) {
         setState(() {
-          _idProofDropDownValueId = value.id;
-          _idProofDropDownValue = value;
+          idProofValue = value;
         });
       },
     );
@@ -1919,13 +1780,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _backNameWidget() {
     return TextFieldWidget(
         maxLength: 20,
-        headingLabel:AppStrings.customerAccountNoLabel,
+        headingLabel: AppStrings.customerAccountNoLabel,
         hintText: AppStrings.customerAccountNoLabel,
         controller: bankAccNoController,
         textInputType: TextInputType.text,
         suffixIcon: AppStrings.isBankAccNo == true
             ? Icon(Icons.check_circle_sharp, color: Colors.green,)
-            : Icon(Icons.info,color: Colors.red),
+            : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter bank account number";
@@ -1937,21 +1798,23 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onTap: () {},
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 7 ? AppStrings.isBankAccNo = false : AppStrings.isBankAccNo = true);
+          setState(() =>
+          v.length <= 7 ? AppStrings.isBankAccNo = false : AppStrings
+              .isBankAccNo = true);
         }
     );
   }
 
   Widget _micrCodeWidget() {
     return TextFieldWidget(
-        headingLabel:AppStrings.mICRCodeLabel,
+        headingLabel: AppStrings.mICRCodeLabel,
         hintText: AppStrings.mICRCodeLabel,
         maxLength: 9,
         controller: mICRCodeController,
         textInputType: TextInputType.number,
         suffixIcon: AppStrings.isMICRCode == true
             ? Icon(Icons.check_circle_sharp, color: Colors.green,)
-            : Icon(Icons.info,color: Colors.red),
+            : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter MICR Code";
@@ -1964,54 +1827,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onTap: () {},
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 8 ?  AppStrings.isMICRCode  = false :  AppStrings.isMICRCode  = true);
+          setState(() =>
+          v.length <= 8 ? AppStrings.isMICRCode = false : AppStrings
+              .isMICRCode = true);
         }
     );
   }
 
-  Widget _chequeImageWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.chqPhoto == null ? AppStrings.chqPhotoPath.isEmpty
-              ? _dottedBorder(
-              onTap: () => _showPicker9(context, meterPhotoController9)
-          )
-              : _networkImageWidget(
-              networkImage: AppStrings.chqPhotoPath,
-              onPressed: () {
-                setState(() => AppStrings.chqPhotoPath = "");
-              }
-          )
-              : _fileImageWidget(
-              fileImage: AppStrings.chqPhoto,
-              onPressed: () {
-                setState(() => AppStrings.chqPhoto = null);
-              }
-          ),
-        ),
-      ],
-    );
-  }
 
-  Widget _backImageWidget() {
-    return Column(
-      children: [
-        _imageNameWidget(imageName: AppStrings.idBackImgSide),
-        InkWell(
-            onTap: () => _openEleBackSource(context: context , controller: backImageController),
-            child: backImageController.backImage != null
-                ? _fileImage(
-                fileImage: backImageController.backImage,
-                onPressed: ()=>  backImageController = PhotoController()
-            ) :_localBorderImg()
-        ),
-      ],
-    );
-  }
 
   /////////////////////////////  image 1 ///////////////////////////////////////
   Future<void> _openFrontImageSource({BuildContext context, PhotoController controller}) async {
@@ -2022,35 +1845,36 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getFrontImage(photoController:controller,imageSource: ImageSource.gallery);
+            getFrontImage(
+                photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getFrontImage(photoController:controller,imageSource: ImageSource.camera);
+            getFrontImage(
+                photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
-  Future<void> getFrontImage({PhotoController photoController, ImageSource imageSource}) async {
+
+  Future<void> getFrontImage(
+      {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.getImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      setState(() {
-        if (pickedFile != null) {
-          if (photoController != null) {
-            photoController.frontImage = File(pickedFile.path);
-          } else {
-            print('No image selected.');
-          }
-        } else {
-          print('No image selected.');
-        }
-      });
-    } catch (e) {
+      final pickedFile = await picker.pickImage(source: imageSource,
+          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          frontImageFile = pickedFile.path;
+          //   photoController.frontImage = File(pickedFile.path);
+        });
+      }
+    }catch (e) {
       CustomToast.showToast(e.toString());
     }
   }
+
   Future<void> _openBackImageSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
@@ -2059,35 +1883,36 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getBackImage(photoController:controller,imageSource: ImageSource.gallery);
+            getBackImage(
+                photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getBackImage(photoController:controller,imageSource: ImageSource.camera);
+            getBackImage(
+                photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
-  Future<void> getBackImage({PhotoController photoController, ImageSource imageSource}) async {
+
+  Future<void> getBackImage(
+      {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.getImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      setState(() {
-        if (pickedFile != null) {
-          if (photoController != null) {
-            photoController.backImage = File(pickedFile.path);
-          } else {
-            print('No image selected.');
-          }
-        } else {
-          print('No image selected.');
-        }
-      });
-    } catch (e) {
+      final pickedFile = await picker.pickImage(source: imageSource,
+          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          backImageFile = pickedFile.path;
+          //  photoController.backImage = File(pickedFile.path);
+        });
+      }
+    }  catch (e) {
       CustomToast.showToast(e.toString());
     }
   }
+
   Future<void> _openEleBillFrontSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
@@ -2096,35 +1921,36 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getEleBillFrontImage(photoController:controller,imageSource: ImageSource.gallery);
+            getEleBillFrontImage(
+                photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getEleBillFrontImage(photoController:controller,imageSource: ImageSource.camera);
+            getEleBillFrontImage(
+                photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
-  Future<void> getEleBillFrontImage({PhotoController photoController, ImageSource imageSource}) async {
+
+  Future<void> getEleBillFrontImage(
+      {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.getImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      setState(() {
-        if (pickedFile != null) {
-          if (photoController != null) {
-            photoController.electricBillFrontImg = File(pickedFile.path);
-          } else {
-            print('No image selected.');
-          }
-        } else {
-          print('No image selected.');
-        }
-      });
-    } catch (e) {
+      final pickedFile = await picker.pickImage(source: imageSource,
+          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          electricBillFrontImgFile = pickedFile.path;
+          // photoController.electricBillFrontImg = File(pickedFile.path);
+        });
+      }
+    }catch (e) {
       CustomToast.showToast(e.toString());
     }
   }
+
   Future<void> _openEleBackSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
@@ -2133,55 +1959,263 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getEleBackImage(photoController:controller,imageSource: ImageSource.gallery);
+            getEleBackImage(
+                photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getEleBackImage(photoController:controller,imageSource: ImageSource.camera);
+            getEleBackImage(
+                photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
-  Future<void> getEleBackImage({PhotoController photoController, ImageSource imageSource}) async {
+
+  Future<void> getEleBackImage(
+      {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.getImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      setState(() {
-        if (pickedFile != null) {
-          if (photoController != null) {
-            photoController.electricBillBackImg = File(pickedFile.path);
-          } else {
-            print('No image selected.');
-          }
-        } else {
-          print('No image selected.');
-        }
-      });
+      final pickedFile = await picker.pickImage(source: imageSource,
+          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null|| photoController != null) {
+        setState(() {
+          electricBillBackImgFile = pickedFile.path;
+          // photoController.electricBillBackImg = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+
+  Future<void> _openNocFrontImgSource(
+      {BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getNocFrontImgImage(
+                photoController: controller, imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getNocFrontImgImage(
+                photoController: controller, imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> getNocFrontImgImage(
+      {PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: imageSource,
+          maxHeight: 480,maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          nocFrontImgFile = pickedFile.path;
+          // photoController.nocFrontImg = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+
+  Future<void> _openNocBackImgSource(
+      {BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getNocBackImgImage(
+                photoController: controller, imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getNocBackImgImage(
+                photoController: controller, imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> getNocBackImgImage(
+      {PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: imageSource,
+          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          nocBackImgFile = pickedFile.path;
+          //  photoController.nocBackImg = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+
+  Future<void> _openConsentImgSource(
+      {BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getConsentImgImage(
+                photoController: controller, imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getConsentImgImage(
+                photoController: controller, imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> getConsentImgImage(
+      {PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: imageSource,
+          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          consentPhotoFile = pickedFile.path;
+          // photoController.consentPhoto = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+
+  Future<void> _openChqCancelledImgSource(
+      {BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getChqCancelledImg(photoController: controller, imageSource: ImageSource.gallery);},
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getChqCancelledImg(
+                photoController: controller, imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> getChqCancelledImg(
+      {PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: imageSource,
+          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          chqCancelledPhotoFile = pickedFile.path;
+          //  photoController.chqCancelledPhoto = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+
+  Future<void> _openChqImgSource(
+      {BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getChqImg(
+                photoController: controller, imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getChqImg(
+                photoController: controller, imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> getChqImg(
+      {PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: imageSource,
+          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          chqPhotoFile = pickedFile.path;
+          //  photoController.chqPhoto = File(pickedFile.path);
+        });
+      }
     } catch (e) {
       CustomToast.showToast(e.toString());
     }
   }
 
 
-  PhotoController frontImageController = PhotoController();
-  PhotoController backImageController = PhotoController();
-  PhotoController eleBillFrontImgController = PhotoController();
-  PhotoController eleBillBackImgController = PhotoController();
-  PhotoController image3Controller = PhotoController();
-  PhotoController image4Controller = PhotoController();
-
   Widget _frontImageWidget() {
+    print("Get File Path ====== ${frontImageController.frontImage}");
+    print("Get File Path ====== ${frontImageFile}");
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.idFrontImgSide),
         InkWell(
-            onTap: () => _openFrontImageSource(context: context , controller: frontImageController),
-            child: frontImageController.frontImage != null
+            onTap: () => _openFrontImageSource(context: context, controller: frontImageController),
+            child: frontImageFile != null && frontImageFile.isNotEmpty
                 ? _fileImage(
-                fileImage: frontImageController.frontImage,
-                onPressed: ()=>  frontImageController = PhotoController()
-            ) :_localBorderImg()
+                fileImage: File(frontImageFile),
+                onPressed: () {
+                  _openFrontImageSource(context: context, controller: frontImageController);
+                }
+            ) : _localBorderImg()
+        ),
+      ],
+    );
+  }
+
+  Widget _backImageWidget() {
+    return Column(
+      children: [
+        _imageNameWidget(imageName: AppStrings.idBackImgSide),
+        InkWell(
+            onTap: () => _openBackImageSource(
+                context: context, controller: backImageController),
+            child: backImageFile != null && backImageFile.isNotEmpty
+                ? _fileImage(
+              fileImage: File(backImageFile),
+              onPressed: () => _openBackImageSource(
+                  context: context, controller: backImageController),
+            ) : _localBorderImg()
         ),
       ],
     );
@@ -2192,217 +2226,179 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       children: [
         _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
         InkWell(
-            onTap: () => _openFrontImageSource(context: context , controller: eleBillFrontImgController),
-            child: eleBillFrontImgController.electricBillFrontImg != null
+            onTap: () => _openEleBillFrontSource(
+                context: context, controller: eleBillFrontImgController),
+            child: electricBillFrontImgFile != null && electricBillFrontImgFile.isNotEmpty
                 ? _fileImage(
-                fileImage: eleBillFrontImgController.electricBillFrontImg,
-                onPressed: ()=>  eleBillFrontImgController = PhotoController()
-            ) :_localBorderImg()
+              fileImage:File(electricBillFrontImgFile),
+              onPressed: () => _openEleBillFrontSource(
+                  context: context, controller: eleBillFrontImgController),
+            ) : _localBorderImg()
         ),
       ],
     );
   }
 
-  Widget _electricBillBackImgWidget(){
-    return  Column(
+  Widget _electricBillBackImgWidget() {
+    return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
         InkWell(
-            onTap: () => _openEleBackSource(context: context , controller: eleBillBackImgController),
-            child: eleBillBackImgController.electricBillBackImg != null
+            onTap: () => _openEleBackSource(
+                context: context, controller: eleBillBackImgController),
+            child:electricBillBackImgFile != null && electricBillBackImgFile.isNotEmpty
                 ? _fileImage(
-                fileImage: eleBillBackImgController.electricBillBackImg,
-                onPressed: ()=>  eleBillBackImgController = PhotoController()
-            ) :_localBorderImg()
+              fileImage:File(electricBillBackImgFile),
+              onPressed: () => _openEleBackSource(
+                  context: context, controller: eleBillBackImgController),
+            ) : _localBorderImg()
         ),
       ],
     );
   }
 
-  Widget _nocProofNoWidget(){
-    return   TextFieldWidget(
-      headingLabel:AppStrings.nocProofNoLabel,
-      hintText: AppStrings.nocProofNoLabel,
-      controller:nocProofNoController,
-      textInputType: TextInputType.text,
-      maxLength: 20,
-      /*suffixIcon: AppStrings.isNoc  == true
-            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-            : Icon(Icons.info,color: Colors.red),
-        validator: (value){
-          if(value.isEmpty){
-            return "Please enter NOC Proof Number";
-          }
-          return null;
-        },
-        onTap: (){},
-        onChanged:(v){
-          formGlobalKey.currentState.validate();
-          setState(()=> v.length > 2 ? AppStrings.isNoc  = false : AppStrings.isNoc  = true);
-        }*/
-    );
-  }
-
-  Widget _nocFrontImageWidget(){
+  Widget _nocFrontImageWidget() {
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.nocFrontImg == null ? AppStrings.nocFrontImgPath.isEmpty
-              ? _dottedBorder(
-              onTap:()=>  _showPicker5(context,  meterPhotoController5)
-          )
-              : _networkImageWidget(
-              networkImage:AppStrings.nocFrontImgPath ,
-              onPressed:(){
-                setState(()=> AppStrings.nocFrontImgPath = "");
-              }
-          )
-              : _fileImageWidget(
-              fileImage: AppStrings.nocFrontImg,
-              onPressed: () {
-                setState(() => AppStrings.nocFrontImg = null);
-              }
-          ),
+        InkWell(
+            onTap: () => _openNocFrontImgSource(
+                context: context, controller: nocFrontImgController),
+            child:nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
+                ? _fileImage(
+              fileImage:File(nocFrontImgFile),
+              onPressed: () => _openNocFrontImgSource(
+                  context: context, controller: nocFrontImgController),
+            ) : _localBorderImg()
         ),
       ],
     );
   }
 
-  Widget _nocBackImageWidget(){
+  Widget _nocBackImageWidget() {
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.nocBackImg == null ? AppStrings.nocBackImgPath.isEmpty
-              ? _dottedBorder(
-            onTap:()=>  _showPicker6(context, meterPhotoController6),
-          )
-              : _networkImageWidget(
-              networkImage: AppStrings.nocBackImgPath ,
-              onPressed:(){
-                setState(()=> AppStrings.nocBackImgPath = "");
-              }
-          )
-              : _fileImageWidget(
-              fileImage: AppStrings.nocBackImg,
-              onPressed: () {
-                setState(() => AppStrings.nocBackImg = null);
-              }
-          ),
+        InkWell(
+            onTap: () => _openNocBackImgSource(
+                context: context, controller: nocBackImgController),
+            child: nocBackImgFile != null && nocBackImgFile.isNotEmpty
+                ? _fileImage(
+              fileImage:File(nocBackImgFile),
+              onPressed: () => _openNocBackImgSource(
+                  context: context, controller: nocBackImgController),
+            ) : _localBorderImg()
         ),
       ],
     );
   }
 
-  Widget _consentImageWidget(){
+  Widget _consentImageWidget() {
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child:AppStrings.consentPhoto == null ? AppStrings.consentPhotoPath.isEmpty
-              ? _dottedBorder(
-            onTap:()=>  _showPicker7(context, meterPhotoController7),
-          )
-              : _networkImageWidget(
-              networkImage: AppStrings.consentPhotoPath,
-              onPressed:(){
-                setState(()=> AppStrings.consentPhotoPath = "");
-              }
-          )
-              : _fileImageWidget(
-              fileImage: AppStrings.consentPhoto,
-              onPressed: () {
-                setState(() => AppStrings.consentPhoto = null);
-              }
-          ),
+        InkWell(
+            onTap: () => _openConsentImgSource(
+                context: context, controller: consentImageController),
+            child: consentPhotoFile != null && consentPhotoFile.isNotEmpty
+                ? _fileImage(
+              fileImage: File(consentPhotoFile),
+              onPressed: () => _openConsentImgSource(
+                  context: context, controller: consentImageController),
+            ) : _localBorderImg()
         ),
       ],
     );
   }
 
-  Widget _cancelChqImageWidget(){
+  Widget _cancelChqImageWidget() {
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: AppStrings.chqCancelledPhoto == null ? AppStrings.chqCancelledPhotoPath.isEmpty
-              ? _dottedBorder(
-            onTap:()=> _showPicker8(context, meterPhotoController8),
-          )
-              : _networkImageWidget(
-              networkImage:AppStrings.chqCancelledPhotoPath,
-              onPressed:(){
-                setState(()=> AppStrings.chqCancelledPhotoPath = "");
-              }
-          )
-              : _fileImageWidget(
-              fileImage: AppStrings.chqCancelledPhoto,
-              onPressed: () {
-                setState(() => AppStrings.chqCancelledPhoto = null);
-              }
-          ),
+        InkWell(
+            onTap: () => _openChqCancelledImgSource(
+                context: context, controller: cancelChqImageController),
+            child: chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty
+                ? _fileImage(
+              fileImage: File(chqCancelledPhotoFile),
+              onPressed: () => _openChqCancelledImgSource(
+                  context: context, controller: cancelChqImageController),
+            ) : _localBorderImg()
         ),
-
       ],
     );
   }
 
-  Widget _idProofNoWidget(){
+  Widget _chequeImageWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
+        InkWell(
+            onTap: () => _openChqImgSource(context: context, controller: chqImgController),
+            child:chqPhotoFile != null && chqPhotoFile.isNotEmpty
+                ? _fileImage(
+              fileImage: File(chqPhotoFile),
+              onPressed: () => _openChqImgSource(context: context, controller: chqImgController),
+            ) : _localBorderImg()
+        ),
+      ],
+    );
+  }
+
+  Widget _nocProofNoWidget() {
     return TextFieldWidget(
-        headingLabel:AppStrings.idProofNo,
+      headingLabel: AppStrings.nocProofNoLabel,
+      hintText: AppStrings.nocProofNoLabel,
+      controller: nocProofNoController,
+      textInputType: TextInputType.text,
+      maxLength: 20,
+    );
+  }
+
+
+  Widget _idProofNoWidget() {
+    return TextFieldWidget(
+        headingLabel: AppStrings.idProofNo,
         hintText: AppStrings.idProofNo,
-        controller:idProofNoController,
+        controller: idProofNoController,
         textInputType: TextInputType.text,
         maxLength: 20,
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z-0-9\u0900-\u097F]",))],
-        suffixIcon: AppStrings.isIdProofNo  == true
-            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-            : Icon(Icons.info,color: Colors.red),
-        validator: (value){
-          if(value.isEmpty){
+          FilteringTextInputFormatter.allow(
+              RegExp("[a-zA-Z-0-9\u0900-\u097F]",))
+        ],
+        suffixIcon: AppStrings.isIdProofNo == true
+            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            : Icon(Icons.info, color: Colors.red),
+        validator: (value) {
+          if (value.isEmpty) {
             return "Please enter id proof no";
           }
           return null;
         },
-        onChanged:(v){
+        onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 1 ? AppStrings.isIdProofNo = false : AppStrings.isIdProofNo = true);
+          setState(() =>
+          v.length <= 1 ? AppStrings.isIdProofNo = false : AppStrings
+              .isIdProofNo = true);
         }
     );
   }
 
-  Widget _ownerProofNoWidget(){
+  Widget _ownerProofNoWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.ownershipProofNo,
+      headingLabel: AppStrings.ownershipProofNo,
       hintText: AppStrings.ownershipProofNo,
-      controller:ownershipController,
+      controller: ownershipController,
       textInputType: TextInputType.text,
       maxLength: 20,
-      /* suffixIcon: AppStrings.isOwnershipProofNo  == true
-            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-            : Icon(Icons.info,color: Colors.red),
-        validator: (value){
-          if(value.isEmpty){
-            return "Please enter Ownership Proof No";
-          }
-          return null;
-        },
-        onChanged:(v){
-          formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 1 ? AppStrings.isOwnershipProofNo = false : AppStrings.isOwnershipProofNo = true);
-        }*/
     );
   }
 
   Widget getDropDown2() {
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.docTypeLabel,
+      textLabel: AppStrings.docTypeLabel,
       hint: AppStrings.docTypeLabel,
       items: _addressProofDropdownItems,
       value: _addressProofDropDownValue,
@@ -2418,31 +2414,28 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget getDropDown3() {
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.docTypeLabel,
+      textLabel: AppStrings.docTypeLabel,
       hint: AppStrings.docTypeLabel,
       items: _kycProofDropdownItems,
       value: _kycProofDropDownValue,
-      onChanged: (OptionItem value) {
+      onChanged: ( value) {
         log(value.id);
         setState(() {
-          _kycProofDropDownValueId = value.id;
           _kycProofDropDownValue = value;
         });
       },
     );
   }
 
-  Widget _billModeDropDown(){
+  Widget _billModeDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel:AppStrings.billingModeLabel,
+      textLabel: AppStrings.billingModeLabel,
       hint: AppStrings.billingModeLabel,
-      items: _billingModeList,
-      value: __billingModeValue,
+      items: billingModeList,
+      value: billingModeValue,
       onChanged: (value) {
         setState(() {
-          __billingModeValueId = value.id;
-          __billingModeValue = value;
-          log(__billingModeValueId);
+          billingModeValue = value;
         });
       },
     );
@@ -2450,11 +2443,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _customerBankDropDown() {
     return ReusedDropDownString(
-      textLabel:AppStrings.customerBankNameLabel,
+      textLabel: AppStrings.customerBankNameLabel,
       hint: AppStrings.customerBankNameLabel,
       items: _bankDropdownItems.map((String item) {
         return DropdownMenuItem<String>(
-            value:item,
+            value: item,
             child: Text(item)
         );
       }).toList(),
@@ -2462,96 +2455,102 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       onChanged: (value) {
         setState(() {
           _bankValue = value;
-          print("_bankValue-->"+_bankValue);
+          print("_bankValue-->" + _bankValue);
         });
       },
     );
   }
 
-  Widget _customerBackNoWidget(){
+  Widget _customerBackNoWidget() {
     return TextFieldWidget(
-        headingLabel:AppStrings.customerAccountNoLabel,
+        headingLabel: AppStrings.customerAccountNoLabel,
         // labelText:AppStrings.customerAccountNoLabel,
         hintText: AppStrings.customerAccountNoLabel,
-        controller:customerAccountNum,
+        controller: customerAccountNum,
         textInputType: TextInputType.text,
         maxLength: 20,
         suffixIcon: AppStrings.isCustAccNo == true
-            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-            : Icon(Icons.info,color: Colors.red),
-        validator: (value){
-          if(value.isEmpty){
+            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            : Icon(Icons.info, color: Colors.red),
+        validator: (value) {
+          if (value.isEmpty) {
             return "Please enter Customer Account Number";
-          }else if(value.length <= 16){
+          } else if (value.length <= 16) {
             return "Customer Account Number must be of 17 digit";
           }
           return null;
         },
-        onChanged:(v){
+        onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 16 ? AppStrings.isCustAccNo = false : AppStrings.isCustAccNo = true);
+          setState(() =>
+          v.length <= 16 ? AppStrings.isCustAccNo = false : AppStrings
+              .isCustAccNo = true);
         }
     );
   }
 
-  Widget _customerIFSCCodeWidget(){
+  Widget _customerIFSCCodeWidget() {
     return TextFieldWidget(
-        headingLabel:AppStrings.customerIfscCodeLabel,
+        headingLabel: AppStrings.customerIfscCodeLabel,
         hintText: AppStrings.customerIfscCodeLabel,
-        controller:IFSCController,
+        controller: IFSCController,
         textInputType: TextInputType.text,
         maxLength: 11,
         suffixIcon: AppStrings.isCustIfscCode == true
-            ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-            : Icon(Icons.info,color: Colors.red),
-        validator: (value){
-          if(value.isEmpty){
+            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            : Icon(Icons.info, color: Colors.red),
+        validator: (value) {
+          if (value.isEmpty) {
             return "Please enter Customer Ifsc Code";
-          }else if(value.length <= 10){
+          } else if (value.length <= 10) {
             return "Customer Ifsc Code must be of 11 digit";
           }
           return null;
         },
-        onChanged:(v){
+        onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(()=> v.length <= 10 ? AppStrings.isCustIfscCode = false : AppStrings.isCustIfscCode = true);
+          setState(() =>
+          v.length <= 10 ? AppStrings.isCustIfscCode = false : AppStrings
+              .isCustIfscCode = true);
         }
     );
   }
 
-  Widget _customerBankAddWidget(){
+  Widget _customerBankAddWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.customerBankAddress,
+      headingLabel: AppStrings.customerBankAddress,
       hintText: AppStrings.customerBankAddress,
-      controller:bank_address,
+      controller: bank_address,
       textInputType: TextInputType.text,
       suffixIcon: AppStrings.isCustBankAdd == true
-          ? Icon(Icons.check_circle_sharp,color: Colors.green,)
-          : Icon(Icons.info,color: Colors.red),
-      validator: (value){
-        if(value.isEmpty){
+          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          : Icon(Icons.info, color: Colors.red),
+      validator: (value) {
+        if (value.isEmpty) {
           return "Please enter the customer bank address";
         }
         return null;
       },
-      onTap: (){},
-      onChanged:(v){
+      onTap: () {},
+      onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(()=> v.length > 1 ? AppStrings.isCustBankAdd = true : AppStrings.isCustBankAdd = false);
+        setState(() =>
+        v.length > 1 ? AppStrings.isCustBankAdd = true : AppStrings
+            .isCustBankAdd = false);
       },
     );
   }
 
-  Widget _depositStatusDropDown(){
+  Widget _depositStatusDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel:"",
+      textLabel: "",
       hint: AppStrings.depositStatusLabel,
       items: dropListDepositStatusList,
-      value: __depositStatusValue,
-      onChanged: (OptionItem value) {
+      value: depositStatusValue,
+      onChanged: ( value) {
         setState(() {
           _depositStatusId = value.id;
-          __depositStatusValue = value;
+          depositStatusValue = value;
           if (_depositStatusId != '2') {
             reasonNoController.text = '';
           }
@@ -2560,42 +2559,42 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     );
   }
 
-  Widget _reasonDepositStatusWidget(){
+  Widget _reasonDepositStatusWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.reasonLabel,
+      headingLabel: AppStrings.reasonLabel,
       hintText: AppStrings.reasonLabel,
-      controller:reasonNoController,
+      controller: reasonNoController,
       textInputType: TextInputType.text,
     );
   }
 
-  Widget  _modeDepositDropDown(){
+  Widget _modeDepositDropDown() {
     return ReusedDropDownOptionItem(
-        textLabel:AppStrings.modeOfDepositLabel,
+        textLabel: AppStrings.modeOfDepositLabel,
         hint: AppStrings.modeOfDepositLabel,
-        items: dropListModeOfDepositList,
+        items: modeOfDepositList,
         value: __modeDepositValue,
-        onChanged: (item) {
+        onChanged: (OptionItem item) {
           setState(() {
             __modeDepositValue = item;
-            print("__modeDepositValue-->"+ __modeDepositValue.id.toString());
+            print("__modeDepositValue-->" + __modeDepositValue.id.toString());
           });
           if (item.id == "2") {
             _modeOfDeposit = item.id;
             setState(() {
               chqNOController.clear();
-              bankAccNoController.text="";
+              bankAccNoController.text = "";
               mICRCodeController.text = "";
               mICRCodeController.clear();
               initDepDateController.clear();
-              chqDateController.text="";
-              checkONLine=false;
+              chqDateController.text = "";
+              checkONLine = false;
               isDepositCheq = false;
               _modeOfDeposit = item.id;
             });
           } else {
             setState(() {
-              checkONLine=true;
+              checkONLine = true;
               isDepositCheq = true;
               _modeOfDeposit = item.id;
             });
@@ -2604,22 +2603,22 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     );
   }
 
-  Widget _chqNoWidget(){
+  Widget _chqNoWidget() {
     return TextFieldWidget(
-      headingLabel:AppStrings.chqNoLabel,
+      headingLabel: AppStrings.chqNoLabel,
       hintText: AppStrings.chqNoLabel,
-      controller:chqNOController,
+      controller: chqNOController,
       maxLength: 5,
       textInputType: TextInputType.number,
     );
   }
 
-  Widget _depositDateWidget(){
+  Widget _depositDateWidget() {
     return TextFieldWidget(
-      prefixIcon:Icon(Icons.calendar_today),
-      hintText:  AppStrings.depositDateLabel,
-      controller:initDepDateController,
-      readOnly : true,
+      prefixIcon: Icon(Icons.calendar_today),
+      hintText: AppStrings.depositDateLabel,
+      controller: initDepDateController,
+      readOnly: true,
       textInputType: TextInputType.datetime,
       onTap: () => _selectDate(context, initDepDateController),
     );
@@ -2627,25 +2626,25 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _bankNameDropDown() {
     return ReusedDropDownString(
-      textLabel:AppStrings.bankNameLabel,
+      textLabel: AppStrings.bankNameLabel,
       hint: AppStrings.bankNameLabel,
-      items:_bankDropdownItems2.map((String item) {
+      items: _bankDropdownItems2.map((String item) {
         return DropdownMenuItem<String>(
-          value:item,
+          value: item,
           child: Text(item),
         );
       }).toList(),
-      value:_bankValue2,
+      value: _bankValue2,
       onChanged: (String value) {
         setState(() {
           _bankValue2 = value;
-          print("_bankValue2--->"+_bankValue2);
+          print("_bankValue2--->" + _bankValue2);
         });
       },
     );
   }
 
-  Widget _buildCardWidget({String text}){
+  Widget _buildCardWidget({String text}) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -2659,7 +2658,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 5),
-          child: Text(text,textAlign: TextAlign.center, style: TextStyle(
+          child: Text(text, textAlign: TextAlign.center, style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.bold,
 
@@ -2668,7 +2667,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ),
     );
   }
-  Widget _localBorderImg(){
+
+  Widget _localBorderImg() {
     return CircleAvatar(
       radius: 41,
       child: CircleAvatar(
@@ -2683,212 +2683,85 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ),
     );
   }
-  Widget _fileImage({File fileImage, Function onPressed}){
-    return CircleAvatar(
-      radius: 41,
-      child: CircleAvatar(
-        backgroundImage:FileImage(fileImage),
-        radius: 40,
-        child: Align(
-          alignment: Alignment.center,
-          child: CircleAvatar(
-            backgroundColor: blackColor.withOpacity(0.7),
-            child: IconButton(
-                icon: Icon(Icons.delete_outlined,color: whiteColor.withOpacity(0.7)),
-                onPressed:onPressed
-            ),
-          ),
-        ),
-      ),
-    );
-    /*return CircleAvatar(
-      radius: 41,
-      child: CircleAvatar(
+
+  Widget _fileImage({File fileImage, Function onPressed}) {
+    print("sdsdsldk =========================== ${fileImage}");
+    if (fileImage.path.isNotEmpty) {
+      return CircleAvatar(
+        radius: 41,
+        child: CircleAvatar(
           radius: 40,
-          backgroundColor: Colors.white,
-          child: ClipRRect(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Image.file(
-                fileImage,
-                fit: BoxFit.cover,
-              )
-            ),
-          )
-      ),
-    );*/
-  }
-  Widget _dottedBorder({Function onTap}){
-    return Container(
-      alignment: Alignment.topLeft,
-      child: GestureDetector(
-          child: DottedBorder(
-            padding: EdgeInsets.all(20),
-            borderType: BorderType.Circle,
-            dashPattern: [6, 3],
-            color: greyColor,
-            child: Image.asset("assets/images/place_holder.png",width: 60,height: 60,),
-          ),
-          onTap:onTap
-      ),
-    );
-  }
-
-  Widget _networkImageWidget({Function onPressed, String networkImage}){
-    return Container(
-      alignment: Alignment.topLeft,
-      child: Stack(
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(networkImage),
-            radius: 40,
-            child: Align(
-              alignment: Alignment.center,
-              child: CircleAvatar(
-                backgroundColor: blackColor.withOpacity(0.7),
-                child: IconButton(
-                    icon: Icon(Icons.delete_outlined,color: whiteColor.withOpacity(0.7)),
-                    onPressed:onPressed),
+          backgroundImage: FileImage(fileImage),
+          child: Align(
+            alignment: Alignment.center,
+            child: CircleAvatar(
+              backgroundColor: Colors.grey.shade400.withOpacity(0.7),
+              child: IconButton(
+                  icon: Icon(
+                      Icons.delete_outline, color: Colors.blue.shade900.withOpacity(0.7)),
+                  onPressed: onPressed
               ),
             ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _imageNameWidget({String imageName}){
-    return Container(
-        decoration: BoxDecoration(
-
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: <Color>[Colors.red, Colors.blue.shade900]
+          ),),
+      );
+    } else {
+      return CircleAvatar(
+        radius: 41,
+        child: CircleAvatar(
+          backgroundImage: FileImage(fileImage),
+          radius: 40,
+          child: Align(
+            alignment: Alignment.center,
+            child: CircleAvatar(
+              backgroundColor: blackColor.withOpacity(0.7),
+              child: IconButton(
+                  icon: Icon(
+                      Icons.edit, color: whiteColor.withOpacity(0.7)),
+                  onPressed: onPressed
+              ),
+            ),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(imageName,style: TextStyle(color: Colors.white),),
-        ));
+      );
+    }
   }
 
-  Widget  _fileImageWidget({File fileImage,Function onPressed}){
-    return Container(
-      alignment: Alignment.topLeft,
-      child: Stack(
-        children: [
-          CircleAvatar(
-            backgroundImage:FileImage(fileImage),
-            radius: 40,
-            child: Align(
-              alignment: Alignment.center,
-              child: CircleAvatar(
-                backgroundColor:
-                blackColor.withOpacity(0.7),
-                child: IconButton(
-                    icon: Icon(Icons.delete_outlined,color: whiteColor.withOpacity(0.7)),
-                    onPressed:onPressed
-                ),
+
+  Widget _imageNameWidget({String imageName}) {
+    return Column(
+      children: [
+        Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: <Color>[Colors.red, Colors.blue.shade900]
               ),
             ),
-          )
-        ],
-      ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(imageName, style: TextStyle(color: Colors.white),),
+            )),
+        SizedBox(height: 12,),
+      ],
     );
   }
 
-  Widget _buildRow({String leading,String trailing}){
+  Widget _buildRow({String leading, String trailing}) {
     return Column(
       children: [
         ListTile(
           leading: Text(leading),
-          trailing:Text(trailing),
+          trailing: Text(trailing),
         ),
         Divider(),
       ],
     );
   }
 
-  Widget _preNetworkImage({String networkImage, File imageFile}){
-    return Container(
-      alignment:Alignment.topLeft,
-      child: Stack(
-        children: [
-          CircleAvatar(
-            backgroundImage:NetworkImage(networkImage),
-            radius:40,
-            child:Align(
-              alignment:Alignment.center,
-              child:CircleAvatar(
-                backgroundColor:blackColor.withOpacity(0.7),
-                child: IconButton(icon: Icon(Icons.zoom_out_map, color: whiteColor.withOpacity(0.7),),
-                    onPressed: () {
-                      Widget okButton = TextButton(
-                        child: Text("OK"),
-                        onPressed: () {
-                          Navigator.pop(context, false);
-                        },
-                      );
-                      AlertDialog alert = AlertDialog(
-                        title: Text("HPCL DMA"),
-                        content: Image.file(File(imageFile.path)),
-                        actions: [ okButton,],
-                      );
-                      showDialog(context: context,builder: (BuildContext context) {
-                        return alert;
-                      },
-                      );
-                    }),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _preFileImage({File fileImage,File imageFilePath}){
-    return Container(
-      alignment: Alignment.topLeft,
-      child: Stack(
-        children: [
-          CircleAvatar(
-            backgroundImage: FileImage(AppStrings.frontImage, ),
-            radius: 40,
-            child: Align(
-              alignment:Alignment.center,
-              child:CircleAvatar(
-                backgroundColor: blackColor.withOpacity(0.7),
-                child: IconButton(icon: Icon(Icons.zoom_out_map,color:whiteColor.withOpacity(0.7),),
-                    onPressed: () {
-                      Widget okButton = TextButton(
-                        child: Text("OK"),
-                        onPressed: () {
-                          Navigator.pop(context, false);
-                        },
-                      );
-                      AlertDialog alert = AlertDialog(
-                        title: Text("HPCL DMA"),
-                        content: Image.file(File(imageFilePath.path)),
-                        actions: [okButton, ],
-                      );
-                      showDialog(context: context,builder: (BuildContext context) {
-                        return alert;
-                      },
-                      );
-                    }),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-
-  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+  Future<void> _selectDate(BuildContext context,
+      TextEditingController controller) async {
     DateTime pickedDate = await showDatePicker(
         context: context,
         initialDate: currentDate,
@@ -2897,7 +2770,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     DateFormat formatter = DateFormat('yyyy-MM-dd');
     setState(() {
       initDepDateController.text = formatter.format(pickedDate);
-      if (initDepDateController.text.toString().isNotEmpty) {
+      if (initDepDateController.text
+          .toString()
+          .isNotEmpty) {
         fDepositeDate = true;
       } else {}
     });
@@ -2907,14 +2782,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     var resAllDistrict = prefs.getString(GlobalConstants.AllDistrict);
     List dataChargeList = json.decode(resAllDistrict);
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
-      dataChargeList.length, (i) => DropdownMenuItem(
-      value: OptionItem(id: dataChargeList[i]['id'], title: dataChargeList[i]['district_name']),
-      child: Text("${dataChargeList[i]['district_name']}"),
-    ),
+      dataChargeList.length, (i) =>
+        DropdownMenuItem(
+          value: OptionItem(id: dataChargeList[i]['id'],
+              title: dataChargeList[i]['district_name']),
+          child: Text("${dataChargeList[i]['district_name']}"),
+        ),
     );
     if (!mounted) return;
+    getAllDistrictItems = menuItems;
+    districtValue = getAllDistrictItems.firstWhere((element) => element.value.id == widget.studentModel.districtId).value;
     setState(() {
-      getAllDistrictItems = menuItems;
+
     });
   }
 
@@ -2922,17 +2801,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     var resArea = prefs.getString(GlobalConstants.area);
     List dataList = json.decode(resArea);
     List<DropdownMenuItem<OptionItem>> menuItems = [];
-    for(int i=0; i< dataList.length; i++) {
-      if(dataList[i]['charge_area_id'] == id) {
+    for (int i = 0; i < dataList.length; i++) {
+      if (dataList[i]['charge_area_id'] == id) {
         menuItems.add(DropdownMenuItem(
-          value: OptionItem(id: dataList[i]['gid'], title: dataList[i]['area_name']),
+          value: OptionItem(
+              id: dataList[i]['gid'], title: dataList[i]['area_name']),
           child: Text("${dataList[i]['area_name']}"),
         ));
       }
     }
     if (!mounted) return;
     setState(() {
-      _dropdownItems = menuItems;
+
+      areaItems = menuItems;
+      areaTypeValue = areaItems.firstWhere((element) => element.value.id == widget.studentModel.areaId).value;
+
     });
   }
 
@@ -2943,17 +2826,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     log(dataChargeList.toString());
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length,
-          (i) => DropdownMenuItem(
-        value:
-        OptionItem(id: dataChargeList[i]['gid'], title: dataChargeList[i]['charge_area_name']),
-        child: Text("${dataChargeList[i]['charge_area_name']}"),
-      ),
+          (i) =>
+          DropdownMenuItem(
+            value:
+            OptionItem(id: dataChargeList[i]['gid'],
+                title: dataChargeList[i]['charge_area_name']),
+            child: Text("${dataChargeList[i]['charge_area_name']}"),
+          ),
     );
     if (!mounted) return;
     setState(() {
       chargeAreaItems = menuItems;
+      chargeAreaType = chargeAreaItems.firstWhere((element) => element.value.id == widget.studentModel.chargeArea ?? "").value;
     });
-    fetchArea(dataChargeList[0]['gid']);
+    fetchArea(chargeAreaType.id);
   }
 
   Future<void> interestedDorpdownList() async {
@@ -2985,7 +2871,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Future<void> _getExistingCookingFuel() async {
-    var  resCookingFuel = prefs.getString(GlobalConstants.CookingFuel);
+    var resCookingFuel = prefs.getString(GlobalConstants.CookingFuel);
     final decoded = jsonDecode(resCookingFuel) as Map;
     for (final name in decoded.values) {
       _cookingFuelDropdownItems.add(DropdownMenuItem(
@@ -3007,8 +2893,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     }
     guardianTypeValue = decoded.values.first;
-    setState(() {
-    });
+    setState(() {});
   }
 
   Future<void> _getResidentStatus() async {
@@ -3029,20 +2914,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     List dataList = json.decode(resPropertyCategory);
     List<DropdownMenuItem<OptionItem>> menuItems = [];
     menuItems.add(DropdownMenuItem(
-      value: OptionItem(id: '0', title:'Select Property Category'),
+      value: OptionItem(id: '0', title: 'Select Property Category'),
       child: Text('Select Property Category'),
     ));
     menuItems = List.generate(
-      dataList.length, (i) => DropdownMenuItem(
-      value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
-      child: Text("${dataList[i]['name']}"),
-    ),
+      dataList.length, (i) =>
+        DropdownMenuItem(
+          value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
+          child: Text("${dataList[i]['name']}"),
+        ),
     );
     if (!mounted) return;
     setState(() {
-      _propertyDropdownItems = menuItems;
-      _categoryType = menuItems.first.value;
-      _propertyTypeId = _propertyDropdownItems.first.value.id;
+      propertyCategoryList = menuItems;
+      categoryValue = menuItems.first.value;
+      categoryValue = propertyCategoryList.firstWhere((element) => element.value.id == widget.studentModel.propertyCategoryId).value;
     });
   }
 
@@ -3050,16 +2936,17 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     var resPropertyClass = prefs.getString(GlobalConstants.propertyclass);
     List dataList = json.decode(resPropertyClass);
     List<DropdownMenuItem<OptionItem>> menuItems = [];
-    menuItems = List.generate(dataList.length, (i) => DropdownMenuItem(
-      value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
-      child: Text("${dataList[i]['name']}"),
-    ),
+    menuItems = List.generate(dataList.length, (i) =>
+        DropdownMenuItem(
+          value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
+          child: Text("${dataList[i]['name']}"),
+        ),
     );
     if (!mounted) return;
     setState(() {
-      _propertyClassDropdownItems = menuItems;
-      _propertyClassType = menuItems.first.value;
-      _propertyClassId = _propertyClassDropdownItems.first.value.id;
+      propertyClassList = menuItems;
+      propertyClassValue = menuItems.first.value;
+      propertyClassValue = propertyClassList.firstWhere((element) => element.value.id == widget.studentModel.propertyClassId?? "").value;
     });
   }
 
@@ -3067,13 +2954,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     var resIdentityProof = prefs.getString(GlobalConstants.IdentityProof);
     final decoded = jsonDecode(resIdentityProof) as Map;
     decoded.forEach((k, v) {
-      _idProofDropdownItems.add(DropdownMenuItem(
+      idProofList.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
         child: Text(v),
       ));
     });
-    _idProofDropDownValue = _idProofDropdownItems.first.value;
-    _idProofDropDownValueId = _idProofDropDownValue.id;
+    idProofValue = idProofList.first.value;
+    idProofValue = idProofList.firstWhere((element) => element.value.id == widget.studentModel.kycDocument1).value;
     setState(() {});
   }
 
@@ -3088,6 +2975,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     });
     _addressProofDropDownValue = _addressProofDropdownItems.first.value;
     _addressProofDropDownValueId = _addressProofDropDownValue.id;
+
     setState(() {});
   }
 
@@ -3101,8 +2989,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     });
     _kycProofDropDownValue = _kycProofDropdownItems.first.value;
-    _kycProofDropDownValueId = _kycProofDropDownValue.id;
-    log("NOC_kycProofDropDownValueId$_kycProofDropDownValueId");
+    _kycProofDropDownValue = _kycProofDropdownItems.firstWhere((element) => element.value.id == widget.studentModel.kycDocument3).value;
     setState(() {});
   }
 
@@ -3121,6 +3008,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     log("getBankGetBank2--> $resAllBanks");
     setState(() {
       _bankDropdownItems2 = decoded;
+      billingModeValue = billingModeList.firstWhere((element) => element.value.id == widget.studentModel.billingModel).value;
+
     });
   }
 
@@ -3129,14 +3018,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     final decoded = jsonDecode(resEbilling) as Map;
     log("Ebilling --> $resEbilling");
     decoded.forEach((k, v) {
-      _billingModeList.add(DropdownMenuItem(
+      billingModeList.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
         child: Text(v),
       ));
     });
     setState(() {
-      __billingModeValue = _billingModeList.first.value;
-      __billingModeValueId = __billingModeValue.id;
+      billingModeValue = billingModeList.first.value;
+      billingModeValue = billingModeList.firstWhere((element) => element.value.id == widget.studentModel.billingModel).value;
     });
   }
 
@@ -3150,7 +3039,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     });
     __acceptConversionPolicyValue = _acceptConversionPolicyList.first.value;
-    __acceptConversionPolicyValueId = __acceptConversionPolicyValue.id;
+    __acceptConversionPolicyValue = _acceptConversionPolicyList.firstWhere((element) => element.value.id == widget.studentModel.acceptConversionPolicy).value;
     setState(() {});
   }
 
@@ -3163,42 +3052,43 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         child: Text(v),
       ));
     });
-    __acceptExtraFittingCostValue = _acceptExtraFittingCostList.first.value;
-    __acceptExtraFittingCostValueId = __acceptExtraFittingCostValue.id;
-    setState(() {});
+    acceptExtraFittingCostValue = _acceptExtraFittingCostList.first.value;
+    acceptExtraFittingCostValue = _acceptExtraFittingCostList.firstWhere((element) => element.value.id == widget.studentModel.acceptExtraFittingCost).value;
+    setState(() {
+
+    });
   }
 
   Future<void> _getMdeOfDeposite() async {
     var resMdeOfDeposite = prefs.getString(GlobalConstants.MdeOfDeposite);
     final decoded = jsonDecode(resMdeOfDeposite) as Map;
     decoded.forEach((k, v) {
-      dropListModeOfDepositList.add(DropdownMenuItem(
+      modeOfDepositList.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
         child: Text(v),
       ));
     });
-    __modeDepositValue = dropListModeOfDepositList.first.value;
+    __modeDepositValue = modeOfDepositList.first.value;
     _modeOfDeposit = __modeDepositValue.id;
-
+    __modeDepositValue = modeOfDepositList.firstWhere((element) => element.value.id == widget.studentModel.modeOfDeposite).value;
     setState(() {
       if (_modeOfDeposit == '1') {
         isDepositCheq = true;
-        checkONLine=true;
+        checkONLine = true;
       }
       if (_modeOfDeposit == '2') {
         isDepositCheq = false;
         setState(() {
-          checkONLine=false;
+          checkONLine = false;
           chqNOController.clear();
           mICRCodeController.text = "";
-          bankAccNoController.text="";
+          bankAccNoController.text = "";
           mICRCodeController.clear();
           initDepDateController.clear();
-          chqDateController.text="";
+          chqDateController.text = "";
         });
       }
     });
-
   }
 
   Future<void> _getInitialDepositeStatusList() async {
@@ -3212,8 +3102,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     });
     setState(() {
-      __depositStatusValue = dropListDepositStatusList.first.value;
-      _depositStatusId = __depositStatusValue.id;
+      depositStatusValue = dropListDepositStatusList.first.value;
+      _depositStatusId = depositStatusValue.id;
+      depositStatusValue = dropListDepositStatusList.firstWhere((element) => element.value.id == widget.studentModel.initialDepositeStatus).value;
     });
   }
 
@@ -3243,31 +3134,33 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
           reg_tax: ''),
       child: Text('Select Deposit Type'),
     ));
-    menuItems2 = List.generate(dataList.length, (i) => DropdownMenuItem(
-      value: DepositItem(
-          id: dataList[i]['deposit_types_id'],
-          title: dataList[i]['deposit_name'],
-          firstamount: dataList[i]['firstDepositAmount'],
-          amount: dataList[i]['totalAmount'],
-          schememonth: dataList[i]['scheme_month'],
-          gas_amount: dataList[i]['gas_deposit_amount'],
-          scheme_type: dataList[i]['scheme_type'],
-          scheme_code: dataList[i]['scheme_code'],
-          deposit_amount: dataList[i]['deposit_amount'],
-          equipment_deposit_amount: dataList[i]['equipment_deposit_amount'],
-          interest_amount: dataList[i]['interest_amount'],
-          registration_gst: dataList[i]['registration_gst'],
-          totalAmount: dataList[i]['totalAmount'],
-          nextCycleAmount: dataList[i]['nextCycleAmount'],
-          registration_tax_name: dataList[i]['registration_tax_name'],
-          interest_tax_amt: dataList[i]['interest_tax_amt'],
-          reg_tax: dataList[i]['reg_tax']),
-      child: Text("${dataList[i]['deposit_name']}"),
-    ),);
+    menuItems2 = List.generate(dataList.length, (i) =>
+        DropdownMenuItem(
+          value: DepositItem(
+              id: dataList[i]['deposit_types_id'],
+              title: dataList[i]['deposit_name'],
+              firstamount: dataList[i]['firstDepositAmount'],
+              amount: dataList[i]['totalAmount'],
+              schememonth: dataList[i]['scheme_month'],
+              gas_amount: dataList[i]['gas_deposit_amount'],
+              scheme_type: dataList[i]['scheme_type'],
+              scheme_code: dataList[i]['scheme_code'],
+              deposit_amount: dataList[i]['deposit_amount'],
+              equipment_deposit_amount: dataList[i]['equipment_deposit_amount'],
+              interest_amount: dataList[i]['interest_amount'],
+              registration_gst: dataList[i]['registration_gst'],
+              totalAmount: dataList[i]['totalAmount'],
+              nextCycleAmount: dataList[i]['nextCycleAmount'],
+              registration_tax_name: dataList[i]['registration_tax_name'],
+              interest_tax_amt: dataList[i]['interest_tax_amt'],
+              reg_tax: dataList[i]['reg_tax']),
+          child: Text("${dataList[i]['deposit_name']}"),
+        ),);
     menuItems.addAll(menuItems2);
     if (!mounted) return;
     setState(() {
       _propertyDropdownItemsDeposit = menuItems;
+      _depositCategoryType = _propertyDropdownItemsDeposit.firstWhere((element) => element.value.id == widget.studentModel.depositeType).value;
     });
     return;
   }
@@ -3296,7 +3189,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     AppStrings.chqPhotoLabel = registration.chqPhoto;
     AppStrings.formStatusLabel = registration.payStatus;
     if (!mounted) return;
-
   }
 
 
@@ -3332,7 +3224,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Your are connected to ${isWifiConnected ? "WIFI" : "MOBILE DATA"}"),
+              Text("Your are connected to ${isWifiConnected
+                  ? "WIFI"
+                  : "MOBILE DATA"}"),
               Text(isWifiConnected ? "$wifiBSSID" : "Not Wifi"),
               Text("$wifiIP"),
               Text("$wifiName")
@@ -3342,560 +3236,4 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ),
     );
   }
-
-
-
-  void _showPicker(context, PhotoController photoController) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        getProfilePhoto();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      getImageGallery(photoController,);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-  void _showPicker2(context, PhotoController photoController) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        getProfilePhoto2();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      getImageGallery2(photoController,);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  void _showPicker3(context, PhotoController photoController) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        getProfilePhoto3();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      getImageGallery3(photoController,);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  void _showPicker4(context, PhotoController photoController) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        getProfilePhoto4();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      getImageGallery4(photoController);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  void _showPicker5(context, PhotoController photoController) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        getProfilePhoto5();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      getImageGallery5(photoController,);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-  void _showPicker6(context, PhotoController photoController) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        getProfilePhoto6();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      getImageGallery6(photoController,);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-  void _showPicker7(context, PhotoController photoController) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        getProfilePhoto7();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      getImageGallery7(photoController,);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-  void _showPicker8(context, PhotoController photoController) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        //_imgFromGallery();
-                        //_imgFromGallery();
-                        getProfilePhoto8();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      getImageGallery8(photoController);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-  void _showPicker9(context, PhotoController photoController) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        //_imgFromGallery();
-                        //_imgFromGallery();
-                        getProfilePhoto9();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      //_imgFromCamera();
-                      getImageGallery9(photoController);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Future getProfilePhoto() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-    final pickedImageFile = File(pickedFile.path);
-    setState(() {
-      AppStrings.frontImage = pickedImageFile;
-    });
-  }
-  getImageGallery(PhotoController controller,) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-      final pickedImageFile = File(pickedFile.path);
-      setState(() {
-        AppStrings.frontImage = pickedImageFile;
-        log("pickedImageFile-->" +AppStrings.frontImage.toString());
-      });
-    }catch(e){
-      log(e);
-    }
-  }
-
-  Future getProfilePhoto2() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-    final pickedImageFile = File(pickedFile.path);
-    setState(() {
-      AppStrings.backImage = pickedImageFile;
-    });
-  }
-  getImageGallery2(PhotoController controller) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-      final pickedImageFile = File(pickedFile.path);
-      setState(() {
-        AppStrings.backImage = pickedImageFile;
-        log("pickedImageFile2-->" +AppStrings.backImage.toString());
-      });
-    } catch(e){
-      log(e);
-    }
-  }
-
-  Future getProfilePhoto3() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery, maxHeight: 1000,maxWidth: 1000,imageQuality: 1);
-    final pickedImageFile = File(pickedFile.path);
-    setState(() {
-      AppStrings.electricBillFrontImg = pickedImageFile;
-    });
-  }
-  getImageGallery3(PhotoController controller) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-
-    final pickedImageFile = File(pickedFile.path);
-    setState(() {
-      AppStrings.electricBillFrontImg = pickedImageFile;
-      log("pickedImageFile3-->" + AppStrings.electricBillFrontImg.toString());
-    });
-  }
-
-  Future getProfilePhoto4() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-    final pickedImageFile = File(pickedFile.path);
-    setState(() {
-      AppStrings.electricBillBackImg = pickedImageFile;
-    });
-  }
-  getImageGallery4(PhotoController controller,) async {
-    try  {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 480,maxWidth: 640,imageQuality: 1);
-      final pickedImageFile = File(pickedFile.path);
-      setState(() {
-        AppStrings.electricBillBackImg = pickedImageFile;
-      });
-    } catch(e){
-      log(e.toString());
-    }
-  }
-
-  Future getProfilePhoto5() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-    var asd = File(pickedFile.path);
-    final bytes = asd.readAsBytesSync().lengthInBytes;
-    final kb = bytes / 1024;
-    final mb = kb / 1024;
-    if(mb>1){
-      EasyLoading.showError("PICK IMAGE \nSHOULD BE LESS THEN 1MB");
-    } else{
-      setState(() {
-        if (pickedFile != null) {
-          AppStrings.nocFrontImg = File(pickedFile.path);
-        } else {
-          log('No image selected.');
-        }
-      });
-    }
-  }
-  getImageGallery5(PhotoController controller) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-      final pickedImageFile = File(pickedFile.path);
-      setState(() {
-        AppStrings.nocFrontImg = pickedImageFile;
-        log("pickedImageFile5-->" +AppStrings.nocFrontImg.toString());
-      });
-    }catch(e){
-      log(e);
-    }
-  }
-
-  Future getProfilePhoto6() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-    var asd = File(pickedFile.path);
-    final bytes = asd.readAsBytesSync().lengthInBytes;
-    final kb = bytes / 1024;
-    final mb = kb / 1024;
-    log("mbmbmb$mb");
-    if(mb>1){
-      EasyLoading.showError("PICK IMAGE \nSHOULD BE LESS THEN 1MB");
-    } else {
-      setState(() {
-        if (pickedFile != null) {
-          AppStrings.nocBackImg = File(pickedFile.path);
-        } else {
-          log('No image selected.');
-        }
-      });
-    }
-  }
-  getImageGallery6(PhotoController controller,) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-
-      final pickedImageFile = File(pickedFile.path);
-      setState(() {
-        AppStrings.nocBackImg = pickedImageFile;
-        log("pickedImageFile6-->" +AppStrings.nocBackImg.toString());
-      });
-    }catch(e){
-      log(e);
-    }
-  }
-
-  Future getProfilePhoto7() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery, maxHeight: 480,maxWidth: 640,imageQuality: 1);
-    var asd = File(pickedFile.path);
-    final bytes = asd.readAsBytesSync().lengthInBytes;
-    final kb = bytes / 1024;
-    final mb = kb / 1024;
-    log("mbmbmb$mb");
-    if(mb>1){
-      EasyLoading.showError("PICK IMAGE \nSHOULD BE LESS THEN 1MB");
-    } else {
-      setState(() {
-        if (pickedFile != null) {
-          AppStrings.consentPhoto = File(pickedFile.path);
-        } else {
-          log('No image selected.');
-        }
-      });
-    }
-  }
-  getImageGallery7(PhotoController controller) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-      final pickedImageFile = File(pickedFile.path);
-      setState(() {
-        AppStrings.consentPhoto = pickedImageFile;
-        log("pickedImageFile7-->" +AppStrings.consentPhoto.toString());
-      });
-    } catch(e){
-      log(e);
-    }
-  }
-
-  Future getProfilePhoto8() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery, maxHeight: 480,maxWidth: 640,imageQuality: 1);
-    var asd = File(pickedFile.path);
-    final bytes = asd.readAsBytesSync().lengthInBytes;
-    final kb = bytes / 1024;
-    final mb = kb / 1024;
-    log("mbmbmb$mb");
-    if(mb>1) {
-      EasyLoading.showError("PICK IMAGE \nSHOULD BE LESS THEN 1MB");
-    } else{
-      setState(() {
-        if (pickedFile != null) {
-          AppStrings.chqCancelledPhoto = File(pickedFile.path);
-        } else {
-          log('No image selected.');
-        }
-      });
-    }
-  }
-  getImageGallery8(PhotoController controller,) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-      final pickedImageFile = File(pickedFile.path);
-      setState(() {
-        AppStrings.chqCancelledPhoto = pickedImageFile;
-        log("pickedImageFile8-->" +AppStrings.chqCancelledPhoto.toString());
-      });
-    }catch(e){
-      log(e);
-    }
-  }
-
-  Future getProfilePhoto9() async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-      final pickedImageFile = File(pickedFile.path);
-      setState(() {
-        AppStrings.chqPhoto = pickedImageFile;
-        log("pickedImageFile9-->" +AppStrings.chqPhoto.toString());
-      });
-    } catch(e){
-      log(e.toString());
-    }
-  }
-
-  getImageGallery9(PhotoController controller,) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 480,maxWidth: 640,imageQuality: 1);
-      final pickedImageFile = File(pickedFile.path);
-      setState(() {
-        AppStrings.chqPhoto = pickedImageFile;
-        log("pickedImageFile9-->" +AppStrings.chqPhoto.toString());
-      });
-    } catch(e){
-      log(e.toString());
-    }
-  }
-  Future<XFile> compressFile(File file) async {
-    final filePath = file.absolute.path;
-
-    // Create output file path
-    // eg:- "Volume/VM/abcd_out.jpeg"
-    final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
-    final splitted = filePath.substring(0, (lastIndex));
-    final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
-    var result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path, outPath,
-      quality: 5,
-    );
-
-    print(file.lengthSync());
-    print(result.length());
-    return result;
-  }
-  File imageFile;
-
-  void getImage({ImageSource source}) async{
-    ImagePicker imagePicker = ImagePicker();
-    final file = await imagePicker.pickImage(source: source);
-    if(file.path != null){
-      setState(() {
-        imageFile = File(file.path);
-      });
-    }
-  }
 }
-
-/*
-class PhotoController {
-  File imagePath;
-  String imageString = '';
-}
-*/
-

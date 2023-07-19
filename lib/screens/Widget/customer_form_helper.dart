@@ -30,9 +30,9 @@ class CustomerFormHelper{
       String noOfFamilyMembers,
       String addressProofNo,
       String idProofNo,
-      File idFrontImage,
-      File idBackImage,
-      File consentImage,
+      String idFrontImage,
+      String idBackImage,
+      String consentImage,
       String customerBankName,
       String customerAccNo,
       String customerIfscCode,
@@ -44,7 +44,7 @@ class CustomerFormHelper{
       String bankAccNo,
       String depositAmount,
       String micrCode,
-      File chequePhoto,
+      String chequePhoto,
    }){
       try{
          if (acceptConversionPolicyValueId != "1"){
@@ -114,13 +114,13 @@ class CustomerFormHelper{
          } else if (idProofNo == ""){
             CustomToast.showToast("Please enter the id proof no.");
             return false;
-         } else if (!(idFrontImage != null && idFrontImage.path != null)){
-            CustomToast.showToast("Please select address proof front image");
+         } else if (idFrontImage == null && idFrontImage.isEmpty){
+            CustomToast.showToast("Please select front image");
             return false;
-         } else if (!(idBackImage != null && idBackImage.path != null)){
-            CustomToast.showToast("Please select address proof back image");
+         } else if (idBackImage == null && idBackImage.isEmpty){
+            CustomToast.showToast("Please select back image");
             return false;
-         } else if (!(consentImage != null && consentImage.path != null)){
+         } else if (consentImage == null && consentImage.isEmpty){
             CustomToast.showToast("Please select consent photo");
             return false;
          } else if(customerBankName == null){
@@ -160,7 +160,7 @@ class CustomerFormHelper{
             } else if(micrCode == ""){
                CustomToast.showToast("Please enter the micr code");
                return false;
-            } else if (!(chequePhoto != null && chequePhoto.path != null)){
+            } else if (chequePhoto == null && chequePhoto.isEmpty){
                CustomToast.showToast("Please select cheque image");
                return false;
             }

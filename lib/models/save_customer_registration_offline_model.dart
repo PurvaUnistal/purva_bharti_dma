@@ -132,6 +132,10 @@ class SaveCustomerRegistrationOfflineModel{
   String idkey;
   @HiveField(63)
   bool complete;
+  @HiveField(64)
+  String chargeArea;
+  @HiveField(65)
+  String billingModel;
 
   SaveCustomerRegistrationOfflineModel({
     this.areaId,
@@ -198,6 +202,8 @@ class SaveCustomerRegistrationOfflineModel{
     this.micr,
     this.idkey,
     this.complete,
+    this.chargeArea,
+    this.billingModel,
 
   });
 }

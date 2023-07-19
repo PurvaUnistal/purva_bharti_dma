@@ -229,7 +229,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
         listItem(
             title: "Customer Registration Form",
             icon: Icons.picture_in_picture,
-            onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => MainRegisterPageUpdate()))
+            onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => MainRegisterPageUpdate(isUpdate: false,position: -1 ,studentModel:null)))
     )
     );
     list.add(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hpcl_app/models/save_customer_registration_model.dart';
 import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
+import 'package:hpcl_app/screens/main_register_page_update.dart';
 import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
@@ -28,7 +29,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
   GlobalKey<FormState> _keyLoader = GlobalKey<FormState>();
 
 
-
+  Box<SaveCustomerRegistrationOfflineModel> customerRegistrationBox;
   List<SaveCustomerRegistrationOfflineModel> customerRegistrationList;
   ApiIntegration apiIntegration;
   SaveCustRegReqModel saveCustRegReqModel;
@@ -38,9 +39,10 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
 
   @override
   void initState() {
-    apiIntegration = ApiIntegration();
     initConnectivity();
-    customerRegistrationList = SaveCusRegHiveDataStore.box.values.toList();
+    apiIntegration = ApiIntegration();
+    customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(SaveCusRegHiveDataStore.saveCustRegDataBoxName);
+    customerRegistrationList = customerRegistrationBox.values.toList();
     super.initState();
   }
 
@@ -98,16 +100,20 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           nameOfBank: saveCustRegOffModel.nameOfBank,
           ownerConsent: saveCustRegOffModel.ownerConsent,
           payementBankName: saveCustRegOffModel.payementBankName,
-          backSide1: saveCustRegOffModel.backSide1,
-          backSide2: saveCustRegOffModel.backSide2,
-          backSide3: saveCustRegOffModel.backSide3,
+          backSideImg1: saveCustRegOffModel.backSide1,
+          backSideImg2: saveCustRegOffModel.backSide2,
+          backSideImg3: saveCustRegOffModel.backSide3,
           canceledCheque: saveCustRegOffModel.canceledCheque,
           chequePhoto: saveCustRegOffModel.chequePhoto,
           uploadCustomerPhoto: saveCustRegOffModel.uploadCustomerPhoto,
           uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto,
-          documentUploads1: saveCustRegOffModel.documentUploads1,
-          documentUploads2: saveCustRegOffModel.documentUploads2,
-          documentUploads3: saveCustRegOffModel.documentUploads3,
+          frontSideImg1: saveCustRegOffModel.documentUploads1,
+          frontSideImg2: saveCustRegOffModel.documentUploads2,
+          frontSideImg3: saveCustRegOffModel.documentUploads3,
+          acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy,
+          acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost,
+          micr: saveCustRegOffModel.micr,
+          buildingNumber: "",
         );
         print("saveCustRegReqModel--->"+saveCustRegReqModel.toJson().toString());
         var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
@@ -137,7 +143,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
       }
       customerRegistrationList.removeRange(0, count);
       await Future.delayed(Duration(seconds: 2));
-   //   Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      //   Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       EasyLoading.dismiss();
 
     }
@@ -187,10 +193,10 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
               SizedBox(height: 15,),
               SingleChildScrollView(
                 child: ValueListenableBuilder(
-                    valueListenable: SaveCusRegHiveDataStore.box.listenable(),
-                    builder: (context, Box box, widget) {
-                      return box.length > 0 ?
-                      ListView.builder(
+                    valueListenable: customerRegistrationBox.listenable(),
+                    builder: (context, box,_) {
+                      return customerRegistrationList.length == 0 ? const Center(child: Text("No Data Found"))
+                          : ListView.builder(
                           shrinkWrap: true,
                           physics: ClampingScrollPhysics(),
                           itemCount: customerRegistrationList.length,
@@ -203,100 +209,100 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                 shadowColor: Colors.lightBlueAccent,
                                 color: Colors.white,
                                 shape: Border(left: BorderSide(color: Colors.blue.withOpacity(.7),width: 3)),
-                                child: Padding(padding: const EdgeInsets.all(0.0),
-                                  child: Column(
-                                    children: [
-                                      ListTile(
-                                        title: Column(
-                                          crossAxisAlignment:CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      title: Column(
+                                        crossAxisAlignment:CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Text("Records : ${position + 1}",style: appbarHeadingStyle,),
+                                              Spacer(),
+                                              checkLoading == false
+                                                  ? Icon(Icons.sync, color: syncColors,)
+                                                  : IconButton(icon: Icon(Icons.sync,color: syncColors, ),
+                                                onPressed: (){},
+                                              ),
+                                              InkWell(
+                                                  onTap: ()async{
+                                                    await showDialog(
+                                                      context: context,
+                                                      builder: (context) => AlertDialog(
+                                                        title: Text("HPCL DMA"),
+                                                        content: Text('Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            style: ButtonStyle(
+                                                              backgroundColor: MaterialStateProperty.all(Colors.blue.shade900),
+                                                              elevation: MaterialStateProperty.all(3),
+                                                              shadowColor: MaterialStateProperty.all(Colors.blue.shade900), //Defines shadowColor
+                                                            ),
+                                                            onPressed: () {
+                                                              dataStore.deleteUser(index: position);
+                                                              Navigator.of(context, rootNavigator: true).pop();
+                                                            },
+                                                            child: const Text('Yes', style: TextStyle(color: Colors.white),
+                                                            ),
+                                                          ),
+                                                          TextButton(
+                                                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue.shade900),
+                                                              elevation: MaterialStateProperty.all(3),
+                                                              shadowColor: MaterialStateProperty.all(Colors.blue.shade900), //Defines shadowColor
+                                                            ),
+                                                            onPressed: () {Navigator.of(context, rootNavigator: true).pop(); },
+                                                            child: const Text('No',
+                                                              style: TextStyle(color: Colors.white),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Icon(Icons.delete,size:30,color: Colors.blue.shade900,)),
+                                              IconButton(
+                                                  icon: Icon(Icons.edit, color: Colors.blue.shade900),
+                                                  onPressed: (){
+                                                    Navigator.push(context,MaterialPageRoute(builder:(context) => MainRegisterPageUpdate(isUpdate: true,position: position ,studentModel:getStudent,)));
+                                                  })
+                                            ],
+                                          ),
+                                          Divider(),
+                                          SizedBox(height: 10,),
+                                          Row(
                                               mainAxisSize: MainAxisSize.min,
                                               mainAxisAlignment: MainAxisAlignment.end,
                                               children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.all(0.0),
-                                                //  child: Text("RECORDS : ${position + 1}",style: appbarHeadingStyle,),
-                                                  child: Text("Records : ${position + 1}",style: appbarHeadingStyle,),
-                                                ),
+                                                Text( "Mobile No",style: appbarHeadingStyle,),
                                                 Spacer(),
-                                                checkLoading == false
-                                                    ? Icon(Icons.sync, color: syncColors,)
-                                                    : IconButton(icon: Icon(Icons.sync,color: syncColors, ),
-                                                  onPressed: (){},
+                                                Text("${getStudent.mobileNumber}",style: appbarHeadingStyle,),
+                                              ]),
+                                          SizedBox(height: 10,),
+                                          Divider(),
+                                          Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:MainAxisAlignment.end,
+                                              children: [
+                                                Text("STATUS",style: appbarHeadingStyle,),
+                                                Spacer(),
+                                                getStudent.complete == null
+                                                    ? Padding( padding: const EdgeInsets.all(8.0),
+                                                  child: Icon(Icons.close,color: Colors.red),)
+                                                    :   Padding(padding: const EdgeInsets.all(8.0),
+                                                  child: Icon(Icons.check_circle_sharp,color: Colors.green,),
                                                 ),
-                                                InkWell(
-                                                    onTap: ()async{
-                                                      await showDialog(
-                                                        context: context,
-                                                        builder: (context) => AlertDialog(
-                                                            title: Text("HPCL DMA"),
-                                                            content: Text('Are you sure you want to delete ${getStudent.mobileNumber}?'),
-                                                          actions: <Widget>[
-                                                            TextButton(
-                                                              style: ButtonStyle(
-                                                                backgroundColor: MaterialStateProperty.all(Colors.blue.shade900),
-                                                                elevation: MaterialStateProperty.all(3),
-                                                                shadowColor: MaterialStateProperty.all(Colors.blue.shade900), //Defines shadowColor
-                                                              ),
-                                                              onPressed: () {dataStore.deleteUser(index: position);},
-                                                              child: const Text('Yes', style: TextStyle(color: Colors.white),
-                                                              ),
-                                                            ),
-                                                            TextButton(
-                                                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue.shade900),
-                                                                elevation: MaterialStateProperty.all(3),
-                                                                shadowColor: MaterialStateProperty.all(Colors.blue.shade900), //Defines shadowColor
-                                                              ),
-                                                              onPressed: () {Navigator.of(context, rootNavigator: true).pop(); },
-                                                              child: const Text('No',
-                                                                style: TextStyle(color: Colors.white),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: Icon(Icons.delete,size:30,color: Colors.blue.shade900,)),
-                                                IconButton(onPressed: (){}, icon: Icon(Icons.edit, color: Colors.blue.shade900,))
-                                              ],
-                                            ),
-                                            Divider(),
-                                            SizedBox(height: 10,),
-                                            Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                children: [
-                                                  Text( "Mobile No",style: appbarHeadingStyle,),
-                                                  Spacer(),
-                                                  Text("${getStudent.mobileNumber}",style: appbarHeadingStyle,),
-                                                ]),
-                                            SizedBox(height: 10,),
-                                            Divider(),
-                                            Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:MainAxisAlignment.end,
-                                                children: [
-                                                  Text("STATUS",style: appbarHeadingStyle,),
-                                                  Spacer(),
-                                                  getStudent.complete == null
-                                                      ? Padding( padding: const EdgeInsets.all(8.0),
-                                                    child: Icon(Icons.close,color: Colors.red),)
-                                                      :   Padding(padding: const EdgeInsets.all(8.0),
-                                                    child: Icon(Icons.check_circle_sharp,color: Colors.green,),
-                                                  ),
-                                                  Divider(),
-                                                ]),
-                                          ],
-                                        ),
+                                                Divider(),
+                                              ]),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
-                          })
-                          :const Center(child: Text("No Data Found"));
+                          });
                     }
                 ),
               ),

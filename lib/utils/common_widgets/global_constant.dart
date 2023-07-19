@@ -102,7 +102,7 @@ class GlobalConstants {
   static String SchemeType = "SchemeType";
   static String AllDistrict = "getAllDistrict";
   static String AllLEBELS = "AllLEBELS";
-  static String saveCustomerRegistrationOffline = "api/saveCustomerRegistrationOffline";
+  static String saveCustomerRegistrationOffline = BaseUrl+"api/saveCustomerRegistrationOffline";
   static String cardModel = "cardModel";
   static String index = "index";
 }

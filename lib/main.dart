@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ExportFile/export_file.dart';
+import 'models/optioin_item_class.dart';
 import 'models/save_customer_registration_offline_model.dart';
 
 
@@ -11,6 +12,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter<SaveCustomerRegistrationOfflineModel>(SaveCustomerRegistrationOfflineModelAdapter());
+  Hive.registerAdapter<OptionItemClass>(OptionItemClassAdapter());
   await Hive.openBox<SaveCustomerRegistrationOfflineModel>("saveCustRegDataBoxName");
 
   runApp(MyApp());
