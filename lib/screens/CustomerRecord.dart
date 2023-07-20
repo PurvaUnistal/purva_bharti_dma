@@ -168,7 +168,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
+          child: ListView(
             children: [
               new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -192,6 +192,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
               ),
               SizedBox(height: 15,),
               SingleChildScrollView(
+                scrollDirection: Axis.vertical,
                 child: ValueListenableBuilder(
                     valueListenable: customerRegistrationBox.listenable(),
                     builder: (context, box,_) {
@@ -240,8 +241,9 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                                               elevation: MaterialStateProperty.all(3),
                                                               shadowColor: MaterialStateProperty.all(Colors.blue.shade900), //Defines shadowColor
                                                             ),
-                                                            onPressed: () {
-                                                              dataStore.deleteUser(index: position);
+                                                            onPressed: () async {
+                                                             await dataStore.deleteUser(index: position);
+
                                                               Navigator.of(context, rootNavigator: true).pop();
                                                             },
                                                             child: const Text('Yes', style: TextStyle(color: Colors.white),

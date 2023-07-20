@@ -45,15 +45,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   //Area
   List<DropdownMenuItem<OptionItem>> areaItems = [];
-  OptionItem areaTypeValue = OptionItem(id: "", title: "");
+  OptionItem areaTypeValue;
+  String _areaTypeId = '0';
 
   //Charge Area
   List<DropdownMenuItem<OptionItem>> chargeAreaItems = [];
-  OptionItem chargeAreaType = OptionItem(id: "", title: "");
+  OptionItem chargeAreaType;
+  String chargeAreaId = '0';
 
   //getAllDistrict
   List<DropdownMenuItem<OptionItem>> getAllDistrictItems = [];
-  OptionItem districtValue = OptionItem(id: "", title: "");
+  OptionItem districtValue;
+  String getAllDistrictId = '0';
 
   List<DropdownMenuItem<OptionItem>> dropListModelInterested = [];
   OptionItem _isInterestedItem = OptionItem(id: "", title: "");
@@ -99,7 +102,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   List<ChargeAreaModel> listChargeArea;
 
   var checkDepositeDate;
-  var checkONLine = true;
   String selectedDropDownValue = "";
   ServerApi serverApi;
 
@@ -192,7 +194,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       //   ownerConsent = widget.studentModel.ownerConsent,
       //   reasonForHold = widget.studentModel.reasonForHold,
       _bankValue = widget.studentModel.nameOfBank;
-      _bankValue2 = widget.studentModel.payementBankName;
+     _bankValue2 = widget.studentModel.payementBankName;
       schema = widget.studentModel.schema;
       dmaUserName = widget.studentModel.dmaUserName;
       dmaId = widget.studentModel.dmaUserId;
@@ -274,9 +276,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   TextEditingController IFSCController = TextEditingController();
   TextEditingController bank_address = TextEditingController();
 
-  OptionItem categoryValue = OptionItem(id: "", title: "");
-  OptionItem depositStatusValue = OptionItem(id: "", title: "");
-  OptionItem __modeDepositValue = OptionItem(id: "", title: "");
+  OptionItem categoryValue;
+  OptionItem depositStatusValue;
+  OptionItem __modeDepositValue;
   DepositItem _depositCategoryType;
 
 
@@ -294,16 +296,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   List<DropdownMenuItem<String>> guardianTypeDropdownItems = ([]);
 
   String _depositStatusId = '';
-  String _modeOfDeposit = '';
+  String _modeOfDeposit;
 
-  bool isDepositCheq = true;
+  bool isDepositCheq = false;
 
 
-  OptionItem idProofValue = OptionItem(id: "", title: "");
+  OptionItem idProofValue;
   OptionItem _addressProofDropDownValue = OptionItem(id: "", title: "");
   String _addressProofDropDownValueId = "";
 
-  OptionItem _kycProofDropDownValue = OptionItem(id: "", title: "");
+  OptionItem _kycProofDropDownValue;
  // String _kycProofDropDownValueId = "";
 
   DropListModel dropListModelarea = DropListModel([
@@ -398,13 +400,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   PhotoController chequePhoto = PhotoController();
 
   List<DropdownMenuItem<OptionItem>> billingModeList = [];
-  OptionItem billingModeValue = OptionItem(id: "", title: "");
+  OptionItem billingModeValue;
 
   List<DropdownMenuItem<OptionItem>> _acceptConversionPolicyList = [];
-  OptionItem __acceptConversionPolicyValue = OptionItem(id: "", title: "");
+  OptionItem __acceptConversionPolicyValue = OptionItem(id: "0", title: "");
+  String __acceptConversionPolicyValueId;
 
   List<DropdownMenuItem<OptionItem>> _acceptExtraFittingCostList = [];
-  OptionItem acceptExtraFittingCostValue =  OptionItem(id: "", title: "");
+  OptionItem acceptExtraFittingCostValue =  OptionItem(id: "0", title: "");
+  String __acceptExtraFittingCostValueId;
 
   List<ImageSource> values = [];
   DateTime currentDate = DateTime.now();
@@ -494,7 +498,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
             _customerBackNoWidget(),
             _customerIFSCCodeWidget(),
             _customerBankAddWidget(),
-            Text("=============================================="),
+            _buildCardWidget(text: AppStrings.securityDepositLabel),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -513,34 +517,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
             getdepositTypeDropDown(),
             _depositAmountWidget(),
             Visibility(
-              visible: true,
-              child: Column(
-                children: [
-                  Visibility(
-                    visible: isDepositCheq,
-                    child: Column(
-                      children: [
-                        _chqNoWidget(),
-                        _depositDateWidget(),
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: isDepositCheq,
-                    child: _bankNameDropDown(),
-                  ),
-                  Visibility(
-                    visible: isDepositCheq,
-                    child: Column(
-                      children: [
-                        _backNameWidget(),
-                        _micrCodeWidget(),
-                        _chequeImageWidget(),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                visible: isDepositCheq,
+                child: Column(
+                  children: [
+                    _chqNoWidget(),
+                    _depositDateWidget(),
+                    _bankNameDropDown(),
+                    _backNameWidget(),
+                    _micrCodeWidget(),
+                    _chequeImageWidget(),
+
+            ],
+                )
             ),
             TextButton(
               child: widget.isUpdate == false ? Text("Preview") : Text("Update"),
@@ -548,36 +536,36 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                 var textFieldValidationCheck = CustomerFormHelper
                     .textFieldValidationCheck(
                   titleLocation: latitudeController.text.trim().toString(),
-                  acceptConversionPolicyValueId: __acceptConversionPolicyValue.title,
-                  acceptExtraFittingCostValueId: acceptExtraFittingCostValue.title,
-                  chargeAreaType: chargeAreaType.title,
-                  areaTypeId: areaTypeValue.title,
+                  acceptConversionPolicyValueId: __acceptConversionPolicyValueId.toString(),
+                  acceptExtraFittingCostValueId: __acceptExtraFittingCostValueId.toString(),
+                  chargeAreaType: chargeAreaId.toString(),
+                  areaTypeId: _areaTypeId.toString(),
                   mobileNoController: mobileNoController.text.toString(),
                   firstNameController: firstNameController.text.toString(),
                   lastNameController: lastNameController.text.toString(),
                   guardianNameController: guardianNameController.text
                       .toString(),
-                  propertyTypeId: categoryValue.title,
-                  propertyClassId: propertyClassValue.title,
+                  propertyTypeId: categoryValue.toString(),
+                  propertyClassId: propertyClassValue.toString(),
                   houseNumberController: houseNumberController.text.toString(),
                   localityController: localityController.text.toString(),
                   streetNameController: streetNameController.text.toString(),
-                  district: districtValue.id,
+                  district: getAllDistrictId.toString(),
                   pinCodeController: pinCodeController.text.toString(),
                   noOfKitchen: kitchenController.text.toString(),
                   noOfBathroom: bathroomController.text.toString(),
                   cookInFuelValue: cookInFuelValue,
                   noOfFamilyMembers: familyMemController.text.toString(),
-                  addressProofNo: idProofValue.title,
+                  addressProofNo: idProofValue.id.toString(),
                   idProofNo: idProofNoController.text.toString(),
-                  idFrontImage: frontImageFile,
+                  idFrontImage: frontImageFile.toString(),
                   idBackImage: backImageFile,
                   consentImage: consentPhotoFile,
                   customerBankName: _bankValue,
                   customerAccNo: customerAccountNum.text.trim().toString(),
                   customerIfscCode: IFSCController.text.trim().toString(),
                   customerBankAdd: bank_address.text.trim().toString(),
-                  modeOfDeposit: _modeOfDeposit,
+                  modeOfDeposit: _modeOfDeposit.toString(),
                   chequeNo: _modeOfDeposit == "1" ? chqNOController.text.trim()
                       .toString() : "",
                   chequeDate: _modeOfDeposit == "1" ? initDepDateController.text
@@ -781,7 +769,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                 trailing: _bankValue.toString() ?? "-",
               ),
               Visibility(
-                visible: checkONLine,
+                visible: isDepositCheq,
                 child: Column(
                   children: [
                     Divider(),
@@ -957,32 +945,30 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-                        chqPhotoFile == null && chqPhotoFile.isEmpty
-                            ? InkWell(
-                            onTap: () => _openChqImgSource(
-                                controller: chqImgController,
-                                context: context),
-                            child: _localBorderImg())
-                            : ImageCircle(
-                          fileImage1: File(chqPhotoFile),
-                          pathImage:chqPhotoFile,
-                        ),
-                      ],
-                    ),
-                  ],
+              Visibility(
+                visible: isDepositCheq,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
+                      chqPhotoFile == null && chqPhotoFile.isEmpty
+                          ? InkWell(
+                          onTap: () => _openChqImgSource(
+                              controller: chqImgController,
+                              context: context),
+                          child: _localBorderImg())
+                          : ImageCircle(
+                        fileImage1: File(chqPhotoFile),
+                        pathImage:chqPhotoFile,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
                     onPressed: ()  {
@@ -1010,24 +996,24 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   void  storeRecords() {
     SaveCustomerRegistrationOfflineModel data = SaveCustomerRegistrationOfflineModel(
-      interested: _isInterestedId,
-      areaId: areaTypeValue.id,
-      chargeArea: chargeAreaType.id,
+      interested: _isInterestedId.toString(),
+      areaId: areaTypeValue.id.toString(),
+      chargeArea: chargeAreaType.id.toString(),
       mobileNumber: mobileNoController.text.toString(),
       firstName: firstNameController.text.toString(),
       middleName: middleNameController.text.toString(),
-      lastName: lastNameController.text,
-      guardianType: guardianTypeValue,
+      lastName: lastNameController.text.toString(),
+      guardianType: guardianTypeValue.toString(),
       guardianName: guardianNameController.text.toString(),
       emailId: emailIdController.text.toString(),
-      propertyCategoryId: categoryValue.id,
-      propertyClassId: propertyClassValue.id,
+      propertyCategoryId: categoryValue.id.toString(),
+      propertyClassId: propertyClassValue.id.toString(),
       houseNumber: houseNumberController.text.toString(),
       locality: localityController.text.toString(),
       //   crLocality:streetNameController.text.toString(),
       town: townController.text.toString(),
       pinCode: pinCodeController.text.toString(),
-      districtId: districtValue.id,
+      districtId: districtValue.id.toString(),
       societyAllowedMdpe: _mdpeValue == 'Yes' ? '1' : '0',
       residentStatus: _residentStatusValue,
       noOfKitchen: kitchenController.text.toString(),
@@ -1037,7 +1023,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       latitude: latitudeController.text.toString(),
       longitude: longitudeController.text.toString(),
       remarks: landmarkController.text.toString(),
-      kycDocument1: idProofValue.id,
+      kycDocument1: idProofValue.id.toString(),
       kycDocument1Number: idProofNoController.text.toString(),
       backSide1: backImageFile,
       backSide2: electricBillBackImgFile,
@@ -1060,10 +1046,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       bankAccountNumber: customerAccountNum.text,
       bankIfscCode: IFSCController.text.toString(),
       bankAddress: bank_address.text.toString(),
-      acceptConversionPolicy: __acceptConversionPolicyValue.id,
-      acceptExtraFittingCost: acceptExtraFittingCostValue.id,
+      acceptConversionPolicy: __acceptConversionPolicyValueId,
+      acceptExtraFittingCost: __acceptExtraFittingCostValueId,
       initialDepositeStatus: _depositStatusId.toString(),
-      modeOfDeposite: _modeOfDeposit,
+      modeOfDeposite: __modeDepositValue.id.toString(),
       depositeType: schemeId,
       initialAmount: depositAmountController.text.toString(),
       chequeNumber: chqNOController.text.toString(),
@@ -1130,6 +1116,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       value: __acceptConversionPolicyValue,
       onChanged: (value) {
         setState(() {
+          __acceptConversionPolicyValueId = value.id;
           __acceptConversionPolicyValue = value;
         });
       },
@@ -1144,6 +1131,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       value: acceptExtraFittingCostValue,
       onChanged: (value) {
         setState(() {
+          __acceptExtraFittingCostValueId = value.id;
           acceptExtraFittingCostValue = value;
         });
       },
@@ -1180,9 +1168,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       value: chargeAreaType,
       onChanged: (OptionItem value) {
         setState(() {
+          chargeAreaId = value.id;
           chargeAreaType = value;
-          areaItems.clear();
           areaTypeValue = null;
+          areaItems.clear();
           fetchArea(value.id);
         });
       },
@@ -1197,6 +1186,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       value: areaTypeValue,
       onChanged: (OptionItem value) {
         setState(() {
+          _areaTypeId = value.id;
           areaTypeValue = value;
         });
       },
@@ -1611,7 +1601,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         ]
     );
   }
-
   Widget _districtWidget() {
     return ReusedDropDownOptionItem(
       textLabel: AppStrings.districtLabel,
@@ -1620,6 +1609,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hint: AppStrings.districtLabel,
       onChanged: (OptionItem value) {
         setState(() {
+          getAllDistrictId = value.id;
           districtValue = value;
         });
       },
@@ -2576,27 +2566,30 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         value: __modeDepositValue,
         onChanged: (OptionItem item) {
           setState(() {
+            _modeOfDeposit = item.id;
             __modeDepositValue = item;
             print("__modeDepositValue-->" + __modeDepositValue.id.toString());
+            print("_modeOfDeposit-->" + _modeOfDeposit.toString());
           });
-          if (item.id == "2") {
-            _modeOfDeposit = item.id;
+          if (__modeDepositValue.id == "2") {
             setState(() {
+              isDepositCheq = false;
+              _modeOfDeposit = item.id;
+              print("_modeOfDeposit22222222222-->" + _modeOfDeposit.toString());
+              __modeDepositValue.id = item.id;
               chqNOController.clear();
               bankAccNoController.text = "";
               mICRCodeController.text = "";
               mICRCodeController.clear();
               initDepDateController.clear();
               chqDateController.text = "";
-              checkONLine = false;
-              isDepositCheq = false;
-              _modeOfDeposit = item.id;
             });
-          } else {
+          } else if(__modeDepositValue.id == "1"){
             setState(() {
-              checkONLine = true;
-              isDepositCheq = true;
               _modeOfDeposit = item.id;
+              print("_modeOfDeposit221111111111111111111-->" + _modeOfDeposit.toString());
+              __modeDepositValue.id = item.id;
+              isDepositCheq = true;
             });
           }
         }
@@ -2647,11 +2640,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _buildCardWidget({String text}) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       child: Card(
         shape: Border(
-          left: BorderSide(color: Colors.red, width: 15),
-          right: BorderSide(color: Colors.blue.shade900, width: 15),
+          left: BorderSide(color: Colors.red, width: 8),
+          right: BorderSide(color: Colors.blue.shade900, width: 8),
         ),
         elevation: 5,
         shadowColor: Colors.lightBlueAccent,
@@ -2790,10 +2783,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         ),
     );
     if (!mounted) return;
-    getAllDistrictItems = menuItems;
-    districtValue = getAllDistrictItems.firstWhere((element) => element.value.id == widget.studentModel.districtId).value;
     setState(() {
-
+      getAllDistrictItems = menuItems;
+      if(widget.isUpdate ==  true){
+        if(widget.studentModel.districtId != null) {
+          districtValue = getAllDistrictItems
+              .firstWhere((element) =>
+          element.value.id == widget.studentModel.districtId, orElse: null)
+              .value;
+        }
+      }
     });
   }
 
@@ -2814,8 +2813,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     setState(() {
 
       areaItems = menuItems;
-      areaTypeValue = areaItems.firstWhere((element) => element.value.id == widget.studentModel.areaId).value;
-
+     if(widget.isUpdate ==  true){
+       if(widget.studentModel.areaId != null) {
+         areaTypeValue = areaItems
+             .firstWhere((element) =>
+         element.value.id == widget.studentModel.areaId, orElse: null)
+             .value;
+       }
+     }
     });
   }
 
@@ -2837,9 +2842,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     if (!mounted) return;
     setState(() {
       chargeAreaItems = menuItems;
-      chargeAreaType = chargeAreaItems.firstWhere((element) => element.value.id == widget.studentModel.chargeArea ?? "").value;
+     if(widget.isUpdate ==  true){
+       if(widget.studentModel.chargeArea != null) {
+         chargeAreaType = chargeAreaItems.firstWhere((element) => element.value.id == widget.studentModel.chargeArea, orElse: null).value;
+       }
+     }
+
     });
-    fetchArea(chargeAreaType.id);
+    if(widget.isUpdate == true) {
+      fetchArea(chargeAreaType.id);
+    } else{
+      fetchArea(dataChargeList[0]['gid']);
+    }
   }
 
   Future<void> interestedDorpdownList() async {
@@ -2928,7 +2942,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     setState(() {
       propertyCategoryList = menuItems;
       categoryValue = menuItems.first.value;
-      categoryValue = propertyCategoryList.firstWhere((element) => element.value.id == widget.studentModel.propertyCategoryId).value;
+     if(widget.isUpdate == true){
+       if(widget.studentModel.propertyCategoryId != null) {
+         categoryValue = propertyCategoryList
+             .firstWhere((element) =>
+         element.value.id == widget.studentModel.propertyCategoryId,
+             orElse: null)
+             .value;
+       }
+     }
     });
   }
 
@@ -2946,7 +2968,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     setState(() {
       propertyClassList = menuItems;
       propertyClassValue = menuItems.first.value;
-      propertyClassValue = propertyClassList.firstWhere((element) => element.value.id == widget.studentModel.propertyClassId?? "").value;
+      if(widget.isUpdate == true){
+        if(widget.studentModel.propertyClassId != null) {
+          propertyClassValue = propertyClassList
+              .firstWhere((element) =>
+          element.value.id == widget.studentModel.propertyClassId, orElse: null)
+              .value;
+        }
+      }
     });
   }
 
@@ -2960,7 +2989,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     });
     idProofValue = idProofList.first.value;
-    idProofValue = idProofList.firstWhere((element) => element.value.id == widget.studentModel.kycDocument1).value;
+   if(widget.isUpdate == true){
+     if(widget.studentModel.kycDocument1 != null) {
+       idProofValue = idProofList
+           .firstWhere((element) =>
+       element.value.id == widget.studentModel.kycDocument1)
+           .value;
+     }
+   }
     setState(() {});
   }
 
@@ -2989,7 +3025,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     });
     _kycProofDropDownValue = _kycProofDropdownItems.first.value;
-    _kycProofDropDownValue = _kycProofDropdownItems.firstWhere((element) => element.value.id == widget.studentModel.kycDocument3).value;
+   if(widget.isUpdate ==true){
+     if(widget.studentModel.kycDocument3 != null) {
+       _kycProofDropDownValue = _kycProofDropdownItems
+           .firstWhere((element) =>
+       element.value.id == widget.studentModel.kycDocument3, orElse: null)
+           .value;
+     }
+   }
     setState(() {});
   }
 
@@ -3008,8 +3051,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     log("getBankGetBank2--> $resAllBanks");
     setState(() {
       _bankDropdownItems2 = decoded;
-      billingModeValue = billingModeList.firstWhere((element) => element.value.id == widget.studentModel.billingModel).value;
-
+   //   if(widget.isUpdate== true || isDepositCheq){
+        /*if(widget.studentModel.billingModel != null) {
+          billingModeValue = billingModeList
+              .firstWhere((element) =>
+          element.value.id == widget.studentModel.billingModel, orElse: null)
+              .value;
+        }*/
+    //  }
     });
   }
 
@@ -3025,7 +3074,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     });
     setState(() {
       billingModeValue = billingModeList.first.value;
-      billingModeValue = billingModeList.firstWhere((element) => element.value.id == widget.studentModel.billingModel).value;
+      if(widget.isUpdate ==true){
+        if(widget.studentModel.billingModel != null) {
+          billingModeValue = billingModeList
+              .firstWhere((element) =>
+          element.value.id == widget.studentModel.billingModel, orElse: null)
+              .value;
+        }
+      }
     });
   }
 
@@ -3039,7 +3095,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     });
     __acceptConversionPolicyValue = _acceptConversionPolicyList.first.value;
-    __acceptConversionPolicyValue = _acceptConversionPolicyList.firstWhere((element) => element.value.id == widget.studentModel.acceptConversionPolicy).value;
+    __acceptConversionPolicyValueId = __acceptConversionPolicyValue.id;
+    if(widget.isUpdate == true){
+      if(widget.studentModel.acceptConversionPolicy != null) {
+        __acceptConversionPolicyValue = _acceptConversionPolicyList
+            .firstWhere((element) =>
+        element.value.id == widget.studentModel.acceptConversionPolicy,
+            orElse: null)
+            .value;
+      }
+    }
     setState(() {});
   }
 
@@ -3053,7 +3118,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     });
     acceptExtraFittingCostValue = _acceptExtraFittingCostList.first.value;
-    acceptExtraFittingCostValue = _acceptExtraFittingCostList.firstWhere((element) => element.value.id == widget.studentModel.acceptExtraFittingCost).value;
+    __acceptExtraFittingCostValueId = acceptExtraFittingCostValue.id;
+  if(widget.isUpdate == true){
+    if(widget.studentModel.acceptExtraFittingCost != null) {
+      acceptExtraFittingCostValue = _acceptExtraFittingCostList
+          .firstWhere((element) =>
+      element.value.id == widget.studentModel.acceptExtraFittingCost,
+          orElse: null)
+          .value;
+    }
+  }
     setState(() {
 
     });
@@ -3068,27 +3142,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         child: Text(v),
       ));
     });
-    __modeDepositValue = modeOfDepositList.first.value;
-    _modeOfDeposit = __modeDepositValue.id;
-    __modeDepositValue = modeOfDepositList.firstWhere((element) => element.value.id == widget.studentModel.modeOfDeposite).value;
-    setState(() {
-      if (_modeOfDeposit == '1') {
-        isDepositCheq = true;
-        checkONLine = true;
-      }
-      if (_modeOfDeposit == '2') {
-        isDepositCheq = false;
-        setState(() {
-          checkONLine = false;
-          chqNOController.clear();
-          mICRCodeController.text = "";
-          bankAccNoController.text = "";
-          mICRCodeController.clear();
-          initDepDateController.clear();
-          chqDateController.text = "";
-        });
-      }
-    });
+  //  __modeDepositValue = modeOfDepositList.first.value;
+  //  _modeOfDeposit = __modeDepositValue.id ?? "";
+   if(widget.isUpdate == true){
+     if(widget.studentModel.modeOfDeposite != null) {
+       __modeDepositValue = modeOfDepositList
+           .firstWhere((element) =>
+       element.value.id == widget.studentModel.modeOfDeposite, orElse: null)
+           .value;
+     }
+   }
   }
 
   Future<void> _getInitialDepositeStatusList() async {
@@ -3104,7 +3167,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     setState(() {
       depositStatusValue = dropListDepositStatusList.first.value;
       _depositStatusId = depositStatusValue.id;
-      depositStatusValue = dropListDepositStatusList.firstWhere((element) => element.value.id == widget.studentModel.initialDepositeStatus).value;
+      if(widget.isUpdate == true){
+        if(widget.studentModel.initialDepositeStatus != null) {
+          depositStatusValue = dropListDepositStatusList
+              .firstWhere((element) =>
+          element.value.id == widget.studentModel.initialDepositeStatus, orElse: null)
+              .value;
+        }
+      }
     });
   }
 
@@ -3160,7 +3230,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     if (!mounted) return;
     setState(() {
       _propertyDropdownItemsDeposit = menuItems;
-      _depositCategoryType = _propertyDropdownItemsDeposit.firstWhere((element) => element.value.id == widget.studentModel.depositeType).value;
+      if(widget.isUpdate ==true){
+        if(widget.studentModel.depositeType != null) {
+          _depositCategoryType = _propertyDropdownItemsDeposit
+              .firstWhere((element) =>
+          element.value.id == widget.studentModel.depositeType)
+              .value;
+        }
+      }
     });
     return;
   }
