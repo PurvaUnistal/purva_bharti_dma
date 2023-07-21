@@ -27,7 +27,7 @@ class SaveCustomerRegistrationOfflineModel{
   @HiveField(10)
   String houseNumber;
   @HiveField(11)
-  String locality;
+  String colonySocietyApartment;
   @HiveField(12)
   String town;
   @HiveField(13)
@@ -136,6 +136,8 @@ class SaveCustomerRegistrationOfflineModel{
   String chargeArea;
   @HiveField(65)
   String billingModel;
+  @HiveField(66)
+  String streetName;
 
   SaveCustomerRegistrationOfflineModel({
     this.areaId,
@@ -181,7 +183,7 @@ class SaveCustomerRegistrationOfflineModel{
     this.kycDocument3,
     this.longitude,
     this.latitude,
-    this.locality,
+    this.colonySocietyApartment,
     this.modeOfDeposite,
     this.nameOfBank,
     this.ownerConsent,
@@ -204,6 +206,7 @@ class SaveCustomerRegistrationOfflineModel{
     this.complete,
     this.chargeArea,
     this.billingModel,
+    this.streetName,
 
   });
 }

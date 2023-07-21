@@ -12,7 +12,10 @@ class RegistrationForm extends StatefulWidget {
 }
 
 class RegistrationFormSate extends BaseState<RegistrationForm> {
-  String customerRegLabel = '', customerKycLabel = '', customerPhotoLabel = '', customerConsentLabel = '';
+  String customerRegLabel = '',
+      customerKycLabel = '',
+      customerPhotoLabel = '',
+      customerConsentLabel = '';
   String customerDepositLabel = '';
   String step1Label = '', step2Label = '', step3Label = '', step4Label = '';
   String step5Label = '';
@@ -33,12 +36,14 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
   bool _checkOutBtnboth = false;
 
   static const APP_STORE_URL = 'https://apps.apple.com/us/app/appname/idAPP-ID';
-  static const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=APP-ID';
+  static const PLAY_STORE_URL =
+      'https://play.google.com/store/apps/details?id=APP-ID';
 
   Future<void> fetchLabals() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String strUrl = GlobalConstants.getLabels;
-    final response = await http.get(Uri.parse(strUrl),
+    final response = await http.get(
+      Uri.parse(strUrl),
     );
     HpclLabals album = HpclLabals.fromJson(json.decode(response.body));
     prefs.setString(GlobalConstants.AllLEBELS, response.body);
@@ -71,41 +76,28 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         print('connected');
         // fetchLabals();
-
       }
     } on SocketException catch (_) {
       print('not connected');
       setState(() {
         isInternet = true;
       });
-      _showMyDialog(context, 'Internet', 'Please Check Your Internet Connection!');
+      _showMyDialog(
+          context, 'Internet', 'Please Check Your Internet Connection!');
     }
   }
 
   ServerApi serverApi;
   List<ChargeAreaModel> listChargeArea;
 
-  // Future fetchChargeArea() async{
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var res = await serverApi.apiChargeArea();
-  //   setState((){
-  //     listChargeArea = res;
-  //     prefs.setString(GlobalConstants.chargeAreaList, jsonEncode(res));
-  //     print("chargeAreaList-->"+prefs.getString(GlobalConstants.chargeAreaList.toString()));
-  //   });
-  //   if(res != null){
-  //     print("Successes");
-  //   } else {
-  //     print("Failed");
-  //   }
-  // }
   @override
   void initState() {
     super.initState();
     serverApi = ServerApi();
     _download(context);
     initConnectivity();
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
   @override
@@ -144,26 +136,26 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
               children: [
                 Column(
                   children: [
-                     Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         _buildBox(
-                          color: _checkInBtnStatus ? Colors.green : Colors.red,
-                          textTitle: "MOBILE DATA"
-                        ),
+                            color:
+                                _checkInBtnStatus ? Colors.green : Colors.red,
+                            textTitle: "MOBILE DATA"),
                         _buildBox(
                             color: _checkOutBtnboth ? Colors.green : Colors.red,
-                            textTitle: "WI-FI"
-                        ),
+                            textTitle: "WI-FI"),
                         _buildBox(
-                            color: _checkOutBtnStatus ? Colors.green : Colors.red,
-                            textTitle: "UPDATE",
+                          color: _checkOutBtnStatus ? Colors.green : Colors.red,
+                          textTitle: "UPDATE",
                           onTap: () async {
                             print("_checkInBtnStatus$_checkInBtnStatus");
                             if (_checkOutBtnboth.toString().contains("true")) {
                               _download(context);
-                             } else {
-                              EasyLoading.showError("ERROR!!!!!\n INTERNET CONNECTION"); //drop down pr jao
+                            } else {
+                              EasyLoading.showError(
+                                  "ERROR!!!!!\n INTERNET CONNECTION"); //drop down pr jao
                             }
                           },
                         ),
@@ -178,22 +170,24 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Version : 1,",
-                      style: TextStyle(
-                      color: Colors.blue.shade900,
-                      fontWeight: FontWeight.bold
-                    ),
-                    ),
-                    Text("Schema : ${schema},",
-                      style: TextStyle(
-                    color: Colors.blue.shade900,
-                        fontWeight: FontWeight.bold
-                    ),),
-                    Text("Date : 12-07-2023",
+                    Text(
+                      "Version : 1,",
                       style: TextStyle(
                           color: Colors.blue.shade900,
-                          fontWeight: FontWeight.bold
-                      ),),
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "Schema : $schema,",
+                      style: TextStyle(
+                          color: Colors.blue.shade900,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "Date : 21-07-2023",
+                      style: TextStyle(
+                          color: Colors.blue.shade900,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
               ],
@@ -202,9 +196,9 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     );
   }
 
-  Widget _buildBox({Color color, String textTitle, Function onTap}){
+  Widget _buildBox({Color color, String textTitle, Function onTap}) {
     return InkWell(
-      onTap:onTap ,
+      onTap: onTap,
       child: Card(
         elevation: 10,
         color: color,
@@ -216,33 +210,31 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                   color: Colors.white,
                   fontSize: 12.0,
                   fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold
-              )
-          ),
+                  fontWeight: FontWeight.bold)),
         ),
       ),
     );
   }
+
   get _itemList {
     List<Widget> list = [];
-    list.add(
-        listItem(
-            title: "Customer Registration Form",
-            icon: Icons.picture_in_picture,
-            onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => MainRegisterPageUpdate(isUpdate: false,position: -1 ,studentModel:null)))
-    )
-    );
-    list.add(
-        listItem(
-            title:"View and Sync Records",
-            icon: Icons.receipt,
-            onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => CustomerRecord()))
-        )
-    );
+    list.add(listItem(
+        title: "Customer Registration Form",
+        icon: Icons.picture_in_picture,
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainRegisterPageUpdate(
+                    isUpdate: false, position: -1, studentModel: null)))));
+    list.add(listItem(
+        title: "View and Sync Records",
+        icon: Icons.receipt,
+        onTap: () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => CustomerRecord()))));
     return list;
   }
 
-  listItem({icon,title, Function onTap}) {
+  listItem({icon, title, Function onTap}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -257,15 +249,19 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                     ? Container(
                         padding: EdgeInsets.all(11),
                         margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.red)),
-                        child: new Icon(icon,),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.red)),
+                        child: new Icon(
+                          icon,
+                        ),
                         alignment: Alignment.centerLeft,
                       )
                     : Container(),
                 Text(
                   title,
                   style: TextStyle(fontWeight: FontWeight.bold),
-                 textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -274,13 +270,19 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
       ),
     );
   }
-  final List<String> titleList = <String>['Customer Registration Form', 'View and Sync Records'];
-  final List<IconData> iconList = <IconData>[Icons.picture_in_picture,Icons.receipt];
+
+  final List<String> titleList = <String>[
+    'Customer Registration Form',
+    'View and Sync Records'
+  ];
+  final List<IconData> iconList = <IconData>[
+    Icons.picture_in_picture,
+    Icons.receipt
+  ];
+
   Widget _buildCardButton() {
     return Card(
-      shape: Border(
-          left: BorderSide(color: Colors.blue.shade900, width: 15)
-      ),
+      shape: Border(left: BorderSide(color: Colors.blue.shade900, width: 15)),
       elevation: 5,
       shadowColor: Colors.lightBlueAccent,
       color: Colors.white,
@@ -292,52 +294,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
               return _itemList[index];
-            }
-            ),
-       /* child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: _itemList.length,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 90,
-                  child: Card(
-                    elevation: 8,
-                    child: InkWell(
-                      onTap: () {
-                     //   if (click != null) click.call();
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          iconList != null
-                              ? Container(
-                            padding: EdgeInsets.all(11),
-                            margin: EdgeInsets.all(5),
-                            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.red)),
-                            child: new Icon(
-                              iconList as IconData,
-                              color: Colors.blue.shade900,
-                            ),
-                            alignment: Alignment.centerLeft,
-                          )
-                              : Container(),
-                          Text(
-                            titleList as String,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }
-        ),*/
+            }),
       ),
     );
   }
@@ -380,7 +337,8 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     return null;
   }
 
-  Future<void> _showMyDialog(BuildContext mContext, String title, String _msg) async {
+  Future<void> _showMyDialog(
+      BuildContext mContext, String title, String _msg) async {
     return showDialog<void>(
       context: mContext,
       barrierDismissible: false, // user must tap button!
@@ -444,134 +402,194 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     getAllDistrictApi();
   }
 
-  String schema, token ;
+  String schema, token;
+
   getSharedPrefer() async {
-    SharedPreferences prefs  = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       schema = prefs.getString(GlobalConstants.schema);
       token = prefs.getString(GlobalConstants.token);
-      print("schema------------->"+schema);
+      print("schema------------->" + schema);
     });
   }
 
-
   Future<void> fetchArea() async {
-    String url = GlobalConstants.getAllArea+ "?schema=" + schema;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.area,);
+    String url = GlobalConstants.getAllArea + "?schema=" + schema;
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.area,
+    );
     return res;
   }
 
   Future<void> fetchChargeAreaList() async {
-    String url = GlobalConstants.getChargeAreaList + "?schema=" +schema;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.chargeAreaName,);
+    String url = GlobalConstants.getChargeAreaList + "?schema=" + schema;
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.chargeAreaName,
+    );
     return res;
   }
 
   Future<void> interestedDorpdownList() async {
     String url = GlobalConstants.getNoInterested;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.Interested,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.Interested,
+    );
     return res;
   }
 
   Future<void> _getPropertyCategory() async {
-    String url = GlobalConstants.getPropertyCategory+ "?schema=" + schema;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.PropertyCategory,);
+    String url = GlobalConstants.getPropertyCategory + "?schema=" + schema;
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.PropertyCategory,
+    );
     return res;
   }
 
   Future<void> _getPropertyClass() async {
-    String url = GlobalConstants.getProClasssCategory+ "?schema=" + schema;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.propertyclass,);
+    String url = GlobalConstants.getProClasssCategory + "?schema=" + schema;
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.propertyclass,
+    );
     return res;
   }
 
   Future<void> _getSocietyAllow() async {
     String url = GlobalConstants.getSocietyAllow;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.sociaty_allow,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.sociaty_allow,
+    );
     return res;
   }
 
   Future<void> _getResidentStatus() async {
     String url = GlobalConstants.getResidentStatus;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.ResidentStatus,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.ResidentStatus,
+    );
     return res;
   }
 
   Future<void> _getExistingCookingFuel() async {
     String url = GlobalConstants.getExistingCookingFuel;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.CookingFuel,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.CookingFuel,
+    );
     return res;
   }
 
   Future<void> _getGuardianType() async {
     String url = GlobalConstants.getGuardianType;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.GuardianType,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.GuardianType,
+    );
     return res;
   }
 
   Future<void> _getIdProofArray() async {
     String url = GlobalConstants.getIdentityProof;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.IdentityProof,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.IdentityProof,
+    );
     return res;
   }
 
   Future<void> _getAddressProofArray() async {
     String url = GlobalConstants.getOwnershipProof;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.OwnershipProof,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.OwnershipProof,
+    );
     return res;
   }
 
   Future<void> _getKycProofArray() async {
     String url = GlobalConstants.getKycDoc;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.KycDoc,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.KycDoc,
+    );
     return res;
   }
 
   Future<void> _getBank() async {
     String url = GlobalConstants.getAllBanks;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.AllBanks,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.AllBanks,
+    );
     return res;
   }
 
   Future<void> _getBillingModeList() async {
     String url = GlobalConstants.getEbilling;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.Ebilling,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.Ebilling,
+    );
     return res;
   }
 
   Future<void> _getAcceptConversionPolicyList() async {
     String url = GlobalConstants.getAcceptConversionPolicy;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.ConversionPolicy,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.ConversionPolicy,
+    );
     return res;
   }
 
   Future<void> _getAcceptExtraFittingCostList() async {
     String url = GlobalConstants.getAcceptExtraFittingCost;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.ExtraFittingCost,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.ExtraFittingCost,
+    );
     return res;
   }
 
   Future<void> _getMdeOfDeposite() async {
     String url = GlobalConstants.getMdeOfDeposite;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.MdeOfDeposite,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.MdeOfDeposite,
+    );
     return res;
   }
 
   Future<void> _getInitialDepositeStatusList() async {
     String url = GlobalConstants.getInitialDepositeStatus;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.DepositeStatus,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.DepositeStatus,
+    );
     return res;
   }
 
   Future<void> getAllDistrictApi() async {
     String url = GlobalConstants.getAllDistrict + "?schema=" + schema;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.AllDistrict,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.AllDistrict,
+    );
     return res;
   }
 
   Future<void> _getInitialDepositeScheme() async {
     String url = GlobalConstants.getSchemeType + "?schema=" + schema;
-    var res = ApiProvider.getData(urlEndPoint:url , setApiData:GlobalConstants.SchemeType,);
+    var res = ApiProvider.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.SchemeType,
+    );
     return res;
   }
 
@@ -584,7 +602,8 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     if (isNetworkPresent) {
       fetchLabals();
     } else {
-      _showMyDialog(context, 'Internet', 'Please Check Wi-fi Internet Connection!');
+      _showMyDialog(
+          context, 'Internet', 'Please Check Wi-fi Internet Connection!');
     }
   }
 
@@ -674,7 +693,8 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                             : Text(
                                 "Please! proceed by connecting to a internet connection",
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 12.0, color: Colors.red),
+                                style: TextStyle(
+                                    fontSize: 12.0, color: Colors.red),
                               ),
                       ],
                     ),
@@ -684,7 +704,8 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                           primary: Colors.red,
                         ),
                         onPressed: () {
-                          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                          SystemChannels.platform
+                              .invokeMethod('SystemNavigator.pop');
                         },
                         child: Text(
                           "CLOSE THE APP",
@@ -733,7 +754,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     _updateConnectionStatus(result);
   }
 
- /* versionCheck(context) async {
+  /* versionCheck(context) async {
     //Get Current installed version of app
     final PackageInfo info = await PackageInfo.fromPlatform();
     double currentVersion = double.parse(info.version.trim().replaceAll(".", ""));
@@ -765,7 +786,8 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         String title = "New Update Available";
-        String message = "There is a newer version of app available please update it now.";
+        String message =
+            "There is a newer version of app available please update it now.";
         String btnLabel = "Update Now";
         String btnLabelCancel = "Later";
         return Platform.isIOS
@@ -831,17 +853,19 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
   }
 }
 
-
-class ApiProvider{
+class ApiProvider {
   static Future<dynamic> getData({var urlEndPoint, var setApiData}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     var token = prefs.getString(GlobalConstants.token);
+    var token = prefs.getString(GlobalConstants.token);
     try {
       String url = urlEndPoint;
       log(url);
-      final response = await get(Uri.parse(url.toString()),  headers: {
-        "authorization": token,
-      },);
+      final response = await get(
+        Uri.parse(url.toString()),
+        headers: {
+          "authorization": token,
+        },
+      );
       log(response.body);
       if (response.statusCode == 200) {
         prefs.setString(setApiData, response.body);
@@ -850,13 +874,13 @@ class ApiProvider{
     } catch (e) {
       if (e is SocketException) {
         log("SocketException : ${e.toString()}");
-      //  CustomToast.showToast(e.toString());
+        //  CustomToast.showToast(e.toString());
       } else if (e is TimeoutException) {
         log("TimeoutException : ${e.toString()}");
-       // CustomToast.showToast(e.toString());
+        // CustomToast.showToast(e.toString());
       } else {
         log("Unhandled exception : ${e.toString()}");
-       // CustomToast.showToast(e.toString());
+        // CustomToast.showToast(e.toString());
       }
     }
     return null;

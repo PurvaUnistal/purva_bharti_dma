@@ -53,6 +53,9 @@ class TextFieldWidget extends StatelessWidget {
             autofillHints: autofillHints,
             enabled: enabled ?? true,
             controller: controller,
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.normal, fontSize: 12),
             readOnly : readOnly ?? false,
            // autofocus: true,
             keyboardType: textInputType ?? TextInputType.text,
@@ -73,10 +76,32 @@ class TextFieldWidget extends StatelessWidget {
               labelStyle: TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.normal, fontSize: 12),
-              //isDense: true,
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-              border: OutlineInputBorder(),
+           //   isDense: true,
+              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            //  border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                borderSide: BorderSide(width: 1,color: Colors.green),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                borderSide: BorderSide(width: 1,color: Colors.grey),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                borderSide: BorderSide(width: 1,color: Colors.green),
+              ),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1,)
+              ),
+              errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1,color: Colors.red)
+              ),
+
             ),
+
               onChanged: onChanged,
               onTap: onTap,
 

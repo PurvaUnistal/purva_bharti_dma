@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hpcl_app/models/save_customer_registration_model.dart';
 import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
-import 'package:hpcl_app/screens/main_register_page_update.dart';
+import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
 import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
+
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
 
 class CustomerRecord extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {return CustomerRecordState();
+  State<StatefulWidget> createState() {
+    return CustomerRecordState();
   }
 }
 
-
 class CustomerRecordState extends BaseState<CustomerRecord> {
-
   bool _checkInBtnStatus = false;
   bool _checkOutBtnStatus = false;
   bool _checkOutBtnboth = false;
@@ -25,9 +25,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
   final Connectivity _connectivity = Connectivity();
   var syncColors = Colors.red;
 
-
   GlobalKey<FormState> _keyLoader = GlobalKey<FormState>();
-
 
   Box<SaveCustomerRegistrationOfflineModel> customerRegistrationBox;
   List<SaveCustomerRegistrationOfflineModel> customerRegistrationList;
@@ -41,16 +39,18 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
   void initState() {
     initConnectivity();
     apiIntegration = ApiIntegration();
-    customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(SaveCusRegHiveDataStore.saveCustRegDataBoxName);
+    customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(
+        SaveCusRegHiveDataStore.saveCustRegDataBoxName);
     customerRegistrationList = customerRegistrationBox.values.toList();
     super.initState();
   }
 
-  Future fetchCustomerData() async {
-    if(_checkOutBtnboth){
+  Future fetchCustomerDataList() async {
+    if (_checkOutBtnboth) {
       int count = 0;
-      for(int i = 0; i < customerRegistrationList.length; i++){
-        SaveCustomerRegistrationOfflineModel saveCustRegOffModel = customerRegistrationList[i];
+      for (int i = 0; i < customerRegistrationList.length; i++) {
+        SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
+        customerRegistrationList[i];
         saveCustRegReqModel = SaveCustRegReqModel(
           schema: saveCustRegOffModel.schema,
           interested: saveCustRegOffModel.interested,
@@ -69,7 +69,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           dmaUserId: saveCustRegOffModel.dmaUserId,
           dmaUserName: saveCustRegOffModel.dmaUserName,
           houseNumber: saveCustRegOffModel.houseNumber,
-          locality: saveCustRegOffModel.locality,
+          colonySocietyApartment: saveCustRegOffModel.colonySocietyApartment,
+          streetName: saveCustRegOffModel.streetName,
           town: saveCustRegOffModel.town,
           districtId: saveCustRegOffModel.districtId,
           pinCode: saveCustRegOffModel.pinCode,
@@ -80,7 +81,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers,
           latitude: saveCustRegOffModel.latitude,
           longitude: saveCustRegOffModel.longitude,
-          remarks:saveCustRegOffModel.remarks ,
+          remarks: saveCustRegOffModel.remarks,
           kycDocument1: saveCustRegOffModel.kycDocument1,
           kycDocument1Number: saveCustRegOffModel.kycDocument1Number,
           kycDocument2: saveCustRegOffModel.kycDocument2,
@@ -94,7 +95,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           chequeNumber: saveCustRegOffModel.chequeNumber,
           customerConsent: saveCustRegOffModel.customerConsent,
           depositeType: saveCustRegOffModel.depositeType,
-          initialDepositeDate: saveCustRegOffModel.initialDepositeDate,
+       //   initialDepositeDate: saveCustRegOffModel.initialDepositeDate,
+          initialDepositeDate: "2021-12-24",
           initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus,
           modeOfDeposite: saveCustRegOffModel.modeOfDeposite,
           nameOfBank: saveCustRegOffModel.nameOfBank,
@@ -114,30 +116,31 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost,
           micr: saveCustRegOffModel.micr,
           buildingNumber: "",
+
         );
-        print("saveCustRegReqModel--->"+saveCustRegReqModel.toJson().toString());
+        print("saveCustRegReqModel--->" + saveCustRegReqModel.toJson().toString());
         var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
         print(response.toString());
         try {
-          if(response != null){
+          if (response != null) {
             setState(() {
-              print("response---->"+response.message[0].message);
-              checkLoading=true;
+              print("response---->" + response.message[0].message);
+              checkLoading = true;
               count++;
             });
           } else {
-            print("response---->"+response.message[0].message);
+            print("response---->" + response.message[0].message);
             EasyLoading.showError('Failed to save');
           }
-        } catch(e){
-          print("EasyLoading---?"+e.toString());
+        } catch (e) {
+          print("EasyLoading---?" + e.toString());
           EasyLoading.showError(e.toString());
         }
       }
-      for(int i = count-1; i >= 0; i--) {
+      for (int i = count - 1; i >= 0; i--) {
         await dataStore.deleteUser(index: i);
       }
-      if(count == customerRegistrationList.length) {
+      if (count == customerRegistrationList.length) {
         EasyLoading.showSuccess('Great Success! \n Record Save');
         await SaveCusRegHiveDataStore.box.clear();
       }
@@ -145,7 +148,98 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
       await Future.delayed(Duration(seconds: 2));
       //   Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       EasyLoading.dismiss();
+    }
+  }
 
+  Future fetchCustomerDataSingle({int index}) async {
+    LoaderDialog.showLoadingDialog(context, _keyLoader);
+    if (_checkOutBtnboth) {
+      SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
+      customerRegistrationList[index];
+      saveCustRegReqModel = SaveCustRegReqModel(
+        schema: saveCustRegOffModel.schema,
+        interested: saveCustRegOffModel.interested,
+        societyAllowedMdpe: saveCustRegOffModel.societyAllowedMdpe,
+        areaId: saveCustRegOffModel.areaId,
+        firstName: saveCustRegOffModel.firstName,
+        middleName: saveCustRegOffModel.middleName,
+        lastName: saveCustRegOffModel.lastName,
+        mobileNumber: saveCustRegOffModel.mobileNumber,
+        emailId: saveCustRegOffModel.emailId,
+        guardianType: saveCustRegOffModel.guardianType,
+        guardianName: saveCustRegOffModel.guardianName,
+        propertyCategoryId: saveCustRegOffModel.propertyCategoryId,
+        propertyClassId: saveCustRegOffModel.propertyClassId,
+        reasonForHold: saveCustRegOffModel.reasonForHold,
+        dmaUserId: saveCustRegOffModel.dmaUserId,
+        dmaUserName: saveCustRegOffModel.dmaUserName,
+        houseNumber: saveCustRegOffModel.houseNumber,
+        colonySocietyApartment: saveCustRegOffModel.colonySocietyApartment,
+        streetName: saveCustRegOffModel.streetName,
+        town: saveCustRegOffModel.town,
+        districtId: saveCustRegOffModel.districtId,
+        pinCode: saveCustRegOffModel.pinCode,
+        residentStatus: saveCustRegOffModel.residentStatus,
+        noOfKitchen: saveCustRegOffModel.noOfKitchen,
+        noOfBathroom: saveCustRegOffModel.noOfBathroom,
+        existingCookingFuel: saveCustRegOffModel.existingCookingFuel,
+        noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers,
+        latitude: saveCustRegOffModel.latitude,
+        longitude: saveCustRegOffModel.longitude,
+        remarks: saveCustRegOffModel.remarks,
+        kycDocument1: saveCustRegOffModel.kycDocument1,
+        kycDocument1Number: saveCustRegOffModel.kycDocument1Number,
+        kycDocument2: saveCustRegOffModel.kycDocument2,
+        kycDocument2Number: saveCustRegOffModel.kycDocument2Number,
+        kycDocument3: saveCustRegOffModel.kycDocument3,
+        initialAmount: saveCustRegOffModel.initialAmount,
+        bankAccountNumber: saveCustRegOffModel.bankAccountNumber,
+        bankAddress: saveCustRegOffModel.bankAddress,
+        bankIfscCode: saveCustRegOffModel.bankIfscCode,
+        chequeBankAccount: saveCustRegOffModel.chequeBankAccount,
+        chequeNumber: saveCustRegOffModel.chequeNumber,
+        customerConsent: saveCustRegOffModel.customerConsent,
+        depositeType: saveCustRegOffModel.depositeType,
+        initialDepositeDate: saveCustRegOffModel.initialDepositeDate,
+        initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus,
+        modeOfDeposite: saveCustRegOffModel.modeOfDeposite,
+        nameOfBank: saveCustRegOffModel.nameOfBank,
+        ownerConsent: saveCustRegOffModel.ownerConsent,
+        payementBankName: saveCustRegOffModel.payementBankName,
+        backSideImg1: saveCustRegOffModel.backSide1,
+        backSideImg2: saveCustRegOffModel.backSide2,
+        backSideImg3: saveCustRegOffModel.backSide3,
+        canceledCheque: saveCustRegOffModel.canceledCheque,
+        chequePhoto: saveCustRegOffModel.chequePhoto,
+        uploadCustomerPhoto: saveCustRegOffModel.uploadCustomerPhoto,
+        uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto,
+        frontSideImg1: saveCustRegOffModel.documentUploads1,
+        frontSideImg2: saveCustRegOffModel.documentUploads2,
+        frontSideImg3: saveCustRegOffModel.documentUploads3,
+        acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy,
+        acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost,
+        micr: saveCustRegOffModel.micr,
+        buildingNumber: "",
+      );
+      print(
+          "saveCustRegReqModel--->" + saveCustRegReqModel.toJson().toString());
+      var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
+      print(response.toString());
+      try {
+        if (response != null) {
+          setState(() {
+            print("response---->" + response.message[0].message);
+            checkLoading = true;
+          });
+          customerRegistrationList.removeAt(index);
+          customerRegistrationBox.deleteAt(index);
+          EasyLoading.showSuccess('Great Success! \n Record Save');
+        }
+      } catch (e) {
+        EasyLoading.showError(e.toString());
+      }
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      EasyLoading.dismiss();
     }
   }
 
@@ -159,8 +253,11 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           child: CustomAppBar(
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios_rounded),
-              onPressed: (){
-                Navigator.push(context,MaterialPageRoute(builder: (context) => RegistrationForm()));
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RegistrationForm()));
               },
             ),
             titleAppBar: "Customer Records",
@@ -175,125 +272,200 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                 children: <Widget>[
                   _buildBox(
                       color: _checkInBtnStatus ? Colors.green : Colors.red,
-                      textTitle: "MOBILE DATA"
-                  ),
+                      textTitle: "MOBILE DATA"),
                   _buildBox(
                       color: _checkOutBtnStatus ? Colors.green : Colors.red,
-                      textTitle: "WI-FI"
-                  ),
+                      textTitle: "WI-FI"),
                   _buildBox(
                     color: _checkOutBtnboth ? Colors.green : Colors.red,
-                    textTitle: checkLoading == false ? CircularProgressIndicator() : "Submit",
+                    textTitle: checkLoading == false
+                        ? CircularProgressIndicator()
+                        : "Submit",
                     onTap: () async {
-                      fetchCustomerData();
+                      fetchCustomerDataList();
                     },
                   ),
                 ],
               ),
-              SizedBox(height: 15,),
+              SizedBox(
+                height: 15,
+              ),
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: ValueListenableBuilder(
                     valueListenable: customerRegistrationBox.listenable(),
-                    builder: (context, box,_) {
-                      return customerRegistrationList.length == 0 ? const Center(child: Text("No Data Found"))
+                    builder: (context, box, _) {
+                      return customerRegistrationList.length == 0
+                          ? const Center(child: Text("No Data Found"))
                           : ListView.builder(
                           shrinkWrap: true,
                           physics: ClampingScrollPhysics(),
                           itemCount: customerRegistrationList.length,
                           itemBuilder: (context, position) {
-                            SaveCustomerRegistrationOfflineModel getStudent = customerRegistrationList[position];
+                            SaveCustomerRegistrationOfflineModel
+                            getStudent =
+                            customerRegistrationList[position];
                             return Visibility(
                               visible: true,
                               child: Card(
                                 elevation: 5,
-                                shadowColor: Colors.lightBlueAccent,
+                                shadowColor: Colors.red,
                                 color: Colors.white,
-                                shape: Border(left: BorderSide(color: Colors.blue.withOpacity(.7),width: 3)),
+                                shape: Border(
+                                    left: BorderSide(color: Colors.red.withOpacity(.7), width: 3),
+                                    right: BorderSide(color: Colors.blue.shade900.withOpacity(.7), width: 3),
+                                ),
                                 child: Column(
                                   children: [
                                     ListTile(
                                       title: Column(
-                                        crossAxisAlignment:CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                             children: [
-                                              Text("Records : ${position + 1}",style: appbarHeadingStyle,),
+                                              Text(
+                                                "Records : ${position + 1}",
+                                                style: appbarHeadingStyle,
+                                              ),
                                               Spacer(),
-                                              checkLoading == false
-                                                  ? Icon(Icons.sync, color: syncColors,)
-                                                  : IconButton(icon: Icon(Icons.sync,color: syncColors, ),
-                                                onPressed: (){},
+                                              IconButton(
+                                                icon: Icon(
+                                                  Icons.sync,
+                                                  color: Colors.blue.shade900,
+                                                ),
+                                                onPressed: () =>
+                                                    fetchCustomerDataSingle(
+                                                        index: position),
                                               ),
                                               InkWell(
-                                                  onTap: ()async{
+                                                  onTap: () async {
                                                     await showDialog(
                                                       context: context,
-                                                      builder: (context) => AlertDialog(
-                                                        title: Text("HPCL DMA"),
-                                                        content: Text('Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            style: ButtonStyle(
-                                                              backgroundColor: MaterialStateProperty.all(Colors.blue.shade900),
-                                                              elevation: MaterialStateProperty.all(3),
-                                                              shadowColor: MaterialStateProperty.all(Colors.blue.shade900), //Defines shadowColor
-                                                            ),
-                                                            onPressed: () async {
-                                                             await dataStore.deleteUser(index: position);
-
-                                                              Navigator.of(context, rootNavigator: true).pop();
-                                                            },
-                                                            child: const Text('Yes', style: TextStyle(color: Colors.white),
+                                                      builder: (context) => Dialog(
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(18.0),
+                                                              child: Column(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: [
+                                                                  Text("HPCL DMA",style: TextStyle(fontWeight: FontWeight.bold),),
+                                                                  Text('Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
+                                                                  Row(
+                                                                    mainAxisSize: MainAxisSize.min,
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    children: [
+                                                                      Flexible(
+                                                                        child: ButtonWidget(
+                                                                          textButton: "Yes",
+                                                                          onPressed: () async {
+                                                                            Navigator.pop(context, false);
+                                                                            customerRegistrationList.removeAt(position);
+                                                                            customerRegistrationBox.deleteAt(position);
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                      Flexible(
+                                                                        child: ButtonWidget(
+                                                                          textButton: "No",
+                                                                          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
-                                                          TextButton(
-                                                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue.shade900),
-                                                              elevation: MaterialStateProperty.all(3),
-                                                              shadowColor: MaterialStateProperty.all(Colors.blue.shade900), //Defines shadowColor
-                                                            ),
-                                                            onPressed: () {Navigator.of(context, rootNavigator: true).pop(); },
-                                                            child: const Text('No',
-                                                              style: TextStyle(color: Colors.white),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
                                                     );
                                                   },
-                                                  child: Icon(Icons.delete,size:30,color: Colors.blue.shade900,)),
+                                                  child: Icon(
+                                                    Icons.delete,
+                                                    size: 30,
+                                                    color: Colors
+                                                        .blue.shade900,
+                                                  )),
                                               IconButton(
-                                                  icon: Icon(Icons.edit, color: Colors.blue.shade900),
-                                                  onPressed: (){
-                                                    Navigator.push(context,MaterialPageRoute(builder:(context) => MainRegisterPageUpdate(isUpdate: true,position: position ,studentModel:getStudent,)));
+                                                  icon: Icon(Icons.edit,
+                                                      color: Colors
+                                                          .blue.shade900),
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                MainRegisterPageUpdate(
+                                                                  isUpdate:
+                                                                  true,
+                                                                  position:
+                                                                  position,
+                                                                  studentModel:
+                                                                  getStudent,
+                                                                )));
                                                   })
                                             ],
                                           ),
                                           Divider(),
-                                          SizedBox(height: 10,),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
                                           Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              mainAxisSize:
+                                              MainAxisSize.min,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.end,
                                               children: [
-                                                Text( "Mobile No",style: appbarHeadingStyle,),
+                                                Text(
+                                                  "Mobile No",
+                                                  style: appbarHeadingStyle,
+                                                ),
                                                 Spacer(),
-                                                Text("${getStudent.mobileNumber}",style: appbarHeadingStyle,),
+                                                Text(
+                                                  "${getStudent.mobileNumber}",
+                                                  style: appbarHeadingStyle,
+                                                ),
                                               ]),
-                                          SizedBox(height: 10,),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
                                           Divider(),
                                           Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:MainAxisAlignment.end,
+                                              mainAxisSize:
+                                              MainAxisSize.min,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.end,
                                               children: [
-                                                Text("STATUS",style: appbarHeadingStyle,),
+                                                Text(
+                                                  "STATUS",
+                                                  style: appbarHeadingStyle,
+                                                ),
                                                 Spacer(),
                                                 getStudent.complete == null
-                                                    ? Padding( padding: const EdgeInsets.all(8.0),
-                                                  child: Icon(Icons.close,color: Colors.red),)
-                                                    :   Padding(padding: const EdgeInsets.all(8.0),
-                                                  child: Icon(Icons.check_circle_sharp,color: Colors.green,),
+                                                    ? Padding(
+                                                  padding:
+                                                  const EdgeInsets
+                                                      .all(8.0),
+                                                  child: Icon(
+                                                      Icons.close,
+                                                      color:
+                                                      Colors.red),
+                                                )
+                                                    : Padding(
+                                                  padding:
+                                                  const EdgeInsets
+                                                      .all(8.0),
+                                                  child: Icon(
+                                                    Icons
+                                                        .check_circle_sharp,
+                                                    color:
+                                                    Colors.green,
+                                                  ),
                                                 ),
                                                 Divider(),
                                               ]),
@@ -305,8 +477,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                               ),
                             );
                           });
-                    }
-                ),
+                    }),
               ),
             ],
           ),
@@ -314,9 +485,6 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
       ),
     );
   }
-
-
-
 
   Future<void> initConnectivity() async {
     ConnectivityResult result;
@@ -343,7 +511,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           dialogIsVisible = false;
           _checkOutBtnStatus = true;
           _checkOutBtnboth = true;
-          checkLoading=true;
+          checkLoading = true;
         });
         break;
       case ConnectivityResult.mobile:
@@ -353,7 +521,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           dialogIsVisible = false;
           _checkInBtnStatus = true;
           _checkOutBtnboth = true;
-          checkLoading=true;
+          checkLoading = true;
         });
         break;
       case ConnectivityResult.wifi:
@@ -363,7 +531,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           dialogIsVisible = false;
           _checkOutBtnStatus = true;
           _checkOutBtnboth = true;
-          checkLoading=true;
+          checkLoading = true;
         });
         break;
       case ConnectivityResult.mobile:
@@ -373,7 +541,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           dialogIsVisible = false;
           _checkInBtnStatus = true;
           _checkOutBtnboth = true;
-          checkLoading=true;
+          checkLoading = true;
         });
         break;
       case ConnectivityResult.none:
@@ -383,15 +551,16 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           _checkInBtnStatus = false;
           _checkOutBtnStatus = false;
           _checkOutBtnboth = false;
-          checkLoading=true;
+          checkLoading = true;
           EasyLoading.dismiss();
           EasyLoading.showError("ERROR!!!!!\n INTERNET DISCONNECTED");
           checkLoading = true;
         });
         break;
-      default: if (!mounted) return;
-      setState(() => isOffline = true);
-      break;
+      default:
+        if (!mounted) return;
+        setState(() => isOffline = true);
+        break;
     }
   }
 
@@ -404,14 +573,31 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text(message,textAlign: TextAlign.center,style: TextStyle(fontSize: 14.0),),
+                title: Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14.0),
+                ),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Icon(Icons.portable_wifi_off,color: Colors.redAccent,size: 36.0,),
+                    Icon(
+                      Icons.portable_wifi_off,
+                      color: Colors.redAccent,
+                      size: 36.0,
+                    ),
                     canProceed
-                        ? Text("Check your internet connection before proceeding.",textAlign: TextAlign.center,style: TextStyle(fontSize: 12.0),)
-                        : Text("Please! proceed by connecting to a internet connection",textAlign: TextAlign.center,style: TextStyle(fontSize: 12.0, color: Colors.red),),
+                        ? Text(
+                      "Check your internet connection before proceeding.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12.0),
+                    )
+                        : Text(
+                      "Please! proceed by connecting to a internet connection",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 12.0, color: Colors.red),
+                    ),
                   ],
                 ),
                 actions: <Widget>[
@@ -420,9 +606,13 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                       elevation: 10,
                     ),
                     onPressed: () {
-                      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                      SystemChannels.platform
+                          .invokeMethod('SystemNavigator.pop');
                     },
-                    child: Text("CLOSE THE APP", style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      "CLOSE THE APP",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -438,7 +628,10 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                         //your code
                       }
                     },
-                    child: Text("PROCEED",style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      "PROCEED",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               );
@@ -447,9 +640,9 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
     }));
   }
 
-  Widget _buildBox({Color color, String textTitle, Function onTap}){
+  Widget _buildBox({Color color, String textTitle, Function onTap}) {
     return InkWell(
-      onTap:onTap ,
+      onTap: onTap,
       child: Card(
         elevation: 10,
         color: color,
@@ -461,14 +654,9 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                   color: Colors.white,
                   fontSize: 12.0,
                   fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold
-              )
-          ),
+                  fontWeight: FontWeight.bold)),
         ),
       ),
     );
   }
-
 }
-
-

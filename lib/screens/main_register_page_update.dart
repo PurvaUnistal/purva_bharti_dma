@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hpcl_app/HiveDataStore/customer_reg_data_store.dart';
 import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
+import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
 import 'package:hpcl_app/utils/common_widgets/photo_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -10,23 +11,21 @@ import '../utils/common_widgets/open_image_source.dart';
 
 class MainRegisterPageUpdate extends StatefulWidget {
   bool isUpdate;
-  int position=-1;
+  int position = -1;
   SaveCustomerRegistrationOfflineModel studentModel = null;
-  MainRegisterPageUpdate({this.isUpdate,this.position, this.studentModel});
+
+  MainRegisterPageUpdate({this.isUpdate, this.position, this.studentModel});
 
   @override
   State<StatefulWidget> createState() {
     return MainRegisterPageUpdateState();
   }
-
 }
 
 class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Customer editedCustomer;
   Position position;
-  int gasDepositAmountController,
-      depositTotalAmount = 0,
-      _schemeMonth = 0;
+  int gasDepositAmountController, depositTotalAmount = 0, _schemeMonth = 0;
 
   var wifiBSSID;
   var wifiIP;
@@ -39,7 +38,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   List data = [];
 
-  List<String> _bankDropdownItems2 = ([]);
+  List<String> _bankDropdownItems2 = [];
   String _bankValue2;
   List data2 = [];
 
@@ -90,7 +89,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       chqCancelledPhotoFile = "",
       chqPhotoFile = "";
 
-
   void removeSpace(TextEditingController controller) {
     if (controller.text.trim() == "") {
       setState(() => controller.text = "");
@@ -105,7 +103,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   String selectedDropDownValue = "";
   ServerApi serverApi;
 
-
   @override
   void initState() {
     _connectivitySubscription =
@@ -115,10 +112,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     firstNameController.addListener(() => removeSpace(firstNameController));
     middleNameController.addListener(() => removeSpace(middleNameController));
     lastNameController.addListener(() => removeSpace(lastNameController));
-    guardianNameController.addListener(() => removeSpace(guardianNameController));
+    guardianNameController
+        .addListener(() => removeSpace(guardianNameController));
     reasonController.addListener(() => removeSpace(reasonController));
     emailIdController.addListener(() => removeSpace(emailIdController));
-    localityController.addListener(() => removeSpace(localityController));
+    colonySocietyApartmentController
+        .addListener(() => removeSpace(colonySocietyApartmentController));
     streetNameController.addListener(() => removeSpace(streetNameController));
     townController.addListener(() => removeSpace(townController));
     landmarkController.addListener(() => removeSpace(landmarkController));
@@ -131,6 +130,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     reasonNoController.addListener(() => removeSpace(reasonNoController));
     mICRCodeController.addListener(() => removeSpace(mICRCodeController));
     initDepDateController.addListener(() => removeSpace(initDepDateController));
+    initDepDateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    print("SDFGHUIOKJHGFHJKL"+initDepDateController.text);
     super.initState();
   }
 
@@ -153,8 +154,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       guardianNameController.text = widget.studentModel.guardianName;
       reasonController.text = widget.studentModel.residentStatus;
       emailIdController.text = widget.studentModel.emailId;
-      localityController.text = widget.studentModel.locality;
-      streetNameController.text = widget.studentModel.locality;
+      colonySocietyApartmentController.text =
+          widget.studentModel.colonySocietyApartment;
+      streetNameController.text = widget.studentModel.streetName;
       townController.text = widget.studentModel.town;
       houseNumberController.text = widget.studentModel.houseNumber;
       pinCodeController.text = widget.studentModel.pinCode;
@@ -178,7 +180,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       IFSCController.text = widget.studentModel.bankIfscCode;
       bank_address.text = widget.studentModel.bankAddress;
       _isInterestedId = widget.studentModel.interested;
-      // _mdpeValue == 'Yes' ? '1' : '0' = widget.studentModel.societyAllowedMdpe;
       _residentStatusValue = widget.studentModel.residentStatus;
       cookInFuelValue = widget.studentModel.existingCookingFuel;
       frontImageFile = widget.studentModel.backSide1;
@@ -190,11 +191,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       consentPhotoFile = widget.studentModel.customerConsent;
       chqCancelledPhotoFile = widget.studentModel.canceledCheque;
       chqPhotoFile = widget.studentModel.chequePhoto;
+    //  _mdpeValue = widget.studentModel.societyAllowedMdpe;
       //  uploadHousePhoto = widget.studentModel.uploadHousePhoto,
       //   ownerConsent = widget.studentModel.ownerConsent,
       //   reasonForHold = widget.studentModel.reasonForHold,
       _bankValue = widget.studentModel.nameOfBank;
-     _bankValue2 = widget.studentModel.payementBankName;
       schema = widget.studentModel.schema;
       dmaUserName = widget.studentModel.dmaUserName;
       dmaId = widget.studentModel.dmaUserId;
@@ -207,18 +208,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios_rounded),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => RegistrationForm()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RegistrationForm()));
               },
             ),
             titleAppBar: "Customer Input",
             actions: [],
           ),
         ),
-        body: _buildLayout()
-    );
+        body: _buildLayout());
   }
-
 
   Future<Position> _getCurrentLocation() async {
     bool serviceEnabled;
@@ -243,7 +244,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         desiredAccuracy: LocationAccuracy.high);
   }
 
-
   TextEditingController mobileNoController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController middleNameController = TextEditingController();
@@ -251,7 +251,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   TextEditingController guardianNameController = TextEditingController();
   TextEditingController reasonController = TextEditingController();
   TextEditingController emailIdController = TextEditingController();
-  TextEditingController localityController = TextEditingController();
+  TextEditingController colonySocietyApartmentController =
+      TextEditingController();
   TextEditingController streetNameController = TextEditingController();
   TextEditingController townController = TextEditingController();
   TextEditingController houseNumberController = TextEditingController();
@@ -278,13 +279,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   OptionItem categoryValue;
   OptionItem depositStatusValue;
-  OptionItem __modeDepositValue;
+
+  List<DropdownMenuItem<OptionItem>> modeOfDepositList = [];
+  OptionItem modeDepositValue;
+  String modeOfDepositId;
+
   DepositItem _depositCategoryType;
 
-
-
   List<DropdownMenuItem<OptionItem>> dropListDepositStatusList = ([]);
-  List<DropdownMenuItem<OptionItem>> modeOfDepositList = ([]);
   List<DropdownMenuItem<OptionItem>> dropListChoiceStatusList = ([]);
   List<DropdownMenuItem<OptionItem>> propertyCategoryList = [];
   List<DropdownMenuItem<DepositItem>> _propertyDropdownItemsDeposit = [];
@@ -296,17 +298,17 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   List<DropdownMenuItem<String>> guardianTypeDropdownItems = ([]);
 
   String _depositStatusId = '';
-  String _modeOfDeposit;
+
 
   bool isDepositCheq = false;
-
 
   OptionItem idProofValue;
   OptionItem _addressProofDropDownValue = OptionItem(id: "", title: "");
   String _addressProofDropDownValueId = "";
 
   OptionItem _kycProofDropDownValue;
- // String _kycProofDropDownValueId = "";
+
+  // String _kycProofDropDownValueId = "";
 
   DropListModel dropListModelarea = DropListModel([
     OptionItem(id: "1", title: "A"),
@@ -315,12 +317,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     OptionItem(id: "4", title: "D"),
   ]);
 
-
   String cookInFuelValue;
 
-
   OptionItem propertyClassValue;
-
 
   OptionItem guardianType;
   String guardianTypeId = '0';
@@ -401,21 +400,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   List<DropdownMenuItem<OptionItem>> billingModeList = [];
   OptionItem billingModeValue;
+  String billingModeId;
 
   List<DropdownMenuItem<OptionItem>> _acceptConversionPolicyList = [];
   OptionItem __acceptConversionPolicyValue = OptionItem(id: "0", title: "");
   String __acceptConversionPolicyValueId;
 
   List<DropdownMenuItem<OptionItem>> _acceptExtraFittingCostList = [];
-  OptionItem acceptExtraFittingCostValue =  OptionItem(id: "0", title: "");
+  OptionItem acceptExtraFittingCostValue = OptionItem(id: "0", title: "");
   String __acceptExtraFittingCostValueId;
 
   List<ImageSource> values = [];
-  DateTime currentDate = DateTime.now();
+
   String userId = "";
   String depositSum = "";
   final formGlobalKey = GlobalKey<FormState>();
-
 
   _buildLayout() {
     return SingleChildScrollView(
@@ -460,10 +459,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
             _idProofNoWidget(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _frontImageWidget(),
-                _backImageWidget()
-              ],
+              children: [_frontImageWidget(), _backImageWidget()],
             ),
             _buildCardWidget(text: AppStrings.ownershipProofHeading),
             getDropDown2(),
@@ -503,8 +499,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 12.0, top: 12, right: 15),
+                  padding:
+                      const EdgeInsets.only(left: 12.0, top: 12, right: 15),
                   child: Text(AppStrings.securityDepositLabel),
                 ),
                 Flexible(child: _depositStatusDropDown())
@@ -526,29 +522,31 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                     _backNameWidget(),
                     _micrCodeWidget(),
                     _chequeImageWidget(),
+                  ],
+                )),
 
-            ],
-                )
-            ),
-            TextButton(
-              child: widget.isUpdate == false ? Text("Preview") : Text("Update"),
-              onPressed: () async {
-                var textFieldValidationCheck = CustomerFormHelper
-                    .textFieldValidationCheck(
+            ButtonWidget(
+              textButton: widget.isUpdate == false ? "Preview" : "Update",
+              onPressed: ()  {
+                var textFieldValidationCheck =
+                    CustomerFormHelper.textFieldValidationCheck(
                   titleLocation: latitudeController.text.trim().toString(),
-                  acceptConversionPolicyValueId: __acceptConversionPolicyValueId.toString(),
-                  acceptExtraFittingCostValueId: __acceptExtraFittingCostValueId.toString(),
+                  acceptConversionPolicyValueId:
+                      __acceptConversionPolicyValueId.toString(),
+                  acceptExtraFittingCostValueId:
+                      __acceptExtraFittingCostValueId.toString(),
                   chargeAreaType: chargeAreaId.toString(),
                   areaTypeId: _areaTypeId.toString(),
                   mobileNoController: mobileNoController.text.toString(),
                   firstNameController: firstNameController.text.toString(),
                   lastNameController: lastNameController.text.toString(),
-                  guardianNameController: guardianNameController.text
-                      .toString(),
+                  guardianNameController:
+                      guardianNameController.text.toString(),
                   propertyTypeId: categoryValue.toString(),
                   propertyClassId: propertyClassValue.toString(),
                   houseNumberController: houseNumberController.text.toString(),
-                  localityController: localityController.text.toString(),
+                  colonySocietyApartmentController:
+                      colonySocietyApartmentController.text.toString(),
                   streetNameController: streetNameController.text.toString(),
                   district: getAllDistrictId.toString(),
                   pinCodeController: pinCodeController.text.toString(),
@@ -565,24 +563,25 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                   customerAccNo: customerAccountNum.text.trim().toString(),
                   customerIfscCode: IFSCController.text.trim().toString(),
                   customerBankAdd: bank_address.text.trim().toString(),
-                  modeOfDeposit: _modeOfDeposit.toString(),
-                  chequeNo: _modeOfDeposit == "1" ? chqNOController.text.trim()
-                      .toString() : "",
-                  chequeDate: _modeOfDeposit == "1" ? initDepDateController.text
-                      .trim().toString() : "",
+                  modeOfDeposit: modeOfDepositId,
+                  chequeNo: modeOfDepositId == "1"
+                      ? chqNOController.text.trim().toString()
+                      : "",
+                  chequeDate: modeOfDepositId == "1"
+                      ? initDepDateController.text.trim().toString()
+                      : DateFormat('yyyy-MM-dd').format(DateTime.now()),
                   bankName: _bankValue2,
                   bankAccNo: bankAccNoController.text.trim().toString(),
                   depositAmount: AppStrings.depositAmount,
-                  micrCode: _modeOfDeposit == "1" ? mICRCodeController.text
-                      .trim().toString() : "",
-                  chequePhoto: _modeOfDeposit == "1"
-                      ? chqPhotoFile
-                      : null,
+                  micrCode: modeOfDepositId == "1"
+                      ? mICRCodeController.text.trim().toString()
+                      : "",
+                  chequePhoto: modeOfDepositId == "1" ? chqPhotoFile : null,
                   mdpeValue: _mdpeValue,
                   residentStatusValue: _residentStatusValue,
                 );
                 if (textFieldValidationCheck == true) {
-                  _showDialog(context: context, index: 0);
+                  _showDialog();
                 }
               },
             ),
@@ -591,411 +590,386 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ),
     );
   }
-
-  _showDialog({BuildContext context, int index}) {
+  _showDialog() {
     return showDialog(
-        context: context, builder: (context,) {
-      return Container(
-        color: Colors.white,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildRow(
-                leading: AppStrings.interestedLabel,
-                trailing: _isInterestedItem.title,
-              ),
-              _buildRow(
-                leading: AppStrings.reasonLabel,
-                trailing: reasonController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.chargeAreaLabel,
-                trailing: chargeAreaType.title ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.areaLabel,
-                trailing: areaTypeValue.title ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.mobileNoLabel,
-                trailing: mobileNoController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.firstNameLabel,
-                trailing: firstNameController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.middleNameLabel,
-                trailing: middleNameController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.lastNameLabel,
-                trailing: lastNameController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.guardianTypeLabel,
-                trailing: guardianTypeValue ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.guardianNameLabel,
-                trailing: guardianNameController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.emailAddressLabel,
-                trailing: emailIdController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.propertyCategoryLabel,
-                trailing: categoryValue.title ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.propertyClassLabel,
-                trailing: propertyClassValue.title ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.houseNumberLabel,
-                trailing: houseNumberController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.apartmentLabel,
-                trailing: localityController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.streetNameLabel,
-                trailing: streetNameController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.townLabel,
-                trailing: townController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.pinCodeLabel,
-                trailing: pinCodeController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.districtLabel,
-                trailing: districtValue.title ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.mdpeAllowLabel,
-                trailing: _mdpeValue ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.residentStatusLabel,
-                trailing: _residentStatusValue ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.noOfKitchenLabel,
-                trailing: kitchenController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.noOfBathroomLabel,
-                trailing: bathroomController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.existingCookingFuelLabel,
-                trailing: cookInFuelValue ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.noOfFamilyMembersLabel,
-                trailing: familyMemController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.latitudeLabel,
-                trailing: latitudeController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.longitudeLabel,
-                trailing: longitudeController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.landmarkLabel,
-                trailing: landmarkController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.identificationProofLabel,
-                trailing: idProofValue.title ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.idProofNo,
-                trailing: idProofNoController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.billingModeLabel,
-                trailing: billingModeValue.title.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.customerAccountNoLabel,
-                trailing: customerAccountNum.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.customerIfscCodeLabel,
-                trailing: IFSCController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.conversionPolicyLabel,
-                trailing: __acceptConversionPolicyValue.title ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.fittingCostLabel,
-                trailing: acceptExtraFittingCostValue.title ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.depositStatusLabel,
-                trailing: depositStatusValue.title ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.modeOfDepositLabel,
-                trailing: __modeDepositValue.title ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.depositTypeLabel,
-                trailing: AppStrings.depositName.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.depositAmountControllerLabel,
-                trailing: depositAmountController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.chqNoLabel,
-                trailing: chqNOController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.depositDateLabel,
-                trailing: initDepDateController.text.toString() ?? "-",
-              ),
-              _buildRow(
-                leading: AppStrings.customerBankNameLabel,
-                trailing: _bankValue.toString() ?? "-",
-              ),
-              Visibility(
-                visible: isDepositCheq,
-                child: Column(
-                  children: [
-                    Divider(),
-                    _buildRow(
-                      leading: AppStrings.accountNoLabel,
-                      trailing: bankAccNoController.text.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.bankNameLabel,
-                      trailing: _bankValue2.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.mICRCodeLabel,
-                      trailing: mICRCodeController.text.toString() ?? "-",
-                    ),
-                  ],
+        context: context,
+        builder: (
+          context,
+        ) {
+          return Container(
+            height: 200,
+            color: Colors.white,
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              children: [
+                _buildRow(
+                  leading: AppStrings.interestedLabel,
+                  trailing: _isInterestedItem.title,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        _imageNameWidget(imageName: AppStrings.idFrontImgSide),
-                        frontImageFile == null && frontImageFile.isEmpty
-                            ? InkWell(
-                            onTap: () => _openFrontImageSource(
-                                controller: frontImageController,
-                                context: context),
-                            child: _localBorderImg())
-                            : ImageCircle(
-                          fileImage1: File(frontImageFile),
-                          pathImage: frontImageFile,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        _imageNameWidget(imageName: AppStrings.idBackImgSide),
-                        backImageFile == null && backImageFile.isEmpty
-                            ? InkWell(
-                            onTap: () => _openBackImageSource(
-                                controller: backImageController,
-                                context: context),
-                            child: _localBorderImg())
-                            : ImageCircle(
-                          fileImage1: File(backImageFile),
-                          pathImage: backImageFile,
-                        ),
-                      ],
-                    ),
-                  ],
+                _buildRow(
+                  leading: AppStrings.reasonLabel,
+                  trailing: reasonController.text.toString() ?? "-",
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        _imageNameWidget(imageName: AppStrings
-                            .electricBillFrontImgLabel),
-                        electricBillFrontImgFile == null && electricBillFrontImgFile.isEmpty
-                            ? InkWell(
-                            onTap: () => _openEleBillFrontSource(
-                                controller: eleBillFrontImgController,
-                                context: context),
-                            child: _localBorderImg())
-                            : ImageCircle(
-                          fileImage1: File(electricBillFrontImgFile),
-                          pathImage: electricBillFrontImgFile,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        _imageNameWidget(imageName: AppStrings
-                            .electricBillBackImgLabel),
-                        electricBillBackImgFile == null && electricBillBackImgFile.isEmpty
-                            ? InkWell(
-                            onTap: () => _openEleBackSource(
-                                controller: eleBillBackImgController,
-                                context: context),
-                            child: _localBorderImg())
-                            : ImageCircle(
-                          fileImage1: File(electricBillBackImgFile),
-                          pathImage: electricBillBackImgFile,
-                        ),
-                      ],
-                    ),
-                  ],
+                _buildRow(
+                  leading: AppStrings.chargeAreaLabel,
+                  trailing: chargeAreaType.title ?? "-",
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        _imageNameWidget(imageName: AppStrings
-                            .nocFrontImgLabel),
-                        nocFrontImgFile == null && nocFrontImgFile.isEmpty
-                            ? InkWell(
-                            onTap: () => _openNocFrontImgSource(
-                                controller: nocFrontImgController,
-                                context: context),
-                            child: _localBorderImg())
-                            : ImageCircle(
-                          fileImage1: File(nocFrontImgFile),
-                          pathImage: nocFrontImgFile,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
-                        nocBackImgFile == null && nocBackImgFile.isEmpty
-                            ? InkWell(
-                            onTap: () => _openNocBackImgSource(
-                                controller: nocBackImgController,
-                                context: context),
-                            child: _localBorderImg())
-                            : ImageCircle(
-                          fileImage1:File(nocBackImgFile),
-                          pathImage: nocBackImgFile,
-                        ),
-                      ],
-                    ),
-                  ],
+                _buildRow(
+                  leading: AppStrings.areaLabel,
+                  trailing: areaTypeValue.title ?? "-",
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        _imageNameWidget(imageName: AppStrings
-                            .consentPhotoLabel),
-                        consentPhotoFile == null && consentPhotoFile.isEmpty
-                            ? InkWell(
-                            onTap: () => _openConsentImgSource(
-                                controller: consentImageController,
-                                context: context),
-                            child: _localBorderImg())
-                            : ImageCircle(
-                          fileImage1: File(consentPhotoFile),
-                          pathImage: consentPhotoFile,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        _imageNameWidget(imageName: AppStrings
-                            .chqCancelledPhotoLabel),
-                        chqCancelledPhotoFile == null && chqCancelledPhotoFile.isEmpty
-                            ? InkWell(
-                            onTap: () => _openChqCancelledImgSource(
-                                controller: cancelChqImageController,
-                                context: context),
-                            child: _localBorderImg())
-                            : ImageCircle(
-                            fileImage1: File(chqCancelledPhotoFile),
-                            pathImage: chqCancelledPhotoFile
-                        ),
-                      ],
-                    ),
-                  ],
+                _buildRow(
+                  leading: AppStrings.mobileNoLabel,
+                  trailing: mobileNoController.text.toString() ?? "-",
                 ),
-              ),
-              Visibility(
-                visible: isDepositCheq,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                _buildRow(
+                  leading: AppStrings.firstNameLabel,
+                  trailing: firstNameController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.middleNameLabel,
+                  trailing: middleNameController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.lastNameLabel,
+                  trailing: lastNameController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.guardianTypeLabel,
+                  trailing: guardianTypeValue ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.guardianNameLabel,
+                  trailing: guardianNameController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.emailAddressLabel,
+                  trailing: emailIdController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.propertyCategoryLabel,
+                  trailing: categoryValue.title ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.propertyClassLabel,
+                  trailing: propertyClassValue.title ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.houseNumberLabel,
+                  trailing: houseNumberController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.apartmentLabel,
+                  trailing:
+                      colonySocietyApartmentController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.streetNameLabel,
+                  trailing: streetNameController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.townLabel,
+                  trailing: townController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.pinCodeLabel,
+                  trailing: pinCodeController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.districtLabel,
+                  trailing: districtValue.title ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.mdpeAllowLabel,
+                  trailing: _mdpeValue ?? "-",
+                ),
+                  _buildRow(
+                  leading: AppStrings.residentStatusLabel,
+                  trailing: _residentStatusValue ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.noOfKitchenLabel,
+                  trailing: kitchenController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.noOfBathroomLabel,
+                  trailing: bathroomController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.existingCookingFuelLabel,
+                  trailing: cookInFuelValue ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.noOfFamilyMembersLabel,
+                  trailing: familyMemController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.latitudeLabel,
+                  trailing: latitudeController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.longitudeLabel,
+                  trailing: longitudeController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.landmarkLabel,
+                  trailing: landmarkController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.identificationProofLabel,
+                  trailing: idProofValue.title ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.idProofNo,
+                  trailing: idProofNoController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.billingModeLabel,
+                  trailing: billingModeValue.title.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.customerAccountNoLabel,
+                  trailing: customerAccountNum.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.customerIfscCodeLabel,
+                  trailing: IFSCController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.conversionPolicyLabel,
+                  trailing: __acceptConversionPolicyValue.title ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.fittingCostLabel,
+                  trailing: acceptExtraFittingCostValue.title ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.depositStatusLabel,
+                  trailing: depositStatusValue.title ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.modeOfDepositLabel,
+                  trailing: modeDepositValue.title ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.depositTypeLabel,
+                  trailing: AppStrings.depositName.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.depositAmountControllerLabel,
+                  trailing: depositAmountController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.chqNoLabel,
+                  trailing: chqNOController.text.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.depositDateLabel,
+                  trailing: initDepDateController.text.toString() ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                ),
+                _buildRow(
+                  leading: AppStrings.customerBankNameLabel,
+                  trailing: _bankValue.toString() ?? "-",
+                ),
+                Visibility(
+                  visible: isDepositCheq,
+                  child: Column(
                     children: [
-                      _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-                      chqPhotoFile == null && chqPhotoFile.isEmpty
-                          ? InkWell(
-                          onTap: () => _openChqImgSource(
-                              controller: chqImgController,
-                              context: context),
-                          child: _localBorderImg())
-                          : ImageCircle(
-                        fileImage1: File(chqPhotoFile),
-                        pathImage:chqPhotoFile,
+                      Divider(),
+                      _buildRow(
+                        leading: AppStrings.accountNoLabel,
+                        trailing: bankAccNoController.text.toString() ?? "-",
+                      ),
+                      _buildRow(
+                        leading: AppStrings.bankNameLabel,
+                        trailing: _bankValue2.toString() ?? "-",
+                      ),
+                      _buildRow(
+                        leading: AppStrings.mICRCodeLabel,
+                        trailing: mICRCodeController.text.toString() ?? "-",
                       ),
                     ],
                   ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    onPressed: ()  {
-                       storeRecords();
-                    },
-                    child: Text("SAVE ", style: TextStyle(fontSize: 20),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          _imageNameWidget(
+                              imageName: AppStrings.idFrontImgSide),
+                          frontImageFile != null && frontImageFile.isNotEmpty
+                              ? ImageCircle(
+                                  fileImage1: File(frontImageFile),
+                                  pathImage: frontImageFile,
+                                )
+                              :_localBorderImg()
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          _imageNameWidget(
+                              imageName: AppStrings.idBackImgSide),
+                          backImageFile != null && backImageFile.isNotEmpty
+                              ? ImageCircle(
+                                  fileImage1: File(backImageFile),
+                                  pathImage: backImageFile,
+                                )
+                              :_localBorderImg()
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          _imageNameWidget(
+                              imageName: AppStrings.electricBillFrontImgLabel),
+                          electricBillFrontImgFile != null &&
+                                  electricBillFrontImgFile.isNotEmpty
+                              ? ImageCircle(
+                                  fileImage1: File(electricBillFrontImgFile),
+                                  pathImage: electricBillFrontImgFile,
+                                )
+                              :_localBorderImg()
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          _imageNameWidget(
+                              imageName: AppStrings.electricBillBackImgLabel),
+                          electricBillBackImgFile != null &&
+                                  electricBillBackImgFile.isNotEmpty
+                              ?  ImageCircle(
+                                  fileImage1: File(electricBillBackImgFile),
+                                  pathImage: electricBillBackImgFile,
+                                )
+                              :_localBorderImg()
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          _imageNameWidget(
+                              imageName: AppStrings.nocFrontImgLabel),
+                          nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
+                              ?  ImageCircle(
+                                  fileImage1: File(nocFrontImgFile),
+                                  pathImage: nocFrontImgFile,
+                                )
+                              :_localBorderImg()
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          _imageNameWidget(
+                              imageName: AppStrings.nocBackImgLabel),
+                          nocBackImgFile != null && nocBackImgFile.isNotEmpty
+                              ?  ImageCircle(
+                                  fileImage1: File(nocBackImgFile),
+                                  pathImage: nocBackImgFile,
+                                )
+                              :_localBorderImg()
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          _imageNameWidget(
+                              imageName: AppStrings.consentPhotoLabel),
+                          consentPhotoFile != null && consentPhotoFile.isNotEmpty
+                              ?  ImageCircle(
+                                  fileImage1: File(consentPhotoFile),
+                                  pathImage: consentPhotoFile,
+                                )
+                              :_localBorderImg()
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          _imageNameWidget(
+                              imageName: AppStrings.chqCancelledPhotoLabel),
+                          chqCancelledPhotoFile != null &&
+                                  chqCancelledPhotoFile.isNotEmpty
+                              ? ImageCircle(
+                                  fileImage1: File(chqCancelledPhotoFile),
+                                  pathImage: chqCancelledPhotoFile)
+                              :_localBorderImg()
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: isDepositCheq,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
+                        chqPhotoFile != null && chqPhotoFile.isNotEmpty
+                            ?  ImageCircle(
+                                fileImage1: File(chqPhotoFile),
+                                pathImage: chqPhotoFile,
+                              )
+                            :_localBorderImg()
+                      ],
                     ),
                   ),
-                  ElevatedButton(
-                    child: Text("EDIT", style: TextStyle(fontSize: 20),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Flexible(
+                      child: ButtonWidget(
+                        onPressed: () {
+                          storeRecords();
+                        },
+                        textButton: "SAVE ",
+                      ),
                     ),
-                    onPressed: () {
-                      Navigator.pop(context, false);
-                    },
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    );
+                    Flexible(
+                      child: ButtonWidget(
+                        textButton: "EDIT",
+                        onPressed: () {
+                          Navigator.pop(context, false);
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
   }
 
-  void  storeRecords() {
-    SaveCustomerRegistrationOfflineModel data = SaveCustomerRegistrationOfflineModel(
+  void storeRecords() {
+    SaveCustomerRegistrationOfflineModel data =
+        SaveCustomerRegistrationOfflineModel(
       interested: _isInterestedId.toString(),
       areaId: areaTypeValue.id.toString(),
       chargeArea: chargeAreaType.id.toString(),
@@ -1009,8 +983,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       propertyCategoryId: categoryValue.id.toString(),
       propertyClassId: propertyClassValue.id.toString(),
       houseNumber: houseNumberController.text.toString(),
-      locality: localityController.text.toString(),
-      //   crLocality:streetNameController.text.toString(),
+      colonySocietyApartment: colonySocietyApartmentController.text.toString(),
+      streetName: streetNameController.text.toString(),
       town: townController.text.toString(),
       pinCode: pinCodeController.text.toString(),
       districtId: districtValue.id.toString(),
@@ -1042,46 +1016,47 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       kycDocument3Number: nocProofNoController.text.toString(),
       kycDocument2: _addressProofDropDownValueId,
       kycDocument2Number: ownershipController.text.toString(),
-      //   cusBillingMode:__billingModeValueId,
+      billingModel:billingModeId,
       bankAccountNumber: customerAccountNum.text,
       bankIfscCode: IFSCController.text.toString(),
       bankAddress: bank_address.text.toString(),
       acceptConversionPolicy: __acceptConversionPolicyValueId,
       acceptExtraFittingCost: __acceptExtraFittingCostValueId,
-      initialDepositeStatus: _depositStatusId.toString(),
-      modeOfDeposite: __modeDepositValue.id.toString(),
+    //  initialDepositeStatus: _depositStatusId.toString(),
+      initialDepositeStatus: depositStatusValue.toString(),
+     // modeOfDeposite: modeDepositValue.id.toString(),
+      modeOfDeposite: modeOfDepositId.toString(),
       depositeType: schemeId,
       initialAmount: depositAmountController.text.toString(),
       chequeNumber: chqNOController.text.toString(),
-      initialDepositeDate: initDepDateController.text.toString(),
-      nameOfBank: _bankValue == null ? '' : _bankValue,
-      payementBankName: _bankValue2 == null ? "" : _bankValue2,
+      initialDepositeDate:  initDepDateController.text.toString() ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      nameOfBank:_bankValue,
+      payementBankName:_bankValue2 ?? "",
       chequeBankAccount: bankAccNoController.text.toString(),
       micr: mICRCodeController.text.toString(),
       schema: schema,
       dmaUserName: dmaUserName,
       dmaUserId: dmaId,
     );
+    print("initialDepositeDatefghj"+data.initialDepositeDate.toString());
     if (isUpdate.value) {
-      dataStore.updateUser(userModel: data, index: widget.position).then((value) {
+      dataStore
+          .updateUser(userModel: data, index: widget.position)
+          .then((value) {
         Navigator.pop(context);
       });
     } else {
       var mmm = SaveCusRegHiveDataStore.box.length;
       if (mmm <= 5) {
         dataStore.addUser(userModel: data);
-      }
-      else {
+      } else {
         EasyLoading.showError('Error !!!! \n Please Uploade Previous record');
       }
     }
     EasyLoading.showSuccess('Great Success! \n Record Save');
     //   Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationForm()),);
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (_) => RegistrationForm()),
-            (r) => false);
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (_) => RegistrationForm()), (r) => false);
   }
 
   Widget _interestedDropDown() {
@@ -1202,24 +1177,25 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
         maxLength: 10,
         suffixIcon: AppStrings.isMobile == true
-            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            ? Icon(
+                Icons.check_circle_sharp,
+                color: Colors.green,
+              )
             : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter Mobile Number";
-          }
-          else if (value.length <= 9) {
+          } else if (value.length <= 9) {
             return 'Mobile Number must be of 10 digit';
           }
           return null;
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() =>
-          v.length <= 9 ? AppStrings.isMobile = false : AppStrings.isMobile =
-          true);
-        }
-    );
+          setState(() => v.length <= 9
+              ? AppStrings.isMobile = false
+              : AppStrings.isMobile = true);
+        });
   }
 
   Widget _firstNameWidget() {
@@ -1232,7 +1208,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]")),
       ],
       suffixIcon: AppStrings.isFirst == true
-          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          ? Icon(
+              Icons.check_circle_sharp,
+              color: Colors.green,
+            )
           : Icon(Icons.info, color: Colors.red),
       validator: (value) {
         if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
@@ -1245,8 +1224,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       onChanged: (v) {
         v = firstNameController.text.trim().toString();
         formGlobalKey.currentState.validate();
-        setState(() =>
-        v.length <= 2 ? AppStrings.isFirst = false : AppStrings.isFirst = true);
+        setState(() => v.length <= 2
+            ? AppStrings.isFirst = false
+            : AppStrings.isFirst = true);
       },
     );
   }
@@ -1269,7 +1249,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       textInputType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       suffixIcon: AppStrings.isLast == true
-          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          ? Icon(
+              Icons.check_circle_sharp,
+              color: Colors.green,
+            )
           : Icon(Icons.info, color: Colors.red),
       validator: (value) {
         if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
@@ -1279,8 +1262,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       },
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() =>
-        v.length <= 2 ? AppStrings.isLast = false : AppStrings.isLast = true);
+        setState(() => v.length <= 2
+            ? AppStrings.isLast = false
+            : AppStrings.isLast = true);
       },
     );
   }
@@ -1305,7 +1289,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       textInputType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       suffixIcon: AppStrings.isGuardian == true
-          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          ? Icon(
+              Icons.check_circle_sharp,
+              color: Colors.green,
+            )
           : Icon(Icons.info, color: Colors.red),
       validator: (value) {
         if (value.isEmpty) {
@@ -1319,9 +1306,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       },
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() =>
-        v.length <= 2 ? AppStrings.isGuardian = false : AppStrings.isGuardian =
-        true);
+        setState(() => v.length <= 2
+            ? AppStrings.isGuardian = false
+            : AppStrings.isGuardian = true);
       },
     );
   }
@@ -1336,16 +1323,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
       ],
-      validator: (value) {
+      /*validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter your emailAddress.';
         } else if (!RegExp(
-            r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
+                r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
             .hasMatch(value)) {
           return 'Please enter a valid Email';
         }
         return null;
-      },
+      },*/
       onChanged: (v) {
         //  formGlobalKey.currentState.validate();
       },
@@ -1401,93 +1388,119 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     );
   }
 
-/*_depositTypeLabel*/
   getdepositTypeDropDown() {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            new Container(
-              padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-              child: DropdownButtonFormField<DepositItem>(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0,right: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            flex: 4,
+            child: DropdownButtonFormField<DepositItem>(
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal, fontSize: 12),
+              decoration: InputDecoration(
+               // border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1,color: Colors.green),
                 ),
-                items: _propertyDropdownItemsDeposit,
-                value: _depositCategoryType,
-                hint: Text(AppStrings.depositTypeLabel,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.normal),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1,color: Colors.grey),
                 ),
-                onChanged: (DepositItem value) {
-                  setState(() {
-                    _schemeMonth = value.schememonth;
-                    if (_schemeMonth > 0) {
-                      depositAmountController.text =
-                          value.firstamount.toString();
-                    } else {
-                      depositAmountController.text = value.amount.toString();
-                    }
-                    AppStrings.depositName = value.title;
-                    AppStrings.depositAmountController = value.amount;
-                    gasDepositAmountController = value.gas_amount;
-                    schemeId = value.id;
-                    AppStrings.schemeType = value.scheme_type;
-                    AppStrings.schemeCode = value.scheme_code;
-                    AppStrings.depositAmount = value.deposit_amount;
-                    AppStrings.equipmentDepositAmount =
-                        value.equipment_deposit_amount;
-                    AppStrings.interestAmount = value.interest_amount;
-                    AppStrings.registrationGST = value.registration_gst;
-                    AppStrings.interestTaxAmt = value.interest_tax_amt;
-                    AppStrings.totalAmount = value.totalAmount;
-                    AppStrings.nextCycleAmount = value.nextCycleAmount;
-                    AppStrings.registrationTaxName =
-                        value.registration_tax_name;
-                    depositTotalAmount = value.total_amount;
-                    AppStrings.interestTaxAmt = value.interest_tax_amt;
-                    AppStrings.regTax = value.reg_tax;
-                    AppStrings.msgSchemeDetail =
-                        "Deposit Name = " + AppStrings.depositName +
-                            "\nDeposit Amount = " +
-                            AppStrings.depositAmountController.toString() +
-                            "\nSchemeMonth = " + _schemeMonth.toString() +
-                            "\nEquipment Deposit Amount = " +
-                            AppStrings.equipmentDepositAmount +
-                            "\nGAS Amount = " +
-                            gasDepositAmountController.toString() +
-                            "\nFirst Deposit Amount = " +
-                            value.firstamount.toString();
-                  });
-                },
-                isExpanded: true,
-                isDense: true,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1,color: Colors.green),
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    borderSide: BorderSide(width: 1,)
+                ),
+                errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    borderSide: BorderSide(width: 1,color: Colors.red)
+                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
               ),
+              items: _propertyDropdownItemsDeposit,
+              value: _depositCategoryType,
+              hint: Text(
+                AppStrings.depositTypeLabel,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.normal),
+              ),
+              onChanged: (DepositItem value) {
+                setState(() {
+                  _schemeMonth = value.schememonth;
+                  if (_schemeMonth > 0) {
+                    depositAmountController.text =
+                        value.firstamount.toString();
+                  } else {
+                    depositAmountController.text = value.amount.toString();
+                  }
+                  AppStrings.depositName = value.title;
+                  AppStrings.depositAmountController = value.amount;
+                  gasDepositAmountController = value.gas_amount;
+                  schemeId = value.id;
+                  AppStrings.schemeType = value.scheme_type;
+                  AppStrings.schemeCode = value.scheme_code;
+                  AppStrings.depositAmount = value.deposit_amount;
+                  AppStrings.equipmentDepositAmount =
+                      value.equipment_deposit_amount;
+                  AppStrings.interestAmount = value.interest_amount;
+                  AppStrings.registrationGST = value.registration_gst;
+                  AppStrings.interestTaxAmt = value.interest_tax_amt;
+                  AppStrings.totalAmount = value.totalAmount;
+                  AppStrings.nextCycleAmount = value.nextCycleAmount;
+                  AppStrings.registrationTaxName =
+                      value.registration_tax_name;
+                  depositTotalAmount = value.total_amount;
+                  AppStrings.interestTaxAmt = value.interest_tax_amt;
+                  AppStrings.regTax = value.reg_tax;
+                  AppStrings.msgSchemeDetail = "Deposit Name = " +
+                      AppStrings.depositName +
+                      "\nDeposit Amount = " +
+                      AppStrings.depositAmountController.toString() +
+                      "\nSchemeMonth = " +
+                      _schemeMonth.toString() +
+                      "\nEquipment Deposit Amount = " +
+                      AppStrings.equipmentDepositAmount +
+                      "\nGAS Amount = " +
+                      gasDepositAmountController.toString() +
+                      "\nFirst Deposit Amount = " +
+                      value.firstamount.toString();
+                });
+              },
+              isExpanded: true,
+              isDense: true,
             ),
-            getDepositDetailButton(
-                "Detail", alignment: CrossAxisAlignment.center),
-          ],
-        ));
-  }
-
-  getDepositDetailButton(title, {alignment}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      child: Column(
-          crossAxisAlignment: alignment ?? CrossAxisAlignment.start,
-          children: [
-            ElevatedButton(
-                child: Text(title, style: TextStyle(color: Colors.white),),
+          ),
+          Flexible(
+            flex: 2,
+            child: ButtonWidget(
+                textButton :"Detail",
                 onPressed: () {
                   _showdepositAmountControllerDialog(
                       AppStrings.msgSchemeDetail);
                 }),
-          ]),
+          )
+        //  getDepositDetailButton("Detail", alignment: CrossAxisAlignment.center),
+        ],
+      ),
     );
+  }
+
+  getDepositDetailButton(title, {alignment}) {
+    return ButtonWidget(
+        textButton :title,
+        onPressed: () {
+          _showdepositAmountControllerDialog(
+              AppStrings.msgSchemeDetail);
+        });
   }
 
   _showdepositAmountControllerDialog(String _msg) async {
@@ -1522,7 +1535,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       controller: houseNumberController,
       textInputType: TextInputType.text,
       suffixIcon: AppStrings.isHouseNo == true
-          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          ? Icon(
+              Icons.check_circle_sharp,
+              color: Colors.green,
+            )
           : Icon(Icons.info, color: Colors.red),
       validator: (value) {
         if (value.isEmpty) {
@@ -1533,9 +1549,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       onTap: () {},
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() =>
-        v.length >= 1 ? AppStrings.isHouseNo = true : AppStrings.isHouseNo =
-        false);
+        setState(() => v.length >= 1
+            ? AppStrings.isHouseNo = true
+            : AppStrings.isHouseNo = false);
       },
     );
   }
@@ -1544,10 +1560,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     return TextFieldWidget(
       headingLabel: AppStrings.addressLabel,
       hintText: AppStrings.addressLabel,
-      controller: localityController,
+      controller: colonySocietyApartmentController,
       textInputType: TextInputType.text,
       suffixIcon: AppStrings.isAddress == true
-          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          ? Icon(
+              Icons.check_circle_sharp,
+              color: Colors.green,
+            )
           : Icon(Icons.info, color: Colors.red),
       validator: (value) {
         if (value.isEmpty) {
@@ -1558,9 +1577,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       onTap: () {},
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() =>
-        v.length > 1 ? AppStrings.isAddress = true : AppStrings.isAddress =
-        false);
+        setState(() => v.length > 1
+            ? AppStrings.isAddress = true
+            : AppStrings.isAddress = false);
       },
     );
   }
@@ -1568,11 +1587,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _streetNameWidget() {
     return TextFieldWidget(
       headingLabel: AppStrings.streetNameLabel,
-      hintText: AppStrings.addressLabel,
+      hintText: AppStrings.streetNameLabel,
       controller: streetNameController,
       textInputType: TextInputType.text,
       suffixIcon: AppStrings.isAddress == true
-          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          ? Icon(
+              Icons.check_circle_sharp,
+              color: Colors.green,
+            )
           : Icon(Icons.info, color: Colors.red),
       validator: (value) {
         if (value.isEmpty) {
@@ -1583,9 +1605,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       onTap: () {},
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() =>
-        v.length > 1 ? AppStrings.isAddress = true : AppStrings.isAddress =
-        false);
+        setState(() => v.length > 1
+            ? AppStrings.isAddress = true
+            : AppStrings.isAddress = false);
       },
     );
   }
@@ -1598,9 +1620,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         textInputType: TextInputType.name,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
-        ]
-    );
+        ]);
   }
+
   Widget _districtWidget() {
     return ReusedDropDownOptionItem(
       textLabel: AppStrings.districtLabel,
@@ -1624,13 +1646,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         textInputType: TextInputType.number,
         maxLength: 6,
         suffixIcon: AppStrings.isPinCode == true
-            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            ? Icon(
+                Icons.check_circle_sharp,
+                color: Colors.green,
+              )
             : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter Pin Number";
-          }
-          else if (value.length <= 5) {
+          } else if (value.length <= 5) {
             return 'Pin Number must be of 6 digit';
           }
           return null;
@@ -1638,11 +1662,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onTap: () {},
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() =>
-          v.length <= 5 ? AppStrings.isPinCode = false : AppStrings.isPinCode =
-          true);
-        }
-    );
+          setState(() => v.length <= 5
+              ? AppStrings.isPinCode = false
+              : AppStrings.isPinCode = true);
+        });
   }
 
   Widget _noKitchenWidget() {
@@ -1681,16 +1704,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Flexible(
+          flex: 4,
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.only(left: 12.0, top: 8),
-              child: TextButton(
-                child: new Text(AppStrings.getLocationLabel),
+              child: ButtonWidget(
+                textButton: AppStrings.getLocationLabel,
                 onPressed: () async {
                   Position position = await _getCurrentLocation();
-                  //  AppStrings.locationLat ='${position.latitude} ';
-                  //  AppStrings.locationLong = '${position.longitude}';
                   latitudeController.text =
                       position.latitude.toStringAsFixed(3);
                   longitudeController.text =
@@ -1701,14 +1723,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
           ),
         ),
         Flexible(
+            flex: 3,
             child: TextFieldWidget(
-              enabled: false,
-              headingLabel: AppStrings.locationLat,
-              hintText: AppStrings.locationLat,
-              controller: latitudeController,
-            )
-        ),
+          enabled: false,
+          headingLabel: AppStrings.locationLat,
+          hintText: AppStrings.locationLat,
+          controller: latitudeController,
+        )),
         Flexible(
+          flex: 3,
           child: TextFieldWidget(
             enabled: false,
             headingLabel: AppStrings.locationLong,
@@ -1775,7 +1798,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         controller: bankAccNoController,
         textInputType: TextInputType.text,
         suffixIcon: AppStrings.isBankAccNo == true
-            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            ? Icon(
+                Icons.check_circle_sharp,
+                color: Colors.green,
+              )
             : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
@@ -1788,11 +1814,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onTap: () {},
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() =>
-          v.length <= 7 ? AppStrings.isBankAccNo = false : AppStrings
-              .isBankAccNo = true);
-        }
-    );
+          setState(() => v.length <= 7
+              ? AppStrings.isBankAccNo = false
+              : AppStrings.isBankAccNo = true);
+        });
   }
 
   Widget _micrCodeWidget() {
@@ -1803,13 +1828,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         controller: mICRCodeController,
         textInputType: TextInputType.number,
         suffixIcon: AppStrings.isMICRCode == true
-            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            ? Icon(
+                Icons.check_circle_sharp,
+                color: Colors.green,
+              )
             : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter MICR Code";
-          }
-          else if (value.length <= 8) {
+          } else if (value.length <= 8) {
             return 'MICR Code must be of 9 digit';
           }
           return null;
@@ -1817,17 +1844,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onTap: () {},
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() =>
-          v.length <= 8 ? AppStrings.isMICRCode = false : AppStrings
-              .isMICRCode = true);
-        }
-    );
+          setState(() => v.length <= 8
+              ? AppStrings.isMICRCode = false
+              : AppStrings.isMICRCode = true);
+        });
   }
 
-
-
   /////////////////////////////  image 1 ///////////////////////////////////////
-  Future<void> _openFrontImageSource({BuildContext context, PhotoController controller}) async {
+  Future<void> _openFrontImageSource(
+      {BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -1852,20 +1877,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,
-          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           frontImageFile = pickedFile.path;
           //   photoController.frontImage = File(pickedFile.path);
         });
       }
-    }catch (e) {
+    } catch (e) {
       CustomToast.showToast(e.toString());
     }
   }
 
-  Future<void> _openBackImageSource({BuildContext context, PhotoController controller}) async {
+  Future<void> _openBackImageSource(
+      {BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -1890,20 +1916,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,
-          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           backImageFile = pickedFile.path;
           //  photoController.backImage = File(pickedFile.path);
         });
       }
-    }  catch (e) {
+    } catch (e) {
       CustomToast.showToast(e.toString());
     }
   }
 
-  Future<void> _openEleBillFrontSource({BuildContext context, PhotoController controller}) async {
+  Future<void> _openEleBillFrontSource(
+      {BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -1928,20 +1955,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,
-          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           electricBillFrontImgFile = pickedFile.path;
           // photoController.electricBillFrontImg = File(pickedFile.path);
         });
       }
-    }catch (e) {
+    } catch (e) {
       CustomToast.showToast(e.toString());
     }
   }
 
-  Future<void> _openEleBackSource({BuildContext context, PhotoController controller}) async {
+  Future<void> _openEleBackSource(
+      {BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -1966,9 +1994,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,
-          maxHeight: 480, maxWidth: 640, imageQuality: 25);
-      if (pickedFile != null|| photoController != null) {
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
         setState(() {
           electricBillBackImgFile = pickedFile.path;
           // photoController.electricBillBackImg = File(pickedFile.path);
@@ -2005,8 +2033,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,
-          maxHeight: 480,maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           nocFrontImgFile = pickedFile.path;
@@ -2044,8 +2072,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,
-          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           nocBackImgFile = pickedFile.path;
@@ -2083,8 +2111,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,
-          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           consentPhotoFile = pickedFile.path;
@@ -2105,7 +2133,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getChqCancelledImg(photoController: controller, imageSource: ImageSource.gallery);},
+            getChqCancelledImg(
+                photoController: controller, imageSource: ImageSource.gallery);
+          },
           onTapCamera: () {
             Navigator.of(context).pop();
             getChqCancelledImg(
@@ -2120,8 +2150,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,
-          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           chqCancelledPhotoFile = pickedFile.path;
@@ -2159,8 +2189,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       {PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,
-          maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           chqPhotoFile = pickedFile.path;
@@ -2172,7 +2202,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     }
   }
 
-
   Widget _frontImageWidget() {
     print("Get File Path ====== ${frontImageController.frontImage}");
     print("Get File Path ====== ${frontImageFile}");
@@ -2180,14 +2209,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       children: [
         _imageNameWidget(imageName: AppStrings.idFrontImgSide),
         InkWell(
-            onTap: () => _openFrontImageSource(context: context, controller: frontImageController),
+            onTap: () => _openFrontImageSource(
+                context: context, controller: frontImageController),
             child: frontImageFile != null && frontImageFile.isNotEmpty
-                ? _fileImage(
-                fileImage: File(frontImageFile),
-                onPressed: () {
-                  _openFrontImageSource(context: context, controller: frontImageController);
-                }
-            ) : _localBorderImg()
+                ? _fileImage(fileImage: File(frontImageFile))
+                : _localBorderImg()
         ),
       ],
     );
@@ -2201,11 +2227,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
             onTap: () => _openBackImageSource(
                 context: context, controller: backImageController),
             child: backImageFile != null && backImageFile.isNotEmpty
-                ? _fileImage(
-              fileImage: File(backImageFile),
-              onPressed: () => _openBackImageSource(
-                  context: context, controller: backImageController),
-            ) : _localBorderImg()
+                ? _fileImage(fileImage: File(backImageFile))
+                : _localBorderImg()
         ),
       ],
     );
@@ -2218,12 +2241,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         InkWell(
             onTap: () => _openEleBillFrontSource(
                 context: context, controller: eleBillFrontImgController),
-            child: electricBillFrontImgFile != null && electricBillFrontImgFile.isNotEmpty
-                ? _fileImage(
-              fileImage:File(electricBillFrontImgFile),
-              onPressed: () => _openEleBillFrontSource(
-                  context: context, controller: eleBillFrontImgController),
-            ) : _localBorderImg()
+            child: electricBillFrontImgFile != null &&
+                    electricBillFrontImgFile.isNotEmpty
+                ? _fileImage(fileImage: File(electricBillFrontImgFile))
+                : _localBorderImg()
         ),
       ],
     );
@@ -2236,12 +2257,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         InkWell(
             onTap: () => _openEleBackSource(
                 context: context, controller: eleBillBackImgController),
-            child:electricBillBackImgFile != null && electricBillBackImgFile.isNotEmpty
-                ? _fileImage(
-              fileImage:File(electricBillBackImgFile),
-              onPressed: () => _openEleBackSource(
-                  context: context, controller: eleBillBackImgController),
-            ) : _localBorderImg()
+            child: electricBillBackImgFile != null &&
+                    electricBillBackImgFile.isNotEmpty
+                ? _fileImage(fileImage: File(electricBillBackImgFile))
+                : _localBorderImg()
         ),
       ],
     );
@@ -2254,12 +2273,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         InkWell(
             onTap: () => _openNocFrontImgSource(
                 context: context, controller: nocFrontImgController),
-            child:nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
-                ? _fileImage(
-              fileImage:File(nocFrontImgFile),
-              onPressed: () => _openNocFrontImgSource(
-                  context: context, controller: nocFrontImgController),
-            ) : _localBorderImg()
+            child: nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
+                ? _fileImage(fileImage: File(nocFrontImgFile))
+                : _localBorderImg()
         ),
       ],
     );
@@ -2273,11 +2289,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
             onTap: () => _openNocBackImgSource(
                 context: context, controller: nocBackImgController),
             child: nocBackImgFile != null && nocBackImgFile.isNotEmpty
-                ? _fileImage(
-              fileImage:File(nocBackImgFile),
-              onPressed: () => _openNocBackImgSource(
-                  context: context, controller: nocBackImgController),
-            ) : _localBorderImg()
+                ? _fileImage(fileImage: File(nocBackImgFile))
+                : _localBorderImg()
         ),
       ],
     );
@@ -2291,11 +2304,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
             onTap: () => _openConsentImgSource(
                 context: context, controller: consentImageController),
             child: consentPhotoFile != null && consentPhotoFile.isNotEmpty
-                ? _fileImage(
-              fileImage: File(consentPhotoFile),
-              onPressed: () => _openConsentImgSource(
-                  context: context, controller: consentImageController),
-            ) : _localBorderImg()
+                ? _fileImage(fileImage: File(consentPhotoFile))
+                : _localBorderImg()
         ),
       ],
     );
@@ -2308,12 +2318,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         InkWell(
             onTap: () => _openChqCancelledImgSource(
                 context: context, controller: cancelChqImageController),
-            child: chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty
-                ? _fileImage(
-              fileImage: File(chqCancelledPhotoFile),
-              onPressed: () => _openChqCancelledImgSource(
-                  context: context, controller: cancelChqImageController),
-            ) : _localBorderImg()
+            child: chqCancelledPhotoFile != null &&
+                    chqCancelledPhotoFile.isNotEmpty
+                ? _fileImage(fileImage: File(chqCancelledPhotoFile))
+                : _localBorderImg()
         ),
       ],
     );
@@ -2325,12 +2333,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       children: [
         _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
         InkWell(
-            onTap: () => _openChqImgSource(context: context, controller: chqImgController),
-            child:chqPhotoFile != null && chqPhotoFile.isNotEmpty
-                ? _fileImage(
-              fileImage: File(chqPhotoFile),
-              onPressed: () => _openChqImgSource(context: context, controller: chqImgController),
-            ) : _localBorderImg()
+            onTap: () => _openChqImgSource(
+                context: context, controller: chqImgController),
+            child: chqPhotoFile != null && chqPhotoFile.isNotEmpty
+                ? _fileImage(fileImage: File(chqPhotoFile))
+                : _localBorderImg()
         ),
       ],
     );
@@ -2346,7 +2353,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     );
   }
 
-
   Widget _idProofNoWidget() {
     return TextFieldWidget(
         headingLabel: AppStrings.idProofNo,
@@ -2355,11 +2361,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         textInputType: TextInputType.text,
         maxLength: 20,
         inputFormatters: [
-          FilteringTextInputFormatter.allow(
-              RegExp("[a-zA-Z-0-9\u0900-\u097F]",))
+          FilteringTextInputFormatter.allow(RegExp(
+            "[a-zA-Z-0-9\u0900-\u097F]",
+          ))
         ],
         suffixIcon: AppStrings.isIdProofNo == true
-            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            ? Icon(
+                Icons.check_circle_sharp,
+                color: Colors.green,
+              )
             : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
@@ -2369,11 +2379,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() =>
-          v.length <= 1 ? AppStrings.isIdProofNo = false : AppStrings
-              .isIdProofNo = true);
-        }
-    );
+          setState(() => v.length <= 1
+              ? AppStrings.isIdProofNo = false
+              : AppStrings.isIdProofNo = true);
+        });
   }
 
   Widget _ownerProofNoWidget() {
@@ -2408,7 +2417,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hint: AppStrings.docTypeLabel,
       items: _kycProofDropdownItems,
       value: _kycProofDropDownValue,
-      onChanged: ( value) {
+      onChanged: (value) {
         log(value.id);
         setState(() {
           _kycProofDropDownValue = value;
@@ -2425,6 +2434,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       value: billingModeValue,
       onChanged: (value) {
         setState(() {
+          billingModeId = value.id;
           billingModeValue = value;
         });
       },
@@ -2436,10 +2446,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       textLabel: AppStrings.customerBankNameLabel,
       hint: AppStrings.customerBankNameLabel,
       items: _bankDropdownItems.map((String item) {
-        return DropdownMenuItem<String>(
-            value: item,
-            child: Text(item)
-        );
+        return DropdownMenuItem<String>(value: item, child: Text(item));
       }).toList(),
       value: _bankValue,
       onChanged: (value) {
@@ -2460,7 +2467,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         textInputType: TextInputType.text,
         maxLength: 20,
         suffixIcon: AppStrings.isCustAccNo == true
-            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            ? Icon(
+                Icons.check_circle_sharp,
+                color: Colors.green,
+              )
             : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
@@ -2472,11 +2482,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() =>
-          v.length <= 16 ? AppStrings.isCustAccNo = false : AppStrings
-              .isCustAccNo = true);
-        }
-    );
+          setState(() => v.length <= 16
+              ? AppStrings.isCustAccNo = false
+              : AppStrings.isCustAccNo = true);
+        });
   }
 
   Widget _customerIFSCCodeWidget() {
@@ -2487,7 +2496,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         textInputType: TextInputType.text,
         maxLength: 11,
         suffixIcon: AppStrings.isCustIfscCode == true
-            ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+            ? Icon(
+                Icons.check_circle_sharp,
+                color: Colors.green,
+              )
             : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
@@ -2499,11 +2511,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() =>
-          v.length <= 10 ? AppStrings.isCustIfscCode = false : AppStrings
-              .isCustIfscCode = true);
-        }
-    );
+          setState(() => v.length <= 10
+              ? AppStrings.isCustIfscCode = false
+              : AppStrings.isCustIfscCode = true);
+        });
   }
 
   Widget _customerBankAddWidget() {
@@ -2513,7 +2524,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       controller: bank_address,
       textInputType: TextInputType.text,
       suffixIcon: AppStrings.isCustBankAdd == true
-          ? Icon(Icons.check_circle_sharp, color: Colors.green,)
+          ? Icon(
+              Icons.check_circle_sharp,
+              color: Colors.green,
+            )
           : Icon(Icons.info, color: Colors.red),
       validator: (value) {
         if (value.isEmpty) {
@@ -2524,9 +2538,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       onTap: () {},
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() =>
-        v.length > 1 ? AppStrings.isCustBankAdd = true : AppStrings
-            .isCustBankAdd = false);
+        setState(() => v.length > 1
+            ? AppStrings.isCustBankAdd = true
+            : AppStrings.isCustBankAdd = false);
       },
     );
   }
@@ -2537,7 +2551,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hint: AppStrings.depositStatusLabel,
       items: dropListDepositStatusList,
       value: depositStatusValue,
-      onChanged: ( value) {
+      onChanged: (value) {
         setState(() {
           _depositStatusId = value.id;
           depositStatusValue = value;
@@ -2563,20 +2577,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         textLabel: AppStrings.modeOfDepositLabel,
         hint: AppStrings.modeOfDepositLabel,
         items: modeOfDepositList,
-        value: __modeDepositValue,
+        value: modeDepositValue,
         onChanged: (OptionItem item) {
           setState(() {
-            _modeOfDeposit = item.id;
-            __modeDepositValue = item;
-            print("__modeDepositValue-->" + __modeDepositValue.id.toString());
-            print("_modeOfDeposit-->" + _modeOfDeposit.toString());
+            modeOfDepositId = item.id;
+            modeDepositValue = item;
+            print("_modeOfDeposit-->" + modeOfDepositId.toString());
           });
-          if (__modeDepositValue.id == "2") {
+          if (modeDepositValue.id == "2") {
             setState(() {
               isDepositCheq = false;
-              _modeOfDeposit = item.id;
-              print("_modeOfDeposit22222222222-->" + _modeOfDeposit.toString());
-              __modeDepositValue.id = item.id;
+              modeOfDepositId = item.id;
+              modeDepositValue.id = item.id;
               chqNOController.clear();
               bankAccNoController.text = "";
               mICRCodeController.text = "";
@@ -2584,16 +2596,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
               initDepDateController.clear();
               chqDateController.text = "";
             });
-          } else if(__modeDepositValue.id == "1"){
+          } else if (modeDepositValue.id == "1") {
             setState(() {
-              _modeOfDeposit = item.id;
-              print("_modeOfDeposit221111111111111111111-->" + _modeOfDeposit.toString());
-              __modeDepositValue.id = item.id;
+              modeOfDepositId = item.id;
+              modeDepositValue.id = item.id;
               isDepositCheq = true;
             });
           }
-        }
-    );
+        });
   }
 
   Widget _chqNoWidget() {
@@ -2613,20 +2623,33 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       controller: initDepDateController,
       readOnly: true,
       textInputType: TextInputType.datetime,
-      onTap: () => _selectDate(context, initDepDateController),
+      onTap: () => _selectDate(context),
     );
+  }
+  DateTime selectedDate = DateTime.now();
+  Future _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015),
+        lastDate: DateTime(2101));
+    if (picked != null)
+      setState(() {
+        selectedDate = picked;
+        initDepDateController.text = DateFormat('yyyy-MM-dd').format(selectedDate);
+      });
   }
 
   Widget _bankNameDropDown() {
     return ReusedDropDownString(
       textLabel: AppStrings.bankNameLabel,
       hint: AppStrings.bankNameLabel,
-      items: _bankDropdownItems2.map((String item) {
+      items: _bankDropdownItems2 != null ? _bankDropdownItems2.map((String item) {
         return DropdownMenuItem<String>(
           value: item,
           child: Text(item),
         );
-      }).toList(),
+      }).toList() : [] ,
       value: _bankValue2,
       onChanged: (String value) {
         setState(() {
@@ -2651,11 +2674,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 5),
-          child: Text(text, textAlign: TextAlign.center, style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-
-          ),),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );
@@ -2664,6 +2690,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _localBorderImg() {
     return CircleAvatar(
       radius: 41,
+      backgroundColor: Colors.blue.shade900,
       child: CircleAvatar(
           radius: 40,
           backgroundColor: Colors.white,
@@ -2672,30 +2699,19 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
               padding: const EdgeInsets.all(12.0),
               child: Image.asset('assets/images/place_holder.png'),
             ),
-          )
-      ),
+          )),
     );
   }
 
-  Widget _fileImage({File fileImage, Function onPressed}) {
-    print("sdsdsldk =========================== ${fileImage}");
+  Widget _fileImage({File fileImage,}) {
     if (fileImage.path.isNotEmpty) {
       return CircleAvatar(
         radius: 41,
+        backgroundColor: Colors.blue.shade900,
         child: CircleAvatar(
           radius: 40,
           backgroundImage: FileImage(fileImage),
-          child: Align(
-            alignment: Alignment.center,
-            child: CircleAvatar(
-              backgroundColor: Colors.grey.shade400.withOpacity(0.7),
-              child: IconButton(
-                  icon: Icon(
-                      Icons.delete_outline, color: Colors.blue.shade900.withOpacity(0.7)),
-                  onPressed: onPressed
-              ),
-            ),
-          ),),
+        ),
       );
     } else {
       return CircleAvatar(
@@ -2703,41 +2719,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         child: CircleAvatar(
           backgroundImage: FileImage(fileImage),
           radius: 40,
-          child: Align(
-            alignment: Alignment.center,
-            child: CircleAvatar(
-              backgroundColor: blackColor.withOpacity(0.7),
-              child: IconButton(
-                  icon: Icon(
-                      Icons.edit, color: whiteColor.withOpacity(0.7)),
-                  onPressed: onPressed
-              ),
-            ),
-          ),
         ),
       );
     }
   }
 
-
   Widget _imageNameWidget({String imageName}) {
-    return Column(
-      children: [
-        Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: <Color>[Colors.red, Colors.blue.shade900]
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(imageName, style: TextStyle(color: Colors.white),),
-            )),
-        SizedBox(height: 12,),
-      ],
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
+      margin: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        child: Text(imageName, style: TextStyle(color: Colors.white),)
     );
   }
 
@@ -2748,48 +2743,33 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
           leading: Text(leading),
           trailing: Text(trailing),
         ),
-        Divider(),
+        Divider()
       ],
     );
-  }
-
-  Future<void> _selectDate(BuildContext context,
-      TextEditingController controller) async {
-    DateTime pickedDate = await showDatePicker(
-        context: context,
-        initialDate: currentDate,
-        firstDate: DateTime(2015),
-        lastDate: DateTime(2050));
-    DateFormat formatter = DateFormat('yyyy-MM-dd');
-    setState(() {
-      initDepDateController.text = formatter.format(pickedDate);
-      if (initDepDateController.text
-          .toString()
-          .isNotEmpty) {
-        fDepositeDate = true;
-      } else {}
-    });
   }
 
   Future<void> fetchDistrict() async {
     var resAllDistrict = prefs.getString(GlobalConstants.AllDistrict);
     List dataChargeList = json.decode(resAllDistrict);
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
-      dataChargeList.length, (i) =>
-        DropdownMenuItem(
-          value: OptionItem(id: dataChargeList[i]['id'],
-              title: dataChargeList[i]['district_name']),
-          child: Text("${dataChargeList[i]['district_name']}"),
-        ),
+      dataChargeList.length,
+      (i) => DropdownMenuItem(
+        value: OptionItem(
+            id: dataChargeList[i]['id'],
+            title: dataChargeList[i]['district_name']),
+        child: Text("${dataChargeList[i]['district_name']}"),
+      ),
     );
     if (!mounted) return;
     setState(() {
       getAllDistrictItems = menuItems;
-      if(widget.isUpdate ==  true){
-        if(widget.studentModel.districtId != null) {
+      if (widget.isUpdate == true) {
+        if (widget.studentModel.districtId != null) {
           districtValue = getAllDistrictItems
-              .firstWhere((element) =>
-          element.value.id == widget.studentModel.districtId, orElse: null)
+              .firstWhere(
+                  (element) =>
+                      element.value.id == widget.studentModel.districtId,
+                  orElse: null)
               .value;
         }
       }
@@ -2811,16 +2791,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     }
     if (!mounted) return;
     setState(() {
-
       areaItems = menuItems;
-     if(widget.isUpdate ==  true){
-       if(widget.studentModel.areaId != null) {
-         areaTypeValue = areaItems
-             .firstWhere((element) =>
-         element.value.id == widget.studentModel.areaId, orElse: null)
-             .value;
-       }
-     }
+      if (widget.isUpdate == true) {
+        if (widget.studentModel.areaId != null) {
+          areaTypeValue = areaItems
+              .firstWhere(
+                  (element) => element.value.id == widget.studentModel.areaId,
+                  orElse: null)
+              .value;
+        }
+      }
     });
   }
 
@@ -2831,27 +2811,30 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     log(dataChargeList.toString());
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length,
-          (i) =>
-          DropdownMenuItem(
-            value:
-            OptionItem(id: dataChargeList[i]['gid'],
-                title: dataChargeList[i]['charge_area_name']),
-            child: Text("${dataChargeList[i]['charge_area_name']}"),
-          ),
+      (i) => DropdownMenuItem(
+        value: OptionItem(
+            id: dataChargeList[i]['gid'],
+            title: dataChargeList[i]['charge_area_name']),
+        child: Text("${dataChargeList[i]['charge_area_name']}"),
+      ),
     );
     if (!mounted) return;
     setState(() {
       chargeAreaItems = menuItems;
-     if(widget.isUpdate ==  true){
-       if(widget.studentModel.chargeArea != null) {
-         chargeAreaType = chargeAreaItems.firstWhere((element) => element.value.id == widget.studentModel.chargeArea, orElse: null).value;
-       }
-     }
-
+      if (widget.isUpdate == true) {
+        if (widget.studentModel.chargeArea != null) {
+          chargeAreaType = chargeAreaItems
+              .firstWhere(
+                  (element) =>
+                      element.value.id == widget.studentModel.chargeArea,
+                  orElse: null)
+              .value;
+        }
+      }
     });
-    if(widget.isUpdate == true) {
+    if (widget.isUpdate == true) {
       fetchArea(chargeAreaType.id);
-    } else{
+    } else {
       fetchArea(dataChargeList[0]['gid']);
     }
   }
@@ -2932,25 +2915,27 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       child: Text('Select Property Category'),
     ));
     menuItems = List.generate(
-      dataList.length, (i) =>
-        DropdownMenuItem(
-          value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
-          child: Text("${dataList[i]['name']}"),
-        ),
+      dataList.length,
+      (i) => DropdownMenuItem(
+        value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
+        child: Text("${dataList[i]['name']}"),
+      ),
     );
     if (!mounted) return;
     setState(() {
       propertyCategoryList = menuItems;
       categoryValue = menuItems.first.value;
-     if(widget.isUpdate == true){
-       if(widget.studentModel.propertyCategoryId != null) {
-         categoryValue = propertyCategoryList
-             .firstWhere((element) =>
-         element.value.id == widget.studentModel.propertyCategoryId,
-             orElse: null)
-             .value;
-       }
-     }
+      if (widget.isUpdate == true) {
+        if (widget.studentModel.propertyCategoryId != null) {
+          categoryValue = propertyCategoryList
+              .firstWhere(
+                  (element) =>
+                      element.value.id ==
+                      widget.studentModel.propertyCategoryId,
+                  orElse: null)
+              .value;
+        }
+      }
     });
   }
 
@@ -2958,21 +2943,24 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     var resPropertyClass = prefs.getString(GlobalConstants.propertyclass);
     List dataList = json.decode(resPropertyClass);
     List<DropdownMenuItem<OptionItem>> menuItems = [];
-    menuItems = List.generate(dataList.length, (i) =>
-        DropdownMenuItem(
-          value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
-          child: Text("${dataList[i]['name']}"),
-        ),
+    menuItems = List.generate(
+      dataList.length,
+      (i) => DropdownMenuItem(
+        value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
+        child: Text("${dataList[i]['name']}"),
+      ),
     );
     if (!mounted) return;
     setState(() {
       propertyClassList = menuItems;
       propertyClassValue = menuItems.first.value;
-      if(widget.isUpdate == true){
-        if(widget.studentModel.propertyClassId != null) {
+      if (widget.isUpdate == true) {
+        if (widget.studentModel.propertyClassId != null) {
           propertyClassValue = propertyClassList
-              .firstWhere((element) =>
-          element.value.id == widget.studentModel.propertyClassId, orElse: null)
+              .firstWhere(
+                  (element) =>
+                      element.value.id == widget.studentModel.propertyClassId,
+                  orElse: null)
               .value;
         }
       }
@@ -2989,14 +2977,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     });
     idProofValue = idProofList.first.value;
-   if(widget.isUpdate == true){
-     if(widget.studentModel.kycDocument1 != null) {
-       idProofValue = idProofList
-           .firstWhere((element) =>
-       element.value.id == widget.studentModel.kycDocument1)
-           .value;
-     }
-   }
+    if (widget.isUpdate == true) {
+      if (widget.studentModel.kycDocument1 != null) {
+        idProofValue = idProofList
+            .firstWhere((element) =>
+                element.value.id == widget.studentModel.kycDocument1)
+            .value;
+      }
+    }
     setState(() {});
   }
 
@@ -3025,14 +3013,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     });
     _kycProofDropDownValue = _kycProofDropdownItems.first.value;
-   if(widget.isUpdate ==true){
-     if(widget.studentModel.kycDocument3 != null) {
-       _kycProofDropDownValue = _kycProofDropdownItems
-           .firstWhere((element) =>
-       element.value.id == widget.studentModel.kycDocument3, orElse: null)
-           .value;
-     }
-   }
+    if (widget.isUpdate == true) {
+      if (widget.studentModel.kycDocument3 != null) {
+        _kycProofDropDownValue = _kycProofDropdownItems
+            .firstWhere(
+                (element) =>
+                    element.value.id == widget.studentModel.kycDocument3,
+                orElse: null)
+            .value;
+      }
+    }
     setState(() {});
   }
 
@@ -3051,14 +3041,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     log("getBankGetBank2--> $resAllBanks");
     setState(() {
       _bankDropdownItems2 = decoded;
-   //   if(widget.isUpdate== true || isDepositCheq){
-        /*if(widget.studentModel.billingModel != null) {
-          billingModeValue = billingModeList
-              .firstWhere((element) =>
-          element.value.id == widget.studentModel.billingModel, orElse: null)
-              .value;
-        }*/
-    //  }
+      if(widget.isUpdate == true) {
+        if (widget.studentModel.payementBankName != null && widget.studentModel.payementBankName.isNotEmpty) {
+          _bankValue2 = widget.studentModel.payementBankName;
+        }
+      }
     });
   }
 
@@ -3074,11 +3061,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     });
     setState(() {
       billingModeValue = billingModeList.first.value;
-      if(widget.isUpdate ==true){
-        if(widget.studentModel.billingModel != null) {
+      billingModeId = billingModeValue.id;
+      if (widget.isUpdate == true) {
+        if (widget.studentModel.billingModel != null) {
           billingModeValue = billingModeList
-              .firstWhere((element) =>
-          element.value.id == widget.studentModel.billingModel, orElse: null)
+              .firstWhere(
+                  (element) =>
+                      element.value.id == widget.studentModel.billingModel,
+                  orElse: null)
               .value;
         }
       }
@@ -3096,12 +3086,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     });
     __acceptConversionPolicyValue = _acceptConversionPolicyList.first.value;
     __acceptConversionPolicyValueId = __acceptConversionPolicyValue.id;
-    if(widget.isUpdate == true){
-      if(widget.studentModel.acceptConversionPolicy != null) {
+    if (widget.isUpdate == true) {
+      if (widget.studentModel.acceptConversionPolicy != null) {
         __acceptConversionPolicyValue = _acceptConversionPolicyList
-            .firstWhere((element) =>
-        element.value.id == widget.studentModel.acceptConversionPolicy,
-            orElse: null)
+            .firstWhere(
+                (element) =>
+                    element.value.id ==
+                    widget.studentModel.acceptConversionPolicy,
+                orElse: null)
             .value;
       }
     }
@@ -3119,18 +3111,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     });
     acceptExtraFittingCostValue = _acceptExtraFittingCostList.first.value;
     __acceptExtraFittingCostValueId = acceptExtraFittingCostValue.id;
-  if(widget.isUpdate == true){
-    if(widget.studentModel.acceptExtraFittingCost != null) {
-      acceptExtraFittingCostValue = _acceptExtraFittingCostList
-          .firstWhere((element) =>
-      element.value.id == widget.studentModel.acceptExtraFittingCost,
-          orElse: null)
-          .value;
+    if (widget.isUpdate == true) {
+      if (widget.studentModel.acceptExtraFittingCost != null) {
+        acceptExtraFittingCostValue = _acceptExtraFittingCostList
+            .firstWhere(
+                (element) =>
+                    element.value.id ==
+                    widget.studentModel.acceptExtraFittingCost,
+                orElse: null)
+            .value;
+      }
     }
-  }
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   Future<void> _getMdeOfDeposite() async {
@@ -3142,16 +3134,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         child: Text(v),
       ));
     });
-  //  __modeDepositValue = modeOfDepositList.first.value;
-  //  _modeOfDeposit = __modeDepositValue.id ?? "";
-   if(widget.isUpdate == true){
-     if(widget.studentModel.modeOfDeposite != null) {
-       __modeDepositValue = modeOfDepositList
-           .firstWhere((element) =>
-       element.value.id == widget.studentModel.modeOfDeposite, orElse: null)
-           .value;
-     }
-   }
+    setState(() {
+      if (widget.isUpdate == true) {
+        if (widget.studentModel.modeOfDeposite != null) {
+          modeDepositValue = modeOfDepositList
+              .firstWhere(
+                  (element) =>
+              element.value.id == widget.studentModel.modeOfDeposite,
+              orElse: null)
+              .value;
+        }
+      }
+      // edit ki case me data to aa gye par ye ek or eror aa rha h ;)
+      modeOfDepositId = modeDepositValue.id;
+    });
   }
 
   Future<void> _getInitialDepositeStatusList() async {
@@ -3167,11 +3163,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     setState(() {
       depositStatusValue = dropListDepositStatusList.first.value;
       _depositStatusId = depositStatusValue.id;
-      if(widget.isUpdate == true){
-        if(widget.studentModel.initialDepositeStatus != null) {
+      if (widget.isUpdate == true) {
+        if (widget.studentModel.initialDepositeStatus != null) {
           depositStatusValue = dropListDepositStatusList
-              .firstWhere((element) =>
-          element.value.id == widget.studentModel.initialDepositeStatus, orElse: null)
+              .firstWhere(
+                  (element) =>
+                      element.value.id ==
+                      widget.studentModel.initialDepositeStatus,
+                  orElse: null)
               .value;
         }
       }
@@ -3204,37 +3203,39 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
           reg_tax: ''),
       child: Text('Select Deposit Type'),
     ));
-    menuItems2 = List.generate(dataList.length, (i) =>
-        DropdownMenuItem(
-          value: DepositItem(
-              id: dataList[i]['deposit_types_id'],
-              title: dataList[i]['deposit_name'],
-              firstamount: dataList[i]['firstDepositAmount'],
-              amount: dataList[i]['totalAmount'],
-              schememonth: dataList[i]['scheme_month'],
-              gas_amount: dataList[i]['gas_deposit_amount'],
-              scheme_type: dataList[i]['scheme_type'],
-              scheme_code: dataList[i]['scheme_code'],
-              deposit_amount: dataList[i]['deposit_amount'],
-              equipment_deposit_amount: dataList[i]['equipment_deposit_amount'],
-              interest_amount: dataList[i]['interest_amount'],
-              registration_gst: dataList[i]['registration_gst'],
-              totalAmount: dataList[i]['totalAmount'],
-              nextCycleAmount: dataList[i]['nextCycleAmount'],
-              registration_tax_name: dataList[i]['registration_tax_name'],
-              interest_tax_amt: dataList[i]['interest_tax_amt'],
-              reg_tax: dataList[i]['reg_tax']),
-          child: Text("${dataList[i]['deposit_name']}"),
-        ),);
+    menuItems2 = List.generate(
+      dataList.length,
+      (i) => DropdownMenuItem(
+        value: DepositItem(
+            id: dataList[i]['deposit_types_id'],
+            title: dataList[i]['deposit_name'],
+            firstamount: dataList[i]['firstDepositAmount'],
+            amount: dataList[i]['totalAmount'],
+            schememonth: dataList[i]['scheme_month'],
+            gas_amount: dataList[i]['gas_deposit_amount'],
+            scheme_type: dataList[i]['scheme_type'],
+            scheme_code: dataList[i]['scheme_code'],
+            deposit_amount: dataList[i]['deposit_amount'],
+            equipment_deposit_amount: dataList[i]['equipment_deposit_amount'],
+            interest_amount: dataList[i]['interest_amount'],
+            registration_gst: dataList[i]['registration_gst'],
+            totalAmount: dataList[i]['totalAmount'],
+            nextCycleAmount: dataList[i]['nextCycleAmount'],
+            registration_tax_name: dataList[i]['registration_tax_name'],
+            interest_tax_amt: dataList[i]['interest_tax_amt'],
+            reg_tax: dataList[i]['reg_tax']),
+        child: Text("${dataList[i]['deposit_name']}"),
+      ),
+    );
     menuItems.addAll(menuItems2);
     if (!mounted) return;
     setState(() {
       _propertyDropdownItemsDeposit = menuItems;
-      if(widget.isUpdate ==true){
-        if(widget.studentModel.depositeType != null) {
+      if (widget.isUpdate == true) {
+        if (widget.studentModel.depositeType != null) {
           _depositCategoryType = _propertyDropdownItemsDeposit
               .firstWhere((element) =>
-          element.value.id == widget.studentModel.depositeType)
+                  element.value.id == widget.studentModel.depositeType)
               .value;
         }
       }
@@ -3244,30 +3245,30 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Future<void> fetchLabels() async {
     String strUrl = GlobalConstants.getLabels;
-    final response = await http.get(Uri.parse(strUrl),
+    final response = await http.get(
+      Uri.parse(strUrl),
     );
     var album = HpclLabals.fromJson(json.decode(response.body));
     var registration = album.deposit;
-    AppStrings.mobileNoLabel = album.steps.mobile;
-    AppStrings.firstNameLabel = album.steps.firstname;
-    AppStrings.middleNameLabel = album.steps.middlename;
-    AppStrings.lastNameLabel = album.steps.lastname;
-    AppStrings.btnLabel = album.steps.button;
+   // AppStrings.mobileNoLabel = album.steps.mobile;
+   // AppStrings.firstNameLabel = album.steps.firstname;
+  //  AppStrings.middleNameLabel = album.steps.middlename;
+   // AppStrings.lastNameLabel = album.steps.lastname;
+  //  AppStrings.btnLabel = album.steps.button;
     AppStrings.feeChargeLabel = "fee charge";
-    AppStrings.depositStatusLabel = registration.depositSta;
-    AppStrings.reasonLabel = registration.reason;
-    AppStrings.modeOfDepositLabel = registration.modeOfDep;
-    AppStrings.depositDateLabel = registration.depositDate;
-    schemeTypeLabel = registration.depositType;
-    AppStrings.depositAmountControllerLabel = registration.depositAmt;
-    AppStrings.chqNoLabel = registration.chqNum;
-    AppStrings.chqBankLabel = registration.chqBank;
-    AppStrings.accountNoLabel = registration.bankAcc;
-    AppStrings.chqPhotoLabel = registration.chqPhoto;
-    AppStrings.formStatusLabel = registration.payStatus;
+  //  AppStrings.depositStatusLabel = registration.depositSta;
+ //   AppStrings.reasonLabel = registration.reason;
+ //   AppStrings.modeOfDepositLabel = registration.modeOfDep;
+ //   AppStrings.depositDateLabel = registration.depositDate;
+  //  schemeTypeLabel = registration.depositType;
+  //  AppStrings.depositAmountControllerLabel = registration.depositAmt;
+ //   AppStrings.chqNoLabel = registration.chqNum;
+ //   AppStrings.chqBankLabel = registration.chqBank;
+  //  AppStrings.accountNoLabel = registration.bankAcc;
+  //  AppStrings.chqPhotoLabel = registration.chqPhoto;
+  //  AppStrings.formStatusLabel = registration.payStatus;
     if (!mounted) return;
   }
-
 
   ConnectivityResult connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
@@ -3301,9 +3302,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Your are connected to ${isWifiConnected
-                  ? "WIFI"
-                  : "MOBILE DATA"}"),
+              Text(
+                  "Your are connected to ${isWifiConnected ? "WIFI" : "MOBILE DATA"}"),
               Text(isWifiConnected ? "$wifiBSSID" : "Not Wifi"),
               Text("$wifiIP"),
               Text("$wifiName")

@@ -20,8 +20,31 @@ class ReusedDropDownString extends StatelessWidget {
             ),
           ),
           DropdownButtonFormField(
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.normal, fontSize: 12),
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
+            //  border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                borderSide: BorderSide(width: 1,color: Colors.green),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                borderSide: BorderSide(width: 1,color: Colors.grey),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                borderSide: BorderSide(width: 1,color: Colors.green),
+              ),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1,)
+              ),
+              errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1,color: Colors.red)
+              ),
               contentPadding: EdgeInsets.symmetric(horizontal: 10),
             ),
             items: items,
@@ -65,8 +88,31 @@ class ReusedDropDownOptionItem extends StatelessWidget {
               ),
             ),
             DropdownButtonFormField(
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal, fontSize: 12),
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+              //  border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1,color: Colors.green),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1,color: Colors.grey),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1,color: Colors.green),
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    borderSide: BorderSide(width: 1,)
+                ),
+                errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    borderSide: BorderSide(width: 1,color: Colors.red)
+                ),
                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
               ),
               items: items,
