@@ -766,7 +766,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                 ),
                 _buildRow(
                   leading: AppStrings.depositDateLabel,
-                  trailing: initDepDateController.text.toString() ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                  trailing: modeOfDepositId == "1"
+                      ? initDepDateController.text.trim().toString()
+                      : DateFormat('yyyy-MM-dd').format(DateTime.now()),
                 ),
                 _buildRow(
                   leading: AppStrings.customerBankNameLabel,
@@ -1022,14 +1024,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       bankAddress: bank_address.text.toString(),
       acceptConversionPolicy: __acceptConversionPolicyValueId,
       acceptExtraFittingCost: __acceptExtraFittingCostValueId,
-    //  initialDepositeStatus: _depositStatusId.toString(),
-      initialDepositeStatus: depositStatusValue.toString(),
-     // modeOfDeposite: modeDepositValue.id.toString(),
-      modeOfDeposite: modeOfDepositId.toString(),
+      initialDepositeStatus: _depositStatusId.toString(),
+     // initialDepositeStatus: depositStatusValue.toString(),
       depositeType: schemeId,
       initialAmount: depositAmountController.text.toString(),
       chequeNumber: chqNOController.text.toString(),
-      initialDepositeDate:  initDepDateController.text.toString() ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      initialDepositeDate: modeOfDepositId == "1"
+          ? initDepDateController.text.trim().toString()
+          : DateFormat('yyyy-MM-dd').format(DateTime.now()),
       nameOfBank:_bankValue,
       payementBankName:_bankValue2 ?? "",
       chequeBankAccount: bankAccNoController.text.toString(),
@@ -3145,7 +3147,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
               .value;
         }
       }
-      // edit ki case me data to aa gye par ye ek or eror aa rha h ;)
       modeOfDepositId = modeDepositValue.id;
     });
   }
