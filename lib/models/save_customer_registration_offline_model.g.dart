@@ -80,7 +80,7 @@ class SaveCustomerRegistrationOfflineModelAdapter
       acceptConversionPolicy: fields[59] as String,
       acceptExtraFittingCost: fields[60] as String,
       micr: fields[61] as String,
-      idkey: fields[62] as String,
+      modeDepositValue: fields[62] as String,
       complete: fields[63] as bool,
       chargeArea: fields[64] as String,
       billingModel: fields[65] as String,
@@ -217,7 +217,7 @@ class SaveCustomerRegistrationOfflineModelAdapter
       ..writeByte(61)
       ..write(obj.micr)
       ..writeByte(62)
-      ..write(obj.idkey)
+      ..write(obj.modeDepositValue)
       ..writeByte(63)
       ..write(obj.complete)
       ..writeByte(64)

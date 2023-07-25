@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
+import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
 import 'package:http/http.dart' as http;
 import '../ExportFile/export_file.dart';
 
@@ -16,7 +18,13 @@ class LoginPage extends State<LoginScreen> {
   static String jwt;
   bool _showProgress = false;
 
-  bool _isError=true;
+
+  bool _obscureText = true;
+  void _togglePasswordStatus() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   void displayDialog(context, title, text) => showDialog(
       context: context,
@@ -60,7 +68,7 @@ class LoginPage extends State<LoginScreen> {
    });
    return res.body;
   }
-
+  bool passwordVisible=false;
 
 
   @override
@@ -84,13 +92,18 @@ class LoginPage extends State<LoginScreen> {
         ),
       ),
       child: Scaffold(
-        //appBar: AppBar(title: Text("Log In"),),
+      appBar: PreferredSize(
+      preferredSize: const Size.fromHeight(50),
+      child:CustomAppBar(
+      titleAppBar: "Login",
+      ),
+      ),
         body:Center(
           child: SingleChildScrollView(
               child: Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -100,40 +113,34 @@ class LoginPage extends State<LoginScreen> {
                         SizedBox(height: 20,),
                         Text("DMA PNG",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
                         SizedBox(height: 50,),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-                          child: TextFormField(
-                            autofillHints: [AutofillHints.username],
-                            controller: _usernameController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Username',hintText:'Username'
-                            ),
-                          ),),
+                        _textField(
+                          autofillHints: [AutofillHints.email],
+                          controller:_usernameController,
+                          hintText: "Enter Your Username",
+                          labelText:"Enter Your Username",
+                          prefix:Icon(Icons.email, color: Colors.blue.shade900),
+                        ),
                         SizedBox(height: 20,),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-                          child: TextFormField(
-                            autofillHints: [AutofillHints.password],
-                            controller: _passwordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                               // suffix: Icon(Icons.panorama_fish_eye_sharp),
-                                labelText: 'Password',hintText: 'Password'
-                            ),
+                        _textField(
+                          autofillHints: [AutofillHints.password],
+                          controller:_passwordController,
+                          hintText: "Enter Your Password",
+                          labelText:"Enter Your Password",
+                          obscureText:_obscureText ,
+                          prefix:Icon(Icons.lock, color: Colors.blue.shade900,),
+                          suffixIcon:  IconButton(
+                            icon:Icon(_obscureText ? Icons.visibility:Icons.visibility_off,),
+                            onPressed: _togglePasswordStatus,
+                            color: Colors.blue.shade900,
                           ),
                         ),
                         SizedBox(height: 30,),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              elevation: 10,
-                            ),
-                            onPressed: () {
-                              TextInput.finishAutofillContext();
-                              btnClick(context);
-                              },
-                            child: Container(width:150,height:45,child: Align(child: Text("LOG IN",style: TextStyle(color: Colors.white),),alignment: Alignment.center,),)
+                        ButtonWidget(
+                          textButton: "LOG IN",
+                          onPressed: () {
+                            TextInput.finishAutofillContext();
+                            btnClick(context);
+                          },
                         ),
                         SizedBox(height: 20,),
                       ],
@@ -163,16 +170,53 @@ class LoginPage extends State<LoginScreen> {
     );
   }
 
+  Widget _textField({
+    Iterable<String> autofillHints,
+    Widget suffixIcon,
+    TextEditingController controller,
+    bool obscureText,
+    Widget prefix,
+    String labelText,
+    String hintText,
+  }){
+    return TextFormField(
+      autofillHints: autofillHints,
+      controller: controller,
+      obscureText: obscureText ?? false,
+      decoration: InputDecoration(
+          prefix:prefix,
+          suffixIcon:  suffixIcon,
+          isDense: false,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          border: OutlineInputBorder(),
+          labelText:labelText,
+          hintText: hintText,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(50)),
+            borderSide: BorderSide(width: 1,color: Colors.blue.shade900),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(50)),
+            borderSide: BorderSide(width: 1,color: Colors.blue.shade900),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(50)),
+            borderSide: BorderSide(width: 1,color: Colors.blue.shade900),
+          ),
+
+      ),
+    );
+  }
 
   btnClick(BuildContext context) async{
     var username = _usernameController.text;
     var password = _passwordController.text;
 
     if(username.length==0){
-      _toastMsg('Enter User Name');
+      CustomToast.showToast('Enter User Name');
       return;
     }else if(password.length==0){
-      _toastMsg('Enter Password');
+      CustomToast.showToast('Enter Password');
       return;
     }else{
       setState(() {
@@ -194,7 +238,7 @@ class LoginPage extends State<LoginScreen> {
           prefs.setString(GlobalConstants.schema, lgd.user.schema);
           prefs.setString(GlobalConstants.name, lgd.user.name);
           prefs.setString(GlobalConstants.changePassword, lgd.user.pwdChanged);
-         _toastMsg(lgd.messages);
+          CustomToast.showToast(lgd.messages);
          if(lgd.user.pwdChanged == "0"){
            Navigator.pushAndRemoveUntil(
              context,
@@ -202,12 +246,13 @@ class LoginPage extends State<LoginScreen> {
                  (Route<dynamic> route) => false,
            );
          }else{
-           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegistrationForm()), (Route<dynamic> route) => false,);
+           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegistrationForm()),
+                 (Route<dynamic> route) => false,);
          }
         }else if(lgd.status == 401) {
-          _toastMsg('Incorrect Username and Password');
+          CustomToast.showToast('Incorrect Username and Password');
         }else{
-          _toastMsg('Incorrect Username and Password');
+          CustomToast.showToast('Incorrect Username and Password');
         }
       }catch(e){
         LoginError lgd = new LoginError.fromJson(json.decode(jwt));
@@ -219,15 +264,4 @@ class LoginPage extends State<LoginScreen> {
 
   }
 
-  _toastMsg(String msg){
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.grey,
-        textColor: Colors.white,
-        fontSize: 14.0
-    );
-  }
 }

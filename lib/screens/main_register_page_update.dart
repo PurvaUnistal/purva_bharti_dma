@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hpcl_app/HiveDataStore/customer_reg_data_store.dart';
 import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
 import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
+import 'package:hpcl_app/utils/common_widgets/no_space_formatter.dart';
 import 'package:hpcl_app/utils/common_widgets/photo_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +23,7 @@ class MainRegisterPageUpdate extends StatefulWidget {
   }
 }
 
-class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
+class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
   Customer editedCustomer;
   Position position;
   int gasDepositAmountController, depositTotalAmount = 0, _schemeMonth = 0;
@@ -90,10 +91,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       chqPhotoFile = "";
 
   void removeSpace(TextEditingController controller) {
-    if (controller.text.trim() == "") {
-      setState(() => controller.text = "");
+   /* if (controller.text.trim() == "") {
+      setState(() => controller.text == '');
     }
-    print("controller==>" + controller.text);
+    print("controller==>" + controller.text);*/
   }
 
   String schemeId = '0';
@@ -109,7 +110,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     getLocalData();
     serverApi = ServerApi();
-    firstNameController.addListener(() => removeSpace(firstNameController));
+   // firstNameController.addListener(() => removeSpace(firstNameController));
+ //   firstNameController.addListener(() => firstNameController.text = firstNameController.text.replaceAll(RegExp(r"\s+"), " "));
+    firstNameController.addListener(() => firstNameController.text = firstNameController.text.replaceAll(" ", " "));
     middleNameController.addListener(() => removeSpace(middleNameController));
     lastNameController.addListener(() => removeSpace(lastNameController));
     guardianNameController
@@ -170,7 +173,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ownershipController.text = widget.studentModel.kycDocument2Number;
       nocProofNoController.text = widget.studentModel.kycDocument3Number;
       reasonNoController.text = widget.studentModel.remarks;
-      depositAmountController.text = widget.studentModel.depositeType;
+
       chqNOController.text = widget.studentModel.chequeNumber;
       bankAccNoController.text = widget.studentModel.chequeBankAccount;
       mICRCodeController.text = widget.studentModel.micr;
@@ -182,7 +185,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       _isInterestedId = widget.studentModel.interested;
       _residentStatusValue = widget.studentModel.residentStatus;
       cookInFuelValue = widget.studentModel.existingCookingFuel;
-      frontImageFile = widget.studentModel.backSide1;
+      backImageFile = widget.studentModel.backSide1;
       electricBillBackImgFile = widget.studentModel.backSide2;
       nocBackImgFile = widget.studentModel.backSide3;
       frontImageFile = widget.studentModel.documentUploads1;
@@ -191,6 +194,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       consentPhotoFile = widget.studentModel.customerConsent;
       chqCancelledPhotoFile = widget.studentModel.canceledCheque;
       chqPhotoFile = widget.studentModel.chequePhoto;
+      depositAmountController.text = widget.studentModel.initialAmount;
     //  _mdpeValue = widget.studentModel.societyAllowedMdpe;
       //  uploadHousePhoto = widget.studentModel.uploadHousePhoto,
       //   ownerConsent = widget.studentModel.ownerConsent,
@@ -528,6 +532,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
             ButtonWidget(
               textButton: widget.isUpdate == false ? "Preview" : "Update",
               onPressed: ()  {
+
+                chargeAreaId =  chargeAreaType == null ? chargeAreaId : chargeAreaType.id;
+                _areaTypeId =  areaTypeValue == null ? _areaTypeId : areaTypeValue.id;
+                getAllDistrictId = districtValue == null ? getAllDistrictId : districtValue.id;
+                modeOfDepositId = modeDepositValue == null ? modeOfDepositId : modeDepositValue.id;
+               // _schemeMonth = _depositCategoryType == null ? _schemeMonth : modeDepositValue.id;
+                depositAmountController.text = _depositCategoryType == null ?  depositAmountController.text : _depositCategoryType.id;
+
                 var textFieldValidationCheck =
                     CustomerFormHelper.textFieldValidationCheck(
                   titleLocation: latitudeController.text.trim().toString(),
@@ -563,7 +575,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                   customerAccNo: customerAccountNum.text.trim().toString(),
                   customerIfscCode: IFSCController.text.trim().toString(),
                   customerBankAdd: bank_address.text.trim().toString(),
-                  modeOfDeposit: modeOfDepositId,
+                  modeOfDeposit: modeOfDepositId.toString(),
                   chequeNo: modeOfDepositId == "1"
                       ? chqNOController.text.trim().toString()
                       : "",
@@ -1024,9 +1036,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       bankAddress: bank_address.text.toString(),
       acceptConversionPolicy: __acceptConversionPolicyValueId,
       acceptExtraFittingCost: __acceptExtraFittingCostValueId,
+      // dekhna ye save kra rkha h ye value ki data de diya
+      modeOfDeposite: modeDepositValue.id.toString() ?? "",
       initialDepositeStatus: _depositStatusId.toString(),
-     // initialDepositeStatus: depositStatusValue.toString(),
-      depositeType: schemeId,
+      depositeType: _depositCategoryType.id.toString(),
       initialAmount: depositAmountController.text.toString(),
       chequeNumber: chqNOController.text.toString(),
       initialDepositeDate: modeOfDepositId == "1"
@@ -1051,12 +1064,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       var mmm = SaveCusRegHiveDataStore.box.length;
       if (mmm <= 5) {
         dataStore.addUser(userModel: data);
+        EasyLoading.showSuccess('Great Success! \n Record Save');
       } else {
         EasyLoading.showError('Error !!!! \n Please Uploade Previous record');
       }
     }
-    EasyLoading.showSuccess('Great Success! \n Record Save');
-    //   Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationForm()),);
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (_) => RegistrationForm()), (r) => false);
   }
@@ -1178,12 +1190,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         textInputType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
         maxLength: 10,
-        suffixIcon: AppStrings.isMobile == true
-            ? Icon(
-                Icons.check_circle_sharp,
-                color: Colors.green,
-              )
-            : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter Mobile Number";
@@ -1194,9 +1200,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 9
-              ? AppStrings.isMobile = false
-              : AppStrings.isMobile = true);
         });
   }
 
@@ -1207,14 +1210,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       controller: firstNameController,
       textInputType: TextInputType.text,
       inputFormatters: [
+      //  FilteringTextInputFormatter.allow(RegExp(r"\s+")),
         FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]")),
       ],
-      suffixIcon: AppStrings.isFirst == true
-          ? Icon(
-              Icons.check_circle_sharp,
-              color: Colors.green,
-            )
-          : Icon(Icons.info, color: Colors.red),
       validator: (value) {
         if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
           return "Enter First Name";
@@ -1224,11 +1222,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         return null;
       },
       onChanged: (v) {
-        v = firstNameController.text.trim().toString();
-        formGlobalKey.currentState.validate();
-        setState(() => v.length <= 2
-            ? AppStrings.isFirst = false
-            : AppStrings.isFirst = true);
+         formGlobalKey.currentState.validate();
       },
     );
   }
@@ -1239,7 +1233,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.middleNameLabel,
       controller: middleNameController,
       textInputType: TextInputType.text,
-      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
     );
   }
 
@@ -1249,13 +1245,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.lastNameLabel,
       controller: lastNameController,
       textInputType: TextInputType.text,
-      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
-      suffixIcon: AppStrings.isLast == true
-          ? Icon(
-              Icons.check_circle_sharp,
-              color: Colors.green,
-            )
-          : Icon(Icons.info, color: Colors.red),
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
         if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
           return "Enter Last Name";
@@ -1264,13 +1256,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       },
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() => v.length <= 2
-            ? AppStrings.isLast = false
-            : AppStrings.isLast = true);
-      },
+        },
     );
   }
-
   Widget _guardianTypeDropDown() {
     return ReusedDropDownString(
       textLabel: AppStrings.guardianTypeLabel,
@@ -1289,13 +1277,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.guardianNameLabel,
       controller: guardianNameController,
       textInputType: TextInputType.text,
-      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
-      suffixIcon: AppStrings.isGuardian == true
-          ? Icon(
-              Icons.check_circle_sharp,
-              color: Colors.green,
-            )
-          : Icon(Icons.info, color: Colors.red),
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
         if (value.isEmpty) {
           return "Please enter Guardian name";
@@ -1308,9 +1292,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       },
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() => v.length <= 2
-            ? AppStrings.isGuardian = false
-            : AppStrings.isGuardian = true);
       },
     );
   }
@@ -1323,6 +1304,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       textCapitalization: TextCapitalization.none,
       textInputType: TextInputType.emailAddress,
       inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
         FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
       ],
       /*validator: (value) {
@@ -1376,17 +1358,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.depositAmountControllerLabel,
       controller: depositAmountController,
       textInputType: TextInputType.number,
-      onChanged: (value) {
-        if (value.length > 1) {
-          setState(() {
-            fDepositeSiteCheck = true;
-          });
-        } else {
-          setState(() {
-            fDepositeSiteCheck = true;
-          });
-        }
-      },
     );
   }
 
@@ -1437,11 +1408,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
               ),
               onChanged: (DepositItem value) {
                 setState(() {
+                  _depositCategoryType = value;
+                  depositAmountController.clear();
+                  depositAmountController.text = "";
+                  depositAmountController.text = value.firstamount.toString();
                   _schemeMonth = value.schememonth;
                   if (_schemeMonth > 0) {
-                    depositAmountController.text =
-                        value.firstamount.toString();
+                    _depositCategoryType = value;
+                    depositAmountController.clear();
+                    depositAmountController.text = "";
+                    depositAmountController.text = value.firstamount.toString();
                   } else {
+                    _depositCategoryType = value;
+                    depositAmountController.clear();
+                    depositAmountController.text = "";
                     depositAmountController.text = value.amount.toString();
                   }
                   AppStrings.depositName = value.title;
@@ -1536,24 +1516,17 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.houseNumberLabel,
       controller: houseNumberController,
       textInputType: TextInputType.text,
-      suffixIcon: AppStrings.isHouseNo == true
-          ? Icon(
-              Icons.check_circle_sharp,
-              color: Colors.green,
-            )
-          : Icon(Icons.info, color: Colors.red),
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
       validator: (value) {
         if (value.isEmpty) {
           return "Please enter House Number";
         }
         return null;
       },
-      onTap: () {},
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() => v.length >= 1
-            ? AppStrings.isHouseNo = true
-            : AppStrings.isHouseNo = false);
       },
     );
   }
@@ -1564,24 +1537,17 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.addressLabel,
       controller: colonySocietyApartmentController,
       textInputType: TextInputType.text,
-      suffixIcon: AppStrings.isAddress == true
-          ? Icon(
-              Icons.check_circle_sharp,
-              color: Colors.green,
-            )
-          : Icon(Icons.info, color: Colors.red),
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
       validator: (value) {
         if (value.isEmpty) {
           return "Please enter Colony/Society/Apartment";
         }
         return null;
       },
-      onTap: () {},
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() => v.length > 1
-            ? AppStrings.isAddress = true
-            : AppStrings.isAddress = false);
       },
     );
   }
@@ -1592,24 +1558,17 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.streetNameLabel,
       controller: streetNameController,
       textInputType: TextInputType.text,
-      suffixIcon: AppStrings.isAddress == true
-          ? Icon(
-              Icons.check_circle_sharp,
-              color: Colors.green,
-            )
-          : Icon(Icons.info, color: Colors.red),
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
       validator: (value) {
         if (value.isEmpty) {
           return "Please enter street name";
         }
         return null;
       },
-      onTap: () {},
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() => v.length > 1
-            ? AppStrings.isAddress = true
-            : AppStrings.isAddress = false);
       },
     );
   }
@@ -1621,6 +1580,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         controller: townController,
         textInputType: TextInputType.name,
         inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
           FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
         ]);
   }
@@ -1646,13 +1606,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         hintText: AppStrings.pinCodeLabel,
         controller: pinCodeController,
         textInputType: TextInputType.number,
-        maxLength: 6,
-        suffixIcon: AppStrings.isPinCode == true
-            ? Icon(
-                Icons.check_circle_sharp,
-                color: Colors.green,
-              )
-            : Icon(Icons.info, color: Colors.red),
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        ],
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter Pin Number";
@@ -1661,12 +1617,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
           }
           return null;
         },
-        onTap: () {},
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 5
-              ? AppStrings.isPinCode = false
-              : AppStrings.isPinCode = true);
         });
   }
 
@@ -1675,6 +1627,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       headingLabel: AppStrings.noOfKitchenLabel,
       hintText: AppStrings.noOfKitchenLabel,
       controller: kitchenController,
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
       textInputType: TextInputType.number,
       maxLength: 2,
     );
@@ -1687,6 +1642,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       controller: bathroomController,
       textInputType: TextInputType.number,
       maxLength: 2,
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
     );
   }
 
@@ -1697,6 +1655,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       controller: familyMemController,
       textInputType: TextInputType.number,
       maxLength: 2,
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
     );
   }
 
@@ -1751,6 +1712,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.landmarkLabel,
       controller: landmarkController,
       textInputType: TextInputType.text,
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
     );
   }
 
@@ -1799,12 +1763,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         hintText: AppStrings.customerAccountNoLabel,
         controller: bankAccNoController,
         textInputType: TextInputType.text,
-        suffixIcon: AppStrings.isBankAccNo == true
-            ? Icon(
-                Icons.check_circle_sharp,
-                color: Colors.green,
-              )
-            : Icon(Icons.info, color: Colors.red),
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        ],
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter bank account number";
@@ -1813,12 +1774,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
           }
           return null;
         },
-        onTap: () {},
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 7
-              ? AppStrings.isBankAccNo = false
-              : AppStrings.isBankAccNo = true);
         });
   }
 
@@ -1829,12 +1786,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         maxLength: 9,
         controller: mICRCodeController,
         textInputType: TextInputType.number,
-        suffixIcon: AppStrings.isMICRCode == true
-            ? Icon(
-                Icons.check_circle_sharp,
-                color: Colors.green,
-              )
-            : Icon(Icons.info, color: Colors.red),
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        ],
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter MICR Code";
@@ -1843,12 +1797,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
           }
           return null;
         },
-        onTap: () {},
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 8
-              ? AppStrings.isMICRCode = false
-              : AppStrings.isMICRCode = true);
         });
   }
 
@@ -2205,8 +2155,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Widget _frontImageWidget() {
-    print("Get File Path ====== ${frontImageController.frontImage}");
-    print("Get File Path ====== ${frontImageFile}");
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.idFrontImgSide),
@@ -2352,6 +2300,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       controller: nocProofNoController,
       textInputType: TextInputType.text,
       maxLength: 20,
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
     );
   }
 
@@ -2363,16 +2314,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         textInputType: TextInputType.text,
         maxLength: 20,
         inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
           FilteringTextInputFormatter.allow(RegExp(
             "[a-zA-Z-0-9\u0900-\u097F]",
           ))
         ],
-        suffixIcon: AppStrings.isIdProofNo == true
-            ? Icon(
-                Icons.check_circle_sharp,
-                color: Colors.green,
-              )
-            : Icon(Icons.info, color: Colors.red),
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter id proof no";
@@ -2381,9 +2327,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 1
-              ? AppStrings.isIdProofNo = false
-              : AppStrings.isIdProofNo = true);
         });
   }
 
@@ -2394,6 +2337,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       controller: ownershipController,
       textInputType: TextInputType.text,
       maxLength: 20,
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
     );
   }
 
@@ -2468,12 +2414,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         controller: customerAccountNum,
         textInputType: TextInputType.text,
         maxLength: 20,
-        suffixIcon: AppStrings.isCustAccNo == true
-            ? Icon(
-                Icons.check_circle_sharp,
-                color: Colors.green,
-              )
-            : Icon(Icons.info, color: Colors.red),
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        ],
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter Customer Account Number";
@@ -2484,9 +2427,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 16
-              ? AppStrings.isCustAccNo = false
-              : AppStrings.isCustAccNo = true);
         });
   }
 
@@ -2497,12 +2437,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         controller: IFSCController,
         textInputType: TextInputType.text,
         maxLength: 11,
-        suffixIcon: AppStrings.isCustIfscCode == true
-            ? Icon(
-                Icons.check_circle_sharp,
-                color: Colors.green,
-              )
-            : Icon(Icons.info, color: Colors.red),
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        ],
         validator: (value) {
           if (value.isEmpty) {
             return "Please enter Customer Ifsc Code";
@@ -2513,9 +2450,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-          setState(() => v.length <= 10
-              ? AppStrings.isCustIfscCode = false
-              : AppStrings.isCustIfscCode = true);
         });
   }
 
@@ -2525,24 +2459,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.customerBankAddress,
       controller: bank_address,
       textInputType: TextInputType.text,
-      suffixIcon: AppStrings.isCustBankAdd == true
-          ? Icon(
-              Icons.check_circle_sharp,
-              color: Colors.green,
-            )
-          : Icon(Icons.info, color: Colors.red),
       validator: (value) {
         if (value.isEmpty) {
           return "Please enter the customer bank address";
         }
         return null;
       },
-      onTap: () {},
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        setState(() => v.length > 1
-            ? AppStrings.isCustBankAdd = true
-            : AppStrings.isCustBankAdd = false);
       },
     );
   }
@@ -2586,6 +2510,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
             modeDepositValue = item;
             print("_modeOfDeposit-->" + modeOfDepositId.toString());
           });
+
           if (modeDepositValue.id == "2") {
             setState(() {
               isDepositCheq = false;
@@ -2615,6 +2540,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       controller: chqNOController,
       maxLength: 5,
       textInputType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
     );
   }
 
@@ -2823,6 +2751,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     if (!mounted) return;
     setState(() {
       chargeAreaItems = menuItems;
+    //  chargeAreaId = chargeAreaType.title.toString();
       if (widget.isUpdate == true) {
         if (widget.studentModel.chargeArea != null) {
           chargeAreaType = chargeAreaItems
@@ -3137,6 +3066,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       ));
     });
     setState(() {
+//  code top to bottom chalta hau
       if (widget.isUpdate == true) {
         if (widget.studentModel.modeOfDeposite != null) {
           modeDepositValue = modeOfDepositList
@@ -3236,11 +3166,17 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         if (widget.studentModel.depositeType != null) {
           _depositCategoryType = _propertyDropdownItemsDeposit
               .firstWhere((element) =>
-                  element.value.id == widget.studentModel.depositeType)
+                  element.value.id == widget.studentModel.depositeType, orElse: null)
               .value;
         }
+
       }
     });
+   /* if (widget.isUpdate == true){
+      depositAmountController.text = widget.studentModel.initialAmount;
+      depositAmountController.clear();
+    }*/
+
     return;
   }
 

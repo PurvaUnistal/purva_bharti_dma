@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:hpcl_app/ExportFile/export_file.dart';
 import 'package:hpcl_app/utils/common_widgets/custom_toast.dart';
 
 class CustomerFormHelper {
@@ -54,7 +55,7 @@ class CustomerFormHelper {
         CustomToast.showToast("Please select Accept Extra Fitting CostValue");
         return false;
       }
-      if (chargeAreaType == "0") {
+      if (chargeAreaType == "0" || chargeAreaType == null || chargeAreaType.isEmpty) {
         CustomToast.showToast('Please select charge area type');
         return false;
       }

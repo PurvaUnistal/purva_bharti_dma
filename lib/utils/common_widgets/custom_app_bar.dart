@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget {
   final String titleAppBar;
   final Widget leading;
+  final Widget child;
   final List<Widget> actions;
-  const CustomAppBar({Key key, this.titleAppBar, this.leading, this.actions}) : super(key: key);
+  const CustomAppBar({Key key, this.titleAppBar, this.leading, this.actions, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar:AppBar(
+    return AppBar(
         leading: leading,
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
@@ -28,19 +28,6 @@ class CustomAppBar extends StatelessWidget {
           ),
         ),
         actions: actions,
-        /* title: GestureDetector(
-          onTap: (){
-            Navigator.push(context,MaterialPageRoute(builder: (context) => RegistrationForm()));
-          },
-          child: Row(
-            children: [
-              Icon(Icons.arrow_back_ios,size: 24, color:Colors.white),
-              SizedBox(width: 10,),
-              Text('Customer Input')
-            ],
-          ),
-        ),*/
-      ),
-    );
+      );
   }
 }

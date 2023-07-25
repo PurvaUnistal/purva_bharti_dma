@@ -53,6 +53,7 @@ class TextFieldWidget extends StatelessWidget {
             autofillHints: autofillHints,
             enabled: enabled ?? true,
             controller: controller,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.normal, fontSize: 12),

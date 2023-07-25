@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
 import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import '../ExportFile/export_file.dart';
 
 class RegistrationForm extends StatefulWidget {
@@ -75,7 +77,6 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         print('connected');
-        // fetchLabals();
       }
     } on SocketException catch (_) {
       print('not connected');
@@ -93,6 +94,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
   @override
   void initState() {
     super.initState();
+    _multipleRequstPermission();
     serverApi = ServerApi();
     _download(context);
     initConnectivity();
@@ -113,7 +115,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
       onWillPop: () async => false,
       child: Scaffold(
           appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(50),
+            preferredSize: const Size.fromHeight(80),
             child: CustomAppBar(
               titleAppBar: GlobalConstants.DMA_Page,
               actions: <Widget>[
@@ -124,7 +126,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                   ),
                   onPressed: () {
                     _exitApp(context);
-                  },
+                    },
                 )
               ],
             ),
@@ -141,7 +143,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                       children: <Widget>[
                         _buildBox(
                             color:
-                                _checkInBtnStatus ? Colors.green : Colors.red,
+                            _checkInBtnStatus ? Colors.green : Colors.red,
                             textTitle: "MOBILE DATA"),
                         _buildBox(
                             color: _checkOutBtnboth ? Colors.green : Colors.red,
@@ -183,7 +185,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 21-07-2023",
+                      "Date : 25-07-2023",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -247,16 +249,16 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
               children: <Widget>[
                 icon != null
                     ? Container(
-                        padding: EdgeInsets.all(11),
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.red)),
-                        child: new Icon(
-                          icon,
-                        ),
-                        alignment: Alignment.centerLeft,
-                      )
+                  padding: EdgeInsets.all(11),
+                  margin: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.red)),
+                  child: new Icon(
+                    icon,
+                  ),
+                  alignment: Alignment.centerLeft,
+                )
                     : Container(),
                 Text(
                   title,
@@ -271,6 +273,25 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     );
   }
 
+  Future<bool> _multipleRequstPermission() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.location,Permission.storage, Permission.camera,
+      //add more permission to request here.
+    ].request();
+
+    if(statuses[Permission.location].isGranted){
+      print("Location permission is denied.");
+    }
+    if(statuses[Permission.camera].isGranted){
+      print("Camera permission is denied.");
+    }
+    if(statuses[Permission.storage].isGranted){
+      print("Camera permission is denied.");
+    }
+    return true;
+  }
+
+
   final List<String> titleList = <String>[
     'Customer Registration Form',
     'View and Sync Records'
@@ -279,6 +300,8 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     Icons.picture_in_picture,
     Icons.receipt
   ];
+
+
 
   Widget _buildCardButton() {
     return Card(
@@ -301,28 +324,28 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
 
   Future<bool> _exitApp(BuildContext context) {
     return showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Do you want to logout this application?'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    _getLoggedOut();
-                  },
-                  child: Text('Yes'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    print("you choose no");
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text('No'),
-                ),
-              ],
-            );
-          },
-        ) ??
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Do you want to logout this application?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                _getLoggedOut();
+              },
+              child: Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                print("you choose no");
+                Navigator.of(context).pop(false);
+              },
+              child: Text('No'),
+            ),
+          ],
+        );
+      },
+    ) ??
         false;
   }
 
@@ -332,7 +355,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),
-      (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
     );
     return null;
   }
@@ -362,14 +385,14 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
             ),
             title == 'Internet'
                 ? TextButton(
-                    child: Text('Refresh'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      //  checkInternet();
+              child: Text('Refresh'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                //  checkInternet();
 
-                      checkWifi();
-                    },
-                  )
+                checkWifi();
+              },
+            )
                 : Container(),
           ],
         );
@@ -402,12 +425,13 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     getAllDistrictApi();
   }
 
-  String schema, token;
+  String schema, token, nameUser;
 
   getSharedPrefer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       schema = prefs.getString(GlobalConstants.schema);
+      nameUser = prefs.getString(GlobalConstants.name);
       token = prefs.getString(GlobalConstants.token);
       print("schema------------->" + schema);
     });
@@ -664,78 +688,73 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
 
   void buildAlertDialog(String message) {
     SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {
-          if (isOffline && !dialogIsVisible) {
-            dialogIsVisible = true;
-            showDialog(
-                barrierDismissible: false,
-                context: ctx,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text(
-                      message,
+      if (isOffline && !dialogIsVisible) {
+        dialogIsVisible = true;
+        showDialog(
+            barrierDismissible: false,
+            context: ctx,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14.0),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      Icons.portable_wifi_off,
+                      color: Colors.redAccent,
+                      size: 36.0,
+                    ),
+                    canProceed
+                        ? Text(
+                      "Check your internet connection before proceeding.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 12.0),
+                    )
+                        : Text(
+                      "Please! proceed by connecting to a internet connection",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 12.0, color: Colors.red),
                     ),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(
-                          Icons.portable_wifi_off,
-                          color: Colors.redAccent,
-                          size: 36.0,
-                        ),
-                        canProceed
-                            ? Text(
-                                "Check your internet connection before proceeding.",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 12.0),
-                              )
-                            : Text(
-                                "Please! proceed by connecting to a internet connection",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 12.0, color: Colors.red),
-                              ),
-                      ],
-                    ),
-                    actions: <Widget>[
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
-                        ),
-                        onPressed: () {
-                          SystemChannels.platform
-                              .invokeMethod('SystemNavigator.pop');
-                        },
-                        child: Text(
-                          "CLOSE THE APP",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.black,
-                        ),
-                        onPressed: () {
-                          if (isOffline) {
-                            setState(() {
-                              canProceed = false;
-                            });
-                          } else {
-                            Navigator.pop(ctx);
-                            //your code
-                          }
-                        },
-                        child: Text(
-                          "PROCEED",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  );
-                });
-          }
-        }));
+                  ],
+                ),
+                actions: <Widget>[
+                  ButtonWidget(
+                    textButton:"CLOSE THE APP",
+                    onPressed: () {
+                      SystemChannels.platform
+                          .invokeMethod('SystemNavigator.pop');
+                    },
+                  ),
+                  ButtonWidget(
+                    textButton:"CLOSE THE APP",
+                    onPressed: () {
+                      SystemChannels.platform
+                          .invokeMethod('SystemNavigator.pop');
+                    },
+                  ),
+                  ButtonWidget(
+                    textButton:"PROCEED",
+                    onPressed: () {
+                      if (isOffline) {
+                        setState(() {
+                          canProceed = false;
+                        });
+                      } else {
+                        Navigator.pop(ctx);
+                        //your code
+                      }
+                    },
+                  ),
+                ],
+              );
+            });
+      }
+    }));
   }
 
   Future<void> initConnectivity() async {
@@ -752,104 +771,6 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     }
 
     _updateConnectionStatus(result);
-  }
-
-  /* versionCheck(context) async {
-    //Get Current installed version of app
-    final PackageInfo info = await PackageInfo.fromPlatform();
-    double currentVersion = double.parse(info.version.trim().replaceAll(".", ""));
-
-    //Get Latest version info from firebase config
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-
-    try {
-      // Using default duration to force fetching from remote server.
-      await remoteConfig.fetch(expiration: const Duration(seconds: 0));
-      await remoteConfig.activateFetched();
-      remoteConfig.getString('force_update_current_version');
-      double newVersion = double.parse(remoteConfig.getString('force_update_current_version').trim().replaceAll(".", ""));
-      if (newVersion > currentVersion) {
-        _showVersionDialog(context);
-      }
-    } on FetchThrottledException catch (exception) {
-      // Fetch throttled.
-      print(exception);
-    } catch (exception) {
-      print('Unable to fetch remote config. Cached or default values will be ' 'used');
-    }
-  }*/
-
-  //Show Dialog to force user to update
-  _showVersionDialog(context) async {
-    await showDialog<String>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        String title = "New Update Available";
-        String message =
-            "There is a newer version of app available please update it now.";
-        String btnLabel = "Update Now";
-        String btnLabelCancel = "Later";
-        return Platform.isIOS
-            ? new CupertinoAlertDialog(
-                title: Text(title),
-                content: Text(message),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text(btnLabel),
-                    onPressed: () => _launchURL(APP_STORE_URL),
-                  ),
-                  TextButton(
-                    child: Text(btnLabelCancel),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              )
-            : new AlertDialog(
-                title: Text(title),
-                content: Text(message),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text(btnLabel),
-                    onPressed: () => _launchURL(PLAY_STORE_URL),
-                  ),
-                  TextButton(
-                    child: Text(btnLabelCancel),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              );
-      },
-    );
-  }
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Timer timer;
-  int _start = 10;
-
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    timer = new Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start == 0) {
-          setState(() {
-            timer.cancel();
-          });
-        } else {
-          setState(() {
-            _start--;
-          });
-        }
-      },
-    );
   }
 }
 

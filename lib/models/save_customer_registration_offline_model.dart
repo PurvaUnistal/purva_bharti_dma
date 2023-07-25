@@ -129,7 +129,7 @@ class SaveCustomerRegistrationOfflineModel{
   @HiveField(61)
   String micr;
   @HiveField(62)
-  String idkey;
+  String modeDepositValue;
   @HiveField(63)
   bool complete;
   @HiveField(64)
@@ -202,7 +202,7 @@ class SaveCustomerRegistrationOfflineModel{
     this.acceptConversionPolicy,
     this.acceptExtraFittingCost,
     this.micr,
-    this.idkey,
+    this.modeDepositValue,
     this.complete,
     this.chargeArea,
     this.billingModel,

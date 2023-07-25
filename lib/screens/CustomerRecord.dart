@@ -20,7 +20,6 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
   bool _checkOutBtnboth = false;
   bool canProceed = true;
   bool isOffline = false;
-  var checkLoading = true;
   bool dialogIsVisible = false;
   final Connectivity _connectivity = Connectivity();
   var syncColors = Colors.red;
@@ -124,7 +123,6 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           if (response != null) {
             setState(() {
               print("response---->" + response.message[0].message);
-              checkLoading = true;
               count++;
             });
           } else {
@@ -151,7 +149,6 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
   }
 
   Future fetchCustomerDataSingle({int index}) async {
-    LoaderDialog.showLoadingDialog(context, _keyLoader);
     if (_checkOutBtnboth) {
       SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
       customerRegistrationList[index];
@@ -225,20 +222,14 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
       var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
       print(response.toString());
       try {
-        if (response != null) {
-          setState(() {
-            print("response---->" + response.message[0].message);
-            checkLoading = true;
-          });
-          customerRegistrationList.removeAt(index);
+         if(response.success != null){
+           customerRegistrationList.removeAt(index);
           customerRegistrationBox.deleteAt(index);
-          EasyLoading.showSuccess('Great Success! \n Record Save');
+          CustomToast.showToast('Great Success! \n Record Save');
         }
       } catch (e) {
-        EasyLoading.showError(e.toString());
+        CustomToast.showToast(e.toString());
       }
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      EasyLoading.dismiss();
     }
   }
 
@@ -277,9 +268,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                       textTitle: "WI-FI"),
                   _buildBox(
                     color: _checkOutBtnboth ? Colors.green : Colors.red,
-                    textTitle: checkLoading == false
-                        ? CircularProgressIndicator()
-                        : "Submit",
+                    textTitle: "Submit",
                     onTap: () async {
                       fetchCustomerDataList();
                     },
@@ -331,7 +320,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                                 style: appbarHeadingStyle,
                                               ),
                                               Spacer(),
-                                              IconButton(
+                                               IconButton(
                                                 icon: Icon(
                                                   Icons.sync,
                                                   color: Colors.blue.shade900,
@@ -510,7 +499,6 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           dialogIsVisible = false;
           _checkOutBtnStatus = true;
           _checkOutBtnboth = true;
-          checkLoading = true;
         });
         break;
       case ConnectivityResult.mobile:
@@ -520,7 +508,6 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           dialogIsVisible = false;
           _checkInBtnStatus = true;
           _checkOutBtnboth = true;
-          checkLoading = true;
         });
         break;
       case ConnectivityResult.wifi:
@@ -530,7 +517,6 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           dialogIsVisible = false;
           _checkOutBtnStatus = true;
           _checkOutBtnboth = true;
-          checkLoading = true;
         });
         break;
       case ConnectivityResult.mobile:
@@ -540,7 +526,6 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           dialogIsVisible = false;
           _checkInBtnStatus = true;
           _checkOutBtnboth = true;
-          checkLoading = true;
         });
         break;
       case ConnectivityResult.none:
@@ -550,10 +535,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           _checkInBtnStatus = false;
           _checkOutBtnStatus = false;
           _checkOutBtnboth = false;
-          checkLoading = true;
           EasyLoading.dismiss();
           EasyLoading.showError("ERROR!!!!!\n INTERNET DISCONNECTED");
-          checkLoading = true;
         });
         break;
       default:

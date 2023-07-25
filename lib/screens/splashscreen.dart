@@ -25,19 +25,15 @@ class _SplashScreenState extends State<SplashScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isLoggedIn =  prefs.getBool(GlobalConstants.isUserLogIn) ?? false;
     String changePassword = prefs.getString(GlobalConstants.changePassword);
-    if(changePassword == "0"){
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ChangePasswordPage()),
-            (Route<dynamic> route) => false,
-      );
-    }else {
       if(isLoggedIn){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegistrationForm()));
+        if(changePassword == "0"){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChangePasswordPage()));
+        } else{
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegistrationForm()));
+        }
       }else{
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
       }
-    }
   }
 
   @override

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
+import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
 import '../ExportFile/export_file.dart';
 
 
@@ -97,9 +99,24 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text("Change Password"),
-        ),
+       appBar: PreferredSize(
+         preferredSize: const Size.fromHeight(50),
+         child:CustomAppBar(
+            titleAppBar: "Change Password",
+           actions: [
+             IconButton(
+               icon: Icon(
+               Icons.settings_power,
+               color: Colors.white,
+             ),
+               onPressed: (){
+                 LogOutMethod.logOut(context);
+               },
+             )
+           ],
+          ),
+       ),
+
         body: _buildLayout()
     );
   }
@@ -124,16 +141,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 Image.asset("assets/images/ic_launcher.png"),
                 horgentental(),
                 newPasswordValidation(),
-                //   horgentental(),
                 _confirmPasswordWidget(),
-              //  horgentental(),
                 horgentental(),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue,
-                  ),
-                  child: Text("Change Password"),
+                ButtonWidget(
+                  textButton: "Change Password",
                   onPressed: (){
                     TextInput.finishAutofillContext();
                     getChangeData();
