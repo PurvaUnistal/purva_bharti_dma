@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hpcl_app/HiveDataStore/customer_reg_data_store.dart';
 import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
 import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
-import 'package:hpcl_app/utils/common_widgets/no_space_formatter.dart';
 import 'package:hpcl_app/utils/common_widgets/photo_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -71,27 +70,33 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
   bool fDepositeSiteCheck = false;
   bool fDepositeDate = false;
 
+  PhotoController ownerConsentImageController = PhotoController();
   PhotoController frontImageController = PhotoController();
   PhotoController backImageController = PhotoController();
   PhotoController eleBillFrontImgController = PhotoController();
   PhotoController eleBillBackImgController = PhotoController();
   PhotoController nocFrontImgController = PhotoController();
   PhotoController nocBackImgController = PhotoController();
+  PhotoController customerImgController = PhotoController();
+  PhotoController houseImgController = PhotoController();
   PhotoController consentImageController = PhotoController();
   PhotoController cancelChqImageController = PhotoController();
   PhotoController chqImgController = PhotoController();
-  var frontImageFile = "",
+  var ownerConsentImageFile = "",
+      frontImageFile = "",
       backImageFile = "",
       electricBillFrontImgFile = "",
       electricBillBackImgFile = "",
       nocFrontImgFile = "",
       nocBackImgFile = "",
+      customerImgFile = "",
+      houseImgFile = "",
       consentPhotoFile = "",
       chqCancelledPhotoFile = "",
       chqPhotoFile = "";
 
   void removeSpace(TextEditingController controller) {
-   /* if (controller.text.trim() == "") {
+    /* if (controller.text.trim() == "") {
       setState(() => controller.text == '');
     }
     print("controller==>" + controller.text);*/
@@ -110,9 +115,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     getLocalData();
     serverApi = ServerApi();
-   // firstNameController.addListener(() => removeSpace(firstNameController));
- //   firstNameController.addListener(() => firstNameController.text = firstNameController.text.replaceAll(RegExp(r"\s+"), " "));
-    firstNameController.addListener(() => firstNameController.text = firstNameController.text.replaceAll(" ", " "));
+    // firstNameController.addListener(() => removeSpace(firstNameController));
+    //   firstNameController.addListener(() => firstNameController.text = firstNameController.text.replaceAll(RegExp(r"\s+"), " "));
+    //   firstNameController.addListener(() => firstNameController.text = firstNameController.text.replaceAll(" ", " "));
     middleNameController.addListener(() => removeSpace(middleNameController));
     lastNameController.addListener(() => removeSpace(lastNameController));
     guardianNameController
@@ -185,20 +190,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       _isInterestedId = widget.studentModel.interested;
       _residentStatusValue = widget.studentModel.residentStatus;
       cookInFuelValue = widget.studentModel.existingCookingFuel;
-      backImageFile = widget.studentModel.backSide1;
-      electricBillBackImgFile = widget.studentModel.backSide2;
-      nocBackImgFile = widget.studentModel.backSide3;
-      frontImageFile = widget.studentModel.documentUploads1;
-      electricBillFrontImgFile = widget.studentModel.documentUploads2;
-      nocFrontImgFile = widget.studentModel.documentUploads3;
-      consentPhotoFile = widget.studentModel.customerConsent;
-      chqCancelledPhotoFile = widget.studentModel.canceledCheque;
+      backImageFile = widget.studentModel.backSidePhoto1;
+      electricBillBackImgFile = widget.studentModel.backSidePhoto2;
+      nocBackImgFile = widget.studentModel.backSidePhoto3;
+      frontImageFile = widget.studentModel.documentUploadsPhoto1;
+      electricBillFrontImgFile = widget.studentModel.documentUploadsPhoto2;
+      nocFrontImgFile = widget.studentModel.documentUploadsPhoto3;
+      consentPhotoFile = widget.studentModel.customerConsentPhoto;
+      chqCancelledPhotoFile = widget.studentModel.canceledChequePhoto;
       chqPhotoFile = widget.studentModel.chequePhoto;
-      depositAmountController.text = widget.studentModel.initialAmount;
-    //  _mdpeValue = widget.studentModel.societyAllowedMdpe;
-      //  uploadHousePhoto = widget.studentModel.uploadHousePhoto,
-      //   ownerConsent = widget.studentModel.ownerConsent,
-      //   reasonForHold = widget.studentModel.reasonForHold,
+      ownerConsentImageFile = widget.studentModel.ownerConsent;
+      houseImgFile = widget.studentModel.uploadHousePhoto;
+      customerImgFile = widget.studentModel.uploadCustomerPhoto;
+      buildingNumberController.text = widget.studentModel.buildingNumber;
+      ownerConsentController.text = widget.studentModel.ownerConsentText;
       _bankValue = widget.studentModel.nameOfBank;
       schema = widget.studentModel.schema;
       dmaUserName = widget.studentModel.dmaUserName;
@@ -256,14 +261,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
   TextEditingController reasonController = TextEditingController();
   TextEditingController emailIdController = TextEditingController();
   TextEditingController colonySocietyApartmentController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController streetNameController = TextEditingController();
   TextEditingController townController = TextEditingController();
+  TextEditingController buildingNumberController = TextEditingController();
   TextEditingController houseNumberController = TextEditingController();
   TextEditingController pinCodeController = TextEditingController();
   TextEditingController kitchenController = TextEditingController(text: '1');
   TextEditingController bathroomController = TextEditingController(text: "1");
   TextEditingController familyMemController = TextEditingController(text: "4");
+  TextEditingController ownerConsentController = TextEditingController();
   TextEditingController landmarkController = TextEditingController();
   TextEditingController longitudeController = TextEditingController();
   TextEditingController latitudeController = TextEditingController();
@@ -443,6 +450,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
             _emailWidget(),
             _isInterestedId == '1' ? _propertyCategoryDropDown() : Container(),
             _isInterestedId == '1' ? _propertyClassDropDown() : Container(),
+            _buildingNumberWidget(),
             _houseNumberWidget(),
             _apartmentWidget(),
             _streetNameWidget(),
@@ -456,42 +464,42 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
             _isInterestedId == '1' ? _noBathroomWidget() : Container(),
             _isInterestedId == '1' ? _fuelDropdownWidget() : Container(),
             _isInterestedId == '1' ? _noFamilyWidget() : Container(),
+       //     _ownerConsentWidget(),
             _locationWidget(),
             _isInterestedId == '1' ? _landmarkWidget() : Container(),
             _buildCardWidget(text: AppStrings.identificationProofLabel),
             _docTypeDropDown(),
             _idProofNoWidget(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [_frontImageWidget(), _backImageWidget()],
+            _rowWidget(
+              widget1: _frontImageWidget(),
+              widget2: _backImageWidget(),
             ),
             _buildCardWidget(text: AppStrings.ownershipProofHeading),
             getDropDown2(),
             _ownerProofNoWidget(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _electricBillFrontImgWidget(),
-                _electricBillBackImgWidget(),
-              ],
+            _rowWidget(
+              widget1: _electricBillFrontImgWidget(),
+              widget2: _electricBillBackImgWidget(),
             ),
             _buildCardWidget(text: AppStrings.nocLabel),
             getDropDown3(),
             _nocProofNoWidget(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _nocFrontImageWidget(),
-                _nocBackImageWidget(),
-              ],
+            _rowWidget(
+              widget1: _nocFrontImageWidget(),
+              widget2: _nocBackImageWidget(),
             ),
+            SizedBox(
+              height: 12,
+            ),
+            _rowWidget(
+              widget1: _customerImageWidget(),
+              widget2: _houseNumImageWidget(),
+            ),
+            _ownerConsentImageWidget(),
             _buildCardWidget(text: AppStrings.customerConsentLabel),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _consentImageWidget(),
-                _cancelChqImageWidget(),
-              ],
+            _rowWidget(
+              widget1: _consentImageWidget(),
+              widget2: _cancelChqImageWidget(),
             ),
             _billModeDropDown(),
             _customerBankDropDown(),
@@ -504,7 +512,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
               children: [
                 Padding(
                   padding:
-                      const EdgeInsets.only(left: 12.0, top: 12, right: 15),
+                  const EdgeInsets.only(left: 12.0, top: 12, right: 15),
                   child: Text(AppStrings.securityDepositLabel),
                 ),
                 Flexible(child: _depositStatusDropDown())
@@ -532,33 +540,32 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
             ButtonWidget(
               textButton: widget.isUpdate == false ? "Preview" : "Update",
               onPressed: ()  {
-
                 chargeAreaId =  chargeAreaType == null ? chargeAreaId : chargeAreaType.id;
                 _areaTypeId =  areaTypeValue == null ? _areaTypeId : areaTypeValue.id;
                 getAllDistrictId = districtValue == null ? getAllDistrictId : districtValue.id;
                 modeOfDepositId = modeDepositValue == null ? modeOfDepositId : modeDepositValue.id;
-               // _schemeMonth = _depositCategoryType == null ? _schemeMonth : modeDepositValue.id;
                 depositAmountController.text = _depositCategoryType == null ?  depositAmountController.text : _depositCategoryType.id;
 
                 var textFieldValidationCheck =
-                    CustomerFormHelper.textFieldValidationCheck(
+                CustomerFormHelper.textFieldValidationCheck(
                   titleLocation: latitudeController.text.trim().toString(),
                   acceptConversionPolicyValueId:
-                      __acceptConversionPolicyValueId.toString(),
+                  __acceptConversionPolicyValueId.toString(),
                   acceptExtraFittingCostValueId:
-                      __acceptExtraFittingCostValueId.toString(),
+                  __acceptExtraFittingCostValueId.toString(),
                   chargeAreaType: chargeAreaId.toString(),
                   areaTypeId: _areaTypeId.toString(),
                   mobileNoController: mobileNoController.text.toString(),
                   firstNameController: firstNameController.text.toString(),
                   lastNameController: lastNameController.text.toString(),
                   guardianNameController:
-                      guardianNameController.text.toString(),
+                  guardianNameController.text.toString(),
                   propertyTypeId: categoryValue.toString(),
                   propertyClassId: propertyClassValue.toString(),
+                  buildingNumberController: buildingNumberController.text.toString(),
                   houseNumberController: houseNumberController.text.toString(),
                   colonySocietyApartmentController:
-                      colonySocietyApartmentController.text.toString(),
+                  colonySocietyApartmentController.text.toString(),
                   streetNameController: streetNameController.text.toString(),
                   district: getAllDistrictId.toString(),
                   pinCodeController: pinCodeController.text.toString(),
@@ -592,9 +599,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                   mdpeValue: _mdpeValue,
                   residentStatusValue: _residentStatusValue,
                 );
-                if (textFieldValidationCheck == true) {
-                  _showDialog();
+                if(formGlobalKey.currentState.validate()){
+                  formGlobalKey.currentState.save();
+                  if (textFieldValidationCheck == true) {
+                    _showDialog();
+                  }
                 }
+
               },
             ),
           ],
@@ -606,8 +617,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     return showDialog(
         context: context,
         builder: (
-          context,
-        ) {
+            context,
+            ) {
           return Container(
             height: 200,
             color: Colors.white,
@@ -668,13 +679,17 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                   trailing: propertyClassValue.title ?? "-",
                 ),
                 _buildRow(
+                  leading: AppStrings.buildingNumberLabel,
+                  trailing: buildingNumberController.text.toString() ?? "-",
+                ),
+                _buildRow(
                   leading: AppStrings.houseNumberLabel,
                   trailing: houseNumberController.text.toString() ?? "-",
                 ),
                 _buildRow(
                   leading: AppStrings.apartmentLabel,
                   trailing:
-                      colonySocietyApartmentController.text.toString() ?? "-",
+                  colonySocietyApartmentController.text.toString() ?? "-",
                 ),
                 _buildRow(
                   leading: AppStrings.streetNameLabel,
@@ -696,7 +711,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                   leading: AppStrings.mdpeAllowLabel,
                   trailing: _mdpeValue ?? "-",
                 ),
-                  _buildRow(
+                _buildRow(
                   leading: AppStrings.residentStatusLabel,
                   trailing: _residentStatusValue ?? "-",
                 ),
@@ -817,9 +832,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                               imageName: AppStrings.idFrontImgSide),
                           frontImageFile != null && frontImageFile.isNotEmpty
                               ? ImageCircle(
-                                  fileImage1: File(frontImageFile),
-                                  pathImage: frontImageFile,
-                                )
+                            fileImage1: File(frontImageFile),
+                            pathImage: frontImageFile,
+                          )
                               :_localBorderImg()
                         ],
                       ),
@@ -829,9 +844,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                               imageName: AppStrings.idBackImgSide),
                           backImageFile != null && backImageFile.isNotEmpty
                               ? ImageCircle(
-                                  fileImage1: File(backImageFile),
-                                  pathImage: backImageFile,
-                                )
+                            fileImage1: File(backImageFile),
+                            pathImage: backImageFile,
+                          )
                               :_localBorderImg()
                         ],
                       ),
@@ -848,11 +863,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                           _imageNameWidget(
                               imageName: AppStrings.electricBillFrontImgLabel),
                           electricBillFrontImgFile != null &&
-                                  electricBillFrontImgFile.isNotEmpty
+                              electricBillFrontImgFile.isNotEmpty
                               ? ImageCircle(
-                                  fileImage1: File(electricBillFrontImgFile),
-                                  pathImage: electricBillFrontImgFile,
-                                )
+                            fileImage1: File(electricBillFrontImgFile),
+                            pathImage: electricBillFrontImgFile,
+                          )
                               :_localBorderImg()
                         ],
                       ),
@@ -861,11 +876,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                           _imageNameWidget(
                               imageName: AppStrings.electricBillBackImgLabel),
                           electricBillBackImgFile != null &&
-                                  electricBillBackImgFile.isNotEmpty
+                              electricBillBackImgFile.isNotEmpty
                               ?  ImageCircle(
-                                  fileImage1: File(electricBillBackImgFile),
-                                  pathImage: electricBillBackImgFile,
-                                )
+                            fileImage1: File(electricBillBackImgFile),
+                            pathImage: electricBillBackImgFile,
+                          )
                               :_localBorderImg()
                         ],
                       ),
@@ -883,9 +898,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                               imageName: AppStrings.nocFrontImgLabel),
                           nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
                               ?  ImageCircle(
-                                  fileImage1: File(nocFrontImgFile),
-                                  pathImage: nocFrontImgFile,
-                                )
+                            fileImage1: File(nocFrontImgFile),
+                            pathImage: nocFrontImgFile,
+                          )
                               :_localBorderImg()
                         ],
                       ),
@@ -895,9 +910,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                               imageName: AppStrings.nocBackImgLabel),
                           nocBackImgFile != null && nocBackImgFile.isNotEmpty
                               ?  ImageCircle(
-                                  fileImage1: File(nocBackImgFile),
-                                  pathImage: nocBackImgFile,
-                                )
+                            fileImage1: File(nocBackImgFile),
+                            pathImage: nocBackImgFile,
+                          )
                               :_localBorderImg()
                         ],
                       ),
@@ -915,9 +930,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                               imageName: AppStrings.consentPhotoLabel),
                           consentPhotoFile != null && consentPhotoFile.isNotEmpty
                               ?  ImageCircle(
-                                  fileImage1: File(consentPhotoFile),
-                                  pathImage: consentPhotoFile,
-                                )
+                            fileImage1: File(consentPhotoFile),
+                            pathImage: consentPhotoFile,
+                          )
                               :_localBorderImg()
                         ],
                       ),
@@ -926,13 +941,60 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                           _imageNameWidget(
                               imageName: AppStrings.chqCancelledPhotoLabel),
                           chqCancelledPhotoFile != null &&
-                                  chqCancelledPhotoFile.isNotEmpty
+                              chqCancelledPhotoFile.isNotEmpty
                               ? ImageCircle(
-                                  fileImage1: File(chqCancelledPhotoFile),
-                                  pathImage: chqCancelledPhotoFile)
+                              fileImage1: File(chqCancelledPhotoFile),
+                              pathImage: chqCancelledPhotoFile)
                               :_localBorderImg()
                         ],
                       ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          _imageNameWidget(
+                              imageName: AppStrings.customerImgLabel),
+                          customerImgFile != null && customerImgFile.isNotEmpty
+                              ?  ImageCircle(
+                            fileImage1: File(customerImgFile),
+                            pathImage: customerImgFile,
+                          )
+                              :_localBorderImg()
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          _imageNameWidget(
+                              imageName: AppStrings.houseImgLabel),
+                          houseImgFile != null &&
+                              houseImgFile.isNotEmpty
+                              ? ImageCircle(
+                              fileImage1: File(houseImgFile),
+                              pathImage: houseImgFile)
+                              :_localBorderImg()
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      _imageNameWidget(
+                          imageName: AppStrings.ownerConsentLabel),
+                      ownerConsentImageFile != null &&
+                          ownerConsentImageFile.isNotEmpty
+                          ? ImageCircle(
+                          fileImage1: File(ownerConsentImageFile),
+                          pathImage: ownerConsentImageFile)
+                          :_localBorderImg()
                     ],
                   ),
                 ),
@@ -946,9 +1008,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                         _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
                         chqPhotoFile != null && chqPhotoFile.isNotEmpty
                             ?  ImageCircle(
-                                fileImage1: File(chqPhotoFile),
-                                pathImage: chqPhotoFile,
-                              )
+                          fileImage1: File(chqPhotoFile),
+                          pathImage: chqPhotoFile,
+                        )
                             :_localBorderImg()
                       ],
                     ),
@@ -981,9 +1043,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         });
   }
 
-  void storeRecords() {
+  Future<void> storeRecords() async {
     SaveCustomerRegistrationOfflineModel data =
-        SaveCustomerRegistrationOfflineModel(
+    SaveCustomerRegistrationOfflineModel(
       interested: _isInterestedId.toString(),
       areaId: areaTypeValue.id.toString(),
       chargeArea: chargeAreaType.id.toString(),
@@ -1013,18 +1075,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       remarks: landmarkController.text.toString(),
       kycDocument1: idProofValue.id.toString(),
       kycDocument1Number: idProofNoController.text.toString(),
-      backSide1: backImageFile,
-      backSide2: electricBillBackImgFile,
-      backSide3: nocBackImgFile,
-      documentUploads1: frontImageFile,
-      documentUploads2: electricBillFrontImgFile,
-      documentUploads3: nocFrontImgFile,
-      customerConsent: consentPhotoFile,
-      canceledCheque: chqCancelledPhotoFile,
+      backSidePhoto1: backImageFile,
+      backSidePhoto2: electricBillBackImgFile,
+      backSidePhoto3: nocBackImgFile,
+      documentUploadsPhoto1: frontImageFile,
+      documentUploadsPhoto2: electricBillFrontImgFile,
+      documentUploadsPhoto3: nocFrontImgFile,
+      customerConsentPhoto: consentPhotoFile,
+      canceledChequePhoto: chqCancelledPhotoFile,
       chequePhoto: chqPhotoFile,
-      uploadCustomerPhoto: "",
-      uploadHousePhoto: "",
-      ownerConsent: "",
+      uploadCustomerPhoto: customerImgFile,
+      uploadHousePhoto: houseImgFile,
+      ownerConsent: ownerConsentImageFile,
       reasonForHold: "",
       kycDocument3: _kycProofDropDownValue.id,
       kycDocument3Number: nocProofNoController.text.toString(),
@@ -1036,7 +1098,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       bankAddress: bank_address.text.toString(),
       acceptConversionPolicy: __acceptConversionPolicyValueId,
       acceptExtraFittingCost: __acceptExtraFittingCostValueId,
-      // dekhna ye save kra rkha h ye value ki data de diya
       modeOfDeposite: modeDepositValue.id.toString() ?? "",
       initialDepositeStatus: _depositStatusId.toString(),
       depositeType: _depositCategoryType.id.toString(),
@@ -1052,21 +1113,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       schema: schema,
       dmaUserName: dmaUserName,
       dmaUserId: dmaId,
+      buildingNumber:  buildingNumberController.text.trim().toString(),
+      ownerConsentText: ownerConsentController.text.trim().toString(),
     );
     print("initialDepositeDatefghj"+data.initialDepositeDate.toString());
-    if (isUpdate.value) {
-      dataStore
-          .updateUser(userModel: data, index: widget.position)
-          .then((value) {
-        Navigator.pop(context);
-      });
+    if (widget.isUpdate) {
+      var box = await Hive.openBox<SaveCustomerRegistrationOfflineModel>("saveCustRegDataBoxName");
+      box.putAt(widget.position, data);
     } else {
       var mmm = SaveCusRegHiveDataStore.box.length;
       if (mmm <= 5) {
-        dataStore.addUser(userModel: data);
-        EasyLoading.showSuccess('Great Success! \n Record Save');
+        var box = await Hive.openBox<SaveCustomerRegistrationOfflineModel>("saveCustRegDataBoxName");
+        box.add(data);
+        CustomToast.showToast('Great Success! \n Record Save');
       } else {
-        EasyLoading.showError('Error !!!! \n Please Uploade Previous record');
+        CustomToast.showToast('Error !!!! \n Please Uploade Previous record');
       }
     }
     Navigator.pushAndRemoveUntil(context,
@@ -1146,6 +1207,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       textInputType: TextInputType.text,
       controller: reasonController,
       hintText: AppStrings.reasonLabel,
+      validator: (value){
+        if (value != reasonController.text.trim()) {
+          return "Not allow black Space";
+        }
+        return null;
+      },
     );
   }
 
@@ -1191,7 +1258,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
         maxLength: 10,
         validator: (value) {
-          if (value.isEmpty) {
+          if (value != mobileNoController.text.trim()) {
+            return "Not allow black Space";
+          } else if (value.isEmpty) {
             return "Please enter Mobile Number";
           } else if (value.length <= 9) {
             return 'Mobile Number must be of 10 digit';
@@ -1210,11 +1279,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: firstNameController,
       textInputType: TextInputType.text,
       inputFormatters: [
-      //  FilteringTextInputFormatter.allow(RegExp(r"\s+")),
         FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]")),
       ],
       validator: (value) {
-        if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
+        if (value != firstNameController.text.trim()) {
+          return "Not allow black Space";
+        } else if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
           return "Enter First Name";
         } else if (value.length <= 2) {
           return "First Name must be of minimum 2+ Letters";
@@ -1222,7 +1292,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return null;
       },
       onChanged: (v) {
-         formGlobalKey.currentState.validate();
+        formGlobalKey.currentState.validate();
       },
     );
   }
@@ -1234,8 +1304,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: middleNameController,
       textInputType: TextInputType.text,
       inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
         FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
+      validator: (value){
+        if (value != middleNameController.text.trim()) {
+          return "Not allow black Space";
+        }
+        return null;
+      },
     );
   }
 
@@ -1246,17 +1321,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: lastNameController,
       textInputType: TextInputType.text,
       inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
         FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
-        if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
+        if (value != lastNameController.text.trim()) {
+          return "Not allow black Space";
+        } else if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
           return "Enter Last Name";
         }
         return null;
       },
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-        },
+      },
     );
   }
   Widget _guardianTypeDropDown() {
@@ -1278,10 +1354,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: guardianNameController,
       textInputType: TextInputType.text,
       inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
         FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
-        if (value.isEmpty) {
+        if (value != guardianNameController.text.trim()) {
+          return "Not allow black Space";
+        } else if (value.isEmpty) {
           return "Please enter Guardian name";
         } else if (!RegExp('.*[A-Z].*').hasMatch(value ?? '')) {
           return 'Input should contain an uppercase letter A-Z.';
@@ -1304,21 +1381,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       textCapitalization: TextCapitalization.none,
       textInputType: TextInputType.emailAddress,
       inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
         FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
       ],
-      /*validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your emailAddress.';
-        } else if (!RegExp(
-                r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
-            .hasMatch(value)) {
-          return 'Please enter a valid Email';
+      validator: (value){
+        if (value != emailIdController.text.trim()) {
+          return "Not allow black Space";
         }
         return null;
-      },*/
-      onChanged: (v) {
-        //  formGlobalKey.currentState.validate();
       },
     );
   }
@@ -1358,6 +1427,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.depositAmountControllerLabel,
       controller: depositAmountController,
       textInputType: TextInputType.number,
+      validator: (value){
+        if (value != depositAmountController.text.trim()) {
+          return "Not allow black Space";
+        }
+        return null;
+      },
     );
   }
 
@@ -1374,7 +1449,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                   color: Colors.black,
                   fontWeight: FontWeight.normal, fontSize: 12),
               decoration: InputDecoration(
-               // border: OutlineInputBorder(),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                   borderSide: BorderSide(width: 1,color: Colors.green),
@@ -1409,20 +1483,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
               onChanged: (DepositItem value) {
                 setState(() {
                   _depositCategoryType = value;
-                  depositAmountController.clear();
-                  depositAmountController.text = "";
-                  depositAmountController.text = value.firstamount.toString();
                   _schemeMonth = value.schememonth;
+                  print("_schemeMonth-->"+_schemeMonth.toString());
                   if (_schemeMonth > 0) {
                     _depositCategoryType = value;
-                    depositAmountController.clear();
-                    depositAmountController.text = "";
                     depositAmountController.text = value.firstamount.toString();
+                    print(depositAmountController.text.toString());
                   } else {
                     _depositCategoryType = value;
-                    depositAmountController.clear();
-                    depositAmountController.text = "";
                     depositAmountController.text = value.amount.toString();
+                    print(depositAmountController.text.toString());
                   }
                   AppStrings.depositName = value.title;
                   AppStrings.depositAmountController = value.amount;
@@ -1470,7 +1540,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                       AppStrings.msgSchemeDetail);
                 }),
           )
-        //  getDepositDetailButton("Detail", alignment: CrossAxisAlignment.center),
         ],
       ),
     );
@@ -1516,12 +1585,31 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.houseNumberLabel,
       controller: houseNumberController,
       textInputType: TextInputType.text,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      ],
-      validator: (value) {
-        if (value.isEmpty) {
-          return "Please enter House Number";
+      validator: (value){
+        if (value != houseNumberController.text.trim()) {
+          return "Not allow black Space";
+        } else if (value.isEmpty) {
+          return "Please enter house number";
+        }
+        return null;
+      },
+      onChanged: (v) {
+        formGlobalKey.currentState.validate();
+      },
+    );
+  }
+
+  Widget _buildingNumberWidget() {
+    return TextFieldWidget(
+      headingLabel: AppStrings.buildingNumberLabel,
+      hintText: AppStrings.buildingNumberLabel,
+      controller: buildingNumberController,
+      textInputType: TextInputType.text,
+      validator: (value){
+        if (value != buildingNumberController.text.trim()) {
+          return "Not allow black Space";
+        }else if (value.isEmpty) {
+          return "Please enter building number";
         }
         return null;
       },
@@ -1537,11 +1625,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.addressLabel,
       controller: colonySocietyApartmentController,
       textInputType: TextInputType.text,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      ],
       validator: (value) {
-        if (value.isEmpty) {
+        if (value != colonySocietyApartmentController.text.trim()) {
+          return "Not allow black Space";
+        } else if (value.isEmpty) {
           return "Please enter Colony/Society/Apartment";
         }
         return null;
@@ -1558,11 +1645,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.streetNameLabel,
       controller: streetNameController,
       textInputType: TextInputType.text,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      ],
       validator: (value) {
-        if (value.isEmpty) {
+        if (value != streetNameController.text.trim()) {
+          return "Not allow black Space";
+        } else if (value.isEmpty) {
           return "Please enter street name";
         }
         return null;
@@ -1575,14 +1661,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
 
   Widget _townWidget() {
     return TextFieldWidget(
-        headingLabel: AppStrings.townLabel,
-        hintText: AppStrings.townLabel,
-        controller: townController,
-        textInputType: TextInputType.name,
-        inputFormatters: [
-          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-          FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
-        ]);
+      headingLabel: AppStrings.townLabel,
+      hintText: AppStrings.townLabel,
+      controller: townController,
+      textInputType: TextInputType.name,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
+      ],
+      validator: (value){
+        if (value != townController.text.trim()) {
+          return "Not allow black Space";
+        }
+        return null;
+      },
+    );
   }
 
   Widget _districtWidget() {
@@ -1606,11 +1698,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         hintText: AppStrings.pinCodeLabel,
         controller: pinCodeController,
         textInputType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-        ],
+        maxLength: 6,
         validator: (value) {
-          if (value.isEmpty) {
+          if (value != pinCodeController.text.trim()) {
+            return "Not allow black Space";
+          } else if (value.isEmpty) {
             return "Please enter Pin Number";
           } else if (value.length <= 5) {
             return 'Pin Number must be of 6 digit';
@@ -1627,11 +1719,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       headingLabel: AppStrings.noOfKitchenLabel,
       hintText: AppStrings.noOfKitchenLabel,
       controller: kitchenController,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      ],
       textInputType: TextInputType.number,
       maxLength: 2,
+
     );
   }
 
@@ -1642,9 +1732,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: bathroomController,
       textInputType: TextInputType.number,
       maxLength: 2,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      ],
     );
   }
 
@@ -1655,8 +1742,35 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: familyMemController,
       textInputType: TextInputType.number,
       maxLength: 2,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+    );
+  }
+
+  Widget _ownerConsentWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          flex: 4,
+          child: TextFieldWidget(
+            headingLabel: AppStrings.ownerConsentLabel,
+            hintText: AppStrings.ownerConsentLabel,
+            controller: ownerConsentController,
+            textInputType: TextInputType.text,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
+            ],
+            validator: (value){
+              if (value != ownerConsentController.text.trim()) {
+                return "Not allow black Space";
+              }
+              return null;
+            },
+          ),
+        ),
+        Flexible(
+          flex: 4,
+          child: _ownerConsentImageWidget(),
+        ),
       ],
     );
   }
@@ -1688,11 +1802,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         Flexible(
             flex: 3,
             child: TextFieldWidget(
-          enabled: false,
-          headingLabel: AppStrings.locationLat,
-          hintText: AppStrings.locationLat,
-          controller: latitudeController,
-        )),
+              enabled: false,
+              headingLabel: AppStrings.locationLat,
+              hintText: AppStrings.locationLat,
+              controller: latitudeController,
+            )),
         Flexible(
           flex: 3,
           child: TextFieldWidget(
@@ -1712,9 +1826,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.landmarkLabel,
       controller: landmarkController,
       textInputType: TextInputType.text,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      ],
+      validator: (value){
+        if (value != landmarkController.text.trim()) {
+          return "Not allow black Space";
+        }
+        return null;
+      },
     );
   }
 
@@ -1763,11 +1880,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         hintText: AppStrings.customerAccountNoLabel,
         controller: bankAccNoController,
         textInputType: TextInputType.text,
-        inputFormatters: [
-          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-        ],
         validator: (value) {
-          if (value.isEmpty) {
+          if (value != bankAccNoController.text.trim()) {
+            return "Not allow black Space";
+          } else if (value.isEmpty) {
             return "Please enter bank account number";
           } else if (value.length <= 7) {
             return 'bank account number must be of 6 digit';
@@ -1786,11 +1902,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         maxLength: 9,
         controller: mICRCodeController,
         textInputType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-        ],
         validator: (value) {
-          if (value.isEmpty) {
+          if (value != mICRCodeController.text.trim()) {
+            return "Not allow black Space";
+          } else if (value.isEmpty) {
             return "Please enter MICR Code";
           } else if (value.length <= 8) {
             return 'MICR Code must be of 9 digit';
@@ -1803,6 +1918,44 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
   }
 
   /////////////////////////////  image 1 ///////////////////////////////////////
+  Future<void> _openOwnerConsentImageSource(
+      {BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getOwnerConsentImage(
+                photoController: controller, imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getOwnerConsentImage(
+                photoController: controller, imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> getOwnerConsentImage(
+      {PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          ownerConsentImageFile = pickedFile.path;
+        });
+      }
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+
   Future<void> _openFrontImageSource(
       {BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
@@ -2037,6 +2190,84 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
+  Future<void> _openCustomerImgSource(
+      {BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getCustomerImage(
+                photoController: controller, imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getCustomerImage(
+                photoController: controller, imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> getCustomerImage(
+      {PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          customerImgFile = pickedFile.path;
+          //  photoController.nocBackImg = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+
+  Future<void> _openHouseImgSource(
+      {BuildContext context, PhotoController controller}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () {
+            Navigator.of(context).pop();
+            getHouseImg(
+                photoController: controller, imageSource: ImageSource.gallery);
+          },
+          onTapCamera: () {
+            Navigator.of(context).pop();
+            getHouseImg(
+                photoController: controller, imageSource: ImageSource.camera);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> getHouseImg(
+      {PhotoController photoController, ImageSource imageSource}) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      if (pickedFile != null || photoController != null) {
+        setState(() {
+          houseImgFile = pickedFile.path;
+          //  photoController.nocBackImg = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+    }
+  }
+
   Future<void> _openConsentImgSource(
       {BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
@@ -2154,6 +2385,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
+  Widget _ownerConsentImageWidget() {
+    return Column(
+      children: [
+        _imageNameWidget(imageName: AppStrings.ownerConsentLabel),
+        InkWell(
+            onTap: () => _openOwnerConsentImageSource(
+                context: context, controller: ownerConsentImageController),
+            child: ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
+                ? _fileImage(fileImage: File(ownerConsentImageFile))
+                : _localBorderImg()
+        ),
+      ],
+    );
+  }
   Widget _frontImageWidget() {
     return Column(
       children: [
@@ -2192,7 +2437,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
             onTap: () => _openEleBillFrontSource(
                 context: context, controller: eleBillFrontImgController),
             child: electricBillFrontImgFile != null &&
-                    electricBillFrontImgFile.isNotEmpty
+                electricBillFrontImgFile.isNotEmpty
                 ? _fileImage(fileImage: File(electricBillFrontImgFile))
                 : _localBorderImg()
         ),
@@ -2208,7 +2453,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
             onTap: () => _openEleBackSource(
                 context: context, controller: eleBillBackImgController),
             child: electricBillBackImgFile != null &&
-                    electricBillBackImgFile.isNotEmpty
+                electricBillBackImgFile.isNotEmpty
                 ? _fileImage(fileImage: File(electricBillBackImgFile))
                 : _localBorderImg()
         ),
@@ -2246,6 +2491,48 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     );
   }
 
+  Widget _customerImageWidget() {
+    return Column(
+      children: [
+        _imageNameWidget(imageName: AppStrings.customerImgLabel),
+        InkWell(
+            onTap: () => _openCustomerImgSource(
+                context: context, controller: customerImgController),
+            child: customerImgFile != null && customerImgFile.isNotEmpty
+                ? _fileImage(fileImage: File(customerImgFile))
+                : _localBorderImg()
+        ),
+      ],
+    );
+  }
+
+  Widget _rowWidget({Widget widget1, Widget widget2}){
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0,right: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          widget1,
+          widget2
+        ],
+      ),
+    );
+  }
+  Widget _houseNumImageWidget() {
+    return Column(
+      children: [
+        _imageNameWidget(imageName: AppStrings.houseImgLabel),
+        InkWell(
+            onTap: () => _openHouseImgSource(
+                context: context, controller: houseImgController),
+            child: houseImgFile != null && houseImgFile.isNotEmpty
+                ? _fileImage(fileImage: File(houseImgFile))
+                : _localBorderImg()
+        ),
+      ],
+    );
+  }
+
   Widget _consentImageWidget() {
     return Column(
       children: [
@@ -2269,7 +2556,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
             onTap: () => _openChqCancelledImgSource(
                 context: context, controller: cancelChqImageController),
             child: chqCancelledPhotoFile != null &&
-                    chqCancelledPhotoFile.isNotEmpty
+                chqCancelledPhotoFile.isNotEmpty
                 ? _fileImage(fileImage: File(chqCancelledPhotoFile))
                 : _localBorderImg()
         ),
@@ -2300,34 +2587,34 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: nocProofNoController,
       textInputType: TextInputType.text,
       maxLength: 20,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      ],
+      validator: (value){
+        if (value != nocProofNoController.text.trim()) {
+          return "Not allow black Space";
+        }
+        return null;
+      },
     );
   }
 
   Widget _idProofNoWidget() {
     return TextFieldWidget(
-        headingLabel: AppStrings.idProofNo,
-        hintText: AppStrings.idProofNo,
-        controller: idProofNoController,
-        textInputType: TextInputType.text,
-        maxLength: 20,
-        inputFormatters: [
-          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-          FilteringTextInputFormatter.allow(RegExp(
-            "[a-zA-Z-0-9\u0900-\u097F]",
-          ))
-        ],
-        validator: (value) {
-          if (value.isEmpty) {
-            return "Please enter id proof no";
-          }
-          return null;
-        },
-        onChanged: (v) {
-          formGlobalKey.currentState.validate();
-        });
+      headingLabel: AppStrings.idProofNo,
+      hintText: AppStrings.idProofNo,
+      controller: idProofNoController,
+      textInputType: TextInputType.text,
+      maxLength: 20,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z-0-9\u0900-\u097F]",))
+      ],
+      validator: (value){
+        if (value != idProofNoController.text.trim()) {
+          return "Not allow black Space";
+        }else if (value.isEmpty) {
+          return "Please enter id proof no.";
+        }
+        return null;
+      },
+    );
   }
 
   Widget _ownerProofNoWidget() {
@@ -2337,9 +2624,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: ownershipController,
       textInputType: TextInputType.text,
       maxLength: 20,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      ],
+      validator: (value){
+        if (value != ownershipController.text.trim()) {
+          return "Not allow black Space";
+        }
+        return null;
+      },
     );
   }
 
@@ -2409,16 +2699,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
   Widget _customerBackNoWidget() {
     return TextFieldWidget(
         headingLabel: AppStrings.customerAccountNoLabel,
-        // labelText:AppStrings.customerAccountNoLabel,
         hintText: AppStrings.customerAccountNoLabel,
         controller: customerAccountNum,
         textInputType: TextInputType.text,
         maxLength: 20,
-        inputFormatters: [
-          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-        ],
         validator: (value) {
-          if (value.isEmpty) {
+          if (value != customerAccountNum.text.trim()) {
+            return "Not allow black Space";
+          } else if (value.isEmpty) {
             return "Please enter Customer Account Number";
           } else if (value.length <= 16) {
             return "Customer Account Number must be of 17 digit";
@@ -2437,11 +2725,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         controller: IFSCController,
         textInputType: TextInputType.text,
         maxLength: 11,
-        inputFormatters: [
-          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-        ],
         validator: (value) {
-          if (value.isEmpty) {
+          if (value != IFSCController.text.trim()) {
+            return "Not allow black Space";
+          } else if (value.isEmpty) {
             return "Please enter Customer Ifsc Code";
           } else if (value.length <= 10) {
             return "Customer Ifsc Code must be of 11 digit";
@@ -2460,7 +2747,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: bank_address,
       textInputType: TextInputType.text,
       validator: (value) {
-        if (value.isEmpty) {
+        if (value != bank_address.text.trim()) {
+          return "Not allow black Space";
+        } else if (value.isEmpty) {
           return "Please enter the customer bank address";
         }
         return null;
@@ -2495,6 +2784,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.reasonLabel,
       controller: reasonNoController,
       textInputType: TextInputType.text,
+      validator: (value){
+        if (value != reasonNoController.text.trim()) {
+          return "Not allow black Space";
+        }
+        return null;
+      },
     );
   }
 
@@ -2540,9 +2835,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: chqNOController,
       maxLength: 5,
       textInputType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      ],
+      validator: (value){
+        if (value != chqNOController.text.trim()) {
+          return "Not allow black Space";
+        }
+        return null;
+      },
     );
   }
 
@@ -2656,8 +2954,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
 
   Widget _imageNameWidget({String imageName}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
-      margin: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
+        margin: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
         decoration: BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -2683,7 +2981,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     List dataChargeList = json.decode(resAllDistrict);
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length,
-      (i) => DropdownMenuItem(
+          (i) => DropdownMenuItem(
         value: OptionItem(
             id: dataChargeList[i]['id'],
             title: dataChargeList[i]['district_name']),
@@ -2698,8 +2996,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
           districtValue = getAllDistrictItems
               .firstWhere(
                   (element) =>
-                      element.value.id == widget.studentModel.districtId,
-                  orElse: null)
+              element.value.id == widget.studentModel.districtId,
+              orElse: null)
               .value;
         }
       }
@@ -2727,7 +3025,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
           areaTypeValue = areaItems
               .firstWhere(
                   (element) => element.value.id == widget.studentModel.areaId,
-                  orElse: null)
+              orElse: null)
               .value;
         }
       }
@@ -2741,7 +3039,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     log(dataChargeList.toString());
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length,
-      (i) => DropdownMenuItem(
+          (i) => DropdownMenuItem(
         value: OptionItem(
             id: dataChargeList[i]['gid'],
             title: dataChargeList[i]['charge_area_name']),
@@ -2751,14 +3049,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     if (!mounted) return;
     setState(() {
       chargeAreaItems = menuItems;
-    //  chargeAreaId = chargeAreaType.title.toString();
+      //  chargeAreaId = chargeAreaType.title.toString();
       if (widget.isUpdate == true) {
         if (widget.studentModel.chargeArea != null) {
           chargeAreaType = chargeAreaItems
               .firstWhere(
                   (element) =>
-                      element.value.id == widget.studentModel.chargeArea,
-                  orElse: null)
+              element.value.id == widget.studentModel.chargeArea,
+              orElse: null)
               .value;
         }
       }
@@ -2847,7 +3145,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     ));
     menuItems = List.generate(
       dataList.length,
-      (i) => DropdownMenuItem(
+          (i) => DropdownMenuItem(
         value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
         child: Text("${dataList[i]['name']}"),
       ),
@@ -2861,9 +3159,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
           categoryValue = propertyCategoryList
               .firstWhere(
                   (element) =>
-                      element.value.id ==
-                      widget.studentModel.propertyCategoryId,
-                  orElse: null)
+              element.value.id ==
+                  widget.studentModel.propertyCategoryId,
+              orElse: null)
               .value;
         }
       }
@@ -2876,7 +3174,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     List<DropdownMenuItem<OptionItem>> menuItems = [];
     menuItems = List.generate(
       dataList.length,
-      (i) => DropdownMenuItem(
+          (i) => DropdownMenuItem(
         value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
         child: Text("${dataList[i]['name']}"),
       ),
@@ -2890,8 +3188,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
           propertyClassValue = propertyClassList
               .firstWhere(
                   (element) =>
-                      element.value.id == widget.studentModel.propertyClassId,
-                  orElse: null)
+              element.value.id == widget.studentModel.propertyClassId,
+              orElse: null)
               .value;
         }
       }
@@ -2912,7 +3210,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       if (widget.studentModel.kycDocument1 != null) {
         idProofValue = idProofList
             .firstWhere((element) =>
-                element.value.id == widget.studentModel.kycDocument1)
+        element.value.id == widget.studentModel.kycDocument1)
             .value;
       }
     }
@@ -2949,8 +3247,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         _kycProofDropDownValue = _kycProofDropdownItems
             .firstWhere(
                 (element) =>
-                    element.value.id == widget.studentModel.kycDocument3,
-                orElse: null)
+            element.value.id == widget.studentModel.kycDocument3,
+            orElse: null)
             .value;
       }
     }
@@ -2998,8 +3296,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
           billingModeValue = billingModeList
               .firstWhere(
                   (element) =>
-                      element.value.id == widget.studentModel.billingModel,
-                  orElse: null)
+              element.value.id == widget.studentModel.billingModel,
+              orElse: null)
               .value;
         }
       }
@@ -3022,9 +3320,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         __acceptConversionPolicyValue = _acceptConversionPolicyList
             .firstWhere(
                 (element) =>
-                    element.value.id ==
-                    widget.studentModel.acceptConversionPolicy,
-                orElse: null)
+            element.value.id ==
+                widget.studentModel.acceptConversionPolicy,
+            orElse: null)
             .value;
       }
     }
@@ -3047,9 +3345,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         acceptExtraFittingCostValue = _acceptExtraFittingCostList
             .firstWhere(
                 (element) =>
-                    element.value.id ==
-                    widget.studentModel.acceptExtraFittingCost,
-                orElse: null)
+            element.value.id ==
+                widget.studentModel.acceptExtraFittingCost,
+            orElse: null)
             .value;
       }
     }
@@ -3099,9 +3397,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
           depositStatusValue = dropListDepositStatusList
               .firstWhere(
                   (element) =>
-                      element.value.id ==
-                      widget.studentModel.initialDepositeStatus,
-                  orElse: null)
+              element.value.id ==
+                  widget.studentModel.initialDepositeStatus,
+              orElse: null)
               .value;
         }
       }
@@ -3136,7 +3434,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     ));
     menuItems2 = List.generate(
       dataList.length,
-      (i) => DropdownMenuItem(
+          (i) => DropdownMenuItem(
         value: DepositItem(
             id: dataList[i]['deposit_types_id'],
             title: dataList[i]['deposit_name'],
@@ -3163,20 +3461,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     setState(() {
       _propertyDropdownItemsDeposit = menuItems;
       if (widget.isUpdate == true) {
+        depositAmountController.text = widget.studentModel.initialAmount;
         if (widget.studentModel.depositeType != null) {
           _depositCategoryType = _propertyDropdownItemsDeposit
               .firstWhere((element) =>
-                  element.value.id == widget.studentModel.depositeType, orElse: null)
+          element.value.id == widget.studentModel.depositeType, orElse: null)
               .value;
+            depositAmountController.text = _depositCategoryType.amount.toString();
         }
-
       }
     });
-   /* if (widget.isUpdate == true){
-      depositAmountController.text = widget.studentModel.initialAmount;
-      depositAmountController.clear();
-    }*/
-
     return;
   }
 
@@ -3187,23 +3481,23 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     );
     var album = HpclLabals.fromJson(json.decode(response.body));
     var registration = album.deposit;
-   // AppStrings.mobileNoLabel = album.steps.mobile;
-   // AppStrings.firstNameLabel = album.steps.firstname;
-  //  AppStrings.middleNameLabel = album.steps.middlename;
-   // AppStrings.lastNameLabel = album.steps.lastname;
-  //  AppStrings.btnLabel = album.steps.button;
+    // AppStrings.mobileNoLabel = album.steps.mobile;
+    // AppStrings.firstNameLabel = album.steps.firstname;
+    //  AppStrings.middleNameLabel = album.steps.middlename;
+    // AppStrings.lastNameLabel = album.steps.lastname;
+    //  AppStrings.btnLabel = album.steps.button;
     AppStrings.feeChargeLabel = "fee charge";
-  //  AppStrings.depositStatusLabel = registration.depositSta;
- //   AppStrings.reasonLabel = registration.reason;
- //   AppStrings.modeOfDepositLabel = registration.modeOfDep;
- //   AppStrings.depositDateLabel = registration.depositDate;
-  //  schemeTypeLabel = registration.depositType;
-  //  AppStrings.depositAmountControllerLabel = registration.depositAmt;
- //   AppStrings.chqNoLabel = registration.chqNum;
- //   AppStrings.chqBankLabel = registration.chqBank;
-  //  AppStrings.accountNoLabel = registration.bankAcc;
-  //  AppStrings.chqPhotoLabel = registration.chqPhoto;
-  //  AppStrings.formStatusLabel = registration.payStatus;
+    //  AppStrings.depositStatusLabel = registration.depositSta;
+    //   AppStrings.reasonLabel = registration.reason;
+    //   AppStrings.modeOfDepositLabel = registration.modeOfDep;
+    //   AppStrings.depositDateLabel = registration.depositDate;
+    //  schemeTypeLabel = registration.depositType;
+    //  AppStrings.depositAmountControllerLabel = registration.depositAmt;
+    //   AppStrings.chqNoLabel = registration.chqNum;
+    //   AppStrings.chqBankLabel = registration.chqBank;
+    //  AppStrings.accountNoLabel = registration.bankAcc;
+    //  AppStrings.chqPhotoLabel = registration.chqPhoto;
+    //  AppStrings.formStatusLabel = registration.payStatus;
     if (!mounted) return;
   }
 

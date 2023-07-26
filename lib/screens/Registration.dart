@@ -115,10 +115,11 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
       onWillPop: () async => false,
       child: Scaffold(
           appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(80),
+            preferredSize: const Size.fromHeight(50),
             child: CustomAppBar(
               titleAppBar: GlobalConstants.DMA_Page,
               actions: <Widget>[
+                Text(nameUser, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
                 IconButton(
                   icon: Icon(
                     Icons.settings_power,
@@ -185,7 +186,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 25-07-2023",
+                      "Date : 26-07-2023",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -280,13 +281,13 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     ].request();
 
     if(statuses[Permission.location].isGranted){
-      print("Location permission is denied.");
+      print("Location permission is isGranted.");
     }
     if(statuses[Permission.camera].isGranted){
-      print("Camera permission is denied.");
+      print("Camera permission is isGranted.");
     }
     if(statuses[Permission.storage].isGranted){
-      print("Camera permission is denied.");
+      print("Camera permission is isGranted.");
     }
     return true;
   }

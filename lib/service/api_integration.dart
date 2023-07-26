@@ -44,6 +44,7 @@ class ApiIntegration {
       "email_id": saveCustRegReqModel.emailId ?? "",
       "property_category_id": saveCustRegReqModel.propertyCategoryId ?? "",
       "property_class_id": saveCustRegReqModel.propertyClassId ?? "",
+      "building_number": saveCustRegReqModel.buildingNumber ?? "",
       "house_number": saveCustRegReqModel.houseNumber ?? "",
       "locality": saveCustRegReqModel.colonySocietyApartment ?? "",
       "address2": saveCustRegReqModel.streetName.toString() ?? "",

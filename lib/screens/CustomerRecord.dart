@@ -3,6 +3,7 @@ import 'package:hpcl_app/models/save_customer_registration_model.dart';
 import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
 import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
 import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
+import 'package:hpcl_app/utils/common_widgets/loading_widget.dart';
 
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
@@ -92,7 +93,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           bankIfscCode: saveCustRegOffModel.bankIfscCode,
           chequeBankAccount: saveCustRegOffModel.chequeBankAccount,
           chequeNumber: saveCustRegOffModel.chequeNumber,
-          customerConsent: saveCustRegOffModel.customerConsent,
+          customerConsent: saveCustRegOffModel.customerConsentPhoto,
           depositeType: saveCustRegOffModel.depositeType,
           initialDepositeDate: saveCustRegOffModel.initialDepositeDate,
           initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus,
@@ -100,56 +101,55 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           nameOfBank: saveCustRegOffModel.nameOfBank,
           ownerConsent: saveCustRegOffModel.ownerConsent,
           payementBankName: saveCustRegOffModel.payementBankName,
-          backSideImg1: saveCustRegOffModel.backSide1,
-          backSideImg2: saveCustRegOffModel.backSide2,
-          backSideImg3: saveCustRegOffModel.backSide3,
-          canceledCheque: saveCustRegOffModel.canceledCheque,
+          backSideImg1: saveCustRegOffModel.backSidePhoto1,
+          backSideImg2: saveCustRegOffModel.backSidePhoto2,
+          backSideImg3: saveCustRegOffModel.backSidePhoto3,
+          canceledCheque: saveCustRegOffModel.canceledChequePhoto,
           chequePhoto: saveCustRegOffModel.chequePhoto,
           uploadCustomerPhoto: saveCustRegOffModel.uploadCustomerPhoto,
           uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto,
-          frontSideImg1: saveCustRegOffModel.documentUploads1,
-          frontSideImg2: saveCustRegOffModel.documentUploads2,
-          frontSideImg3: saveCustRegOffModel.documentUploads3,
+          frontSideImg1: saveCustRegOffModel.documentUploadsPhoto1,
+          frontSideImg2: saveCustRegOffModel.documentUploadsPhoto2,
+          frontSideImg3: saveCustRegOffModel.documentUploadsPhoto3,
           acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy,
           acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost,
           micr: saveCustRegOffModel.micr,
-          buildingNumber: "",
-
+          buildingNumber: saveCustRegOffModel.buildingNumber,
         );
         print("saveCustRegReqModel--->" + saveCustRegReqModel.toJson().toString());
         var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
         print(response.toString());
         try {
           if (response != null) {
+            CustomToast.showToast(response.message[0].message.toString());
             setState(() {
-              print("response---->" + response.message[0].message);
               count++;
             });
           } else {
-            print("response---->" + response.message[0].message);
-            EasyLoading.showError('Failed to save');
+            CustomToast.showToast(response.message[0].message.toString());
           }
         } catch (e) {
-          print("EasyLoading---?" + e.toString());
-          EasyLoading.showError(e.toString());
+          CustomToast.showToast(e.toString());
         }
       }
       for (int i = count - 1; i >= 0; i--) {
         await dataStore.deleteUser(index: i);
       }
       if (count == customerRegistrationList.length) {
-        EasyLoading.showSuccess('Great Success! \n Record Save');
         await SaveCusRegHiveDataStore.box.clear();
+       // CustomToast.showToast('Great Success! \n Record Save');
       }
       customerRegistrationList.removeRange(0, count);
-      await Future.delayed(Duration(seconds: 2));
-      //   Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      EasyLoading.dismiss();
+  //    CustomToast.showToast("Data saved successfully");
     }
   }
 
+  bool isLoading = false;
   Future fetchCustomerDataSingle({int index}) async {
     if (_checkOutBtnboth) {
+      setState(() {
+        isLoading = true;
+      });
       SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
       customerRegistrationList[index];
       saveCustRegReqModel = SaveCustRegReqModel(
@@ -194,7 +194,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         bankIfscCode: saveCustRegOffModel.bankIfscCode,
         chequeBankAccount: saveCustRegOffModel.chequeBankAccount,
         chequeNumber: saveCustRegOffModel.chequeNumber,
-        customerConsent: saveCustRegOffModel.customerConsent,
+        customerConsent: saveCustRegOffModel.customerConsentPhoto,
         depositeType: saveCustRegOffModel.depositeType,
         initialDepositeDate: saveCustRegOffModel.initialDepositeDate,
         initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus,
@@ -202,32 +202,39 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         nameOfBank: saveCustRegOffModel.nameOfBank,
         ownerConsent: saveCustRegOffModel.ownerConsent,
         payementBankName: saveCustRegOffModel.payementBankName,
-        backSideImg1: saveCustRegOffModel.backSide1,
-        backSideImg2: saveCustRegOffModel.backSide2,
-        backSideImg3: saveCustRegOffModel.backSide3,
-        canceledCheque: saveCustRegOffModel.canceledCheque,
+        backSideImg1: saveCustRegOffModel.backSidePhoto1,
+        backSideImg2: saveCustRegOffModel.backSidePhoto2,
+        backSideImg3: saveCustRegOffModel.backSidePhoto3,
+        canceledCheque: saveCustRegOffModel.canceledChequePhoto,
         chequePhoto: saveCustRegOffModel.chequePhoto,
         uploadCustomerPhoto: saveCustRegOffModel.uploadCustomerPhoto,
         uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto,
-        frontSideImg1: saveCustRegOffModel.documentUploads1,
-        frontSideImg2: saveCustRegOffModel.documentUploads2,
-        frontSideImg3: saveCustRegOffModel.documentUploads3,
+        frontSideImg1: saveCustRegOffModel.documentUploadsPhoto1,
+        frontSideImg2: saveCustRegOffModel.documentUploadsPhoto2,
+        frontSideImg3: saveCustRegOffModel.documentUploadsPhoto3,
         acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy,
         acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost,
         micr: saveCustRegOffModel.micr,
-        buildingNumber: "",
+        buildingNumber: saveCustRegOffModel.buildingNumber,
+
       );
       print(
           "saveCustRegReqModel--->" + saveCustRegReqModel.toJson().toString());
       var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
       print(response.toString());
       try {
-         if(response.success != null){
-           customerRegistrationList.removeAt(index);
+         if(response.message != null){
+           setState(() {
+             isLoading = false;
+           });
+          customerRegistrationList.removeAt(index);
           customerRegistrationBox.deleteAt(index);
-          CustomToast.showToast('Great Success! \n Record Save');
+          CustomToast.showToast(response.message[0].message);
         }
       } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
         CustomToast.showToast(e.toString());
       }
     }
@@ -268,7 +275,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                       textTitle: "WI-FI"),
                   _buildBox(
                     color: _checkOutBtnboth ? Colors.green : Colors.red,
-                    textTitle: "Submit",
+                    textTitle:isLoading ? "Loading" : "Submit",
                     onTap: () async {
                       fetchCustomerDataList();
                     },
@@ -278,195 +285,179 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
               SizedBox(
                 height: 15,
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: ValueListenableBuilder(
-                    valueListenable: customerRegistrationBox.listenable(),
-                    builder: (context, box, _) {
-                      return customerRegistrationList.length == 0
-                          ? const Center(child: Text("No Data Found"))
-                          : ListView.builder(
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          itemCount: customerRegistrationList.length,
-                          itemBuilder: (context, position) {
-                            SaveCustomerRegistrationOfflineModel
-                            getStudent =
-                            customerRegistrationList[position];
-                            return Visibility(
-                              visible: true,
-                              child: Card(
-                                elevation: 5,
-                                shadowColor: Colors.red,
-                                color: Colors.white,
-                                shape: Border(
-                                    left: BorderSide(color: Colors.red.withOpacity(.7), width: 3),
-                                    right: BorderSide(color: Colors.blue.shade900.withOpacity(.7), width: 3),
-                                ),
-                                child: Column(
-                                  children: [
-                                    ListTile(
-                                      title: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.end,
+              Stack(
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: ValueListenableBuilder(
+                        valueListenable: customerRegistrationBox.listenable(),
+                        builder: (context, box, _) {
+                          return customerRegistrationList.length == 0
+                              ? const Center(child: Text("No Data Found"))
+                              : ListView.builder(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              itemCount: customerRegistrationList.length,
+                              itemBuilder: (context, position) {
+                                SaveCustomerRegistrationOfflineModel
+                                getStudent =
+                                customerRegistrationList[position];
+                                return Visibility(
+                                  visible: true,
+                                  child: Card(
+                                    elevation: 5,
+                                    shadowColor: Colors.red,
+                                    color: Colors.white,
+                                    shape: Border(
+                                        left: BorderSide(color: Colors.red.withOpacity(.7), width: 3),
+                                        right: BorderSide(color: Colors.blue.shade900.withOpacity(.7), width: 3),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          title: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                "Records : ${position + 1}",
-                                                style: appbarHeadingStyle,
-                                              ),
-                                              Spacer(),
-                                               IconButton(
-                                                icon: Icon(
-                                                  Icons.sync,
-                                                  color: Colors.blue.shade900,
-                                                ),
-                                                onPressed: () =>
-                                                    fetchCustomerDataSingle(
-                                                        index: position),
-                                              ),
-                                              InkWell(
-                                                  onTap: () async {
-                                                    await showDialog(
-                                                      context: context,
-                                                      builder: (context) => Dialog(
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.all(18.0),
-                                                              child: Column(
-                                                                mainAxisSize: MainAxisSize.min,
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                                children: [
-                                                                  Text("HPCL DMA",style: TextStyle(fontWeight: FontWeight.bold),),
-                                                                  Text('Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
-                                                                  Row(
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    "Records : ${position + 1}",
+                                                    style: appbarHeadingStyle,
+                                                  ),
+                                                  Spacer(),
+                                                   IconButton(
+                                                    icon: Icon(
+                                                      Icons.sync,
+                                                      color: Colors.blue.shade900,
+                                                    ),
+                                                    onPressed: () =>
+                                                        fetchCustomerDataSingle(
+                                                            index: position),
+                                                  ),
+                                                  InkWell(
+                                                      onTap: () async {
+                                                        await showDialog(
+                                                          context: context,
+                                                          builder: (context) => Dialog(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.all(18.0),
+                                                                  child: Column(
                                                                     mainAxisSize: MainAxisSize.min,
                                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                                     children: [
-                                                                      Flexible(
-                                                                        child: ButtonWidget(
-                                                                          textButton: "Yes",
-                                                                          onPressed: () async {
-                                                                            Navigator.pop(context, false);
-                                                                            customerRegistrationList.removeAt(position);
-                                                                            customerRegistrationBox.deleteAt(position);
-                                                                          },
-                                                                        ),
-                                                                      ),
-                                                                      Flexible(
-                                                                        child: ButtonWidget(
-                                                                          textButton: "No",
-                                                                          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                                                                        ),
+                                                                      Text("HPCL DMA",style: TextStyle(fontWeight: FontWeight.bold),),
+                                                                      Text('Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
+                                                                      Row(
+                                                                        mainAxisSize: MainAxisSize.min,
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          Flexible(
+                                                                            child: ButtonWidget(
+                                                                              textButton: "Yes",
+                                                                              onPressed: () async {
+                                                                                Navigator.pop(context, false);
+                                                                                customerRegistrationList.removeAt(position);
+                                                                                customerRegistrationBox.deleteAt(position);
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                          Flexible(
+                                                                            child: ButtonWidget(
+                                                                              textButton: "No",
+                                                                              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                                                            ),
+                                                                          ),
+                                                                        ],
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                ],
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                    );
-                                                  },
-                                                  child: Icon(
-                                                    Icons.delete,
-                                                    size: 30,
-                                                    color: Colors
-                                                        .blue.shade900,
-                                                  )),
-                                              IconButton(
-                                                  icon: Icon(Icons.edit,
-                                                      color: Colors
-                                                          .blue.shade900),
-                                                  onPressed: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                MainRegisterPageUpdate(
-                                                                  isUpdate:
-                                                                  true,
-                                                                  position:
-                                                                  position,
-                                                                  studentModel:
-                                                                  getStudent,
-                                                                )));
-                                                  })
+                                                        );
+                                                      },
+                                                      child: Icon(
+                                                        Icons.delete,
+                                                        size: 30,
+                                                        color: Colors
+                                                            .blue.shade900,
+                                                      )),
+                                                  IconButton(
+                                                      icon: Icon(Icons.edit,
+                                                          color: Colors
+                                                              .blue.shade900),
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                    MainRegisterPageUpdate(
+                                                                      isUpdate:
+                                                                      true,
+                                                                      position:
+                                                                      position,
+                                                                      studentModel:
+                                                                      getStudent,
+                                                                    )));
+                                                      })
+                                                ],
+                                              ),
+                                              Divider(),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                  mainAxisSize:
+                                                  MainAxisSize.min,
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      "Mobile No",
+                                                      style: appbarHeadingStyle,
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      "${getStudent.mobileNumber}",
+                                                      style: appbarHeadingStyle,
+                                                    ),
+                                                  ]),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Divider(),
+                                              Row(
+                                                  mainAxisSize:
+                                                  MainAxisSize.min,
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      "STATUS",
+                                                      style: appbarHeadingStyle,
+                                                    ),
+                                                    Divider(),
+                                                  ]),
                                             ],
                                           ),
-                                          Divider(),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                              mainAxisSize:
-                                              MainAxisSize.min,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                  "Mobile No",
-                                                  style: appbarHeadingStyle,
-                                                ),
-                                                Spacer(),
-                                                Text(
-                                                  "${getStudent.mobileNumber}",
-                                                  style: appbarHeadingStyle,
-                                                ),
-                                              ]),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Divider(),
-                                          Row(
-                                              mainAxisSize:
-                                              MainAxisSize.min,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                  "STATUS",
-                                                  style: appbarHeadingStyle,
-                                                ),
-                                                Spacer(),
-                                                getStudent.complete == null
-                                                    ? Padding(
-                                                  padding:
-                                                  const EdgeInsets
-                                                      .all(8.0),
-                                                  child: Icon(
-                                                      Icons.close,
-                                                      color:
-                                                      Colors.red),
-                                                )
-                                                    : Padding(
-                                                  padding:
-                                                  const EdgeInsets
-                                                      .all(8.0),
-                                                  child: Icon(
-                                                    Icons
-                                                        .check_circle_sharp,
-                                                    color:
-                                                    Colors.green,
-                                                  ),
-                                                ),
-                                                Divider(),
-                                              ]),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          });
-                    }),
-              ),
+                                  ),
+                                );
+                              });
+                        }),
+                  ),
+                  isLoading ? Center(child: LoadingWidget()) :Container()
+                ],
+              )
+
             ],
           ),
         ),

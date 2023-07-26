@@ -15,6 +15,7 @@ class CustomerFormHelper {
     // String emailIdController,
     String propertyTypeId,
     String propertyClassId,
+    String buildingNumberController,
     String houseNumberController,
     String colonySocietyApartmentController,
     String streetNameController,
@@ -85,6 +86,10 @@ class CustomerFormHelper {
       }
       if (propertyClassId == "0") {
         CustomToast.showToast("Please select property class id");
+        return false;
+      }
+      if (buildingNumberController == "") {
+        CustomToast.showToast("Please enter the building number");
         return false;
       }
       if (houseNumberController == "") {

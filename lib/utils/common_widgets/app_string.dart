@@ -24,10 +24,12 @@ class AppStrings {
   static String addressLabel = star + 'Colony/Society/Apartment';
 
   static String reasonLabel = 'Reason';
+  static String buildingNumberLabel = star + 'Building Number';
   static String houseNumberLabel = star + 'House Number';
   static String apartmentLabel = star + 'Colony/Society/Apartment';
   static String streetNameLabel = star + 'Street Name';
   static String townLabel = 'Town';
+  static String ownerConsentLabel = 'Owner Consent';
   static String pinCodeLabel = star + 'Pin Code';
   static String districtLabel = star + 'District';
   static String mdpeAllowLabel = 'Society Allows MDPE';
@@ -62,10 +64,12 @@ class AppStrings {
   static String nocProofNoLabel = 'NOC Proof No';
   static String nocFrontImgLabel = 'NOC Front Img';
   static String nocBackImgLabel = 'NOC Back Img';
+  static String customerImgLabel = 'Customer  Img';
+  static String houseImgLabel = 'House Img';
   static String customerConsentLabel = "Customer Consent";
   static String securityDepositLabel = "Security Deposit";
-  static String consentPhotoLabel = star + 'Consent Photo';
-  static String chqCancelledPhotoLabel = 'Cancelled Cheque Photo';
+  static String consentPhotoLabel = star + 'Consent Img';
+  static String chqCancelledPhotoLabel = 'Cancelled Cheque Img';
   static String chqPhotoLabel = star + 'Cheque Photo';
   static String formStatusLabel = '';
   static String depositStatusLabel = star + 'Deposit Status';

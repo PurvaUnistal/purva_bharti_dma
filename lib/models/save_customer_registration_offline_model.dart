@@ -69,27 +69,27 @@ class SaveCustomerRegistrationOfflineModel{
   @HiveField(31)
   String kycDocument3;
   @HiveField(32)
-  String backSide1;
+  String backSidePhoto1;
   @HiveField(33)
-  String backSide2;
+  String backSidePhoto2;
   @HiveField(34)
-  String backSide3;
+  String backSidePhoto3;
   @HiveField(35)
-  String documentUploads1;
+  String documentUploadsPhoto1;
   @HiveField(36)
-  String documentUploads2;
+  String documentUploadsPhoto2;
   @HiveField(37)
-  String documentUploads3;
+  String documentUploadsPhoto3;
   @HiveField(38)
   String uploadCustomerPhoto;
   @HiveField(39)
   String uploadHousePhoto;
   @HiveField(40)
-  String canceledCheque;
+  String canceledChequePhoto;
   @HiveField(41)
   String chequePhoto;
   @HiveField(42)
-  String customerConsent;
+  String customerConsentPhoto;
   @HiveField(43)
   String nameOfBank;
   @HiveField(44)
@@ -131,13 +131,15 @@ class SaveCustomerRegistrationOfflineModel{
   @HiveField(62)
   String modeDepositValue;
   @HiveField(63)
-  bool complete;
+  String buildingNumber;
   @HiveField(64)
   String chargeArea;
   @HiveField(65)
   String billingModel;
   @HiveField(66)
   String streetName;
+  @HiveField(67)
+  String ownerConsentText;
 
   SaveCustomerRegistrationOfflineModel({
     this.areaId,
@@ -152,23 +154,23 @@ class SaveCustomerRegistrationOfflineModel{
     this.mobileNumber,
     this.schema,
     this.emailId,
-    this.backSide1,
-    this.backSide2,
-    this.backSide3,
+    this.backSidePhoto1,
+    this.backSidePhoto2,
+    this.backSidePhoto3,
+    this.documentUploadsPhoto1,
+    this.documentUploadsPhoto2,
+    this.documentUploadsPhoto3,
+    this.canceledChequePhoto,
+    this.customerConsentPhoto,
     this.bankAccountNumber,
     this.bankAddress,
     this.bankIfscCode,
-    this.canceledCheque,
     this.chequeBankAccount,
     this.chequeNumber,
-    this.customerConsent,
     this.depositeType,
     this.districtId,
     this.dmaUserId,
     this.dmaUserName,
-    this.documentUploads1,
-    this.documentUploads2,
-    this.documentUploads3,
     this.existingCookingFuel,
     this.guardianName,
     this.guardianType,
@@ -203,10 +205,11 @@ class SaveCustomerRegistrationOfflineModel{
     this.acceptExtraFittingCost,
     this.micr,
     this.modeDepositValue,
-    this.complete,
+    this.buildingNumber,
     this.chargeArea,
     this.billingModel,
     this.streetName,
+    this.ownerConsentText,
 
   });
 }

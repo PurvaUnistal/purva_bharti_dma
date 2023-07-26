@@ -30,23 +30,23 @@ class SaveCustomerRegistrationOfflineModelAdapter
       mobileNumber: fields[1] as String,
       schema: fields[23] as String,
       emailId: fields[7] as String,
-      backSide1: fields[32] as String,
-      backSide2: fields[33] as String,
-      backSide3: fields[34] as String,
+      backSidePhoto1: fields[32] as String,
+      backSidePhoto2: fields[33] as String,
+      backSidePhoto3: fields[34] as String,
       bankAccountNumber: fields[44] as String,
       bankAddress: fields[46] as String,
       bankIfscCode: fields[45] as String,
-      canceledCheque: fields[40] as String,
+      canceledChequePhoto: fields[40] as String,
       chequeBankAccount: fields[53] as String,
       chequeNumber: fields[54] as String,
-      customerConsent: fields[42] as String,
+      customerConsentPhoto: fields[42] as String,
       depositeType: fields[50] as String,
       districtId: fields[56] as String,
       dmaUserId: fields[25] as String,
       dmaUserName: fields[24] as String,
-      documentUploads1: fields[35] as String,
-      documentUploads2: fields[36] as String,
-      documentUploads3: fields[37] as String,
+      documentUploadsPhoto1: fields[35] as String,
+      documentUploadsPhoto2: fields[36] as String,
+      documentUploadsPhoto3: fields[37] as String,
       existingCookingFuel: fields[18] as String,
       guardianName: fields[6] as String,
       guardianType: fields[5] as String,
@@ -81,10 +81,11 @@ class SaveCustomerRegistrationOfflineModelAdapter
       acceptExtraFittingCost: fields[60] as String,
       micr: fields[61] as String,
       modeDepositValue: fields[62] as String,
-      complete: fields[63] as bool,
+      buildingNumber: fields[63] as String,
       chargeArea: fields[64] as String,
       billingModel: fields[65] as String,
       streetName: fields[66] as String,
+      ownerConsentText: fields[67] as String,
     );
   }
 
@@ -157,27 +158,27 @@ class SaveCustomerRegistrationOfflineModelAdapter
       ..writeByte(31)
       ..write(obj.kycDocument3)
       ..writeByte(32)
-      ..write(obj.backSide1)
+      ..write(obj.backSidePhoto1)
       ..writeByte(33)
-      ..write(obj.backSide2)
+      ..write(obj.backSidePhoto2)
       ..writeByte(34)
-      ..write(obj.backSide3)
+      ..write(obj.backSidePhoto3)
       ..writeByte(35)
-      ..write(obj.documentUploads1)
+      ..write(obj.documentUploadsPhoto1)
       ..writeByte(36)
-      ..write(obj.documentUploads2)
+      ..write(obj.documentUploadsPhoto2)
       ..writeByte(37)
-      ..write(obj.documentUploads3)
+      ..write(obj.documentUploadsPhoto3)
       ..writeByte(38)
       ..write(obj.uploadCustomerPhoto)
       ..writeByte(39)
       ..write(obj.uploadHousePhoto)
       ..writeByte(40)
-      ..write(obj.canceledCheque)
+      ..write(obj.canceledChequePhoto)
       ..writeByte(41)
       ..write(obj.chequePhoto)
       ..writeByte(42)
-      ..write(obj.customerConsent)
+      ..write(obj.customerConsentPhoto)
       ..writeByte(43)
       ..write(obj.nameOfBank)
       ..writeByte(44)
@@ -219,13 +220,15 @@ class SaveCustomerRegistrationOfflineModelAdapter
       ..writeByte(62)
       ..write(obj.modeDepositValue)
       ..writeByte(63)
-      ..write(obj.complete)
+      ..write(obj.buildingNumber)
       ..writeByte(64)
       ..write(obj.chargeArea)
       ..writeByte(65)
       ..write(obj.billingModel)
       ..writeByte(66)
-      ..write(obj.streetName);
+      ..write(obj.streetName)
+      ..writeByte(66)
+      ..write(obj.ownerConsentText);
   }
 
   @override
