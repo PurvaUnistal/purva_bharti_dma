@@ -186,7 +186,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 26-07-2023",
+                      "Date : 27-07-2023",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),

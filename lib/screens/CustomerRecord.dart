@@ -32,6 +32,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
   ApiIntegration apiIntegration;
   SaveCustRegReqModel saveCustRegReqModel;
 
+  bool isLoading = false;
   final SaveCusRegHiveDataStore dataStore = SaveCusRegHiveDataStore();
   ValueNotifier<bool> isUpdate = ValueNotifier<bool>(false);
 
@@ -51,6 +52,9 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
       for (int i = 0; i < customerRegistrationList.length; i++) {
         SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
         customerRegistrationList[i];
+        setState(() {
+          isLoading = true;
+        });
         saveCustRegReqModel = SaveCustRegReqModel(
           schema: saveCustRegOffModel.schema,
           interested: saveCustRegOffModel.interested,
@@ -121,14 +125,24 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         print(response.toString());
         try {
           if (response != null) {
-            CustomToast.showToast(response.message[0].message.toString());
+            setState(() {
+              isLoading = false;
+            });
             setState(() {
               count++;
             });
+            CustomToast.showToast(response.message[0].message.toString());
+
           } else {
+            setState(() {
+              isLoading = false;
+            });
             CustomToast.showToast(response.message[0].message.toString());
           }
         } catch (e) {
+          setState(() {
+            isLoading = false;
+          });
           CustomToast.showToast(e.toString());
         }
       }
@@ -144,7 +158,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
     }
   }
 
-  bool isLoading = false;
+
   Future fetchCustomerDataSingle({int index}) async {
     if (_checkOutBtnboth) {
       setState(() {

@@ -6,14 +6,19 @@ class LoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Card(
-        child: Padding(
+      child: AlertDialog(
+        title: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircularProgressIndicator(backgroundColor: Colors.blue.shade900),
+              CircularProgressIndicator(
+                  backgroundColor: Colors.blue.shade900,
+            valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
+
+
+        ),
               SizedBox(width: 8,),
               Text("Loading..." ,style: TextStyle(fontWeight: FontWeight.bold)),
             ],

@@ -544,7 +544,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                 _areaTypeId =  areaTypeValue == null ? _areaTypeId : areaTypeValue.id;
                 getAllDistrictId = districtValue == null ? getAllDistrictId : districtValue.id;
                 modeOfDepositId = modeDepositValue == null ? modeOfDepositId : modeDepositValue.id;
-                depositAmountController.text = _depositCategoryType == null ?  depositAmountController.text : _depositCategoryType.id;
+             //   depositAmountController.text = _depositCategoryType == null ?  depositAmountController.text : _depositCategoryType.id;
 
                 var textFieldValidationCheck =
                 CustomerFormHelper.textFieldValidationCheck(
@@ -622,422 +622,426 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
           return Container(
             height: 200,
             color: Colors.white,
-            child: ListView(
+            child: ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              children: [
-                _buildRow(
-                  leading: AppStrings.interestedLabel,
-                  trailing: _isInterestedItem.title,
-                ),
-                _buildRow(
-                  leading: AppStrings.reasonLabel,
-                  trailing: reasonController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.chargeAreaLabel,
-                  trailing: chargeAreaType.title ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.areaLabel,
-                  trailing: areaTypeValue.title ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.mobileNoLabel,
-                  trailing: mobileNoController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.firstNameLabel,
-                  trailing: firstNameController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.middleNameLabel,
-                  trailing: middleNameController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.lastNameLabel,
-                  trailing: lastNameController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.guardianTypeLabel,
-                  trailing: guardianTypeValue ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.guardianNameLabel,
-                  trailing: guardianNameController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.emailAddressLabel,
-                  trailing: emailIdController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.propertyCategoryLabel,
-                  trailing: categoryValue.title ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.propertyClassLabel,
-                  trailing: propertyClassValue.title ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.buildingNumberLabel,
-                  trailing: buildingNumberController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.houseNumberLabel,
-                  trailing: houseNumberController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.apartmentLabel,
-                  trailing:
-                  colonySocietyApartmentController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.streetNameLabel,
-                  trailing: streetNameController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.townLabel,
-                  trailing: townController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.pinCodeLabel,
-                  trailing: pinCodeController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.districtLabel,
-                  trailing: districtValue.title ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.mdpeAllowLabel,
-                  trailing: _mdpeValue ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.residentStatusLabel,
-                  trailing: _residentStatusValue ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.noOfKitchenLabel,
-                  trailing: kitchenController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.noOfBathroomLabel,
-                  trailing: bathroomController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.existingCookingFuelLabel,
-                  trailing: cookInFuelValue ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.noOfFamilyMembersLabel,
-                  trailing: familyMemController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.latitudeLabel,
-                  trailing: latitudeController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.longitudeLabel,
-                  trailing: longitudeController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.landmarkLabel,
-                  trailing: landmarkController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.identificationProofLabel,
-                  trailing: idProofValue.title ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.idProofNo,
-                  trailing: idProofNoController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.billingModeLabel,
-                  trailing: billingModeValue.title.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.customerAccountNoLabel,
-                  trailing: customerAccountNum.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.customerIfscCodeLabel,
-                  trailing: IFSCController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.conversionPolicyLabel,
-                  trailing: __acceptConversionPolicyValue.title ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.fittingCostLabel,
-                  trailing: acceptExtraFittingCostValue.title ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.depositStatusLabel,
-                  trailing: depositStatusValue.title ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.modeOfDepositLabel,
-                  trailing: modeDepositValue.title ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.depositTypeLabel,
-                  trailing: AppStrings.depositName.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.depositAmountControllerLabel,
-                  trailing: depositAmountController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.chqNoLabel,
-                  trailing: chqNOController.text.toString() ?? "-",
-                ),
-                _buildRow(
-                  leading: AppStrings.depositDateLabel,
-                  trailing: modeOfDepositId == "1"
-                      ? initDepDateController.text.trim().toString()
-                      : DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                ),
-                _buildRow(
-                  leading: AppStrings.customerBankNameLabel,
-                  trailing: _bankValue.toString() ?? "-",
-                ),
-                Visibility(
-                  visible: isDepositCheq,
-                  child: Column(
-                    children: [
-                      Divider(),
-                      _buildRow(
-                        leading: AppStrings.accountNoLabel,
-                        trailing: bankAccNoController.text.toString() ?? "-",
+              itemBuilder: (BuildContext context,int i){
+                return Column(
+                  children: [
+                    _buildRow(
+                      leading: AppStrings.interestedLabel,
+                      trailing: _isInterestedItem.title,
+                    ),
+                    _buildRow(
+                      leading: AppStrings.reasonLabel,
+                      trailing: reasonController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.chargeAreaLabel,
+                      trailing: chargeAreaType.title ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.areaLabel,
+                      trailing: areaTypeValue.title ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.mobileNoLabel,
+                      trailing: mobileNoController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.firstNameLabel,
+                      trailing: firstNameController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.middleNameLabel,
+                      trailing: middleNameController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.lastNameLabel,
+                      trailing: lastNameController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.guardianTypeLabel,
+                      trailing: guardianTypeValue ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.guardianNameLabel,
+                      trailing: guardianNameController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.emailAddressLabel,
+                      trailing: emailIdController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.propertyCategoryLabel,
+                      trailing: categoryValue.title ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.propertyClassLabel,
+                      trailing: propertyClassValue.title ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.buildingNumberLabel,
+                      trailing: buildingNumberController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.houseNumberLabel,
+                      trailing: houseNumberController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.apartmentLabel,
+                      trailing:
+                      colonySocietyApartmentController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.streetNameLabel,
+                      trailing: streetNameController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.townLabel,
+                      trailing: townController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.pinCodeLabel,
+                      trailing: pinCodeController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.districtLabel,
+                      trailing: districtValue.title ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.mdpeAllowLabel,
+                      trailing: _mdpeValue ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.residentStatusLabel,
+                      trailing: _residentStatusValue ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.noOfKitchenLabel,
+                      trailing: kitchenController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.noOfBathroomLabel,
+                      trailing: bathroomController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.existingCookingFuelLabel,
+                      trailing: cookInFuelValue ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.noOfFamilyMembersLabel,
+                      trailing: familyMemController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.latitudeLabel,
+                      trailing: latitudeController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.longitudeLabel,
+                      trailing: longitudeController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.landmarkLabel,
+                      trailing: landmarkController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.identificationProofLabel,
+                      trailing: idProofValue.title ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.idProofNo,
+                      trailing: idProofNoController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.billingModeLabel,
+                      trailing: billingModeValue.title.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.customerAccountNoLabel,
+                      trailing: customerAccountNum.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.customerIfscCodeLabel,
+                      trailing: IFSCController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.conversionPolicyLabel,
+                      trailing: __acceptConversionPolicyValue.title ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.fittingCostLabel,
+                      trailing: acceptExtraFittingCostValue.title ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.depositStatusLabel,
+                      trailing: depositStatusValue.title ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.modeOfDepositLabel,
+                      trailing: modeDepositValue.title ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.depositTypeLabel,
+                      trailing: AppStrings.depositName.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.depositAmountControllerLabel,
+                      trailing: depositAmountController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.chqNoLabel,
+                      trailing: chqNOController.text.toString() ?? "-",
+                    ),
+                    _buildRow(
+                      leading: AppStrings.depositDateLabel,
+                      trailing: modeOfDepositId == "1"
+                          ? initDepDateController.text.trim().toString()
+                          : DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                    ),
+                    _buildRow(
+                      leading: AppStrings.customerBankNameLabel,
+                      trailing: _bankValue.toString() ?? "-",
+                    ),
+                    Visibility(
+                      visible: isDepositCheq,
+                      child: Column(
+                        children: [
+                          Divider(),
+                          _buildRow(
+                            leading: AppStrings.accountNoLabel,
+                            trailing: bankAccNoController.text.toString() ?? "-",
+                          ),
+                          _buildRow(
+                            leading: AppStrings.bankNameLabel,
+                            trailing: _bankValue2.toString() ?? "-",
+                          ),
+                          _buildRow(
+                            leading: AppStrings.mICRCodeLabel,
+                            trailing: mICRCodeController.text.toString() ?? "-",
+                          ),
+                        ],
                       ),
-                      _buildRow(
-                        leading: AppStrings.bankNameLabel,
-                        trailing: _bankValue2.toString() ?? "-",
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              _imageNameWidget(
+                                  imageName: AppStrings.idFrontImgSide),
+                              frontImageFile != null && frontImageFile.isNotEmpty
+                                  ? ImageCircle(
+                                fileImage1: File(frontImageFile),
+                                pathImage: frontImageFile,
+                              )
+                                  :_localBorderImg()
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              _imageNameWidget(
+                                  imageName: AppStrings.idBackImgSide),
+                              backImageFile != null && backImageFile.isNotEmpty
+                                  ? ImageCircle(
+                                fileImage1: File(backImageFile),
+                                pathImage: backImageFile,
+                              )
+                                  :_localBorderImg()
+                            ],
+                          ),
+                        ],
                       ),
-                      _buildRow(
-                        leading: AppStrings.mICRCodeLabel,
-                        trailing: mICRCodeController.text.toString() ?? "-",
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              _imageNameWidget(
+                                  imageName: AppStrings.electricBillFrontImgLabel),
+                              electricBillFrontImgFile != null &&
+                                  electricBillFrontImgFile.isNotEmpty
+                                  ? ImageCircle(
+                                fileImage1: File(electricBillFrontImgFile),
+                                pathImage: electricBillFrontImgFile,
+                              )
+                                  :_localBorderImg()
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              _imageNameWidget(
+                                  imageName: AppStrings.electricBillBackImgLabel),
+                              electricBillBackImgFile != null &&
+                                  electricBillBackImgFile.isNotEmpty
+                                  ?  ImageCircle(
+                                fileImage1: File(electricBillBackImgFile),
+                                pathImage: electricBillBackImgFile,
+                              )
+                                  :_localBorderImg()
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              _imageNameWidget(
+                                  imageName: AppStrings.nocFrontImgLabel),
+                              nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
+                                  ?  ImageCircle(
+                                fileImage1: File(nocFrontImgFile),
+                                pathImage: nocFrontImgFile,
+                              )
+                                  :_localBorderImg()
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              _imageNameWidget(
+                                  imageName: AppStrings.nocBackImgLabel),
+                              nocBackImgFile != null && nocBackImgFile.isNotEmpty
+                                  ?  ImageCircle(
+                                fileImage1: File(nocBackImgFile),
+                                pathImage: nocBackImgFile,
+                              )
+                                  :_localBorderImg()
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              _imageNameWidget(
+                                  imageName: AppStrings.consentPhotoLabel),
+                              consentPhotoFile != null && consentPhotoFile.isNotEmpty
+                                  ?  ImageCircle(
+                                fileImage1: File(consentPhotoFile),
+                                pathImage: consentPhotoFile,
+                              )
+                                  :_localBorderImg()
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              _imageNameWidget(
+                                  imageName: AppStrings.chqCancelledPhotoLabel),
+                              chqCancelledPhotoFile != null &&
+                                  chqCancelledPhotoFile.isNotEmpty
+                                  ? ImageCircle(
+                                  fileImage1: File(chqCancelledPhotoFile),
+                                  pathImage: chqCancelledPhotoFile)
+                                  :_localBorderImg()
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              _imageNameWidget(
+                                  imageName: AppStrings.customerImgLabel),
+                              customerImgFile != null && customerImgFile.isNotEmpty
+                                  ?  ImageCircle(
+                                fileImage1: File(customerImgFile),
+                                pathImage: customerImgFile,
+                              )
+                                  :_localBorderImg()
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              _imageNameWidget(
+                                  imageName: AppStrings.houseImgLabel),
+                              houseImgFile != null &&
+                                  houseImgFile.isNotEmpty
+                                  ? ImageCircle(
+                                  fileImage1: File(houseImgFile),
+                                  pathImage: houseImgFile)
+                                  :_localBorderImg()
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
                         children: [
                           _imageNameWidget(
-                              imageName: AppStrings.idFrontImgSide),
-                          frontImageFile != null && frontImageFile.isNotEmpty
+                              imageName: AppStrings.ownerConsentLabel),
+                          ownerConsentImageFile != null &&
+                              ownerConsentImageFile.isNotEmpty
                               ? ImageCircle(
-                            fileImage1: File(frontImageFile),
-                            pathImage: frontImageFile,
-                          )
+                              fileImage1: File(ownerConsentImageFile),
+                              pathImage: ownerConsentImageFile)
                               :_localBorderImg()
                         ],
                       ),
-                      Column(
-                        children: [
-                          _imageNameWidget(
-                              imageName: AppStrings.idBackImgSide),
-                          backImageFile != null && backImageFile.isNotEmpty
-                              ? ImageCircle(
-                            fileImage1: File(backImageFile),
-                            pathImage: backImageFile,
-                          )
-                              :_localBorderImg()
-                        ],
+                    ),
+                    Visibility(
+                      visible: isDepositCheq,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
+                            chqPhotoFile != null && chqPhotoFile.isNotEmpty
+                                ?  ImageCircle(
+                              fileImage1: File(chqPhotoFile),
+                              pathImage: chqPhotoFile,
+                            )
+                                :_localBorderImg()
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        children: [
-                          _imageNameWidget(
-                              imageName: AppStrings.electricBillFrontImgLabel),
-                          electricBillFrontImgFile != null &&
-                              electricBillFrontImgFile.isNotEmpty
-                              ? ImageCircle(
-                            fileImage1: File(electricBillFrontImgFile),
-                            pathImage: electricBillFrontImgFile,
-                          )
-                              :_localBorderImg()
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          _imageNameWidget(
-                              imageName: AppStrings.electricBillBackImgLabel),
-                          electricBillBackImgFile != null &&
-                              electricBillBackImgFile.isNotEmpty
-                              ?  ImageCircle(
-                            fileImage1: File(electricBillBackImgFile),
-                            pathImage: electricBillBackImgFile,
-                          )
-                              :_localBorderImg()
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        children: [
-                          _imageNameWidget(
-                              imageName: AppStrings.nocFrontImgLabel),
-                          nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
-                              ?  ImageCircle(
-                            fileImage1: File(nocFrontImgFile),
-                            pathImage: nocFrontImgFile,
-                          )
-                              :_localBorderImg()
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          _imageNameWidget(
-                              imageName: AppStrings.nocBackImgLabel),
-                          nocBackImgFile != null && nocBackImgFile.isNotEmpty
-                              ?  ImageCircle(
-                            fileImage1: File(nocBackImgFile),
-                            pathImage: nocBackImgFile,
-                          )
-                              :_localBorderImg()
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        children: [
-                          _imageNameWidget(
-                              imageName: AppStrings.consentPhotoLabel),
-                          consentPhotoFile != null && consentPhotoFile.isNotEmpty
-                              ?  ImageCircle(
-                            fileImage1: File(consentPhotoFile),
-                            pathImage: consentPhotoFile,
-                          )
-                              :_localBorderImg()
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          _imageNameWidget(
-                              imageName: AppStrings.chqCancelledPhotoLabel),
-                          chqCancelledPhotoFile != null &&
-                              chqCancelledPhotoFile.isNotEmpty
-                              ? ImageCircle(
-                              fileImage1: File(chqCancelledPhotoFile),
-                              pathImage: chqCancelledPhotoFile)
-                              :_localBorderImg()
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        children: [
-                          _imageNameWidget(
-                              imageName: AppStrings.customerImgLabel),
-                          customerImgFile != null && customerImgFile.isNotEmpty
-                              ?  ImageCircle(
-                            fileImage1: File(customerImgFile),
-                            pathImage: customerImgFile,
-                          )
-                              :_localBorderImg()
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          _imageNameWidget(
-                              imageName: AppStrings.houseImgLabel),
-                          houseImgFile != null &&
-                              houseImgFile.isNotEmpty
-                              ? ImageCircle(
-                              fileImage1: File(houseImgFile),
-                              pathImage: houseImgFile)
-                              :_localBorderImg()
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      _imageNameWidget(
-                          imageName: AppStrings.ownerConsentLabel),
-                      ownerConsentImageFile != null &&
-                          ownerConsentImageFile.isNotEmpty
-                          ? ImageCircle(
-                          fileImage1: File(ownerConsentImageFile),
-                          pathImage: ownerConsentImageFile)
-                          :_localBorderImg()
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: isDepositCheq,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
+                    ),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-                        chqPhotoFile != null && chqPhotoFile.isNotEmpty
-                            ?  ImageCircle(
-                          fileImage1: File(chqPhotoFile),
-                          pathImage: chqPhotoFile,
+                        Flexible(
+                          child: ButtonWidget(
+                            onPressed: () {
+                              storeRecords();
+                            },
+                            textButton: "SAVE ",
+                          ),
+                        ),
+                        Flexible(
+                          child: ButtonWidget(
+                            textButton: "EDIT",
+                            onPressed: () {
+                              Navigator.pop(context, false);
+                            },
+                          ),
                         )
-                            :_localBorderImg()
                       ],
                     ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Flexible(
-                      child: ButtonWidget(
-                        onPressed: () {
-                          storeRecords();
-                        },
-                        textButton: "SAVE ",
-                      ),
-                    ),
-                    Flexible(
-                      child: ButtonWidget(
-                        textButton: "EDIT",
-                        onPressed: () {
-                          Navigator.pop(context, false);
-                        },
-                      ),
-                    )
                   ],
-                ),
-              ],
+                );
+              },
             ),
           );
         });
@@ -3364,7 +3368,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       ));
     });
     setState(() {
-//  code top to bottom chalta hau
       if (widget.isUpdate == true) {
         if (widget.studentModel.modeOfDeposite != null) {
           modeDepositValue = modeOfDepositList
