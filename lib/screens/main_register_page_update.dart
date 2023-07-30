@@ -3,8 +3,9 @@ import 'package:hpcl_app/HiveDataStore/customer_reg_data_store.dart';
 import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
 import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
 import 'package:hpcl_app/utils/common_widgets/photo_controller.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
 import '../ExportFile/export_file.dart';
 import '../utils/common_widgets/custom_app_bar.dart';
 import '../utils/common_widgets/open_image_source.dart';
@@ -22,7 +23,7 @@ class MainRegisterPageUpdate extends StatefulWidget {
   }
 }
 
-class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
+class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Customer editedCustomer;
   Position position;
   int gasDepositAmountController, depositTotalAmount = 0, _schemeMonth = 0;
@@ -111,8 +112,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
 
   @override
   void initState() {
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     getLocalData();
     serverApi = ServerApi();
     // firstNameController.addListener(() => removeSpace(firstNameController));
@@ -120,12 +120,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     //   firstNameController.addListener(() => firstNameController.text = firstNameController.text.replaceAll(" ", " "));
     middleNameController.addListener(() => removeSpace(middleNameController));
     lastNameController.addListener(() => removeSpace(lastNameController));
-    guardianNameController
-        .addListener(() => removeSpace(guardianNameController));
+    guardianNameController.addListener(() => removeSpace(guardianNameController));
     reasonController.addListener(() => removeSpace(reasonController));
     emailIdController.addListener(() => removeSpace(emailIdController));
-    colonySocietyApartmentController
-        .addListener(() => removeSpace(colonySocietyApartmentController));
+    colonySocietyApartmentController.addListener(() => removeSpace(colonySocietyApartmentController));
     streetNameController.addListener(() => removeSpace(streetNameController));
     townController.addListener(() => removeSpace(townController));
     landmarkController.addListener(() => removeSpace(landmarkController));
@@ -139,22 +137,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     mICRCodeController.addListener(() => removeSpace(mICRCodeController));
     initDepDateController.addListener(() => removeSpace(initDepDateController));
     initDepDateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    print("SDFGHUIOKJHGFHJKL"+initDepDateController.text);
+    print("SDFGHUIOKJHGFHJKL" + initDepDateController.text);
+    updateValue();
     super.initState();
   }
 
-  final SaveCusRegHiveDataStore dataStore = SaveCusRegHiveDataStore();
-  ValueNotifier<bool> isUpdate = ValueNotifier<bool>(false);
-
-  @override
-  void dispose() {
-    _connectivitySubscription.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget buildView(BuildContext context) {
-    if (widget.isUpdate == true) {
+  updateValue() {
+    if (widget.isUpdate) {
       mobileNoController.text = widget.studentModel.mobileNumber;
       firstNameController.text = widget.studentModel.firstName;
       middleNameController.text = widget.studentModel.middleName;
@@ -162,8 +151,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       guardianNameController.text = widget.studentModel.guardianName;
       reasonController.text = widget.studentModel.residentStatus;
       emailIdController.text = widget.studentModel.emailId;
-      colonySocietyApartmentController.text =
-          widget.studentModel.colonySocietyApartment;
+      colonySocietyApartmentController.text = widget.studentModel.colonySocietyApartment;
       streetNameController.text = widget.studentModel.streetName;
       townController.text = widget.studentModel.town;
       houseNumberController.text = widget.studentModel.houseNumber;
@@ -209,7 +197,19 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       dmaUserName = widget.studentModel.dmaUserName;
       dmaId = widget.studentModel.dmaUserId;
     }
+  }
 
+  final SaveCusRegHiveDataStore dataStore = SaveCusRegHiveDataStore();
+  ValueNotifier<bool> isUpdate = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget buildView(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
@@ -217,10 +217,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios_rounded),
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RegistrationForm()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationForm()));
               },
             ),
             titleAppBar: "Customer Input",
@@ -246,11 +243,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 
   TextEditingController mobileNoController = TextEditingController();
@@ -260,8 +255,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
   TextEditingController guardianNameController = TextEditingController();
   TextEditingController reasonController = TextEditingController();
   TextEditingController emailIdController = TextEditingController();
-  TextEditingController colonySocietyApartmentController =
-  TextEditingController();
+  TextEditingController colonySocietyApartmentController = TextEditingController();
   TextEditingController streetNameController = TextEditingController();
   TextEditingController townController = TextEditingController();
   TextEditingController buildingNumberController = TextEditingController();
@@ -309,7 +303,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
   List<DropdownMenuItem<String>> guardianTypeDropdownItems = ([]);
 
   String _depositStatusId = '';
-
 
   bool isDepositCheq = false;
 
@@ -457,14 +450,12 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
             _townWidget(),
             _districtWidget(),
             _pinCodeWidget(),
-            _isInterestedId == '1'
-                ? _residentStatusDropdownWidget()
-                : Container(),
+            _isInterestedId == '1' ? _residentStatusDropdownWidget() : Container(),
             _isInterestedId == '1' ? _noKitchenWidget() : Container(),
             _isInterestedId == '1' ? _noBathroomWidget() : Container(),
             _isInterestedId == '1' ? _fuelDropdownWidget() : Container(),
             _isInterestedId == '1' ? _noFamilyWidget() : Container(),
-       //     _ownerConsentWidget(),
+            //     _ownerConsentWidget(),
             _locationWidget(),
             _isInterestedId == '1' ? _landmarkWidget() : Container(),
             _buildCardWidget(text: AppStrings.identificationProofLabel),
@@ -511,16 +502,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding:
-                  const EdgeInsets.only(left: 12.0, top: 12, right: 15),
+                  padding: const EdgeInsets.only(left: 12.0, top: 12, right: 15),
                   child: Text(AppStrings.securityDepositLabel),
                 ),
                 Flexible(child: _depositStatusDropDown())
               ],
             ),
-            _depositStatusId != "1"
-                ? _reasonDepositStatusWidget()
-                : Container(),
+            _depositStatusId != "1" ? _reasonDepositStatusWidget() : Container(),
             _modeDepositDropDown(),
             getdepositTypeDropDown(),
             _depositAmountWidget(),
@@ -538,34 +526,29 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                 )),
 
             ButtonWidget(
-              textButton: widget.isUpdate == false ? "Preview" : "Update",
-              onPressed: ()  {
-                chargeAreaId =  chargeAreaType == null ? chargeAreaId : chargeAreaType.id;
-                _areaTypeId =  areaTypeValue == null ? _areaTypeId : areaTypeValue.id;
+              textButton: !widget.isUpdate ? "Preview" : "Update",
+              onPressed: () {
+                chargeAreaId = chargeAreaType == null ? chargeAreaId : chargeAreaType.id;
+                _areaTypeId = areaTypeValue == null ? _areaTypeId : areaTypeValue.id;
                 getAllDistrictId = districtValue == null ? getAllDistrictId : districtValue.id;
                 modeOfDepositId = modeDepositValue == null ? modeOfDepositId : modeDepositValue.id;
-             //   depositAmountController.text = _depositCategoryType == null ?  depositAmountController.text : _depositCategoryType.id;
+                //   depositAmountController.text = _depositCategoryType == null ?  depositAmountController.text : _depositCategoryType.id;
 
-                var textFieldValidationCheck =
-                CustomerFormHelper.textFieldValidationCheck(
+                var textFieldValidationCheck = CustomerFormHelper.textFieldValidationCheck(
                   titleLocation: latitudeController.text.trim().toString(),
-                  acceptConversionPolicyValueId:
-                  __acceptConversionPolicyValueId.toString(),
-                  acceptExtraFittingCostValueId:
-                  __acceptExtraFittingCostValueId.toString(),
+                  acceptConversionPolicyValueId: __acceptConversionPolicyValueId.toString(),
+                  acceptExtraFittingCostValueId: __acceptExtraFittingCostValueId.toString(),
                   chargeAreaType: chargeAreaId.toString(),
                   areaTypeId: _areaTypeId.toString(),
                   mobileNoController: mobileNoController.text.toString(),
                   firstNameController: firstNameController.text.toString(),
                   lastNameController: lastNameController.text.toString(),
-                  guardianNameController:
-                  guardianNameController.text.toString(),
+                  guardianNameController: guardianNameController.text.toString(),
                   propertyTypeId: categoryValue.toString(),
                   propertyClassId: propertyClassValue.toString(),
                   buildingNumberController: buildingNumberController.text.toString(),
                   houseNumberController: houseNumberController.text.toString(),
-                  colonySocietyApartmentController:
-                  colonySocietyApartmentController.text.toString(),
+                  colonySocietyApartmentController: colonySocietyApartmentController.text.toString(),
                   streetNameController: streetNameController.text.toString(),
                   district: getAllDistrictId.toString(),
                   pinCodeController: pinCodeController.text.toString(),
@@ -583,29 +566,22 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                   customerIfscCode: IFSCController.text.trim().toString(),
                   customerBankAdd: bank_address.text.trim().toString(),
                   modeOfDeposit: modeOfDepositId.toString(),
-                  chequeNo: modeOfDepositId == "1"
-                      ? chqNOController.text.trim().toString()
-                      : "",
-                  chequeDate: modeOfDepositId == "1"
-                      ? initDepDateController.text.trim().toString()
-                      : DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                  chequeNo: modeOfDepositId == "1" ? chqNOController.text.trim().toString() : "",
+                  chequeDate: modeOfDepositId == "1" ? initDepDateController.text.trim().toString() : DateFormat('yyyy-MM-dd').format(DateTime.now()),
                   bankName: _bankValue2,
                   bankAccNo: bankAccNoController.text.trim().toString(),
                   depositAmount: AppStrings.depositAmount,
-                  micrCode: modeOfDepositId == "1"
-                      ? mICRCodeController.text.trim().toString()
-                      : "",
+                  micrCode: modeOfDepositId == "1" ? mICRCodeController.text.trim().toString() : "",
                   chequePhoto: modeOfDepositId == "1" ? chqPhotoFile : null,
                   mdpeValue: _mdpeValue,
                   residentStatusValue: _residentStatusValue,
                 );
-                if(formGlobalKey.currentState.validate()){
+                if (formGlobalKey.currentState.validate()) {
                   formGlobalKey.currentState.save();
                   if (textFieldValidationCheck == true) {
                     _showDialog();
                   }
                 }
-
               },
             ),
           ],
@@ -613,20 +589,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       ),
     );
   }
+
   _showDialog() {
     return showDialog(
         context: context,
         builder: (
-            context,
-            ) {
+          context,
+        ) {
           return Container(
-            height: 200,
-            color: Colors.white,
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context,int i){
-                return Column(
+              height: 200,
+              color: Colors.white,
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
                     _buildRow(
                       leading: AppStrings.interestedLabel,
@@ -690,8 +664,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                     ),
                     _buildRow(
                       leading: AppStrings.apartmentLabel,
-                      trailing:
-                      colonySocietyApartmentController.text.toString() ?? "-",
+                      trailing: colonySocietyApartmentController.text.toString() ?? "-",
                     ),
                     _buildRow(
                       leading: AppStrings.streetNameLabel,
@@ -795,9 +768,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                     ),
                     _buildRow(
                       leading: AppStrings.depositDateLabel,
-                      trailing: modeOfDepositId == "1"
-                          ? initDepDateController.text.trim().toString()
-                          : DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                      trailing: modeOfDepositId == "1" ? initDepDateController.text.trim().toString() : DateFormat('yyyy-MM-dd').format(DateTime.now()),
                     ),
                     _buildRow(
                       leading: AppStrings.customerBankNameLabel,
@@ -830,26 +801,24 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                         children: [
                           Column(
                             children: [
-                              _imageNameWidget(
-                                  imageName: AppStrings.idFrontImgSide),
+                              _imageNameWidget(imageName: AppStrings.idFrontImgSide),
                               frontImageFile != null && frontImageFile.isNotEmpty
                                   ? ImageCircle(
-                                fileImage1: File(frontImageFile),
-                                pathImage: frontImageFile,
-                              )
-                                  :_localBorderImg()
+                                      fileImage1: File(frontImageFile),
+                                      pathImage: frontImageFile,
+                                    )
+                                  : _localBorderImg()
                             ],
                           ),
                           Column(
                             children: [
-                              _imageNameWidget(
-                                  imageName: AppStrings.idBackImgSide),
+                              _imageNameWidget(imageName: AppStrings.idBackImgSide),
                               backImageFile != null && backImageFile.isNotEmpty
                                   ? ImageCircle(
-                                fileImage1: File(backImageFile),
-                                pathImage: backImageFile,
-                              )
-                                  :_localBorderImg()
+                                      fileImage1: File(backImageFile),
+                                      pathImage: backImageFile,
+                                    )
+                                  : _localBorderImg()
                             ],
                           ),
                         ],
@@ -862,28 +831,24 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                         children: [
                           Column(
                             children: [
-                              _imageNameWidget(
-                                  imageName: AppStrings.electricBillFrontImgLabel),
-                              electricBillFrontImgFile != null &&
-                                  electricBillFrontImgFile.isNotEmpty
+                              _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
+                              electricBillFrontImgFile != null && electricBillFrontImgFile.isNotEmpty
                                   ? ImageCircle(
-                                fileImage1: File(electricBillFrontImgFile),
-                                pathImage: electricBillFrontImgFile,
-                              )
-                                  :_localBorderImg()
+                                      fileImage1: File(electricBillFrontImgFile),
+                                      pathImage: electricBillFrontImgFile,
+                                    )
+                                  : _localBorderImg()
                             ],
                           ),
                           Column(
                             children: [
-                              _imageNameWidget(
-                                  imageName: AppStrings.electricBillBackImgLabel),
-                              electricBillBackImgFile != null &&
-                                  electricBillBackImgFile.isNotEmpty
-                                  ?  ImageCircle(
-                                fileImage1: File(electricBillBackImgFile),
-                                pathImage: electricBillBackImgFile,
-                              )
-                                  :_localBorderImg()
+                              _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
+                              electricBillBackImgFile != null && electricBillBackImgFile.isNotEmpty
+                                  ? ImageCircle(
+                                      fileImage1: File(electricBillBackImgFile),
+                                      pathImage: electricBillBackImgFile,
+                                    )
+                                  : _localBorderImg()
                             ],
                           ),
                         ],
@@ -896,26 +861,24 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                         children: [
                           Column(
                             children: [
-                              _imageNameWidget(
-                                  imageName: AppStrings.nocFrontImgLabel),
+                              _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
                               nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
-                                  ?  ImageCircle(
-                                fileImage1: File(nocFrontImgFile),
-                                pathImage: nocFrontImgFile,
-                              )
-                                  :_localBorderImg()
+                                  ? ImageCircle(
+                                      fileImage1: File(nocFrontImgFile),
+                                      pathImage: nocFrontImgFile,
+                                    )
+                                  : _localBorderImg()
                             ],
                           ),
                           Column(
                             children: [
-                              _imageNameWidget(
-                                  imageName: AppStrings.nocBackImgLabel),
+                              _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
                               nocBackImgFile != null && nocBackImgFile.isNotEmpty
-                                  ?  ImageCircle(
-                                fileImage1: File(nocBackImgFile),
-                                pathImage: nocBackImgFile,
-                              )
-                                  :_localBorderImg()
+                                  ? ImageCircle(
+                                      fileImage1: File(nocBackImgFile),
+                                      pathImage: nocBackImgFile,
+                                    )
+                                  : _localBorderImg()
                             ],
                           ),
                         ],
@@ -928,26 +891,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                         children: [
                           Column(
                             children: [
-                              _imageNameWidget(
-                                  imageName: AppStrings.consentPhotoLabel),
+                              _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
                               consentPhotoFile != null && consentPhotoFile.isNotEmpty
-                                  ?  ImageCircle(
-                                fileImage1: File(consentPhotoFile),
-                                pathImage: consentPhotoFile,
-                              )
-                                  :_localBorderImg()
+                                  ? ImageCircle(
+                                      fileImage1: File(consentPhotoFile),
+                                      pathImage: consentPhotoFile,
+                                    )
+                                  : _localBorderImg()
                             ],
                           ),
                           Column(
                             children: [
-                              _imageNameWidget(
-                                  imageName: AppStrings.chqCancelledPhotoLabel),
-                              chqCancelledPhotoFile != null &&
-                                  chqCancelledPhotoFile.isNotEmpty
-                                  ? ImageCircle(
-                                  fileImage1: File(chqCancelledPhotoFile),
-                                  pathImage: chqCancelledPhotoFile)
-                                  :_localBorderImg()
+                              _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
+                              chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty
+                                  ? ImageCircle(fileImage1: File(chqCancelledPhotoFile), pathImage: chqCancelledPhotoFile)
+                                  : _localBorderImg()
                             ],
                           ),
                         ],
@@ -960,26 +918,19 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                         children: [
                           Column(
                             children: [
-                              _imageNameWidget(
-                                  imageName: AppStrings.customerImgLabel),
+                              _imageNameWidget(imageName: AppStrings.customerImgLabel),
                               customerImgFile != null && customerImgFile.isNotEmpty
-                                  ?  ImageCircle(
-                                fileImage1: File(customerImgFile),
-                                pathImage: customerImgFile,
-                              )
-                                  :_localBorderImg()
+                                  ? ImageCircle(
+                                      fileImage1: File(customerImgFile),
+                                      pathImage: customerImgFile,
+                                    )
+                                  : _localBorderImg()
                             ],
                           ),
                           Column(
                             children: [
-                              _imageNameWidget(
-                                  imageName: AppStrings.houseImgLabel),
-                              houseImgFile != null &&
-                                  houseImgFile.isNotEmpty
-                                  ? ImageCircle(
-                                  fileImage1: File(houseImgFile),
-                                  pathImage: houseImgFile)
-                                  :_localBorderImg()
+                              _imageNameWidget(imageName: AppStrings.houseImgLabel),
+                              houseImgFile != null && houseImgFile.isNotEmpty ? ImageCircle(fileImage1: File(houseImgFile), pathImage: houseImgFile) : _localBorderImg()
                             ],
                           ),
                         ],
@@ -989,14 +940,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          _imageNameWidget(
-                              imageName: AppStrings.ownerConsentLabel),
-                          ownerConsentImageFile != null &&
-                              ownerConsentImageFile.isNotEmpty
-                              ? ImageCircle(
-                              fileImage1: File(ownerConsentImageFile),
-                              pathImage: ownerConsentImageFile)
-                              :_localBorderImg()
+                          _imageNameWidget(imageName: AppStrings.ownerConsentLabel),
+                          ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
+                              ? ImageCircle(fileImage1: File(ownerConsentImageFile), pathImage: ownerConsentImageFile)
+                              : _localBorderImg()
                         ],
                       ),
                     ),
@@ -1009,11 +956,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                           children: [
                             _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
                             chqPhotoFile != null && chqPhotoFile.isNotEmpty
-                                ?  ImageCircle(
-                              fileImage1: File(chqPhotoFile),
-                              pathImage: chqPhotoFile,
-                            )
-                                :_localBorderImg()
+                                ? ImageCircle(
+                                    fileImage1: File(chqPhotoFile),
+                                    pathImage: chqPhotoFile,
+                                  )
+                                : _localBorderImg()
                           ],
                         ),
                       ),
@@ -1040,16 +987,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                       ],
                     ),
                   ],
-                );
-              },
-            ),
-          );
+                ),
+              ));
         });
   }
 
   Future<void> storeRecords() async {
-    SaveCustomerRegistrationOfflineModel data =
-    SaveCustomerRegistrationOfflineModel(
+    SaveCustomerRegistrationOfflineModel data = SaveCustomerRegistrationOfflineModel(
       interested: _isInterestedId.toString(),
       areaId: areaTypeValue.id.toString(),
       chargeArea: chargeAreaType.id.toString(),
@@ -1096,7 +1040,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       kycDocument3Number: nocProofNoController.text.toString(),
       kycDocument2: _addressProofDropDownValueId,
       kycDocument2Number: ownershipController.text.toString(),
-      billingModel:billingModeId,
+      billingModel: billingModeId,
       bankAccountNumber: customerAccountNum.text,
       bankIfscCode: IFSCController.text.toString(),
       bankAddress: bank_address.text.toString(),
@@ -1107,20 +1051,18 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       depositeType: _depositCategoryType.id.toString(),
       initialAmount: depositAmountController.text.toString(),
       chequeNumber: chqNOController.text.toString(),
-      initialDepositeDate: modeOfDepositId == "1"
-          ? initDepDateController.text.trim().toString()
-          : DateFormat('yyyy-MM-dd').format(DateTime.now()),
-      nameOfBank:_bankValue,
-      payementBankName:_bankValue2 ?? "",
+      initialDepositeDate: modeOfDepositId == "1" ? initDepDateController.text.trim().toString() : DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      nameOfBank: _bankValue,
+      payementBankName: _bankValue2 ?? "",
       chequeBankAccount: bankAccNoController.text.toString(),
       micr: mICRCodeController.text.toString(),
       schema: schema,
       dmaUserName: dmaUserName,
       dmaUserId: dmaId,
-      buildingNumber:  buildingNumberController.text.trim().toString(),
+      buildingNumber: buildingNumberController.text.trim().toString(),
       ownerConsentText: ownerConsentController.text.trim().toString(),
     );
-    print("initialDepositeDatefghj"+data.initialDepositeDate.toString());
+    print("initialDepositeDatefghj" + data.initialDepositeDate.toString());
     if (widget.isUpdate) {
       var box = await Hive.openBox<SaveCustomerRegistrationOfflineModel>("saveCustRegDataBoxName");
       box.putAt(widget.position, data);
@@ -1134,8 +1076,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         CustomToast.showToast('Error !!!! \n Please Uploade Previous record');
       }
     }
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (_) => RegistrationForm()), (r) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => RegistrationForm()), (r) => false);
   }
 
   Widget _interestedDropDown() {
@@ -1211,7 +1152,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       textInputType: TextInputType.text,
       controller: reasonController,
       hintText: AppStrings.reasonLabel,
-      validator: (value){
+      validator: (value) {
         if (value != reasonController.text.trim()) {
           return "Not allow black Space";
         }
@@ -1307,9 +1248,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.middleNameLabel,
       controller: middleNameController,
       textInputType: TextInputType.text,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
-      validator: (value){
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
+      validator: (value) {
         if (value != middleNameController.text.trim()) {
           return "Not allow black Space";
         }
@@ -1324,8 +1264,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.lastNameLabel,
       controller: lastNameController,
       textInputType: TextInputType.text,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
         if (value != lastNameController.text.trim()) {
           return "Not allow black Space";
@@ -1339,6 +1278,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       },
     );
   }
+
   Widget _guardianTypeDropDown() {
     return ReusedDropDownString(
       textLabel: AppStrings.guardianTypeLabel,
@@ -1357,8 +1297,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.guardianNameLabel,
       controller: guardianNameController,
       textInputType: TextInputType.text,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
         if (value != guardianNameController.text.trim()) {
           return "Not allow black Space";
@@ -1387,7 +1326,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
       ],
-      validator: (value){
+      validator: (value) {
         if (value != emailIdController.text.trim()) {
           return "Not allow black Space";
         }
@@ -1431,7 +1370,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.depositAmountControllerLabel,
       controller: depositAmountController,
       textInputType: TextInputType.number,
-      validator: (value){
+      validator: (value) {
         if (value != depositAmountController.text.trim()) {
           return "Not allow black Space";
         }
@@ -1442,53 +1381,46 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
 
   getdepositTypeDropDown() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0,right: 12),
+      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0, right: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
             flex: 4,
             child: DropdownButtonFormField<DepositItem>(
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal, fontSize: 12),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
-                  borderSide: BorderSide(width: 1,color: Colors.green),
+                  borderSide: BorderSide(width: 1, color: Colors.green),
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
-                  borderSide: BorderSide(width: 1,color: Colors.grey),
+                  borderSide: BorderSide(width: 1, color: Colors.grey),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
-                  borderSide: BorderSide(width: 1,color: Colors.green),
+                  borderSide: BorderSide(width: 1, color: Colors.green),
                 ),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(4)),
-                    borderSide: BorderSide(width: 1,)
-                ),
-                errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                    borderSide: BorderSide(width: 1,color: Colors.red)
-                ),
+                    borderSide: BorderSide(
+                      width: 1,
+                    )),
+                errorBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4)), borderSide: BorderSide(width: 1, color: Colors.red)),
                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
               ),
               items: _propertyDropdownItemsDeposit,
               value: _depositCategoryType,
               hint: Text(
                 AppStrings.depositTypeLabel,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.normal),
+                style: TextStyle(color: Colors.black, fontFamily: 'Montserrat', fontWeight: FontWeight.normal),
               ),
               onChanged: (DepositItem value) {
                 setState(() {
                   _depositCategoryType = value;
                   _schemeMonth = value.schememonth;
-                  print("_schemeMonth-->"+_schemeMonth.toString());
+                  print("_schemeMonth-->" + _schemeMonth.toString());
                   if (_schemeMonth > 0) {
                     _depositCategoryType = value;
                     depositAmountController.text = value.firstamount.toString();
@@ -1505,15 +1437,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                   AppStrings.schemeType = value.scheme_type;
                   AppStrings.schemeCode = value.scheme_code;
                   AppStrings.depositAmount = value.deposit_amount;
-                  AppStrings.equipmentDepositAmount =
-                      value.equipment_deposit_amount;
+                  AppStrings.equipmentDepositAmount = value.equipment_deposit_amount;
                   AppStrings.interestAmount = value.interest_amount;
                   AppStrings.registrationGST = value.registration_gst;
                   AppStrings.interestTaxAmt = value.interest_tax_amt;
                   AppStrings.totalAmount = value.totalAmount;
                   AppStrings.nextCycleAmount = value.nextCycleAmount;
-                  AppStrings.registrationTaxName =
-                      value.registration_tax_name;
+                  AppStrings.registrationTaxName = value.registration_tax_name;
                   depositTotalAmount = value.total_amount;
                   AppStrings.interestTaxAmt = value.interest_tax_amt;
                   AppStrings.regTax = value.reg_tax;
@@ -1538,10 +1468,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
           Flexible(
             flex: 2,
             child: ButtonWidget(
-                textButton :"Detail",
+                textButton: "Detail",
                 onPressed: () {
-                  _showdepositAmountControllerDialog(
-                      AppStrings.msgSchemeDetail);
+                  _showdepositAmountControllerDialog(AppStrings.msgSchemeDetail);
                 }),
           )
         ],
@@ -1551,10 +1480,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
 
   getDepositDetailButton(title, {alignment}) {
     return ButtonWidget(
-        textButton :title,
+        textButton: title,
         onPressed: () {
-          _showdepositAmountControllerDialog(
-              AppStrings.msgSchemeDetail);
+          _showdepositAmountControllerDialog(AppStrings.msgSchemeDetail);
         });
   }
 
@@ -1589,7 +1517,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.houseNumberLabel,
       controller: houseNumberController,
       textInputType: TextInputType.text,
-      validator: (value){
+      validator: (value) {
         if (value != houseNumberController.text.trim()) {
           return "Not allow black Space";
         } else if (value.isEmpty) {
@@ -1609,10 +1537,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.buildingNumberLabel,
       controller: buildingNumberController,
       textInputType: TextInputType.text,
-      validator: (value){
+      validator: (value) {
         if (value != buildingNumberController.text.trim()) {
           return "Not allow black Space";
-        }else if (value.isEmpty) {
+        } else if (value.isEmpty) {
           return "Please enter building number";
         }
         return null;
@@ -1669,10 +1597,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.townLabel,
       controller: townController,
       textInputType: TextInputType.name,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
-      ],
-      validator: (value){
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
+      validator: (value) {
         if (value != townController.text.trim()) {
           return "Not allow black Space";
         }
@@ -1725,7 +1651,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: kitchenController,
       textInputType: TextInputType.number,
       maxLength: 2,
-
     );
   }
 
@@ -1760,10 +1685,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
             hintText: AppStrings.ownerConsentLabel,
             controller: ownerConsentController,
             textInputType: TextInputType.text,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
-            ],
-            validator: (value){
+            inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
+            validator: (value) {
               if (value != ownerConsentController.text.trim()) {
                 return "Not allow black Space";
               }
@@ -1794,10 +1717,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
                 textButton: AppStrings.getLocationLabel,
                 onPressed: () async {
                   Position position = await _getCurrentLocation();
-                  latitudeController.text =
-                      position.latitude.toStringAsFixed(3);
-                  longitudeController.text =
-                      position.longitude.toStringAsFixed(3);
+                  latitudeController.text = position.latitude.toStringAsFixed(3);
+                  longitudeController.text = position.longitude.toStringAsFixed(3);
                 },
               ),
             ),
@@ -1830,7 +1751,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.landmarkLabel,
       controller: landmarkController,
       textInputType: TextInputType.text,
-      validator: (value){
+      validator: (value) {
         if (value != landmarkController.text.trim()) {
           return "Not allow black Space";
         }
@@ -1922,8 +1843,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
   }
 
   /////////////////////////////  image 1 ///////////////////////////////////////
-  Future<void> _openOwnerConsentImageSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openOwnerConsentImageSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -1931,25 +1851,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getOwnerConsentImage(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getOwnerConsentImage(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getOwnerConsentImage(
-                photoController: controller, imageSource: ImageSource.camera);
+            getOwnerConsentImage(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getOwnerConsentImage(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getOwnerConsentImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           ownerConsentImageFile = pickedFile.path;
@@ -1960,34 +1876,29 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openFrontImageSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openFrontImageSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return OpenImageSource(
-          onTapGallery: () {
+          onTapGallery: () async {
             Navigator.of(context).pop();
-            getFrontImage(
-                photoController: controller, imageSource: ImageSource.gallery);
+            await getFrontImage(photoController: controller, imageSource: ImageSource.gallery);
           },
-          onTapCamera: () {
+          onTapCamera: () async {
             Navigator.of(context).pop();
-            getFrontImage(
-                photoController: controller, imageSource: ImageSource.camera);
+            await getFrontImage(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getFrontImage(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getFrontImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           frontImageFile = pickedFile.path;
@@ -1999,8 +1910,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openBackImageSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openBackImageSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -2008,25 +1918,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getBackImage(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getBackImage(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getBackImage(
-                photoController: controller, imageSource: ImageSource.camera);
+            getBackImage(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getBackImage(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getBackImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           backImageFile = pickedFile.path;
@@ -2038,8 +1944,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openEleBillFrontSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openEleBillFrontSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -2047,25 +1952,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getEleBillFrontImage(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getEleBillFrontImage(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getEleBillFrontImage(
-                photoController: controller, imageSource: ImageSource.camera);
+            getEleBillFrontImage(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getEleBillFrontImage(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getEleBillFrontImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           electricBillFrontImgFile = pickedFile.path;
@@ -2077,8 +1978,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openEleBackSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openEleBackSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -2086,25 +1986,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getEleBackImage(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getEleBackImage(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getEleBackImage(
-                photoController: controller, imageSource: ImageSource.camera);
+            getEleBackImage(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getEleBackImage(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getEleBackImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           electricBillBackImgFile = pickedFile.path;
@@ -2116,8 +2012,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openNocFrontImgSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openNocFrontImgSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -2125,25 +2020,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getNocFrontImgImage(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getNocFrontImgImage(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getNocFrontImgImage(
-                photoController: controller, imageSource: ImageSource.camera);
+            getNocFrontImgImage(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getNocFrontImgImage(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getNocFrontImgImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           nocFrontImgFile = pickedFile.path;
@@ -2155,8 +2046,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openNocBackImgSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openNocBackImgSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -2164,25 +2054,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getNocBackImgImage(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getNocBackImgImage(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getNocBackImgImage(
-                photoController: controller, imageSource: ImageSource.camera);
+            getNocBackImgImage(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getNocBackImgImage(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getNocBackImgImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           nocBackImgFile = pickedFile.path;
@@ -2194,8 +2080,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openCustomerImgSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openCustomerImgSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -2203,25 +2088,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getCustomerImage(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getCustomerImage(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getCustomerImage(
-                photoController: controller, imageSource: ImageSource.camera);
+            getCustomerImage(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getCustomerImage(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getCustomerImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           customerImgFile = pickedFile.path;
@@ -2233,8 +2114,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openHouseImgSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openHouseImgSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -2242,25 +2122,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getHouseImg(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getHouseImg(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getHouseImg(
-                photoController: controller, imageSource: ImageSource.camera);
+            getHouseImg(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getHouseImg(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getHouseImg({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           houseImgFile = pickedFile.path;
@@ -2272,8 +2148,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openConsentImgSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openConsentImgSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -2281,25 +2156,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getConsentImgImage(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getConsentImgImage(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getConsentImgImage(
-                photoController: controller, imageSource: ImageSource.camera);
+            getConsentImgImage(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getConsentImgImage(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getConsentImgImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           consentPhotoFile = pickedFile.path;
@@ -2311,8 +2182,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openChqCancelledImgSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openChqCancelledImgSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -2320,25 +2190,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getChqCancelledImg(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getChqCancelledImg(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getChqCancelledImg(
-                photoController: controller, imageSource: ImageSource.camera);
+            getChqCancelledImg(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getChqCancelledImg(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getChqCancelledImg({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           chqCancelledPhotoFile = pickedFile.path;
@@ -2350,8 +2216,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     }
   }
 
-  Future<void> _openChqImgSource(
-      {BuildContext context, PhotoController controller}) async {
+  Future<void> _openChqImgSource({BuildContext context, PhotoController controller}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -2359,25 +2224,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
         return OpenImageSource(
           onTapGallery: () {
             Navigator.of(context).pop();
-            getChqImg(
-                photoController: controller, imageSource: ImageSource.gallery);
+            getChqImg(photoController: controller, imageSource: ImageSource.gallery);
           },
           onTapCamera: () {
             Navigator.of(context).pop();
-            getChqImg(
-                photoController: controller, imageSource: ImageSource.camera);
+            getChqImg(photoController: controller, imageSource: ImageSource.camera);
           },
         );
       },
     );
   }
 
-  Future<void> getChqImg(
-      {PhotoController photoController, ImageSource imageSource}) async {
+  Future<void> getChqImg({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-          source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
       if (pickedFile != null || photoController != null) {
         setState(() {
           chqPhotoFile = pickedFile.path;
@@ -2394,26 +2255,19 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       children: [
         _imageNameWidget(imageName: AppStrings.ownerConsentLabel),
         InkWell(
-            onTap: () => _openOwnerConsentImageSource(
-                context: context, controller: ownerConsentImageController),
-            child: ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
-                ? _fileImage(fileImage: File(ownerConsentImageFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openOwnerConsentImageSource(context: context, controller: ownerConsentImageController),
+            child: ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty ? _fileImage(fileImage: File(ownerConsentImageFile)) : _localBorderImg()),
       ],
     );
   }
+
   Widget _frontImageWidget() {
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.idFrontImgSide),
         InkWell(
-            onTap: () => _openFrontImageSource(
-                context: context, controller: frontImageController),
-            child: frontImageFile != null && frontImageFile.isNotEmpty
-                ? _fileImage(fileImage: File(frontImageFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openFrontImageSource(context: context, controller: frontImageController),
+            child: frontImageFile != null && frontImageFile.isNotEmpty ? _fileImage(fileImage: File(frontImageFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2423,12 +2277,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       children: [
         _imageNameWidget(imageName: AppStrings.idBackImgSide),
         InkWell(
-            onTap: () => _openBackImageSource(
-                context: context, controller: backImageController),
-            child: backImageFile != null && backImageFile.isNotEmpty
-                ? _fileImage(fileImage: File(backImageFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openBackImageSource(context: context, controller: backImageController),
+            child: backImageFile != null && backImageFile.isNotEmpty ? _fileImage(fileImage: File(backImageFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2438,13 +2288,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       children: [
         _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
         InkWell(
-            onTap: () => _openEleBillFrontSource(
-                context: context, controller: eleBillFrontImgController),
-            child: electricBillFrontImgFile != null &&
-                electricBillFrontImgFile.isNotEmpty
-                ? _fileImage(fileImage: File(electricBillFrontImgFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openEleBillFrontSource(context: context, controller: eleBillFrontImgController),
+            child: electricBillFrontImgFile != null && electricBillFrontImgFile.isNotEmpty ? _fileImage(fileImage: File(electricBillFrontImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2454,13 +2299,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       children: [
         _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
         InkWell(
-            onTap: () => _openEleBackSource(
-                context: context, controller: eleBillBackImgController),
-            child: electricBillBackImgFile != null &&
-                electricBillBackImgFile.isNotEmpty
-                ? _fileImage(fileImage: File(electricBillBackImgFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openEleBackSource(context: context, controller: eleBillBackImgController),
+            child: electricBillBackImgFile != null && electricBillBackImgFile.isNotEmpty ? _fileImage(fileImage: File(electricBillBackImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2470,12 +2310,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       children: [
         _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
         InkWell(
-            onTap: () => _openNocFrontImgSource(
-                context: context, controller: nocFrontImgController),
-            child: nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
-                ? _fileImage(fileImage: File(nocFrontImgFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openNocFrontImgSource(context: context, controller: nocFrontImgController),
+            child: nocFrontImgFile != null && nocFrontImgFile.isNotEmpty ? _fileImage(fileImage: File(nocFrontImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2485,12 +2321,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       children: [
         _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
         InkWell(
-            onTap: () => _openNocBackImgSource(
-                context: context, controller: nocBackImgController),
-            child: nocBackImgFile != null && nocBackImgFile.isNotEmpty
-                ? _fileImage(fileImage: File(nocBackImgFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openNocBackImgSource(context: context, controller: nocBackImgController),
+            child: nocBackImgFile != null && nocBackImgFile.isNotEmpty ? _fileImage(fileImage: File(nocBackImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2500,39 +2332,29 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       children: [
         _imageNameWidget(imageName: AppStrings.customerImgLabel),
         InkWell(
-            onTap: () => _openCustomerImgSource(
-                context: context, controller: customerImgController),
-            child: customerImgFile != null && customerImgFile.isNotEmpty
-                ? _fileImage(fileImage: File(customerImgFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openCustomerImgSource(context: context, controller: customerImgController),
+            child: customerImgFile != null && customerImgFile.isNotEmpty ? _fileImage(fileImage: File(customerImgFile)) : _localBorderImg()),
       ],
     );
   }
 
-  Widget _rowWidget({Widget widget1, Widget widget2}){
+  Widget _rowWidget({Widget widget1, Widget widget2}) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0,right: 12),
+      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0, right: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          widget1,
-          widget2
-        ],
+        children: [widget1, widget2],
       ),
     );
   }
+
   Widget _houseNumImageWidget() {
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.houseImgLabel),
         InkWell(
-            onTap: () => _openHouseImgSource(
-                context: context, controller: houseImgController),
-            child: houseImgFile != null && houseImgFile.isNotEmpty
-                ? _fileImage(fileImage: File(houseImgFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openHouseImgSource(context: context, controller: houseImgController),
+            child: houseImgFile != null && houseImgFile.isNotEmpty ? _fileImage(fileImage: File(houseImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2542,12 +2364,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       children: [
         _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
         InkWell(
-            onTap: () => _openConsentImgSource(
-                context: context, controller: consentImageController),
-            child: consentPhotoFile != null && consentPhotoFile.isNotEmpty
-                ? _fileImage(fileImage: File(consentPhotoFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openConsentImgSource(context: context, controller: consentImageController),
+            child: consentPhotoFile != null && consentPhotoFile.isNotEmpty ? _fileImage(fileImage: File(consentPhotoFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2557,13 +2375,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       children: [
         _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
         InkWell(
-            onTap: () => _openChqCancelledImgSource(
-                context: context, controller: cancelChqImageController),
-            child: chqCancelledPhotoFile != null &&
-                chqCancelledPhotoFile.isNotEmpty
-                ? _fileImage(fileImage: File(chqCancelledPhotoFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openChqCancelledImgSource(context: context, controller: cancelChqImageController),
+            child: chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty ? _fileImage(fileImage: File(chqCancelledPhotoFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2574,12 +2387,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       children: [
         _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
         InkWell(
-            onTap: () => _openChqImgSource(
-                context: context, controller: chqImgController),
-            child: chqPhotoFile != null && chqPhotoFile.isNotEmpty
-                ? _fileImage(fileImage: File(chqPhotoFile))
-                : _localBorderImg()
-        ),
+            onTap: () => _openChqImgSource(context: context, controller: chqImgController),
+            child: chqPhotoFile != null && chqPhotoFile.isNotEmpty ? _fileImage(fileImage: File(chqPhotoFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2591,7 +2400,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: nocProofNoController,
       textInputType: TextInputType.text,
       maxLength: 20,
-      validator: (value){
+      validator: (value) {
         if (value != nocProofNoController.text.trim()) {
           return "Not allow black Space";
         }
@@ -2608,12 +2417,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       textInputType: TextInputType.text,
       maxLength: 20,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z-0-9\u0900-\u097F]",))
+        FilteringTextInputFormatter.allow(RegExp(
+          "[a-zA-Z-0-9\u0900-\u097F]",
+        ))
       ],
-      validator: (value){
+      validator: (value) {
         if (value != idProofNoController.text.trim()) {
           return "Not allow black Space";
-        }else if (value.isEmpty) {
+        } else if (value.isEmpty) {
           return "Please enter id proof no.";
         }
         return null;
@@ -2628,7 +2439,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: ownershipController,
       textInputType: TextInputType.text,
       maxLength: 20,
-      validator: (value){
+      validator: (value) {
         if (value != ownershipController.text.trim()) {
           return "Not allow black Space";
         }
@@ -2788,7 +2599,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       hintText: AppStrings.reasonLabel,
       controller: reasonNoController,
       textInputType: TextInputType.text,
-      validator: (value){
+      validator: (value) {
         if (value != reasonNoController.text.trim()) {
           return "Not allow black Space";
         }
@@ -2839,7 +2650,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       controller: chqNOController,
       maxLength: 5,
       textInputType: TextInputType.number,
-      validator: (value){
+      validator: (value) {
         if (value != chqNOController.text.trim()) {
           return "Not allow black Space";
         }
@@ -2858,13 +2669,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       onTap: () => _selectDate(context),
     );
   }
+
   DateTime selectedDate = DateTime.now();
   Future _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015),
-        lastDate: DateTime(2101));
+    final DateTime picked = await showDatePicker(context: context, initialDate: selectedDate, firstDate: DateTime(2015), lastDate: DateTime(2101));
     if (picked != null)
       setState(() {
         selectedDate = picked;
@@ -2876,12 +2684,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     return ReusedDropDownString(
       textLabel: AppStrings.bankNameLabel,
       hint: AppStrings.bankNameLabel,
-      items: _bankDropdownItems2 != null ? _bankDropdownItems2.map((String item) {
-        return DropdownMenuItem<String>(
-          value: item,
-          child: Text(item),
-        );
-      }).toList() : [] ,
+      items: _bankDropdownItems2 != null
+          ? _bankDropdownItems2.map((String item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Text(item),
+              );
+            }).toList()
+          : [],
       value: _bankValue2,
       onChanged: (String value) {
         setState(() {
@@ -2935,7 +2745,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     );
   }
 
-  Widget _fileImage({File fileImage,}) {
+  Widget _fileImage({
+    File fileImage,
+  }) {
     if (fileImage.path.isNotEmpty) {
       return CircleAvatar(
         radius: 41,
@@ -2958,14 +2770,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
 
   Widget _imageNameWidget({String imageName}) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
-        margin: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
-        child: Text(imageName, style: TextStyle(color: Colors.white),)
-    );
+        child: Text(
+          imageName,
+          style: TextStyle(color: Colors.white),
+        ));
   }
 
   Widget _buildRow({String leading, String trailing}) {
@@ -2985,10 +2799,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     List dataChargeList = json.decode(resAllDistrict);
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length,
-          (i) => DropdownMenuItem(
-        value: OptionItem(
-            id: dataChargeList[i]['id'],
-            title: dataChargeList[i]['district_name']),
+      (i) => DropdownMenuItem(
+        value: OptionItem(id: dataChargeList[i]['id'], title: dataChargeList[i]['district_name']),
         child: Text("${dataChargeList[i]['district_name']}"),
       ),
     );
@@ -2997,12 +2809,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       getAllDistrictItems = menuItems;
       if (widget.isUpdate == true) {
         if (widget.studentModel.districtId != null) {
-          districtValue = getAllDistrictItems
-              .firstWhere(
-                  (element) =>
-              element.value.id == widget.studentModel.districtId,
-              orElse: null)
-              .value;
+          districtValue = getAllDistrictItems.firstWhere((element) => element.value.id == widget.studentModel.districtId, orElse: null).value;
         }
       }
     });
@@ -3015,8 +2822,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     for (int i = 0; i < dataList.length; i++) {
       if (dataList[i]['charge_area_id'] == id) {
         menuItems.add(DropdownMenuItem(
-          value: OptionItem(
-              id: dataList[i]['gid'], title: dataList[i]['area_name']),
+          value: OptionItem(id: dataList[i]['gid'], title: dataList[i]['area_name']),
           child: Text("${dataList[i]['area_name']}"),
         ));
       }
@@ -3026,11 +2832,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       areaItems = menuItems;
       if (widget.isUpdate == true) {
         if (widget.studentModel.areaId != null) {
-          areaTypeValue = areaItems
-              .firstWhere(
-                  (element) => element.value.id == widget.studentModel.areaId,
-              orElse: null)
-              .value;
+          areaTypeValue = areaItems.firstWhere((element) => element.value.id == widget.studentModel.areaId, orElse: null).value;
         }
       }
     });
@@ -3043,10 +2845,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     log(dataChargeList.toString());
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length,
-          (i) => DropdownMenuItem(
-        value: OptionItem(
-            id: dataChargeList[i]['gid'],
-            title: dataChargeList[i]['charge_area_name']),
+      (i) => DropdownMenuItem(
+        value: OptionItem(id: dataChargeList[i]['gid'], title: dataChargeList[i]['charge_area_name']),
         child: Text("${dataChargeList[i]['charge_area_name']}"),
       ),
     );
@@ -3056,12 +2856,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       //  chargeAreaId = chargeAreaType.title.toString();
       if (widget.isUpdate == true) {
         if (widget.studentModel.chargeArea != null) {
-          chargeAreaType = chargeAreaItems
-              .firstWhere(
-                  (element) =>
-              element.value.id == widget.studentModel.chargeArea,
-              orElse: null)
-              .value;
+          chargeAreaType = chargeAreaItems.firstWhere((element) => element.value.id == widget.studentModel.chargeArea, orElse: null).value;
         }
       }
     });
@@ -3149,7 +2944,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     ));
     menuItems = List.generate(
       dataList.length,
-          (i) => DropdownMenuItem(
+      (i) => DropdownMenuItem(
         value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
         child: Text("${dataList[i]['name']}"),
       ),
@@ -3160,13 +2955,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       categoryValue = menuItems.first.value;
       if (widget.isUpdate == true) {
         if (widget.studentModel.propertyCategoryId != null) {
-          categoryValue = propertyCategoryList
-              .firstWhere(
-                  (element) =>
-              element.value.id ==
-                  widget.studentModel.propertyCategoryId,
-              orElse: null)
-              .value;
+          categoryValue = propertyCategoryList.firstWhere((element) => element.value.id == widget.studentModel.propertyCategoryId, orElse: null).value;
         }
       }
     });
@@ -3178,7 +2967,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     List<DropdownMenuItem<OptionItem>> menuItems = [];
     menuItems = List.generate(
       dataList.length,
-          (i) => DropdownMenuItem(
+      (i) => DropdownMenuItem(
         value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
         child: Text("${dataList[i]['name']}"),
       ),
@@ -3189,12 +2978,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       propertyClassValue = menuItems.first.value;
       if (widget.isUpdate == true) {
         if (widget.studentModel.propertyClassId != null) {
-          propertyClassValue = propertyClassList
-              .firstWhere(
-                  (element) =>
-              element.value.id == widget.studentModel.propertyClassId,
-              orElse: null)
-              .value;
+          propertyClassValue = propertyClassList.firstWhere((element) => element.value.id == widget.studentModel.propertyClassId, orElse: null).value;
         }
       }
     });
@@ -3212,10 +2996,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     idProofValue = idProofList.first.value;
     if (widget.isUpdate == true) {
       if (widget.studentModel.kycDocument1 != null) {
-        idProofValue = idProofList
-            .firstWhere((element) =>
-        element.value.id == widget.studentModel.kycDocument1)
-            .value;
+        idProofValue = idProofList.firstWhere((element) => element.value.id == widget.studentModel.kycDocument1).value;
       }
     }
     setState(() {});
@@ -3248,12 +3029,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     _kycProofDropDownValue = _kycProofDropdownItems.first.value;
     if (widget.isUpdate == true) {
       if (widget.studentModel.kycDocument3 != null) {
-        _kycProofDropDownValue = _kycProofDropdownItems
-            .firstWhere(
-                (element) =>
-            element.value.id == widget.studentModel.kycDocument3,
-            orElse: null)
-            .value;
+        _kycProofDropDownValue = _kycProofDropdownItems.firstWhere((element) => element.value.id == widget.studentModel.kycDocument3, orElse: null).value;
       }
     }
     setState(() {});
@@ -3274,7 +3050,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     log("getBankGetBank2--> $resAllBanks");
     setState(() {
       _bankDropdownItems2 = decoded;
-      if(widget.isUpdate == true) {
+      if (widget.isUpdate == true) {
         if (widget.studentModel.payementBankName != null && widget.studentModel.payementBankName.isNotEmpty) {
           _bankValue2 = widget.studentModel.payementBankName;
         }
@@ -3297,12 +3073,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       billingModeId = billingModeValue.id;
       if (widget.isUpdate == true) {
         if (widget.studentModel.billingModel != null) {
-          billingModeValue = billingModeList
-              .firstWhere(
-                  (element) =>
-              element.value.id == widget.studentModel.billingModel,
-              orElse: null)
-              .value;
+          billingModeValue = billingModeList.firstWhere((element) => element.value.id == widget.studentModel.billingModel, orElse: null).value;
         }
       }
     });
@@ -3321,13 +3092,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     __acceptConversionPolicyValueId = __acceptConversionPolicyValue.id;
     if (widget.isUpdate == true) {
       if (widget.studentModel.acceptConversionPolicy != null) {
-        __acceptConversionPolicyValue = _acceptConversionPolicyList
-            .firstWhere(
-                (element) =>
-            element.value.id ==
-                widget.studentModel.acceptConversionPolicy,
-            orElse: null)
-            .value;
+        __acceptConversionPolicyValue = _acceptConversionPolicyList.firstWhere((element) => element.value.id == widget.studentModel.acceptConversionPolicy, orElse: null).value;
       }
     }
     setState(() {});
@@ -3346,13 +3111,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     __acceptExtraFittingCostValueId = acceptExtraFittingCostValue.id;
     if (widget.isUpdate == true) {
       if (widget.studentModel.acceptExtraFittingCost != null) {
-        acceptExtraFittingCostValue = _acceptExtraFittingCostList
-            .firstWhere(
-                (element) =>
-            element.value.id ==
-                widget.studentModel.acceptExtraFittingCost,
-            orElse: null)
-            .value;
+        acceptExtraFittingCostValue = _acceptExtraFittingCostList.firstWhere((element) => element.value.id == widget.studentModel.acceptExtraFittingCost, orElse: null).value;
       }
     }
     setState(() {});
@@ -3370,12 +3129,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     setState(() {
       if (widget.isUpdate == true) {
         if (widget.studentModel.modeOfDeposite != null) {
-          modeDepositValue = modeOfDepositList
-              .firstWhere(
-                  (element) =>
-              element.value.id == widget.studentModel.modeOfDeposite,
-              orElse: null)
-              .value;
+          modeDepositValue = modeOfDepositList.firstWhere((element) => element.value.id == widget.studentModel.modeOfDeposite, orElse: null).value;
         }
       }
       modeOfDepositId = modeDepositValue.id;
@@ -3397,13 +3151,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
       _depositStatusId = depositStatusValue.id;
       if (widget.isUpdate == true) {
         if (widget.studentModel.initialDepositeStatus != null) {
-          depositStatusValue = dropListDepositStatusList
-              .firstWhere(
-                  (element) =>
-              element.value.id ==
-                  widget.studentModel.initialDepositeStatus,
-              orElse: null)
-              .value;
+          depositStatusValue = dropListDepositStatusList.firstWhere((element) => element.value.id == widget.studentModel.initialDepositeStatus, orElse: null).value;
         }
       }
     });
@@ -3437,7 +3185,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     ));
     menuItems2 = List.generate(
       dataList.length,
-          (i) => DropdownMenuItem(
+      (i) => DropdownMenuItem(
         value: DepositItem(
             id: dataList[i]['deposit_types_id'],
             title: dataList[i]['deposit_name'],
@@ -3463,14 +3211,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
     if (!mounted) return;
     setState(() {
       _propertyDropdownItemsDeposit = menuItems;
-      if (widget.isUpdate == true) {
+      if (widget.isUpdate) {
         depositAmountController.text = widget.studentModel.initialAmount;
         if (widget.studentModel.depositeType != null) {
-          _depositCategoryType = _propertyDropdownItemsDeposit
-              .firstWhere((element) =>
-          element.value.id == widget.studentModel.depositeType, orElse: null)
-              .value;
-            depositAmountController.text = _depositCategoryType.amount.toString();
+          _depositCategoryType = _propertyDropdownItemsDeposit.firstWhere((element) => element.value.id.toString() == widget.studentModel.depositeType, orElse: null).value;
+          depositAmountController.text = _depositCategoryType.amount.toString();
         }
       }
     });
@@ -3536,8 +3281,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate>  {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                  "Your are connected to ${isWifiConnected ? "WIFI" : "MOBILE DATA"}"),
+              Text("Your are connected to ${isWifiConnected ? "WIFI" : "MOBILE DATA"}"),
               Text(isWifiConnected ? "$wifiBSSID" : "Not Wifi"),
               Text("$wifiIP"),
               Text("$wifiName")
