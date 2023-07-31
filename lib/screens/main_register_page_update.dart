@@ -562,10 +562,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                   idFrontImage: frontImageFile.toString(),
                   idBackImage: backImageFile,
                   consentImage: consentPhotoFile,
-                 // customerBankName: _bankValue,
-                 // customerAccNo: customerAccountNum.text.trim().toString(),
-                //  customerIfscCode: IFSCController.text.trim().toString(),
-                //  customerBankAdd: bank_address.text.trim().toString(),
+                  // customerBankName: _bankValue,
+                  // customerAccNo: customerAccountNum.text.trim().toString(),
+                  //  customerIfscCode: IFSCController.text.trim().toString(),
+                  //  customerBankAdd: bank_address.text.trim().toString(),
                   modeOfDeposit: modeOfDepositId.toString(),
                   chequeNo: modeOfDepositId == "1" ? chqNOController.text.trim().toString() : "",
                   chequeDate: modeOfDepositId == "1" ? initDepDateController.text.trim().toString() : DateFormat('yyyy-MM-dd').format(DateTime.now()),
@@ -609,7 +609,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 18.0),
                       child: Text("Customer Detail", textAlign: TextAlign.center,style: TextStyle(
-                        fontSize: 21, fontWeight: FontWeight.bold,color: Colors.blue.shade900
+                          fontSize: 21, fontWeight: FontWeight.bold,color: Colors.blue.shade900
                       ),
                       ),
                     ),
@@ -804,188 +804,145 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    _imageColumn(
+                      leadingImg: Column(
                         children: [
-                          Column(
-                            children: [
-                              _imageNameWidget(imageName: AppStrings.idFrontImgSide),
-                              frontImageFile != null && frontImageFile.isNotEmpty
-                                  ? ImageCircle(
-                                fileImage1: File(frontImageFile),
-                                pathImage: frontImageFile,
-                              )
-                                  : _localBorderImg()
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              _imageNameWidget(imageName: AppStrings.idBackImgSide),
-                              backImageFile != null && backImageFile.isNotEmpty
-                                  ? ImageCircle(
-                                fileImage1: File(backImageFile),
-                                pathImage: backImageFile,
-                              )
-                                  : _localBorderImg()
-                            ],
-                          ),
+                          _imageNameWidget(imageName: AppStrings.idFrontImgSide),
+                          frontImageFile != null && frontImageFile.isNotEmpty
+                              ? ImageCircle(
+                            fileImage1: File(frontImageFile),
+                            pathImage: frontImageFile,
+                          )
+                              : _localBorderImg()
+                        ],
+                      ),
+                      trailingImg: Column(
+                        children: [
+                          _imageNameWidget(imageName: AppStrings.idBackImgSide),
+                          backImageFile != null && backImageFile.isNotEmpty
+                              ? ImageCircle(
+                            fileImage1: File(backImageFile),
+                            pathImage: backImageFile,
+                          )
+                              : _localBorderImg()
                         ],
                       ),
                     ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    _imageColumn(
+                      leadingImg: Column(
                         children: [
-                          Column(
-                            children: [
-                              _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
-                              electricBillFrontImgFile != null && electricBillFrontImgFile.isNotEmpty
-                                  ? ImageCircle(
-                                fileImage1: File(electricBillFrontImgFile),
-                                pathImage: electricBillFrontImgFile,
-                              )
-                                  : _localBorderImg()
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
-                              electricBillBackImgFile != null && electricBillBackImgFile.isNotEmpty
-                                  ? ImageCircle(
-                                fileImage1: File(electricBillBackImgFile),
-                                pathImage: electricBillBackImgFile,
-                              )
-                                  : _localBorderImg()
-                            ],
-                          ),
+                          _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
+                          electricBillFrontImgFile != null && electricBillFrontImgFile.isNotEmpty
+                              ? ImageCircle(
+                            fileImage1: File(electricBillFrontImgFile),
+                            pathImage: electricBillFrontImgFile,
+                          )
+                              : _localBorderImg()
+                        ],
+                      ),
+                      trailingImg:Column(
+                        children: [
+                          _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
+                          electricBillBackImgFile != null && electricBillBackImgFile.isNotEmpty
+                              ? ImageCircle(
+                            fileImage1: File(electricBillBackImgFile),
+                            pathImage: electricBillBackImgFile,
+                          )
+                              : _localBorderImg()
                         ],
                       ),
                     ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    _imageColumn(
+                      leadingImg:  Column(
                         children: [
-                          Column(
+                          _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
+                          nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
+                              ? ImageCircle(
+                            fileImage1: File(nocFrontImgFile),
+                            pathImage: nocFrontImgFile,
+                          )
+                              : _localBorderImg()
+                        ],
+                      ),
+                      trailingImg: Column(
+                        children: [
+                          _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
+                          nocBackImgFile != null && nocBackImgFile.isNotEmpty
+                              ? ImageCircle(
+                            fileImage1: File(nocBackImgFile),
+                            pathImage: nocBackImgFile,
+                          )
+                              : _localBorderImg()
+                        ],
+                      ),
+                    ),
+                    _imageColumn(
+                      leadingImg:  Column(
+                        children: [
+                          _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
+                          consentPhotoFile != null && consentPhotoFile.isNotEmpty
+                              ? ImageCircle(
+                            fileImage1: File(consentPhotoFile),
+                            pathImage: consentPhotoFile,
+                          )
+                              : _localBorderImg()
+                        ],
+                      ),
+                      trailingImg: Column(
+                        children: [
+                          _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
+                          chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty
+                              ? ImageCircle(fileImage1: File(chqCancelledPhotoFile), pathImage: chqCancelledPhotoFile)
+                              : _localBorderImg()
+                        ],
+                      ),
+                    ),
+                    _imageColumn(
+                      leadingImg:  Column(
+                        children: [
+                          _imageNameWidget(imageName: AppStrings.customerImgLabel),
+                          customerImgFile != null && customerImgFile.isNotEmpty
+                              ? ImageCircle(
+                            fileImage1: File(customerImgFile),
+                            pathImage: customerImgFile,
+                          )
+                              : _localBorderImg()
+                        ],
+                      ),
+                      trailingImg: Column(
+                        children: [
+                          _imageNameWidget(imageName: AppStrings.houseImgLabel),
+                          houseImgFile != null && houseImgFile.isNotEmpty ? ImageCircle(fileImage1: File(houseImgFile), pathImage: houseImgFile) : _localBorderImg()
+                        ],
+                      ),
+                    ),
+                    _imageColumn(
+                      leadingImg: Column(
+                        children: [
+                          _imageNameWidget(imageName: AppStrings.ownerConsentLabel),
+                          ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
+                              ? ImageCircle(fileImage1: File(ownerConsentImageFile), pathImage: ownerConsentImageFile)
+                              : _localBorderImg()
+                        ],
+                      ),
+                      trailingImg:Visibility(
+                        visible: isDepositCheq,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
                             children: [
-                              _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
-                              nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
+                              _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
+                              chqPhotoFile != null && chqPhotoFile.isNotEmpty
                                   ? ImageCircle(
-                                fileImage1: File(nocFrontImgFile),
-                                pathImage: nocFrontImgFile,
+                                fileImage1: File(chqPhotoFile),
+                                pathImage: chqPhotoFile,
                               )
                                   : _localBorderImg()
                             ],
                           ),
-                          Column(
-                            children: [
-                              _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
-                              nocBackImgFile != null && nocBackImgFile.isNotEmpty
-                                  ? ImageCircle(
-                                fileImage1: File(nocBackImgFile),
-                                pathImage: nocBackImgFile,
-                              )
-                                  : _localBorderImg()
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
-                              consentPhotoFile != null && consentPhotoFile.isNotEmpty
-                                  ? ImageCircle(
-                                fileImage1: File(consentPhotoFile),
-                                pathImage: consentPhotoFile,
-                              )
-                                  : _localBorderImg()
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
-                              chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty
-                                  ? ImageCircle(fileImage1: File(chqCancelledPhotoFile), pathImage: chqCancelledPhotoFile)
-                                  : _localBorderImg()
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              _imageNameWidget(imageName: AppStrings.customerImgLabel),
-                              customerImgFile != null && customerImgFile.isNotEmpty
-                                  ? ImageCircle(
-                                fileImage1: File(customerImgFile),
-                                pathImage: customerImgFile,
-                              )
-                                  : _localBorderImg()
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              _imageNameWidget(imageName: AppStrings.houseImgLabel),
-                              houseImgFile != null && houseImgFile.isNotEmpty ? ImageCircle(fileImage1: File(houseImgFile), pathImage: houseImgFile) : _localBorderImg()
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              _imageNameWidget(imageName: AppStrings.ownerConsentLabel),
-                              ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
-                                  ? ImageCircle(fileImage1: File(ownerConsentImageFile), pathImage: ownerConsentImageFile)
-                                  : _localBorderImg()
-                            ],
-                          ),
-                          Visibility(
-                            visible: isDepositCheq,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-                                  chqPhotoFile != null && chqPhotoFile.isNotEmpty
-                                      ? ImageCircle(
-                                    fileImage1: File(chqPhotoFile),
-                                    pathImage: chqPhotoFile,
-                                  )
-                                      : _localBorderImg()
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -1086,7 +1043,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     print("initialDepositeDatefghj" + data.initialDepositeDate.toString());
     if (widget.isUpdate) {
       var box = await Hive.openBox<SaveCustomerRegistrationOfflineModel>("saveCustRegDataBoxName");
-     await  box.putAt(widget.position, data);
+      await  box.putAt(widget.position, data);
       CustomToast.showToast('Great Success! Update Record Save');
     } else {
       var mmm = SaveCusRegHiveDataStore.box.length;
@@ -1353,7 +1310,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         if (value != emailIdController.text.trim()) {
           return "Not allow black Space";
         }
-       /* else if(!emailValid.hasMatch(value)){
+        /* else if(!emailValid.hasMatch(value)){
           return "demo@gmail.com";
         }*/
         return null;
@@ -2544,11 +2501,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
 
   Widget _customerBackNoWidget() {
     return TextFieldWidget(
-        headingLabel: AppStrings.customerAccountNoLabel,
-        hintText: AppStrings.customerAccountNoLabel,
-        controller: customerAccountNum,
-        textInputType: TextInputType.text,
-        maxLength: 20,
+      headingLabel: AppStrings.customerAccountNoLabel,
+      hintText: AppStrings.customerAccountNoLabel,
+      controller: customerAccountNum,
+      textInputType: TextInputType.text,
+      maxLength: 20,
       /*  validator: (value) {
           if (value != customerAccountNum.text.trim()) {
             return "Not allow black Space";
@@ -2562,16 +2519,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onChanged: (v) {
           formGlobalKey.currentState.validate();
         }*/
-        );
+    );
   }
 
   Widget _customerIFSCCodeWidget() {
     return TextFieldWidget(
-        headingLabel: AppStrings.customerIfscCodeLabel,
-        hintText: AppStrings.customerIfscCodeLabel,
-        controller: IFSCController,
-        textInputType: TextInputType.text,
-        maxLength: 11,
+      headingLabel: AppStrings.customerIfscCodeLabel,
+      hintText: AppStrings.customerIfscCodeLabel,
+      controller: IFSCController,
+      textInputType: TextInputType.text,
+      maxLength: 11,
       /*  validator: (value) {
           if (value != IFSCController.text.trim()) {
             return "Not allow black Space";
@@ -2585,7 +2542,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         onChanged: (v) {
           formGlobalKey.currentState.validate();
         }*/
-        );
+    );
   }
 
   Widget _customerBankAddWidget() {
@@ -2594,7 +2551,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.customerBankAddress,
       controller: bank_address,
       textInputType: TextInputType.text,
-    /*  validator: (value) {
+      /*  validator: (value) {
         if (value != bank_address.text.trim()) {
           return "Not allow black Space";
         } else if (value.isEmpty) {
@@ -2830,6 +2787,24 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         ),
         Divider()
       ],
+    );
+  }
+
+  Widget _imageColumn({Widget leadingImg, Widget trailingImg}){
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              leadingImg,
+              trailingImg
+            ],
+          ),
+          Divider(),
+        ],
+      ),
     );
   }
 
