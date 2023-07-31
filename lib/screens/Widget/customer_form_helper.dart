@@ -41,7 +41,7 @@ class CustomerFormHelper {
     String modeOfDeposit,
     String chequeNo,
     String chequeDate,
-    String bankName,
+    String payementBankName,
     String bankAccNo,
     String depositAmount,
     String micrCode,
@@ -152,7 +152,7 @@ class CustomerFormHelper {
         CustomToast.showToast("Please select consent photo");
         return false;
       }
-      if (customerBankName == null) {
+     /* if (customerBankName == null) {
         CustomToast.showToast("Please select customer bank account name");
         return false;
       }
@@ -167,7 +167,7 @@ class CustomerFormHelper {
       if (customerBankAdd == "") {
         CustomToast.showToast("Please enter the customer back address");
         return false;
-      }
+      }*/
       if (depositAmount == "") {
         CustomToast.showToast("Please select deposit Type");
         return false;
@@ -193,8 +193,8 @@ class CustomerFormHelper {
             CustomToast.showToast("Please enter the cheque date");
             return false;
          }
-         if (customerBankName == null) {
-            CustomToast.showToast("Please select back name");
+         if (payementBankName == null) {
+            CustomToast.showToast("Please select payement bank name");
             return false;
          }
          if (bankAccNo == "") {

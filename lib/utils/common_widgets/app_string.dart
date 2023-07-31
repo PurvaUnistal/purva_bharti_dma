@@ -51,12 +51,12 @@ class AppStrings {
   static String ownershipProofNo = 'Ownership Proof No';
   static String electricBillFrontImgLabel = 'Electric Bill Front Img';
   static String electricBillBackImgLabel = 'Electric Bill Back Img';
-  static String customerBankNameLabel = star + 'Select Customer Bank Name';
+  static String customerBankNameLabel =  'Select Customer Bank Name';
   static String bankNameLabel = 'Select Bank Name';
-  static String customerAccountNoLabel = star + 'Customer Bank Account Number';
+  static String customerAccountNoLabel = 'Customer Bank Account Number';
   static String mICRCodeLabel = star + 'MICR Code';
-  static String customerIfscCodeLabel = star + 'Customer IFSC Code';
-  static String customerBankAddress = star + 'Customer Bank Address';
+  static String customerIfscCodeLabel =  'Customer IFSC Code';
+  static String customerBankAddress =  'Customer Bank Address';
   static String bankAddressLabel = 'Bank Address';
   static String billingModeLabel = star + 'Prefered Billing Mode';
   static String submit = 'Submit';

@@ -147,13 +147,15 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         }
       }
       for (int i = count - 1; i >= 0; i--) {
-        await dataStore.deleteUser(index: i);
+        customerRegistrationList.removeAt(i);
+        await customerRegistrationBox.deleteAt(i);
       }
       if (count == customerRegistrationList.length) {
         await SaveCusRegHiveDataStore.box.clear();
-       // CustomToast.showToast('Great Success! \n Record Save');
+        CustomToast.showToast('Great Success! \n Record Save');
       }
       customerRegistrationList.removeRange(0, count);
+
   //    CustomToast.showToast("Data saved successfully");
     }
   }
@@ -427,36 +429,25 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                                 height: 10,
                                               ),
                                               Row(
-                                                  mainAxisSize:
-                                                  MainAxisSize.min,
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.end,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisAlignment: MainAxisAlignment.end,
                                                   children: [
-                                                    Text(
-                                                      "Mobile No",
-                                                      style: appbarHeadingStyle,
-                                                    ),
+                                                    Text("Mobile No", style: appbarHeadingStyle,),
                                                     Spacer(),
-                                                    Text(
-                                                      "${getStudent.mobileNumber}",
-                                                      style: appbarHeadingStyle,
-                                                    ),
+                                                    Text(getStudent.mobileNumber, style: appbarHeadingStyle,),
                                                   ]),
                                               SizedBox(
                                                 height: 10,
                                               ),
                                               Divider(),
                                               Row(
-                                                  mainAxisSize:
-                                                  MainAxisSize.min,
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.end,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisAlignment: MainAxisAlignment.end,
                                                   children: [
-                                                    Text(
-                                                      "STATUS",
-                                                      style: appbarHeadingStyle,
+                                                    Text("Name", style: appbarHeadingStyle,),
+                                                    Spacer(),
+                                                    Text(getStudent.firstName+" "+getStudent.middleName+" "+getStudent.lastName, style: appbarHeadingStyle,
                                                     ),
-                                                    Divider(),
                                                   ]),
                                             ],
                                           ),

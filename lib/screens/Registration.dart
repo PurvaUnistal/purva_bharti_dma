@@ -119,7 +119,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
             child: CustomAppBar(
               titleAppBar: GlobalConstants.DMA_Page,
               actions: <Widget>[
-                Text(nameUser, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
+                Text(nameUser.toString(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
                 IconButton(
                   icon: Icon(
                     Icons.settings_power,
@@ -180,13 +180,13 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Schema : $schema,",
+                      "GA : $schema,",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 27-07-2023",
+                      "Date : 31-07-2023",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -221,14 +221,17 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
 
   get _itemList {
     List<Widget> list = [];
-    list.add(listItem(
+    list.add(
+        listItem(
         title: "Customer Registration Form",
         icon: Icons.picture_in_picture,
-        onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MainRegisterPageUpdate(
-                    isUpdate: false, position: -1, studentModel: null)))));
+        onTap: () async {
+          await _download(context);
+          Navigator.push(context, MaterialPageRoute(
+              builder: (context) => MainRegisterPageUpdate(isUpdate: false, position: -1, studentModel: null)));
+        }
+        )
+    );
     list.add(listItem(
         title: "View and Sync Records",
         icon: Icons.receipt,

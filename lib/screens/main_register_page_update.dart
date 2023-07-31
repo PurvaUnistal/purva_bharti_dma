@@ -532,7 +532,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                 _areaTypeId = areaTypeValue == null ? _areaTypeId : areaTypeValue.id;
                 getAllDistrictId = districtValue == null ? getAllDistrictId : districtValue.id;
                 modeOfDepositId = modeDepositValue == null ? modeOfDepositId : modeDepositValue.id;
-                //   depositAmountController.text = _depositCategoryType == null ?  depositAmountController.text : _depositCategoryType.id;
+
 
                 var textFieldValidationCheck = CustomerFormHelper.textFieldValidationCheck(
                   titleLocation: latitudeController.text.trim().toString(),
@@ -550,6 +550,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                   houseNumberController: houseNumberController.text.toString(),
                   colonySocietyApartmentController: colonySocietyApartmentController.text.toString(),
                   streetNameController: streetNameController.text.toString(),
+                  townController: townController.text.toString(),
                   district: getAllDistrictId.toString(),
                   pinCodeController: pinCodeController.text.toString(),
                   noOfKitchen: kitchenController.text.toString(),
@@ -561,22 +562,25 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                   idFrontImage: frontImageFile.toString(),
                   idBackImage: backImageFile,
                   consentImage: consentPhotoFile,
-                  customerBankName: _bankValue,
-                  customerAccNo: customerAccountNum.text.trim().toString(),
-                  customerIfscCode: IFSCController.text.trim().toString(),
-                  customerBankAdd: bank_address.text.trim().toString(),
+                 // customerBankName: _bankValue,
+                 // customerAccNo: customerAccountNum.text.trim().toString(),
+                //  customerIfscCode: IFSCController.text.trim().toString(),
+                //  customerBankAdd: bank_address.text.trim().toString(),
                   modeOfDeposit: modeOfDepositId.toString(),
                   chequeNo: modeOfDepositId == "1" ? chqNOController.text.trim().toString() : "",
                   chequeDate: modeOfDepositId == "1" ? initDepDateController.text.trim().toString() : DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                  bankName: _bankValue2,
+                  payementBankName: _bankValue2.toString(),
                   bankAccNo: bankAccNoController.text.trim().toString(),
-                  depositAmount: AppStrings.depositAmount,
+                  depositAmount: _depositCategoryType.id.toString(),
                   micrCode: modeOfDepositId == "1" ? mICRCodeController.text.trim().toString() : "",
                   chequePhoto: modeOfDepositId == "1" ? chqPhotoFile : null,
                   mdpeValue: _mdpeValue,
                   residentStatusValue: _residentStatusValue,
                 );
-                if (formGlobalKey.currentState.validate()) {
+
+                if (formGlobalKey.currentState.validate() == false) {
+                  CustomToast.showToast("Not allow black space. Please remove space");
+                }else {
                   formGlobalKey.currentState.save();
                   if (textFieldValidationCheck == true) {
                     _showDialog();
@@ -594,14 +598,21 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     return showDialog(
         context: context,
         builder: (
-          context,
-        ) {
+            context,
+            ) {
           return Container(
               height: 200,
               color: Colors.white,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 18.0),
+                      child: Text("Customer Detail", textAlign: TextAlign.center,style: TextStyle(
+                        fontSize: 21, fontWeight: FontWeight.bold,color: Colors.blue.shade900
+                      ),
+                      ),
+                    ),
                     _buildRow(
                       leading: AppStrings.interestedLabel,
                       trailing: _isInterestedItem.title,
@@ -778,7 +789,6 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                       visible: isDepositCheq,
                       child: Column(
                         children: [
-                          Divider(),
                           _buildRow(
                             leading: AppStrings.accountNoLabel,
                             trailing: bankAccNoController.text.toString() ?? "-",
@@ -797,16 +807,16 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             children: [
                               _imageNameWidget(imageName: AppStrings.idFrontImgSide),
                               frontImageFile != null && frontImageFile.isNotEmpty
                                   ? ImageCircle(
-                                      fileImage1: File(frontImageFile),
-                                      pathImage: frontImageFile,
-                                    )
+                                fileImage1: File(frontImageFile),
+                                pathImage: frontImageFile,
+                              )
                                   : _localBorderImg()
                             ],
                           ),
@@ -815,28 +825,29 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                               _imageNameWidget(imageName: AppStrings.idBackImgSide),
                               backImageFile != null && backImageFile.isNotEmpty
                                   ? ImageCircle(
-                                      fileImage1: File(backImageFile),
-                                      pathImage: backImageFile,
-                                    )
+                                fileImage1: File(backImageFile),
+                                pathImage: backImageFile,
+                              )
                                   : _localBorderImg()
                             ],
                           ),
                         ],
                       ),
                     ),
+                    Divider(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             children: [
                               _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
                               electricBillFrontImgFile != null && electricBillFrontImgFile.isNotEmpty
                                   ? ImageCircle(
-                                      fileImage1: File(electricBillFrontImgFile),
-                                      pathImage: electricBillFrontImgFile,
-                                    )
+                                fileImage1: File(electricBillFrontImgFile),
+                                pathImage: electricBillFrontImgFile,
+                              )
                                   : _localBorderImg()
                             ],
                           ),
@@ -845,28 +856,29 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                               _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
                               electricBillBackImgFile != null && electricBillBackImgFile.isNotEmpty
                                   ? ImageCircle(
-                                      fileImage1: File(electricBillBackImgFile),
-                                      pathImage: electricBillBackImgFile,
-                                    )
+                                fileImage1: File(electricBillBackImgFile),
+                                pathImage: electricBillBackImgFile,
+                              )
                                   : _localBorderImg()
                             ],
                           ),
                         ],
                       ),
                     ),
+                    Divider(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             children: [
                               _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
                               nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
                                   ? ImageCircle(
-                                      fileImage1: File(nocFrontImgFile),
-                                      pathImage: nocFrontImgFile,
-                                    )
+                                fileImage1: File(nocFrontImgFile),
+                                pathImage: nocFrontImgFile,
+                              )
                                   : _localBorderImg()
                             ],
                           ),
@@ -875,28 +887,29 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                               _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
                               nocBackImgFile != null && nocBackImgFile.isNotEmpty
                                   ? ImageCircle(
-                                      fileImage1: File(nocBackImgFile),
-                                      pathImage: nocBackImgFile,
-                                    )
+                                fileImage1: File(nocBackImgFile),
+                                pathImage: nocBackImgFile,
+                              )
                                   : _localBorderImg()
                             ],
                           ),
                         ],
                       ),
                     ),
+                    Divider(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             children: [
                               _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
                               consentPhotoFile != null && consentPhotoFile.isNotEmpty
                                   ? ImageCircle(
-                                      fileImage1: File(consentPhotoFile),
-                                      pathImage: consentPhotoFile,
-                                    )
+                                fileImage1: File(consentPhotoFile),
+                                pathImage: consentPhotoFile,
+                              )
                                   : _localBorderImg()
                             ],
                           ),
@@ -911,19 +924,20 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                         ],
                       ),
                     ),
+                    Divider(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             children: [
                               _imageNameWidget(imageName: AppStrings.customerImgLabel),
                               customerImgFile != null && customerImgFile.isNotEmpty
                                   ? ImageCircle(
-                                      fileImage1: File(customerImgFile),
-                                      pathImage: customerImgFile,
-                                    )
+                                fileImage1: File(customerImgFile),
+                                pathImage: customerImgFile,
+                              )
                                   : _localBorderImg()
                             ],
                           ),
@@ -936,35 +950,42 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                         ],
                       ),
                     ),
+                    Divider(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Column(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _imageNameWidget(imageName: AppStrings.ownerConsentLabel),
-                          ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
-                              ? ImageCircle(fileImage1: File(ownerConsentImageFile), pathImage: ownerConsentImageFile)
-                              : _localBorderImg()
-                        ],
-                      ),
-                    ),
-                    Visibility(
-                      visible: isDepositCheq,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-                            chqPhotoFile != null && chqPhotoFile.isNotEmpty
-                                ? ImageCircle(
+                          Column(
+                            children: [
+                              _imageNameWidget(imageName: AppStrings.ownerConsentLabel),
+                              ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
+                                  ? ImageCircle(fileImage1: File(ownerConsentImageFile), pathImage: ownerConsentImageFile)
+                                  : _localBorderImg()
+                            ],
+                          ),
+                          Visibility(
+                            visible: isDepositCheq,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
+                                  chqPhotoFile != null && chqPhotoFile.isNotEmpty
+                                      ? ImageCircle(
                                     fileImage1: File(chqPhotoFile),
                                     pathImage: chqPhotoFile,
                                   )
-                                : _localBorderImg()
-                          ],
-                        ),
+                                      : _localBorderImg()
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                    Divider(),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -973,7 +994,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
                             onPressed: () {
                               storeRecords();
                             },
-                            textButton: "SAVE ",
+                            textButton:"Save",
                           ),
                         ),
                         Flexible(
@@ -1065,13 +1086,14 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     print("initialDepositeDatefghj" + data.initialDepositeDate.toString());
     if (widget.isUpdate) {
       var box = await Hive.openBox<SaveCustomerRegistrationOfflineModel>("saveCustRegDataBoxName");
-      box.putAt(widget.position, data);
+     await  box.putAt(widget.position, data);
+      CustomToast.showToast('Great Success! Update Record Save');
     } else {
       var mmm = SaveCusRegHiveDataStore.box.length;
       if (mmm <= 5) {
         var box = await Hive.openBox<SaveCustomerRegistrationOfflineModel>("saveCustRegDataBoxName");
-        box.add(data);
-        CustomToast.showToast('Great Success! \n Record Save');
+        await box.add(data);
+        CustomToast.showToast('Great Success! Add Record Save');
       } else {
         CustomToast.showToast('Error !!!! \n Please Uploade Previous record');
       }
@@ -1317,9 +1339,10 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   }
 
   Widget _emailWidget() {
+    final RegExp emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     return TextFieldWidget(
       headingLabel: AppStrings.emailAddressLabel,
-      hintText: AppStrings.emailAddressLabel,
+      hintText: "demo@gmail.com",
       controller: emailIdController,
       textCapitalization: TextCapitalization.none,
       textInputType: TextInputType.emailAddress,
@@ -1330,6 +1353,9 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         if (value != emailIdController.text.trim()) {
           return "Not allow black Space";
         }
+       /* else if(!emailValid.hasMatch(value)){
+          return "demo@gmail.com";
+        }*/
         return null;
       },
     );
@@ -1601,8 +1627,13 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       validator: (value) {
         if (value != townController.text.trim()) {
           return "Not allow black Space";
+        } else if (value.isEmpty) {
+          return "Please enter the town";
         }
         return null;
+      },
+      onChanged: (v) {
+        formGlobalKey.currentState.validate();
       },
     );
   }
@@ -2518,7 +2549,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         controller: customerAccountNum,
         textInputType: TextInputType.text,
         maxLength: 20,
-        validator: (value) {
+      /*  validator: (value) {
           if (value != customerAccountNum.text.trim()) {
             return "Not allow black Space";
           } else if (value.isEmpty) {
@@ -2530,7 +2561,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-        });
+        }*/
+        );
   }
 
   Widget _customerIFSCCodeWidget() {
@@ -2540,7 +2572,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         controller: IFSCController,
         textInputType: TextInputType.text,
         maxLength: 11,
-        validator: (value) {
+      /*  validator: (value) {
           if (value != IFSCController.text.trim()) {
             return "Not allow black Space";
           } else if (value.isEmpty) {
@@ -2552,7 +2584,8 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-        });
+        }*/
+        );
   }
 
   Widget _customerBankAddWidget() {
@@ -2561,7 +2594,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hintText: AppStrings.customerBankAddress,
       controller: bank_address,
       textInputType: TextInputType.text,
-      validator: (value) {
+    /*  validator: (value) {
         if (value != bank_address.text.trim()) {
           return "Not allow black Space";
         } else if (value.isEmpty) {
@@ -2571,7 +2604,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       },
       onChanged: (v) {
         formGlobalKey.currentState.validate();
-      },
+      },*/
     );
   }
 
@@ -2686,11 +2719,11 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
       hint: AppStrings.bankNameLabel,
       items: _bankDropdownItems2 != null
           ? _bankDropdownItems2.map((String item) {
-              return DropdownMenuItem<String>(
-                value: item,
-                child: Text(item),
-              );
-            }).toList()
+        return DropdownMenuItem<String>(
+          value: item,
+          child: Text(item),
+        );
+      }).toList()
           : [],
       value: _bankValue2,
       onChanged: (String value) {
@@ -2785,9 +2818,15 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
   Widget _buildRow({String leading, String trailing}) {
     return Column(
       children: [
-        ListTile(
-          leading: Text(leading),
-          trailing: Text(trailing),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(child: Text(leading.toUpperCase(),style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),)),
+              Flexible(child: Text(trailing,style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12)))
+            ],
+          ),
         ),
         Divider()
       ],
@@ -2799,7 +2838,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     List dataChargeList = json.decode(resAllDistrict);
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length,
-      (i) => DropdownMenuItem(
+          (i) => DropdownMenuItem(
         value: OptionItem(id: dataChargeList[i]['id'], title: dataChargeList[i]['district_name']),
         child: Text("${dataChargeList[i]['district_name']}"),
       ),
@@ -2845,7 +2884,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     log(dataChargeList.toString());
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length,
-      (i) => DropdownMenuItem(
+          (i) => DropdownMenuItem(
         value: OptionItem(id: dataChargeList[i]['gid'], title: dataChargeList[i]['charge_area_name']),
         child: Text("${dataChargeList[i]['charge_area_name']}"),
       ),
@@ -2944,7 +2983,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     ));
     menuItems = List.generate(
       dataList.length,
-      (i) => DropdownMenuItem(
+          (i) => DropdownMenuItem(
         value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
         child: Text("${dataList[i]['name']}"),
       ),
@@ -2967,7 +3006,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     List<DropdownMenuItem<OptionItem>> menuItems = [];
     menuItems = List.generate(
       dataList.length,
-      (i) => DropdownMenuItem(
+          (i) => DropdownMenuItem(
         value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
         child: Text("${dataList[i]['name']}"),
       ),
@@ -3185,7 +3224,7 @@ class MainRegisterPageUpdateState extends BaseState<MainRegisterPageUpdate> {
     ));
     menuItems2 = List.generate(
       dataList.length,
-      (i) => DropdownMenuItem(
+          (i) => DropdownMenuItem(
         value: DepositItem(
             id: dataList[i]['deposit_types_id'],
             title: dataList[i]['deposit_name'],
