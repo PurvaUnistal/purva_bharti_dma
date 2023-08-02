@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hpcl_app/models/save_customer_registration_model.dart';
-import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
-import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
-import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
+import 'package:hpcl_app/screens/custom_input_form_screen.dart';
 import 'package:hpcl_app/utils/common_widgets/loading_widget.dart';
-
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
 
@@ -413,13 +410,10 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                                             MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                    MainRegisterPageUpdate(
-                                                                      isUpdate:
-                                                                      true,
-                                                                      position:
-                                                                      position,
-                                                                      studentModel:
-                                                                      getStudent,
+                                                                        CustomInputForm(
+                                                                      isUpdate: true,
+                                                                      position: position,
+                                                                      studentModel: getStudent,
                                                                     )));
                                                       })
                                                 ],

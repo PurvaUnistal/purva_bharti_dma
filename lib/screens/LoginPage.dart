@@ -114,6 +114,8 @@ class LoginPage extends State<LoginScreen> {
                         Text("DMA PNG",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
                         SizedBox(height: 50,),
                         _textField(
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.emailAddress,
                           autofillHints: [AutofillHints.email],
                           controller:_usernameController,
                           hintText: "Enter Your Username",
@@ -122,6 +124,8 @@ class LoginPage extends State<LoginScreen> {
                         ),
                         SizedBox(height: 20,),
                         _textField(
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.visiblePassword,
                           autofillHints: [AutofillHints.password],
                           controller:_passwordController,
                           hintText: "Enter Your Password",
@@ -171,6 +175,8 @@ class LoginPage extends State<LoginScreen> {
   }
 
   Widget _textField({
+    TextInputType keyboardType,
+    TextInputAction textInputAction,
     Iterable<String> autofillHints,
     Widget suffixIcon,
     TextEditingController controller,
@@ -180,11 +186,13 @@ class LoginPage extends State<LoginScreen> {
     String hintText,
   }){
     return TextFormField(
+      keyboardType: keyboardType,
+      textInputAction: textInputAction,
       autofillHints: autofillHints,
       controller: controller,
       obscureText: obscureText ?? false,
       decoration: InputDecoration(
-          prefix:prefix,
+          prefixIcon:prefix,
           suffixIcon:  suffixIcon,
           isDense: false,
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -239,16 +247,16 @@ class LoginPage extends State<LoginScreen> {
           prefs.setString(GlobalConstants.name, lgd.user.name);
           prefs.setString(GlobalConstants.changePassword, lgd.user.pwdChanged);
           CustomToast.showToast(lgd.messages);
-         if(lgd.user.pwdChanged == "0"){
+        /* if(lgd.user.pwdChanged == "0"){
            Navigator.pushAndRemoveUntil(
              context,
              MaterialPageRoute(builder: (context) => ChangePasswordPage()),
                  (Route<dynamic> route) => false,
            );
-         }else{
+         }else{*/
            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegistrationForm()),
                  (Route<dynamic> route) => false,);
-         }
+        // }
         }else if(lgd.status == 401) {
           CustomToast.showToast('Incorrect Username and Password');
         }else{

@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
-import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
+import 'package:hpcl_app/screens/custom_input_form_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import '../ExportFile/export_file.dart';
@@ -155,9 +153,10 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                           onTap: () async {
                             print("_checkInBtnStatus$_checkInBtnStatus");
                             if (_checkOutBtnboth.toString().contains("true")) {
-                              _download(context);
+                             await _download(context);
+                             CustomToast.showToast("Loading Successfully...");
                             } else {
-                              EasyLoading.showError(
+                              CustomToast.showToast(
                                   "ERROR!!!!!\n INTERNET CONNECTION"); //drop down pr jao
                             }
                           },
@@ -186,7 +185,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 31-07-2023",
+                      "Date : 02-08-2023",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -228,7 +227,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
         onTap: () async {
           await _download(context);
           Navigator.push(context, MaterialPageRoute(
-              builder: (context) => MainRegisterPageUpdate(isUpdate: false, position: -1, studentModel: null)));
+              builder: (context) => CustomInputForm(isUpdate: false, position: -1, studentModel: null)));
         }
         )
     );

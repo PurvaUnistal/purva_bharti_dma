@@ -9,7 +9,6 @@ class AppStrings {
   static String conversionPolicyLabel = star + 'accept conversion Policy';
   static String fittingCostLabel = star + 'accept extra fitting cost';
   static String areaLabel = star + 'Select Area';
-  static String docTypeLabel = 'Select Doc Type';
   static String chargeAreaLabel = star + 'Select Charge Area';
   static String getAllDistrictLabel = star + 'All District';
   static String mobileNoLabel = star + "Mobile No";
@@ -23,7 +22,8 @@ class AppStrings {
   static String propertyClassLabel = 'Property Class';
   static String addressLabel = star + 'Colony/Society/Apartment';
 
-  static String reasonLabel = 'Reason';
+  static String reasonInterestedLabel = 'Reason Interested Status';
+  static String reasonDepositLabel = 'Reason Deposit Status';
   static String buildingNumberLabel = star + 'Building Number';
   static String houseNumberLabel = star + 'House Number';
   static String apartmentLabel = star + 'Colony/Society/Apartment';
@@ -44,19 +44,25 @@ class AppStrings {
   static String getLocationLabel = 'Location';
   static String landmarkLabel = 'Nearest Landmark';
   static String identificationProofLabel = 'Identification Proof';
-  static String idProofNo = star + 'Id Proof No';
+  static String kYCDoc1Label = 'KYC Document 1';
+  static String kYCDoc1NoLabel = star + 'KYC Document 1 Number';
+  static String kYCDoc2Label = 'KYC Document 2';
+  static String kYCDoc2NoLabel = 'KYC Document 2 Number';
+  static String kYCDoc3Label = 'KYC Document 3';
+  static String kYCDoc3NoLabel = 'KYC Document 3 Number';
   static String idFrontImgSide = star + 'Id Front Img Side';
   static String idBackImgSide = star + 'Id Back Img Side';
   static String ownershipProofHeading = 'Address/Ownership Proof';
   static String ownershipProofNo = 'Ownership Proof No';
   static String electricBillFrontImgLabel = 'Electric Bill Front Img';
   static String electricBillBackImgLabel = 'Electric Bill Back Img';
-  static String customerBankNameLabel =  'Select Customer Bank Name';
-  static String bankNameLabel = 'Select Bank Name';
+  static String customerBankNameLabel =  'Customer Bank Name';
+  static String payementBankNameLabel = star +'Payment Bank Name';
+  static String chequeAccountNoLabel = star +'Cheque Account Number';
   static String customerAccountNoLabel = 'Customer Bank Account Number';
-  static String mICRCodeLabel = star + 'MICR Code';
+  static String chequeMICRNoLabel = star + 'Cheque MICR Number';
   static String customerIfscCodeLabel =  'Customer IFSC Code';
-  static String customerBankAddress =  'Customer Bank Address';
+  static String customerBankAddLabel =  'Customer Bank Address';
   static String bankAddressLabel = 'Bank Address';
   static String billingModeLabel = star + 'Prefered Billing Mode';
   static String submit = 'Submit';
@@ -68,6 +74,7 @@ class AppStrings {
   static String houseImgLabel = 'House Img';
   static String customerConsentLabel = "Customer Consent";
   static String securityDepositLabel = "Security Deposit";
+  static String initialDepositStatusLabel = "Initial Deposit Status";
   static String consentPhotoLabel = star + 'Consent Img';
   static String chqCancelledPhotoLabel = 'Cancelled Cheque Img';
   static String chqPhotoLabel = star + 'Cheque Photo';
@@ -77,9 +84,8 @@ class AppStrings {
   static String depositDateLabel = star + 'Cheque Date';
   static String depositTypeLabel = star + 'Deposit Type';
   static String depositAmountControllerLabel = star + 'Deposit Amount';
-  static String chqNoLabel = 'Cheque No';
+  static String chqNoLabel = star +'Cheque No';
   static String chqBankLabel = '';
-  static String accountNoLabel = 'Account No';
   static String btnLabel = '';
   static String feeChargeLabel = '';
   static String schemeType = '';

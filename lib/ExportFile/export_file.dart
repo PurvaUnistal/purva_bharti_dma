@@ -56,3 +56,8 @@ export 'package:hpcl_app/service/api_client.dart';
 export 'package:password_validated_field/src/requirement_widget.dart';
 export 'package:hpcl_app/screens/splashscreen.dart';
 export 'package:path_provider/path_provider.dart';
+export 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
+export 'package:hpcl_app/utils/common_widgets/button_widget.dart';
+export 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
+export 'package:hpcl_app/utils/common_widgets/open_image_source.dart';
+export 'package:hpcl_app/utils/common_widgets/photo_controller.dart';

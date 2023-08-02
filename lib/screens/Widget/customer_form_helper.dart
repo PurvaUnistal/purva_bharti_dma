@@ -43,7 +43,7 @@ class CustomerFormHelper {
     String chequeDate,
     String payementBankName,
     String bankAccNo,
-    String depositAmount,
+    String depositType,
     String micrCode,
     String chequePhoto,
   }) {
@@ -168,9 +168,9 @@ class CustomerFormHelper {
         CustomToast.showToast("Please enter the customer back address");
         return false;
       }*/
-      if (depositAmount == "") {
+      if (depositType == "") {
         CustomToast.showToast("Please select deposit Type");
-        return false;
+        return null;
       }
       if (mdpeValue.isEmpty || mdpeValue == null) {
         CustomToast.showToast("Please select society allows MDPE");
