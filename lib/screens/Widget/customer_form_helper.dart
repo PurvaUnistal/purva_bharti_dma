@@ -180,20 +180,19 @@ class CustomerFormHelper {
         CustomToast.showToast("Select resident status");
         return null;
       }
-
       if (modeOfDeposit == "" || modeOfDeposit == null || modeOfDeposit.isEmpty ) {
         CustomToast.showToast("Please select mode of deposite");
         return false;
       } else if (modeOfDeposit == "1") {
          if (chequeNo == "") {
-            CustomToast.showToast("Please enter the cheque number");
+            CustomToast.showToast("Please enter cheque number");
             return false;
          }
          if (chequeDate == "") {
-            CustomToast.showToast("Please enter the cheque date");
+            CustomToast.showToast("Please enter cheque date");
             return false;
          }
-         if (payementBankName == null) {
+         if (payementBankName == null || payementBankName == "") {
             CustomToast.showToast("Please select payement bank name");
             return false;
          }
@@ -202,7 +201,7 @@ class CustomerFormHelper {
             return false;
          }
          if (micrCode == "") {
-            CustomToast.showToast("Please enter the micr code");
+            CustomToast.showToast("Please enter cheque micr code");
             return false;
          }
          if (chequePhoto == null || chequePhoto.isEmpty || chequePhoto == "") {

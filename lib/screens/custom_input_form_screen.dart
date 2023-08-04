@@ -484,7 +484,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
             ButtonWidget(
               textButton: !widget.isUpdate ? "Preview" : "Update",
-              onPressed: () {
+              onPressed: () async {
                 chargeAreaId = chargeAreaType == null ? chargeAreaId : chargeAreaType.id;
                 _areaTypeId = areaTypeValue == null ? _areaTypeId : areaTypeValue.id;
                 getAllDistrictId = districtValue == null ? getAllDistrictId : districtValue.id;
@@ -513,32 +513,40 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   noOfKitchen: kitchenController.text.toString(),
                   noOfBathroom: bathroomController.text.toString(),
                   cookInFuelValue: cookInFuelValue.toString(),
-                  noOfFamilyMembers: familyMemController.text.trim().toString() ?? "",
+                  noOfFamilyMembers: familyMemController.text.trim().toString(),
                   addressProofNo: _kYCDoc1Value.id.toString(),
-                  idProofNo: kYCDoc1NoController.text.trim().toString() ?? "",
+                  idProofNo: kYCDoc1NoController.text.trim().toString(),
                   idFrontImage: frontImageFile.toString(),
                   idBackImage: backImageFile.toString(),
                   consentImage: consentPhotoFile.toString(),
                   modeOfDeposit: modeOfDepositString.toString(),
-                  chequeNo: modeOfDepositString == "1" ? chqNOController.text.trim().toString() : "",
-                  chequeDate: modeOfDepositString == "1" ? chequeDateController.text.trim().toString() :"",
-                  payementBankName: _payementBankValue.toString() ?? "",
+                  depositType: _depositTypeString.toString(),
+                  chequeNo: chqNOController.text.trim().toString(),
+                  chequeDate: chequeDateController.text.trim().toString(),
+                  payementBankName:_payementBankValue,
                   bankAccNo: chequeAccountNoController.text.trim().toString(),
-                  depositType: _depositTypeString.toString() ?? "",
-                  micrCode: modeOfDepositString == "1" ? chequeMICRNoController.text.trim().toString() : "",
-                  chequePhoto: modeOfDepositString == "1" ? chqPhotoFile : "",
-                  mdpeValue: _mdpeValue.toString() ?? "",
-                  residentStatusValue: _residentStatusValue.toString() ?? "",
+                  micrCode:chequeMICRNoController.text.trim().toString(),
+                  chequePhoto:chqPhotoFile.toString(),
+                  mdpeValue: _mdpeValue.toString(),
+                  residentStatusValue: _residentStatusValue.toString(),
                 );
+                if(textFieldValidationCheck == true || formGlobalKey.currentState.validate()== true){
+                  formGlobalKey.currentState.save();
+                  _showDialog();
+                }else{
+                  return "Remove Space";
+               //   return CustomToast.showToast("remove Spavc");
+                }
 
-                if (formGlobalKey.currentState.validate() == false) {
-                  CustomToast.showToast("Not allow black space. Please remove space");
+               /* if (formGlobalKey.currentState.validate() == false) {
+                  CustomToast.showToast("Blank space. Please remove space");
                 }else {
+                  formGlobalKey.currentState.validate();
                   formGlobalKey.currentState.save();
                   if (textFieldValidationCheck == true) {
                     _showDialog();
                   }
-                }
+                }*/
               },
             ),
           ],
@@ -844,6 +852,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
                       trailing: billingModeValue.title.toString() ?? "-",
                     ),
                     _buildRow(
+                      leading: AppStrings.customerBankNameLabel,
+                      trailing: _customerBankValue.toString() ?? "-",
+                    ),
+                    _buildRow(
                       leading: AppStrings.customerAccountNoLabel,
                       trailing: customerAccountNum.text.toString() ?? "-",
                     ),
@@ -1110,7 +1122,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       hintText: AppStrings.reasonInterestedLabel,
       validator: (value) {
         if (value != reasonInterestedController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         }
         return null;
       },
@@ -1160,7 +1172,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         maxLength: 10,
         validator: (value) {
           if (value != mobileNoController.text.trim()) {
-            return "Not allow black Space";
+            return "Blank space";
           } else if (value.isEmpty) {
             return "Please enter Mobile Number";
           } else if (value.length <= 9) {
@@ -1184,7 +1196,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       ],
       validator: (value) {
         if (value != firstNameController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         } else if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
           return "Enter First Name";
         } else if (value.length <= 2) {
@@ -1207,7 +1219,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
         if (value != middleNameController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         }
         return null;
       },
@@ -1223,7 +1235,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
         if (value != lastNameController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         } else if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
           return "Enter Last Name";
         }
@@ -1256,7 +1268,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
         if (value != guardianNameController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         } else if (value.isEmpty) {
           return "Please enter Guardian name";
         } else if (!RegExp('.*[A-Z].*').hasMatch(value ?? '')) {
@@ -1280,16 +1292,16 @@ class _CustomInputFormState extends State<CustomInputForm> {
       controller: emailIdController,
       textCapitalization: TextCapitalization.none,
       textInputType: TextInputType.emailAddress,
-      inputFormatters: [
+     /* inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
-      ],
+      ],*/
       validator: (value) {
         if (value != emailIdController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         }
-        /* else if(!emailValid.hasMatch(value)){
-          return "demo@gmail.com";
-        }*/
+         else if(!emailValid.hasMatch(value)){
+          return "enter invalid format";
+        }
         return null;
       },
     );
@@ -1332,7 +1344,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.number,
       validator: (value) {
         if (value != depositAmountController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         }
         return null;
       },
@@ -1482,7 +1494,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != houseNumberController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         } else if (value.isEmpty) {
           return "Please enter house number";
         }
@@ -1502,7 +1514,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != buildingNumberController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         } else if (value.isEmpty) {
           return "Please enter building number";
         }
@@ -1522,7 +1534,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != colonySocietyApartmentController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         } else if (value.isEmpty) {
           return "Please enter Colony/Society/Apartment";
         }
@@ -1542,7 +1554,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != streetNameController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         } else if (value.isEmpty) {
           return "Please enter street name";
         }
@@ -1563,7 +1575,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
         if (value != townController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         } else if (value.isEmpty) {
           return "Please enter the town";
         }
@@ -1599,7 +1611,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         maxLength: 6,
         validator: (value) {
           if (value != pinCodeController.text.trim()) {
-            return "Not allow black Space";
+            return "Blank space";
           } else if (value.isEmpty) {
             return "Please enter Pin Number";
           } else if (value.length <= 5) {
@@ -1609,7 +1621,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
         },
         onChanged: (v) {
           formGlobalKey.currentState.validate();
-        });
+        }
+        );
   }
 
   Widget _noKitchenWidget() {
@@ -1694,7 +1707,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != landmarkController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         }
         return null;
       },
@@ -1748,7 +1761,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         textInputType: TextInputType.text,
         validator: (value) {
           if (value != chequeAccountNoController.text.trim()) {
-            return "Not allow black Space";
+            return "Blank space";
           } else if (value.isEmpty) {
             return "Please enter bank account number";
           } else if (value.length <= 7) {
@@ -1770,7 +1783,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         textInputType: TextInputType.number,
         validator: (value) {
           if (value != chequeMICRNoController.text.trim()) {
-            return "Not allow black Space";
+            return "Blank space";
           } else if (value.isEmpty) {
             return "Please enter MICR Code";
           } else if (value.length <= 8) {
@@ -1806,7 +1819,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getOwnerConsentImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           ownerConsentImageFile = pickedFile.path;
@@ -1839,11 +1852,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getFrontImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           frontImageFile = pickedFile.path;
-          //   photoController.frontImage = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -1873,11 +1885,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getBackImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           backImageFile = pickedFile.path;
-          //  photoController.backImage = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -1907,11 +1918,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getEleBillFrontImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           electricBillFrontImgFile = pickedFile.path;
-          // photoController.electricBillFrontImg = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -1941,11 +1951,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getEleBackImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           electricBillBackImgFile = pickedFile.path;
-          // photoController.electricBillBackImg = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -1975,11 +1984,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getNocFrontImgImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           nocFrontImgFile = pickedFile.path;
-          // photoController.nocFrontImg = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -2009,11 +2017,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getNocBackImgImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           nocBackImgFile = pickedFile.path;
-          //  photoController.nocBackImg = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -2043,11 +2050,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getCustomerImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           customerImgFile = pickedFile.path;
-          //  photoController.nocBackImg = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -2077,11 +2083,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getHouseImg({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           houseImgFile = pickedFile.path;
-          //  photoController.nocBackImg = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -2111,11 +2116,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getConsentImgImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           consentPhotoFile = pickedFile.path;
-          // photoController.consentPhoto = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -2145,11 +2149,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getChqCancelledImg({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           chqCancelledPhotoFile = pickedFile.path;
-          //  photoController.chqCancelledPhoto = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -2179,11 +2182,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getChqImg({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 25);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 50);
       if (pickedFile != null || photoController != null) {
         setState(() {
           chqPhotoFile = pickedFile.path;
-          //  photoController.chqPhoto = File(pickedFile.path);
         });
       }
     } catch (e) {
@@ -2208,7 +2210,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
         _imageNameWidget(imageName: AppStrings.idFrontImgSide),
         InkWell(
             onTap: () => _openFrontImageSource(context: context, controller: frontImageController),
-            child: frontImageFile != null && frontImageFile.isNotEmpty ? _fileImage(fileImage: File(frontImageFile)) : _localBorderImg()),
+            child: frontImageFile != null && frontImageFile.isNotEmpty ? _fileImage(fileImage: File(frontImageFile)) : _localBorderImg()
+        ),
       ],
     );
   }
@@ -2219,7 +2222,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
         _imageNameWidget(imageName: AppStrings.idBackImgSide),
         InkWell(
             onTap: () => _openBackImageSource(context: context, controller: backImageController),
-            child: backImageFile != null && backImageFile.isNotEmpty ? _fileImage(fileImage: File(backImageFile)) : _localBorderImg()),
+            child: backImageFile != null && backImageFile.isNotEmpty ? _fileImage(fileImage: File(backImageFile)) : _localBorderImg()
+        ),
       ],
     );
   }
@@ -2343,7 +2347,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       maxLength: 20,
       validator: (value) {
         if (value != kYCDoc3NoController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         }
         return null;
       },
@@ -2359,7 +2363,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       maxLength: 20,
       validator: (value) {
         if (value != kYCDoc1NoController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         } else if (value.isEmpty) {
           return "Please enter id proof no.";
         }
@@ -2377,7 +2381,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       maxLength: 20,
       validator: (value) {
         if (value != kYCDoc2NoController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         }
         return null;
       },
@@ -2456,7 +2460,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       maxLength: 20,
       /*  validator: (value) {
           if (value != customerAccountNum.text.trim()) {
-            return "Not allow black Space";
+            return "Blank space";
           } else if (value.isEmpty) {
             return "Please enter Customer Account Number";
           } else if (value.length <= 16) {
@@ -2479,7 +2483,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       maxLength: 11,
       /*  validator: (value) {
           if (value != IFSCController.text.trim()) {
-            return "Not allow black Space";
+            return "Blank space";
           } else if (value.isEmpty) {
             return "Please enter Customer Ifsc Code";
           } else if (value.length <= 10) {
@@ -2501,7 +2505,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       /*  validator: (value) {
         if (value != bank_address.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         } else if (value.isEmpty) {
           return "Please enter the customer bank address";
         }
@@ -2539,7 +2543,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != reasonDepositStatusController.text.trim()) {
-          return "Not allow black Space";
+          return "Blank space";
         }
         return null;
       },
@@ -2587,12 +2591,19 @@ class _CustomInputFormState extends State<CustomInputForm> {
       controller: chqNOController,
       maxLength: 6,
       textInputType: TextInputType.number,
-      validator: (value) {
-        if (value != chqNOController.text.trim()) {
-          return "Not allow black Space";
+        validator: (value) {
+          if (value != chqNOController.text.trim()) {
+            return "Blank space";
+          } else if (value.isEmpty) {
+            return "Please enter Cheque Number";
+          } else if (value.length <= 5) {
+            return 'Cheque Number must be of 6 digit';
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState.validate();
         }
-        return null;
-      },
     );
   }
 
