@@ -62,7 +62,6 @@ class ApiIntegration {
       "latitude": saveCustRegReqModel.latitude ?? "",
       "longitude": saveCustRegReqModel.longitude ?? "",
       "remarks": saveCustRegReqModel.remarks ?? "",
-      "owner_consent": saveCustRegReqModel.ownerConsent ?? "",
       "kyc_document_1": saveCustRegReqModel.kycDocument1 ?? "",
       "kyc_document_1_number": saveCustRegReqModel.kycDocument1Number ?? "",
       "kyc_document_2": saveCustRegReqModel.kycDocument2 ?? "",
@@ -90,111 +89,99 @@ class ApiIntegration {
     request.headers.addAll(headers);
     request.fields.addAll(requestBody);
 
-    /*   request.files.add(await http.MultipartFile.fromPath("backside1", saveCustRegReqModel.backSideImg1));
-    request.files.add(await http.MultipartFile.fromPath("backside2", saveCustRegReqModel.backSideImg2));
-    request.files.add(await http.MultipartFile.fromPath("backside3", saveCustRegReqModel.backSideImg3));
-    request.files.add(await http.MultipartFile.fromPath("document_uploads_1", saveCustRegReqModel.frontSideImg1));
-    request.files.add(await http.MultipartFile.fromPath("document_uploads_2", saveCustRegReqModel.frontSideImg2));
-    request.files.add(await http.MultipartFile.fromPath("document_uploads_3", saveCustRegReqModel.frontSideImg3));
-    request.files.add(await http.MultipartFile.fromPath("upload_customer_photo", saveCustRegReqModel.uploadCustomerPhoto));
-    request.files.add(await http.MultipartFile.fromPath("upload_house_photo", saveCustRegReqModel.uploadHousePhoto));
-    request.files.add(await http.MultipartFile.fromPath("customer_consent", saveCustRegReqModel.customerConsent));
-    request.files.add(await http.MultipartFile.fromPath("canceled_cheque", saveCustRegReqModel.canceledCheque));
-    request.files.add(await http.MultipartFile.fromPath("cheque_photo", saveCustRegReqModel.chequePhoto));*/
-
     if (saveCustRegReqModel.backSideImg1.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
+      var backSide1Image = await http.MultipartFile.fromPath(
           "backside1", saveCustRegReqModel.backSideImg1);
-      request.files.add(rfcFormImage);
+      request.files.add(backSide1Image);
+      print("backside1-->" + backSide1Image.toString());
     } else {
       request.fields["backside1"] = "";
     }
     if (saveCustRegReqModel.backSideImg2.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
+      var backSide2Image = await http.MultipartFile.fromPath(
           "backside2", saveCustRegReqModel.backSideImg2);
-      request.files.add(rfcFormImage..toString());
+      request.files.add(backSide2Image..toString());
+      print("backside2-->" + backSide2Image.toString());
     } else {
       request.fields["backside2"] = "";
     }
     if (saveCustRegReqModel.backSideImg3.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
+      var backSide3Image = await http.MultipartFile.fromPath(
           "backside3", saveCustRegReqModel.backSideImg3);
-      request.files.add(rfcFormImage);
-      print("saveCustRegReqModel.backSide3-->" + rfcFormImage.toString());
+      request.files.add(backSide3Image);
+      print("backside3-->" + backSide3Image.toString());
     } else {
       request.fields["backside3"] = "";
     }
-    if (saveCustRegReqModel.frontSideImg1.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
-          "document_uploads_1", saveCustRegReqModel.frontSideImg1);
-      request.files.add(rfcFormImage);
-      print(
-          "saveCustRegReqModel.documentUploads1-->" + rfcFormImage.toString());
+    if (saveCustRegReqModel.docUploadsImg1.isNotEmpty) {
+      var docUploads1Image = await http.MultipartFile.fromPath(
+          "document_uploads_1", saveCustRegReqModel.docUploadsImg1);
+      request.files.add(docUploads1Image);
+      print("docUploads1Image-->" + docUploads1Image.toString());
     } else {
       request.fields["document_uploads_1"] = "";
     }
-    if (saveCustRegReqModel.frontSideImg2.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
-          "document_uploads_2", saveCustRegReqModel.frontSideImg2);
-      request.files.add(rfcFormImage);
-      print(
-          "saveCustRegReqModel.documentUploads2-->" + rfcFormImage.toString());
+    if (saveCustRegReqModel.docUploadsImg2.isNotEmpty) {
+      var docUploads2Image = await http.MultipartFile.fromPath(
+          "document_uploads_2", saveCustRegReqModel.docUploadsImg2);
+      request.files.add(docUploads2Image);
+      print("docUploads2Image-->" + docUploads2Image.toString());
     } else {
       request.fields["document_uploads_2"] = "";
     }
-    if (saveCustRegReqModel.frontSideImg3.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
-          "document_uploads_3", saveCustRegReqModel.frontSideImg3);
-      request.files.add(rfcFormImage);
-      print(
-          "saveCustRegReqModel.documentUploads3,-->" + rfcFormImage.toString());
+    if (saveCustRegReqModel.docUploadsImg3.isNotEmpty) {
+      var docUploads3Image = await http.MultipartFile.fromPath(
+          "document_uploads_3", saveCustRegReqModel.docUploadsImg3);
+      request.files.add(docUploads3Image);
+      print("docUploads3Image-->" + docUploads3Image.toString());
     } else {
       request.fields["document_uploads_3"] = "";
     }
     if (saveCustRegReqModel.uploadCustomerPhoto.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
-          "upload_customer_photo", saveCustRegReqModel.uploadCustomerPhoto);
-      request.files.add(rfcFormImage);
-      print("saveCustRegReqModel.uploadCustomerPhoto-->" +
-          rfcFormImage.toString());
+      var uploadCustImage = await http.MultipartFile.fromPath("upload_customer_photo", saveCustRegReqModel.uploadCustomerPhoto);
+      request.files.add(uploadCustImage);
+      print("uploadCustImage-->" + uploadCustImage.toString());
     } else {
       request.fields["upload_customer_photo"] = "";
     }
     if (saveCustRegReqModel.uploadHousePhoto.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
+      var uploadHouseImage = await http.MultipartFile.fromPath(
           "upload_house_photo", saveCustRegReqModel.uploadHousePhoto);
-      request.files.add(rfcFormImage);
-      print(
-          "saveCustRegReqModel.uploadHousePhoto-->" + rfcFormImage.toString());
+      request.files.add(uploadHouseImage);
+      print("uploadHouseImage-->" + uploadHouseImage.toString());
     } else {
       request.fields["upload_house_photo"] = "";
     }
+    if (saveCustRegReqModel.ownerConsent.isNotEmpty) {
+      var ownerConsentImage = await http.MultipartFile.fromPath("owner_consent", saveCustRegReqModel.ownerConsent);
+      request.files.add(ownerConsentImage);
+      print("ownerConsentImage-->" + ownerConsentImage.toString());
+    } else {
+      request.fields["owner_consent"] = "";
+    }
     if (saveCustRegReqModel.customerConsent.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
+      var customerConsentImage = await http.MultipartFile.fromPath(
           "customer_consent", saveCustRegReqModel.customerConsent);
-      request.files.add(rfcFormImage);
-      print("saveCustRegReqModel.customerConsent-->" + rfcFormImage.toString());
+      request.files.add(customerConsentImage);
+      print("customerConsentImage-->" + customerConsentImage.toString());
     } else {
       request.fields["customer_consent"] = "";
     }
     if (saveCustRegReqModel.canceledCheque.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
-          "canceled_cheque", saveCustRegReqModel.canceledCheque);
-      request.files.add(rfcFormImage);
-      print("saveCustRegReqModel.canceledCheque-->" + rfcFormImage.toString());
+      var canceledChqImage = await http.MultipartFile.fromPath("canceled_cheque", saveCustRegReqModel.canceledCheque);
+      request.files.add(canceledChqImage);
+      print("canceledChqImage-->" + canceledChqImage.toString());
     } else {
       request.fields["canceled_cheque"] = "";
     }
     if (saveCustRegReqModel.chequePhoto.isNotEmpty) {
-      var rfcFormImage = await http.MultipartFile.fromPath(
-          "cheque_photo", saveCustRegReqModel.chequePhoto);
-      request.files.add(rfcFormImage);
-      print("saveCustRegReqModel.chequePhoto-->" + rfcFormImage.toString());
+      var chequeImage = await http.MultipartFile.fromPath("cheque_photo", saveCustRegReqModel.chequePhoto);
+      request.files.add(chequeImage);
+      print("chequeImage-->" + chequeImage.toString());
     } else {
       request.fields["cheque_photo"] = "";
     }
-    print("Request" + requestBody.toString());
-
+    print("requestBody-->" + requestBody.toString());
     try {
       var response = await request.send();
       var responseData = await response.stream.toBytes();

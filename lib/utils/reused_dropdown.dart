@@ -24,7 +24,6 @@ class ReusedDropDownString extends StatelessWidget {
                 color: Colors.black,
                 fontWeight: FontWeight.normal, fontSize: 12),
             decoration: InputDecoration(
-            //  border: OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(4)),
                 borderSide: BorderSide(width: 1,color: Colors.green),
@@ -92,7 +91,6 @@ class ReusedDropDownOptionItem extends StatelessWidget {
                   color: Colors.black,
                   fontWeight: FontWeight.normal, fontSize: 12),
               decoration: InputDecoration(
-              //  border: OutlineInputBorder(),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                   borderSide: BorderSide(width: 1,color: Colors.green),

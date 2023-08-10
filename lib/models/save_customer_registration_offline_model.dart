@@ -212,7 +212,6 @@ class SaveCustomerRegistrationOfflineModel{
     this.billingModel,
     this.streetName,
     this.ownerConsentText,
-    this.isDepositCheq,
-
+    this.isDepositCheq= false,
   });
 }

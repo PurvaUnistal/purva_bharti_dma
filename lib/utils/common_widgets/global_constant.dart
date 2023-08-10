@@ -3,8 +3,8 @@ import '../../ExportFile/export_file.dart';
 class GlobalConstants {
   bool isLoggedIn = false;
 
-  static String BaseUrl = 'http://142.79.231.30:8084/';
-//  static String BaseUrl = "https://citygas.hpcl.co.in/";
+ static String BaseUrl = 'http://142.79.231.30:8084/';
+ // static String BaseUrl = "https://citygas.hpcl.co.in/";
   static String Login = BaseUrl+ "api/auth";
   static String saveCustomerRegistration = BaseUrl+"api/saveCustomerRegistration";
   static String ConsentByPhone =BaseUrl+ "api/getConsentByPhone";
@@ -22,14 +22,6 @@ class GlobalConstants {
 
 
 
-  static const String NEW_Customer = "Customer Registration";
-  static const String Customer_Home = "Customer Photo";
-  static const String Customer_KYC = "Customer KYC";
-  static const String NEW_CONNECTION = "New Connection";
-  static const String Customer_Consent = "Customer Consent";
-  static const String Customer_Initial_Deposi = "Customer Initial Deposit";
-  static const String Payment_Status = "Payment Status";
-  static const String DMA_Page = "HPCL DMA";
   static const String Billing = "Billing";
   static const String Complaint = "Complaint";
   static const String LMC = "LMC";

@@ -115,7 +115,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
             child: CustomAppBar(
-              titleAppBar: GlobalConstants.DMA_Page,
+              titleAppBar: "HPCL DMA",
               actions: <Widget>[
                 Text(nameUser.toString(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
                 IconButton(
@@ -156,8 +156,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                              await _download(context);
                              CustomToast.showToast("Loading Successfully...");
                             } else {
-                              CustomToast.showToast(
-                                  "ERROR!!!!!\n INTERNET CONNECTION"); //drop down pr jao
+                              CustomToast.showToast("ERROR!!!!!\n INTERNET CONNECTION");
                             }
                           },
                         ),
@@ -173,7 +172,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Version : 1,",
+                      "Version : 1.1,",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -185,7 +184,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 02-08-2023",
+                      "Date : 10-08-2023",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -225,9 +224,9 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
         title: "Customer Registration Form",
         icon: Icons.picture_in_picture,
         onTap: () async {
-          await _download(context);
+       //   await _download(context);
           Navigator.push(context, MaterialPageRoute(
-              builder: (context) => CustomInputForm(isUpdate: false, position: -1, studentModel: null)));
+              builder: (context) => CustomInputForm(isUpdate: false, position: 0, studentModel: null)));
         }
         )
     );

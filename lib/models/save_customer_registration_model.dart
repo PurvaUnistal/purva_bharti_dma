@@ -365,7 +365,6 @@ class SaveCustRegReqModel {
   String schema;
   String dmaUserName;
   String dmaUserId;
-  String ownerConsent;
   String kycDocument1;
   String kycDocument1Number;
   String kycDocument2;
@@ -374,13 +373,14 @@ class SaveCustRegReqModel {
   String backSideImg1;
   String backSideImg2;
   String backSideImg3;
-  String frontSideImg1;
-  String frontSideImg2;
-  String frontSideImg3;
+  String docUploadsImg1;
+  String docUploadsImg2;
+  String docUploadsImg3;
   String uploadCustomerPhoto;
   String uploadHousePhoto;
   String canceledCheque;
   String chequePhoto;
+  String ownerConsent;
   String customerConsent;
   String nameOfBank;
   String bankAccountNumber;
@@ -430,9 +430,9 @@ class SaveCustRegReqModel {
       this.backSideImg1,
       this.backSideImg2,
       this.backSideImg3,
-      this.frontSideImg1,
-      this.frontSideImg2,
-      this.frontSideImg3,
+      this.docUploadsImg1,
+      this.docUploadsImg2,
+      this.docUploadsImg3,
       this.uploadHousePhoto,
       this.uploadCustomerPhoto,
       this.existingCookingFuel,
@@ -498,7 +498,6 @@ class SaveCustRegReqModel {
       "schema": schema.toString() ?? "",
       "dma_user_name": dmaUserName.toString() ?? "",
       "dma_user_id": dmaUserId.toString() ?? "",
-      "owner_consent": ownerConsent.toString() ?? "",
       "kyc_document_1": kycDocument1.toString() ?? "",
       "kyc_document_1_number": kycDocument1Number.toString() ?? "",
       "kyc_document_2": kycDocument2.toString() ?? "",
@@ -508,13 +507,14 @@ class SaveCustRegReqModel {
       "backside1": backSideImg1.toString() ?? "",
       "backside2": backSideImg2.toString() ?? "",
       "backside3": backSideImg3.toString() ?? "",
-      "document_uploads_1": frontSideImg1.toString() ?? "",
-      "document_uploads_2": frontSideImg2.toString() ?? "",
-      "document_uploads_3": frontSideImg3.toString() ?? "",
+      "document_uploads_1": docUploadsImg1.toString() ?? "",
+      "document_uploads_2": docUploadsImg2.toString() ?? "",
+      "document_uploads_3": docUploadsImg3.toString() ?? "",
       "upload_customer_photo": uploadCustomerPhoto.toString() ?? "",
       "upload_house_photo": uploadHousePhoto.toString() ?? "",
       "canceled_cheque": canceledCheque.toString() ?? "",
       "cheque_photo": chequePhoto.toString() ?? "",
+      "owner_consent": ownerConsent.toString() ?? "",
       "customer_consent": customerConsent.toString() ?? "",
       "name_of_bank": nameOfBank.toString() ?? "",
       "bank_account_number": bankAccountNumber.toString() ?? "",
