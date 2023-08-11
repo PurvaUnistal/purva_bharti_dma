@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:hpcl_app/screens/Internet/network_binding.dart';
 import '../../ExportFile/export_file.dart';
 import 'models/optioin_item_class.dart';
 import 'models/save_customer_registration_offline_model.dart';
@@ -22,7 +24,9 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      //Initiate Bindings we have created with GETX
+      initialBinding: NetworkBinding() ,
       title: 'HPCL',
       theme: ThemeData(
         primaryColor: Colors.blue.shade900,

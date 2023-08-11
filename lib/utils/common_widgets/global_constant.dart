@@ -3,8 +3,8 @@ import '../../ExportFile/export_file.dart';
 class GlobalConstants {
   bool isLoggedIn = false;
 
- static String BaseUrl = 'http://142.79.231.30:8084/';
- // static String BaseUrl = "https://citygas.hpcl.co.in/";
+// static String BaseUrl = 'http://142.79.231.30:8084/';
+  static String BaseUrl = "https://citygas.hpcl.co.in/";
   static String Login = BaseUrl+ "api/auth";
   static String saveCustomerRegistration = BaseUrl+"api/saveCustomerRegistration";
   static String ConsentByPhone =BaseUrl+ "api/getConsentByPhone";

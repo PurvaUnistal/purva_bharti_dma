@@ -5,13 +5,13 @@ import 'package:permission_handler/permission_handler.dart';
 import '../ExportFile/export_file.dart';
 
 class RegistrationForm extends StatefulWidget {
+  const RegistrationForm({Key key}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() {
-    return RegistrationFormSate();
-  }
+  State<RegistrationForm> createState() => _RegistrationFormState();
 }
 
-class RegistrationFormSate extends BaseState<RegistrationForm> {
+class _RegistrationFormState extends State<RegistrationForm> {
   String customerRegLabel = '',
       customerKycLabel = '',
       customerPhotoLabel = '',
@@ -31,9 +31,9 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   DateTime formattedDate;
-  bool _checkInBtnStatus = false;
-  bool _checkOutBtnStatus = false;
-  bool _checkOutBtnboth = false;
+  bool _isMobileType = false;
+  bool _isBothType = false;
+  bool _isWifiTypea = false;
 
   static const APP_STORE_URL = 'https://apps.apple.com/us/app/appname/idAPP-ID';
   static const PLAY_STORE_URL =
@@ -107,8 +107,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
   }
 
   @override
-  Widget buildView(BuildContext context) {
-    ctx = context;
+  Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -142,17 +141,17 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                       children: <Widget>[
                         _buildBox(
                             color:
-                            _checkInBtnStatus ? Colors.green : Colors.red,
+                            _isMobileType ? Colors.green : Colors.red,
                             textTitle: "MOBILE DATA"),
                         _buildBox(
-                            color: _checkOutBtnboth ? Colors.green : Colors.red,
+                            color: _isWifiTypea ? Colors.green : Colors.red,
                             textTitle: "WI-FI"),
                         _buildBox(
-                          color: _checkOutBtnStatus ? Colors.green : Colors.red,
+                          color: _isBothType ? Colors.green : Colors.red,
                           textTitle: "UPDATE",
                           onTap: () async {
-                            print("_checkInBtnStatus$_checkInBtnStatus");
-                            if (_checkOutBtnboth.toString().contains("true")) {
+                            print("_isMobileType$_isMobileType");
+                            if (_isWifiTypea.toString().contains("true")) {
                              await _download(context);
                              CustomToast.showToast("Loading Successfully...");
                             } else {
@@ -184,7 +183,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 10-08-2023",
+                      "Date : 11-08-2023",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -278,9 +277,7 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
   Future<bool> _multipleRequstPermission() async {
     Map<Permission, PermissionStatus> statuses = await [
       Permission.location,Permission.storage, Permission.camera,
-      //add more permission to request here.
     ].request();
-
     if(statuses[Permission.location].isGranted){
       print("Location permission is isGranted.");
     }
@@ -640,8 +637,8 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
         setState(() {
           isOffline = false;
           dialogIsVisible = false;
-          _checkOutBtnStatus = true;
-          _checkOutBtnboth = true;
+          _isBothType = true;
+          _isWifiTypea = true;
         });
         break;
       case ConnectivityResult.mobile:
@@ -649,8 +646,8 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
         setState(() {
           isOffline = true;
           dialogIsVisible = false;
-          _checkInBtnStatus = true;
-          _checkOutBtnboth = true;
+          _isMobileType = true;
+          _isWifiTypea = true;
         });
         break;
       case ConnectivityResult.wifi:
@@ -658,8 +655,8 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
         setState(() {
           isOffline = false;
           dialogIsVisible = false;
-          _checkOutBtnStatus = true;
-          _checkOutBtnboth = true;
+          _isBothType = true;
+          _isWifiTypea = true;
         });
         break;
       case ConnectivityResult.mobile:
@@ -667,19 +664,18 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
         setState(() {
           isOffline = true;
           dialogIsVisible = false;
-          _checkInBtnStatus = true;
-          _checkOutBtnboth = true;
+          _isMobileType = true;
+          _isWifiTypea = true;
         });
         break;
       case ConnectivityResult.none:
         if (!mounted) return;
         setState(() {
           isOffline = true;
-          _checkInBtnStatus = false;
-          _checkOutBtnStatus = false;
-          _checkOutBtnboth = false;
+          _isMobileType = false;
+          _isBothType = false;
+          _isWifiTypea = false;
         });
-        //   buildAlertDialog("Internet connection cannot be established!");
         break;
       default:
         if (!mounted) return;
@@ -775,6 +771,9 @@ class RegistrationFormSate extends BaseState<RegistrationForm> {
     _updateConnectionStatus(result);
   }
 }
+
+
+
 
 class ApiProvider {
   static Future<dynamic> getData({var urlEndPoint, var setApiData}) async {
