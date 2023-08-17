@@ -157,6 +157,7 @@ class ApiIntegration {
     if (saveCustRegReqModel.ownerConsent.isNotEmpty) {
       var ownerConsentImage = await http.MultipartFile.fromPath("owner_consent", saveCustRegReqModel.ownerConsent);
       request.files.add(ownerConsentImage);
+      print("ownerConsentLength-->" +ownerConsentImage.length.toString());
       print("ownerConsentImage-->" + ownerConsentImage.toString());
     } else {
       request.fields["owner_consent"] = "";

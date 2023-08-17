@@ -1818,7 +1818,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getOwnerConsentImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           customerConsentImageFile = pickedFile.path;
@@ -1851,7 +1851,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getFrontImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           frontImageFile = pickedFile.path;
@@ -1885,7 +1885,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getBackImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           backImageFile = pickedFile.path;
@@ -1918,7 +1918,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getEleBillFrontImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           electricBillFrontImgFile = pickedFile.path;
@@ -1951,7 +1951,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getEleBackImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           electricBillBackImgFile = pickedFile.path;
@@ -1984,7 +1984,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getNocFrontImgImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           nocFrontImgFile = pickedFile.path;
@@ -2017,7 +2017,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getNocBackImgImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           nocBackImgFile = pickedFile.path;
@@ -2050,7 +2050,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getCustomerImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           uploadCustomerImgFile = pickedFile.path;
@@ -2083,7 +2083,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getHouseImg({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           uploadHouseImgFile = pickedFile.path;
@@ -2116,7 +2116,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getConsentImgImage({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           ownerConsentImageFile = pickedFile.path;
@@ -2149,7 +2149,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getChqCancelledImg({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           chqCancelledPhotoFile = pickedFile.path;
@@ -2182,7 +2182,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> getChqImg({PhotoController photoController, ImageSource imageSource}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
       if (pickedFile != null || photoController != null) {
         setState(() {
           chqPhotoFile = pickedFile.path;

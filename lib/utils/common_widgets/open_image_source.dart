@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hpcl_app/ExportFile/export_file.dart';
 
 //////////////  AlertDialog  /////////////////////////////////////////////////////
 class OpenImageSource extends StatelessWidget {
@@ -62,7 +63,7 @@ class ImageCircle extends StatelessWidget {
                 );
                 AlertDialog alert = AlertDialog(
                   title: Text("HPCL DMA"),
-                  content: Image.file(File(pathImage)),
+                  content: Image.file(File(pathImage),fit: BoxFit.cover,),
                   actions: [
                     okButton,
                   ],
