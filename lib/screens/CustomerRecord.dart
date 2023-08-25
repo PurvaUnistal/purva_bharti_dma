@@ -223,7 +223,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1.toString(),
         docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2.toString(),
         docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
-        customerConsent: saveCustRegOffModel.customerConsentPhoto.toString(),
+        customerConsent: saveCustRegOffModel.customerConsentPhoto,
         ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
         acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy.toString(),
         acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost.toString(),

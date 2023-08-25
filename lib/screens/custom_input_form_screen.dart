@@ -1,7 +1,35 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hpcl_app/helper/DropDownCustom.dart';
+import 'package:hpcl_app/helper/DropDownCustomDeposit.dart';
+import 'package:hpcl_app/models/app_labal.dart';
+import 'package:hpcl_app/models/charge_area_model.dart';
+import 'package:hpcl_app/models/save_customer_registration_offline_model.dart';
+import 'package:hpcl_app/screens/Registration.dart';
+import 'package:hpcl_app/screens/Widget/customer_form_helper.dart';
+import 'package:hpcl_app/service/server_connect.dart';
+import 'package:hpcl_app/utils/common_widgets/app_string.dart';
+import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
+import 'package:hpcl_app/utils/common_widgets/common_text_fields.dart';
+import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
+import 'package:hpcl_app/utils/common_widgets/custom_toast.dart';
+import 'package:hpcl_app/utils/common_widgets/global_constant.dart';
+import 'package:hpcl_app/utils/common_widgets/open_image_source.dart';
+import 'package:hpcl_app/utils/common_widgets/photo_controller.dart';
+import 'package:hpcl_app/utils/reused_dropdown.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import '../ExportFile/export_file.dart';
+import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomInputForm extends StatefulWidget {
   final bool isUpdate;
@@ -56,19 +84,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   String dateAndTime = '';
   bool fDepositeSiteCheck = false;
   bool fDepositeDate = false;
-
-  PhotoController ownerConsentImageController = PhotoController();
-  PhotoController frontImageController = PhotoController();
-  PhotoController backImageController = PhotoController();
-  PhotoController eleBillFrontImgController = PhotoController();
-  PhotoController eleBillBackImgController = PhotoController();
-  PhotoController nocFrontImgController = PhotoController();
-  PhotoController nocBackImgController = PhotoController();
-  PhotoController customerImgController = PhotoController();
-  PhotoController houseImgController = PhotoController();
-  PhotoController consentImageController = PhotoController();
-  PhotoController cancelChqImageController = PhotoController();
-  PhotoController chqImgController = PhotoController();
+  final picker = ImagePicker();
   var frontImageFile = "",
       backImageFile = "",
       electricBillFrontImgFile = "",
@@ -535,16 +551,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     _showDialog();
                   }
                 }
-
-                /* if (formGlobalKey.currentState.validate() == false) {
-                  CustomToast.showToast("Blank space. Please remove space");
-                }else {
-                  formGlobalKey.currentState.validate();
-                  formGlobalKey.currentState.save();
-                  if (textFieldValidationCheck == true) {
-                    _showDialog();
-                  }
-                }*/
               },
             ),
           ],
@@ -554,408 +560,420 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   _showDialog() {
-    return showDialog(
-        context: context,
-        builder: (
-            context,
-            ) {
-          return Container(
-              height: 200,
-              color: Colors.white,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 18.0),
-                      child: Text("Customer Detail", textAlign: TextAlign.center,style: TextStyle(
-                          fontSize: 21, fontWeight: FontWeight.bold,color: Colors.blue.shade900
-                      ),
-                      ),
-                    ),
-                    _buildRow(
-                      leading: AppStrings.interestedLabel,
-                      trailing: _isInterestedItem.title ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.conversionPolicyLabel,
-                      trailing: __acceptConversionPolicyValue.title ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.fittingCostLabel,
-                      trailing: acceptExtraFittingCostValue.title ?? "-",
-                    ),
-                    _isInterestedId == '1' ? _buildRow(
-                      leading: AppStrings.mdpeAllowLabel,
-                      trailing: _mdpeValue ?? "-",
-                    ): Container(),
-                    _isInterestedId == '0' ?_buildRow(
-                      leading: AppStrings.reasonInterestedLabel,
-                      trailing: reasonInterestedController.text.toString() ?? "-",
-                    ): Container(),
-                    _buildRow(
-                      leading: AppStrings.chargeAreaLabel,
-                      trailing: chargeAreaType.title.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.areaLabel,
-                      trailing: areaTypeValue.title.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.mobileNoLabel,
-                      trailing: mobileNoController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.firstNameLabel,
-                      trailing: firstNameController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.middleNameLabel,
-                      trailing: middleNameController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.lastNameLabel,
-                      trailing: lastNameController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.guardianTypeLabel,
-                      trailing: guardianTypeValue.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.guardianNameLabel,
-                      trailing: guardianNameController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.emailAddressLabel,
-                      trailing: emailIdController.text.trim().toString() ?? "-",
-                    ),
-                    _isInterestedId == '1' ?_buildRow(
-                      leading: AppStrings.propertyCategoryLabel,
-                      trailing: propertyCategoryValue.title.toString() ?? "-",
-                    ):Container(),
-                    _isInterestedId == '1' ? _buildRow(
-                      leading: AppStrings.propertyClassLabel,
-                      trailing: propertyClassValue.title.toString() ?? "-",
-                    ):Container(),
-                    _buildRow(
-                      leading: AppStrings.buildingNumberLabel,
-                      trailing: buildingNumberController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.houseNumberLabel,
-                      trailing: houseNumberController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.apartmentLabel,
-                      trailing: colonySocietyApartmentController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.streetNameLabel,
-                      trailing: streetNameController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.townLabel,
-                      trailing: townController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.districtLabel,
-                      trailing: districtValue.title.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.pinCodeLabel,
-                      trailing: pinCodeController.text.trim().toString() ?? "-",
-                    ),
-                    _isInterestedId == '1' ? _buildRow(
-                      leading: AppStrings.residentStatusLabel,
-                      trailing: _residentStatusValue.toString() ?? "-",
-                    ): Container(),
-                    _isInterestedId == '1' ? _buildRow(
-                      leading: AppStrings.noOfKitchenLabel,
-                      trailing: kitchenController.text.trim().toString() ?? "-",
-                    ): Container(),
-                    _isInterestedId == '1' ?_buildRow(
-                      leading: AppStrings.noOfBathroomLabel,
-                      trailing: bathroomController.text.trim().toString() ?? "-",
-                    ): Container(),
-                    _isInterestedId == '1' ?_buildRow(
-                      leading: AppStrings.existingCookingFuelLabel,
-                      trailing: cookInFuelValue.toString() ?? "-",
-                    ): Container(),
-                    _isInterestedId == '1' ? _buildRow(
-                      leading: AppStrings.noOfFamilyMembersLabel,
-                      trailing: familyMemController.text.trim().toString() ?? "-",
-                    ): Container(),
-                    _buildRow(
-                      leading: AppStrings.latitudeLabel,
-                      trailing: latitudeController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.longitudeLabel,
-                      trailing: longitudeController.text.trim().toString() ?? "-",
-                    ),
-                    _isInterestedId == '1' ?_buildRow(
-                      leading: AppStrings.landmarkLabel,
-                      trailing: landmarkController.text.trim().toString() ?? "-",
-                    ): Container(),
-                    _buildCardWidget(text: AppStrings.identificationProofLabel),
-                    _buildRow(
-                      leading: AppStrings.kYCDoc1Label,
-                      trailing: _kYCDoc1Value.title.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.kYCDoc1NoLabel,
-                      trailing: kYCDoc1NoController.text.trim().toString() ?? "-",
-                    ),
-                    _imageColumn(
-                      leadingImg: Column(
-                        children: [
-                          _imageNameWidget(imageName: AppStrings.idFrontImgSide),
-                          frontImageFile != null && frontImageFile.isNotEmpty
-                              ? ImageCircle(
-                            fileImage1: File(frontImageFile.toString()),
-                            pathImage: frontImageFile.toString(),
-                          )
-                              : _localBorderImg()
-                        ],
-                      ),
-                      trailingImg: Column(
-                        children: [
-                          _imageNameWidget(imageName: AppStrings.idBackImgSide),
-                          backImageFile != null && backImageFile.isNotEmpty
-                              ? ImageCircle(
-                            fileImage1: File(backImageFile.toString()),
-                            pathImage: backImageFile.toString(),
-                          )
-                              : _localBorderImg()
-                        ],
-                      ),
-                    ),
-                    _buildCardWidget(text: AppStrings.ownershipProofHeading),
-                    _buildRow(
-                      leading: AppStrings.kYCDoc2Label,
-                      trailing: _kYCDoc2Value.title.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.kYCDoc2NoLabel,
-                      trailing: kYCDoc2NoController.text.toString() ?? "-",
-                    ),
-                    _imageColumn(
-                      leadingImg: Column(
-                        children: [
-                          _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
-                          electricBillFrontImgFile != null && electricBillFrontImgFile.isNotEmpty
-                              ? ImageCircle(
-                            fileImage1: File(electricBillFrontImgFile.toString()),
-                            pathImage: electricBillFrontImgFile.toString(),
-                          )
-                              : _localBorderImg()
-                        ],
-                      ),
-                      trailingImg:Column(
-                        children: [
-                          _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
-                          electricBillBackImgFile != null && electricBillBackImgFile.isNotEmpty
-                              ? ImageCircle(
-                            fileImage1: File(electricBillBackImgFile.toString()),
-                            pathImage: electricBillBackImgFile.toString(),
-                          )
-                              : _localBorderImg()
-                        ],
-                      ),
-                    ),
-                    _buildCardWidget(text: AppStrings.nocLabel),
-                    _buildRow(
-                      leading: AppStrings.kYCDoc3Label,
-                      trailing: _kYCDocument3Value.title.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.kYCDoc3NoLabel,
-                      trailing: kYCDoc3NoController.text.toString() ?? "-",
-                    ),
-                    _imageColumn(
-                      leadingImg:  Column(
-                        children: [
-                          _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
-                          nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
-                              ? ImageCircle(
-                            fileImage1: File(nocFrontImgFile.toString()),
-                            pathImage: nocFrontImgFile.toString(),
-                          )
-                              : _localBorderImg()
-                        ],
-                      ),
-                      trailingImg: Column(
-                        children: [
-                          _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
-                          nocBackImgFile != null && nocBackImgFile.isNotEmpty
-                              ? ImageCircle(
-                            fileImage1: File(nocBackImgFile.toString()),
-                            pathImage: nocBackImgFile.toString(),
-                          )
-                              : _localBorderImg()
-                        ],
-                      ),
-                    ),
-                    _imageColumn(
-                      leadingImg:  Column(
-                        children: [
-                          _imageNameWidget(imageName: AppStrings.customerImgLabel),
-                          uploadCustomerImgFile != null && uploadCustomerImgFile.isNotEmpty
-                              ? ImageCircle(
-                            fileImage1: File(uploadCustomerImgFile.toString()),
-                            pathImage: uploadCustomerImgFile.toString(),
-                          )
-                              : _localBorderImg()
-                        ],
-                      ),
-                      trailingImg: Column(
-                        children: [
-                          _imageNameWidget(imageName: AppStrings.houseImgLabel),
-                          uploadHouseImgFile != null && uploadHouseImgFile.isNotEmpty
-                              ? ImageCircle(fileImage1: File(uploadHouseImgFile.toString()),
-                              pathImage: uploadHouseImgFile.toString())
-                              : _localBorderImg()
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        _imageNameWidget(imageName: AppStrings.customerConsentImgLabel),
-                        customerConsentImageFile != null && customerConsentImageFile.isNotEmpty
-                            ? ImageCircle(fileImage1: File(customerConsentImageFile.toString()), pathImage: customerConsentImageFile.toString())
-                            : _localBorderImg()
-                      ],
-                    ),
-                    Divider(),
-                    _buildCardWidget(text: AppStrings.customerConsentLabel),
-                    _imageColumn(
-                      leadingImg:  Column(
-                        children: [
-                          _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
-                          ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
-                              ? ImageCircle(
-                            fileImage1: File(ownerConsentImageFile.toString()),
-                            pathImage: ownerConsentImageFile.toString(),
-                          )
-                              : _localBorderImg()
-                        ],
-                      ),
-                      trailingImg: Column(
-                        children: [
-                          _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
-                          chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty
-                              ? ImageCircle(fileImage1: File(chqCancelledPhotoFile.toString()), pathImage: chqCancelledPhotoFile.toString())
-                              : _localBorderImg()
-                        ],
-                      ),
-                    ),
-                    _buildRow(
-                      leading: AppStrings.billingModeLabel,
-                      trailing: billingModeValue.title.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.customerBankNameLabel,
-                      trailing: _customerBankValue != null ? _customerBankValue.toString() : "_",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.customerAccountNoLabel,
-                      trailing: customerAccountNum.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.customerIfscCodeLabel,
-                      trailing: customerIFSCController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.customerBankAddLabel,
-                      trailing: customerBankAddController.text.trim().toString() ?? "-",
-                    ),
-                    _buildCardWidget(text: AppStrings.securityDepositLabel),
-                    _buildRow(
-                      leading: AppStrings.depositStatusLabel,
-                      trailing: depositStatusValue.title.toString() ?? "-",
-                    ),
-                    _depositStatusId != "1" ? _buildRow(
-                      leading: AppStrings.reasonDepositLabel,
-                      trailing: reasonDepositStatusController.text.trim().toString() ?? "-",
-                    ): Container(),
-                    _buildRow(
-                      leading: AppStrings.depositTypeLabel,
-                      trailing: AppStrings.depositName.toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.depositAmountControllerLabel,
-                      trailing: depositAmountController.text.trim().toString() ?? "-",
-                    ),
-                    _buildRow(
-                      leading: AppStrings.modeOfDepositLabel,
-                      trailing: modeDepositValue.title.toString() ?? "-",
-                    ),
-                    if(modeOfDepositString == "1")...[
-                      Column(
-                        children: [
-                          _buildRow(
-                            leading: AppStrings.chqNoLabel,
-                            trailing: chqNOController.text.trim().toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.depositDateLabel,
-                            trailing: chequeDateController.text.trim().toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.payementBankNameLabel,
-                            trailing: _payementBankValue.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.chequeAccountNoLabel,
-                            trailing: chequeAccountNoController.text.toString() ?? "-",
-                          ),
-                          _buildRow(
-                            leading: AppStrings.chequeMICRNoLabel,
-                            trailing: chequeMICRNoController.text.toString() ?? "-",
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-                                chqPhotoFile != null && chqPhotoFile.isNotEmpty
-                                    ? ImageCircle(
-                                  fileImage1: File(chqPhotoFile.toString()),
-                                  pathImage: chqPhotoFile.toString(),
-                                )
-                                    : _localBorderImg()
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ]else...[
-                      Container()
+    return showDialog(context: context, builder: (context,) {
+      return Container(
+          height: 200,
+          color: Colors.white,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 18.0),
+                  child: Text("Customer Detail", textAlign: TextAlign.center,style: TextStyle(
+                      fontSize: 21, fontWeight: FontWeight.bold,color: Colors.blue.shade900
+                  ),
+                  ),
+                ),
+                _buildRow(
+                  leading: AppStrings.interestedLabel,
+                  trailing: _isInterestedItem.title ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.conversionPolicyLabel,
+                  trailing: __acceptConversionPolicyValue.title ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.fittingCostLabel,
+                  trailing: acceptExtraFittingCostValue.title ?? "-",
+                ),
+                _isInterestedId == '1' ? _buildRow(
+                  leading: AppStrings.mdpeAllowLabel,
+                  trailing: _mdpeValue ?? "-",
+                ): Container(),
+                _isInterestedId == '0' ?_buildRow(
+                  leading: AppStrings.reasonInterestedLabel,
+                  trailing: reasonInterestedController.text.toString() ?? "-",
+                ): Container(),
+                _buildRow(
+                  leading: AppStrings.chargeAreaLabel,
+                  trailing: chargeAreaType.title.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.areaLabel,
+                  trailing: areaTypeValue.title.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.mobileNoLabel,
+                  trailing: mobileNoController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.firstNameLabel,
+                  trailing: firstNameController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.middleNameLabel,
+                  trailing: middleNameController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.lastNameLabel,
+                  trailing: lastNameController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.guardianTypeLabel,
+                  trailing: guardianTypeValue.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.guardianNameLabel,
+                  trailing: guardianNameController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.emailAddressLabel,
+                  trailing: emailIdController.text.trim().toString() ?? "-",
+                ),
+                _isInterestedId == '1' ?_buildRow(
+                  leading: AppStrings.propertyCategoryLabel,
+                  trailing: propertyCategoryValue.title.toString() ?? "-",
+                ):Container(),
+                _isInterestedId == '1' ? _buildRow(
+                  leading: AppStrings.propertyClassLabel,
+                  trailing: propertyClassValue.title.toString() ?? "-",
+                ):Container(),
+                _buildRow(
+                  leading: AppStrings.buildingNumberLabel,
+                  trailing: buildingNumberController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.houseNumberLabel,
+                  trailing: houseNumberController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.apartmentLabel,
+                  trailing: colonySocietyApartmentController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.streetNameLabel,
+                  trailing: streetNameController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.townLabel,
+                  trailing: townController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.districtLabel,
+                  trailing: districtValue.title.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.pinCodeLabel,
+                  trailing: pinCodeController.text.trim().toString() ?? "-",
+                ),
+                _isInterestedId == '1' ? _buildRow(
+                  leading: AppStrings.residentStatusLabel,
+                  trailing: _residentStatusValue.toString() ?? "-",
+                ): Container(),
+                _isInterestedId == '1' ? _buildRow(
+                  leading: AppStrings.noOfKitchenLabel,
+                  trailing: kitchenController.text.trim().toString() ?? "-",
+                ): Container(),
+                _isInterestedId == '1' ?_buildRow(
+                  leading: AppStrings.noOfBathroomLabel,
+                  trailing: bathroomController.text.trim().toString() ?? "-",
+                ): Container(),
+                _isInterestedId == '1' ?_buildRow(
+                  leading: AppStrings.existingCookingFuelLabel,
+                  trailing: cookInFuelValue.toString() ?? "-",
+                ): Container(),
+                _isInterestedId == '1' ? _buildRow(
+                  leading: AppStrings.noOfFamilyMembersLabel,
+                  trailing: familyMemController.text.trim().toString() ?? "-",
+                ): Container(),
+                _buildRow(
+                  leading: AppStrings.latitudeLabel,
+                  trailing: latitudeController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.longitudeLabel,
+                  trailing: longitudeController.text.trim().toString() ?? "-",
+                ),
+                _isInterestedId == '1' ?_buildRow(
+                  leading: AppStrings.landmarkLabel,
+                  trailing: landmarkController.text.trim().toString() ?? "-",
+                ): Container(),
+                _buildCardWidget(text: AppStrings.identificationProofLabel),
+                _buildRow(
+                  leading: AppStrings.kYCDoc1Label,
+                  trailing: _kYCDoc1Value.title.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.kYCDoc1NoLabel,
+                  trailing: kYCDoc1NoController.text.trim().toString() ?? "-",
+                ),
+                _imageColumn(
+                  leadingImg: Column(
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.idFrontImgSide),
+                      frontImageFile != null
+                          ? frontImageFile.split('.').last == "pdf"
+                          ? _pdfImageWidget(frontImageFile)
+                          :  ImageCircle(
+                        fileImage1: File(frontImageFile.toString()),
+                        pathImage: frontImageFile.toString(),
+                      ) : _localBorderImg()
                     ],
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Flexible(
-                          child: ButtonWidget(
-                            onPressed: () {
-                              storeRecords();
-                            },
-                            textButton:"Save",
-                          ),
-                        ),
-                        Flexible(
-                          child: ButtonWidget(
-                            textButton: "EDIT",
-                            onPressed: () {
-                              Navigator.pop(context, false);
-                            },
-                          ),
-                        )
-                      ],
-                    ),
+                  ),
+                  trailingImg: Column(
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.idBackImgSide),
+                      backImageFile != null
+                          ? backImageFile.split('.').last == "pdf"
+                          ? _pdfImageWidget(backImageFile)
+                          : ImageCircle(
+                        fileImage1: File(backImageFile.toString()),
+                        pathImage: backImageFile.toString(),
+                      ) : _localBorderImg()
+                    ],
+                  ),
+                ),
+                _buildCardWidget(text: AppStrings.ownershipProofHeading),
+                _buildRow(
+                  leading: AppStrings.kYCDoc2Label,
+                  trailing: _kYCDoc2Value.title.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.kYCDoc2NoLabel,
+                  trailing: kYCDoc2NoController.text.toString() ?? "-",
+                ),
+                _imageColumn(
+                  leadingImg: Column(
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
+                      electricBillFrontImgFile != null
+                          ? electricBillFrontImgFile.split('.').last == "pdf"
+                          ? _pdfImageWidget(electricBillFrontImgFile)
+                          :  ImageCircle(
+                        fileImage1: File(electricBillFrontImgFile.toString()),
+                        pathImage: electricBillFrontImgFile.toString(),
+                      ) : _localBorderImg()
+                    ],
+                  ),
+                  trailingImg:Column(
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
+                      electricBillBackImgFile != null
+                          ? electricBillBackImgFile.split('.').last == "pdf"
+                          ? _pdfImageWidget(electricBillBackImgFile)
+                          : ImageCircle(
+                        fileImage1: File(electricBillBackImgFile.toString()),
+                        pathImage: electricBillBackImgFile.toString(),
+                      ) : _localBorderImg()
+                    ],
+                  ),
+                ),
+                _buildCardWidget(text: AppStrings.nocLabel),
+                _buildRow(
+                  leading: AppStrings.kYCDoc3Label,
+                  trailing: _kYCDocument3Value.title.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.kYCDoc3NoLabel,
+                  trailing: kYCDoc3NoController.text.toString() ?? "-",
+                ),
+                _imageColumn(
+                  leadingImg:  Column(
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
+                      nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
+                          ? nocFrontImgFile.split('.').last == "pdf"
+                          ? _pdfImageWidget(nocFrontImgFile)
+                          :  ImageCircle(
+                        fileImage1: File(nocFrontImgFile.toString()),
+                        pathImage: nocFrontImgFile.toString(),
+                      ) : _localBorderImg()
+                    ],
+                  ),
+                  trailingImg: Column(
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
+                      nocBackImgFile != null && nocBackImgFile.isNotEmpty
+                          ? nocBackImgFile.split('.').last == "pdf"
+                          ? _pdfImageWidget(nocBackImgFile)
+                          :  ImageCircle(
+                        fileImage1: File(nocBackImgFile.toString()),
+                        pathImage: nocBackImgFile.toString(),
+                      ) : _localBorderImg()
+                    ],
+                  ),
+                ),
+                _imageColumn(
+                  leadingImg:  Column(
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.customerImgLabel),
+                      uploadCustomerImgFile != null && uploadCustomerImgFile.isNotEmpty
+                          ? uploadCustomerImgFile.split('.').last == "pdf"
+                          ? _pdfImageWidget(uploadCustomerImgFile)
+                          : ImageCircle(
+                        fileImage1: File(uploadCustomerImgFile.toString()),
+                        pathImage: uploadCustomerImgFile.toString(),
+                      ) : _localBorderImg()
+                    ],
+                  ),
+                  trailingImg: Column(
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.houseImgLabel),
+                      uploadHouseImgFile != null && uploadHouseImgFile.isNotEmpty
+                          ? uploadHouseImgFile.split('.').last == "pdf"
+                          ? _pdfImageWidget(uploadHouseImgFile)
+                          : ImageCircle(fileImage1: File(uploadHouseImgFile.toString()),
+                          pathImage: uploadHouseImgFile.toString())
+                          : _localBorderImg()
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    _imageNameWidget(imageName: AppStrings.customerConsentImgLabel),
+                    customerConsentImageFile != null
+                        ? customerConsentImageFile.split('.').last == "pdf"
+                        ? _pdfImageWidget(customerConsentImageFile)
+                        : ImageCircle(
+                        fileImage1: File(customerConsentImageFile.toString()),
+                        pathImage: customerConsentImageFile.toString()) : _localBorderImg()
                   ],
                 ),
-              ));
-        });
+                Divider(),
+                _buildCardWidget(text: AppStrings.customerConsentLabel),
+                _imageColumn(
+                  leadingImg:  Column(
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
+                      ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
+                          ? ownerConsentImageFile.split('.').last == "pdf"
+                          ? _pdfImageWidget(ownerConsentImageFile)
+                          : ImageCircle(
+                        fileImage1: File(ownerConsentImageFile.toString()),
+                        pathImage: ownerConsentImageFile.toString(),
+                      ) : _localBorderImg()
+                    ],
+                  ),
+                  trailingImg: Column(
+                    children: [
+                      _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
+                      chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty
+                          ? chqCancelledPhotoFile.split('.').last == "pdf"
+                          ? _pdfImageWidget(chqCancelledPhotoFile)
+                          : ImageCircle(fileImage1: File(chqCancelledPhotoFile.toString()), pathImage: chqCancelledPhotoFile.toString())
+                          : _localBorderImg()
+                    ],
+                  ),
+                ),
+                _buildRow(
+                  leading: AppStrings.billingModeLabel,
+                  trailing: billingModeValue.title.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.customerBankNameLabel,
+                  trailing: _customerBankValue != null ? _customerBankValue.toString() : "_",
+                ),
+                _buildRow(
+                  leading: AppStrings.customerAccountNoLabel,
+                  trailing: customerAccountNum.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.customerIfscCodeLabel,
+                  trailing: customerIFSCController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.customerBankAddLabel,
+                  trailing: customerBankAddController.text.trim().toString() ?? "-",
+                ),
+                _buildCardWidget(text: AppStrings.securityDepositLabel),
+                _buildRow(
+                  leading: AppStrings.depositStatusLabel,
+                  trailing: depositStatusValue.title.toString() ?? "-",
+                ),
+                _depositStatusId != "1" ? _buildRow(
+                  leading: AppStrings.reasonDepositLabel,
+                  trailing: reasonDepositStatusController.text.trim().toString() ?? "-",
+                ): Container(),
+                _buildRow(
+                  leading: AppStrings.depositTypeLabel,
+                  trailing: AppStrings.depositName.toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.depositAmountControllerLabel,
+                  trailing: depositAmountController.text.trim().toString() ?? "-",
+                ),
+                _buildRow(
+                  leading: AppStrings.modeOfDepositLabel,
+                  trailing: modeDepositValue.title.toString() ?? "-",
+                ),
+                if(modeOfDepositString == "1")...[
+                  Column(
+                    children: [
+                      _buildRow(
+                        leading: AppStrings.chqNoLabel,
+                        trailing: chqNOController.text.trim().toString() ?? "-",
+                      ),
+                      _buildRow(
+                        leading: AppStrings.depositDateLabel,
+                        trailing: chequeDateController.text.trim().toString() ?? "-",
+                      ),
+                      _buildRow(
+                        leading: AppStrings.payementBankNameLabel,
+                        trailing: _payementBankValue.toString() ?? "-",
+                      ),
+                      _buildRow(
+                        leading: AppStrings.chequeAccountNoLabel,
+                        trailing: chequeAccountNoController.text.toString() ?? "-",
+                      ),
+                      _buildRow(
+                        leading: AppStrings.chequeMICRNoLabel,
+                        trailing: chequeMICRNoController.text.toString() ?? "-",
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
+                            chqPhotoFile != null && chqPhotoFile.isNotEmpty
+                                ? chqPhotoFile.split('.').last == "pdf"
+                                ? _pdfImageWidget(chqPhotoFile)
+                                : ImageCircle(
+                              fileImage1: File(chqPhotoFile.toString()),
+                              pathImage: chqPhotoFile.toString(),
+                            ) : _localBorderImg()
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ]else...[
+                  Container()
+                ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Flexible(
+                      child: ButtonWidget(
+                        onPressed: () {
+                          storeRecords();
+                        },
+                        textButton:"Save",
+                      ),
+                    ),
+                    Flexible(
+                      child: ButtonWidget(
+                        textButton: "EDIT",
+                        onPressed: () {
+                          Navigator.pop(context, false);
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ));
+    });
   }
 
   Future<void> storeRecords() async {
@@ -964,7 +982,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       schema: schema,
       dmaUserName: dmaUserName,
       dmaUserId: dmaId,
-     // remarks : reasonInterestedController.text.trim().toString() ?? "",
+      // remarks : reasonInterestedController.text.trim().toString() ?? "",
       chargeArea: chargeAreaType.id.toString(),
       areaId: areaTypeValue.id.toString(),
       mobileNumber: mobileNoController.text.trim().toString(),
@@ -1795,411 +1813,16 @@ class _CustomInputFormState extends State<CustomInputForm> {
         });
   }
 
-  /////////////////////////////  image 1 ///////////////////////////////////////
-  Future<void> _openOwnerConsentImageSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getOwnerConsentImage(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getOwnerConsentImage(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getOwnerConsentImage({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          customerConsentImageFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("customerConsentCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openFrontImageSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () async {
-            Navigator.of(context).pop();
-            await getFrontImage(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () async {
-            Navigator.of(context).pop();
-            await getFrontImage(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getFrontImage({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          frontImageFile = pickedFile.path;
-          print(frontImageFile.toString());
-        });
-      }
-    } catch (e) {
-      print("frontImageFileCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openBackImageSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getBackImage(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getBackImage(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getBackImage({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          backImageFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("backImageFileCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openEleBillFrontSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getEleBillFrontImage(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getEleBillFrontImage(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getEleBillFrontImage({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          electricBillFrontImgFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("EleBillFrontCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openEleBackSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getEleBackImage(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getEleBackImage(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getEleBackImage({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          electricBillBackImgFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("electricBillBackCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openNocFrontImgSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getNocFrontImgImage(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getNocFrontImgImage(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getNocFrontImgImage({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          nocFrontImgFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("NocFrontCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openNocBackImgSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getNocBackImgImage(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getNocBackImgImage(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getNocBackImgImage({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          nocBackImgFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("NocBackCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openCustomerImgSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getCustomerImage(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getCustomerImage(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getCustomerImage({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          uploadCustomerImgFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("uploadCustomerCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openHouseImgSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getHouseImg(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getHouseImg(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getHouseImg({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          uploadHouseImgFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("uploadHouseCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openConsentImgSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getConsentImgImage(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getConsentImgImage(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getConsentImgImage({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          ownerConsentImageFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("ownerConsentCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openChqCancelledImgSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getChqCancelledImg(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getChqCancelledImg(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getChqCancelledImg({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource, maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          chqCancelledPhotoFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("chqCancelledCatch--->"+e.toString());
-    }
-  }
-
-  Future<void> _openChqImgSource({BuildContext context, PhotoController controller}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return OpenImageSource(
-          onTapGallery: () {
-            Navigator.of(context).pop();
-            getChqImg(photoController: controller, imageSource: ImageSource.gallery);
-          },
-          onTapCamera: () {
-            Navigator.of(context).pop();
-            getChqImg(photoController: controller, imageSource: ImageSource.camera);
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> getChqImg({PhotoController photoController, ImageSource imageSource}) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource,  maxHeight: 900, maxWidth: 1000, imageQuality: 100);
-      if (pickedFile != null || photoController != null) {
-        setState(() {
-          chqPhotoFile = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      print("chqPhotoCatch--->"+e.toString());
-    }
-  }
-
   Widget _ownerConsentImageWidget() {
     return Column(
       children: [
         _imageNameWidget(imageName: AppStrings.customerConsentImgLabel),
         InkWell(
-            onTap: () => _openOwnerConsentImageSource(context: context, controller: ownerConsentImageController),
-            child: customerConsentImageFile != null && customerConsentImageFile.isNotEmpty ? _fileImage(fileImage: File(customerConsentImageFile)) : _localBorderImg()),
+            onTap: () => _openCustomerConsentImgSource(context,),
+            child: customerConsentImageFile != null && customerConsentImageFile.isNotEmpty
+                ? customerConsentImageFile.split('.').last == "pdf" ?
+            _pdfImageWidget(customerConsentImageFile) :
+            _fileImage(fileImage: File(customerConsentImageFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2209,8 +1832,11 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.idFrontImgSide),
         InkWell(
-            onTap: () => _openFrontImageSource(context: context, controller: frontImageController),
-            child: frontImageFile != null && frontImageFile.isNotEmpty ? _fileImage(fileImage: File(frontImageFile)) : _localBorderImg()
+            onTap: () => _openFrontImageSource(context, ),
+            child: frontImageFile != null && frontImageFile.isNotEmpty
+                ? frontImageFile.split('.').last == "pdf"
+                ? _pdfImageWidget(frontImageFile)
+                : _fileImage(fileImage: File(frontImageFile)) : _localBorderImg()
         ),
       ],
     );
@@ -2221,8 +1847,11 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.idBackImgSide),
         InkWell(
-            onTap: () => _openBackImageSource(context: context, controller: backImageController),
-            child: backImageFile != null && backImageFile.isNotEmpty ? _fileImage(fileImage: File(backImageFile)) : _localBorderImg()
+            onTap: () => _openBackImageSource(context),
+            child: backImageFile != null && backImageFile.isNotEmpty
+                ? backImageFile.split('.').last == "pdf"
+                ? _pdfImageWidget(backImageFile)
+                : _fileImage(fileImage: File(backImageFile)) : _localBorderImg()
         ),
       ],
     );
@@ -2233,8 +1862,11 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
         InkWell(
-            onTap: () => _openEleBillFrontSource(context: context, controller: eleBillFrontImgController),
-            child: electricBillFrontImgFile != null && electricBillFrontImgFile.isNotEmpty ? _fileImage(fileImage: File(electricBillFrontImgFile)) : _localBorderImg()),
+            onTap: () => _openEleBillFrontSource(context),
+            child: electricBillFrontImgFile != null && electricBillFrontImgFile.isNotEmpty
+                ? electricBillFrontImgFile.split('.').last == "pdf"
+                ? _pdfImageWidget(electricBillFrontImgFile)
+                :   _fileImage(fileImage: File(electricBillFrontImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2244,8 +1876,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
         InkWell(
-            onTap: () => _openEleBackSource(context: context, controller: eleBillBackImgController),
-            child: electricBillBackImgFile != null && electricBillBackImgFile.isNotEmpty ? _fileImage(fileImage: File(electricBillBackImgFile)) : _localBorderImg()),
+            onTap: () => _openEleBackSource(context),
+            child: electricBillBackImgFile != null && electricBillBackImgFile.isNotEmpty ? electricBillBackImgFile.split('.').last == "pdf"
+                ? _pdfImageWidget(electricBillBackImgFile)
+                :  _fileImage(fileImage: File(electricBillBackImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2255,7 +1889,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
         InkWell(
-            onTap: () => _openNocFrontImgSource(context: context, controller: nocFrontImgController),
+            onTap: () => _openNocFrontImgSource(context),
             child: nocFrontImgFile != null && nocFrontImgFile.isNotEmpty ? _fileImage(fileImage: File(nocFrontImgFile)) : _localBorderImg()),
       ],
     );
@@ -2266,7 +1900,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
         InkWell(
-            onTap: () => _openNocBackImgSource(context: context, controller: nocBackImgController),
+            onTap: () => _openNocBackImgSource(context),
             child: nocBackImgFile != null && nocBackImgFile.isNotEmpty ? _fileImage(fileImage: File(nocBackImgFile)) : _localBorderImg()),
       ],
     );
@@ -2277,7 +1911,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.customerImgLabel),
         InkWell(
-            onTap: () => _openCustomerImgSource(context: context, controller: customerImgController),
+            onTap: () => _openCustomerImgSource(context),
             child: uploadCustomerImgFile != null && uploadCustomerImgFile.isNotEmpty ? _fileImage(fileImage: File(uploadCustomerImgFile)) : _localBorderImg()),
       ],
     );
@@ -2300,7 +1934,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.houseImgLabel),
         InkWell(
-            onTap: () => _openHouseImgSource(context: context, controller: houseImgController),
+            onTap: () => _openHouseImgSource(context),
             child: uploadHouseImgFile != null && uploadHouseImgFile.isNotEmpty ? _fileImage(fileImage: File(uploadHouseImgFile)) : _localBorderImg()),
       ],
     );
@@ -2311,7 +1945,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
         InkWell(
-            onTap: () => _openConsentImgSource(context: context, controller: consentImageController),
+            onTap: () => _openOwnerConsentImgSource(context),
             child: ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty ? _fileImage(fileImage: File(ownerConsentImageFile)) : _localBorderImg()),
       ],
     );
@@ -2322,7 +1956,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
         InkWell(
-            onTap: () => _openChqCancelledImgSource(context: context, controller: cancelChqImageController),
+            onTap: () => _openChqCancelledImgSource(context),
             child: chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty ? _fileImage(fileImage: File(chqCancelledPhotoFile)) : _localBorderImg()),
       ],
     );
@@ -2334,7 +1968,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       children: [
         _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
         InkWell(
-            onTap: () => _openChqImgSource(context: context, controller: chqImgController),
+            onTap: () => _openChqImgSource(context),
             child: chqPhotoFile != null && chqPhotoFile.isNotEmpty ? _fileImage(fileImage: File(chqPhotoFile)) : _localBorderImg()),
       ],
     );
@@ -2692,9 +2326,519 @@ class _CustomInputFormState extends State<CustomInputForm> {
     );
   }
 
-  Widget _fileImage({
-    File fileImage,
-  }) {
+  /////////////////////////////  image 1 ///////////////////////////////////////
+  Future<void> _openFrontImageSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  frontImageFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  frontImageFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openBackImageSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  backImageFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  backImageFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openEleBillFrontSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  electricBillFrontImgFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  electricBillFrontImgFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openEleBackSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  electricBillBackImgFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  electricBillBackImgFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openNocFrontImgSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  nocFrontImgFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  nocFrontImgFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openNocBackImgSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  nocBackImgFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear,);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  nocBackImgFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openCustomerImgSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  uploadCustomerImgFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  uploadCustomerImgFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openHouseImgSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  uploadHouseImgFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  uploadHouseImgFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openCustomerConsentImgSource(BuildContext context) async {
+    return showDialog<void>(context: context, barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  customerConsentImageFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  customerConsentImageFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openOwnerConsentImgSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  ownerConsentImageFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera,maxHeight: 900, maxWidth: 1000,);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  ownerConsentImageFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openChqCancelledImgSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  chqCancelledPhotoFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  chqCancelledPhotoFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _openChqImgSource(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OpenImageSource(
+          onTapGallery: () async {
+            Navigator.of(context).pop();
+            try{
+              FilePickerResult result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                setState(() {
+                  chqPhotoFile = result.files.single.path;
+                });
+              } else {
+                print("User canceled the picker");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+          onTapCamera: () async {
+            Navigator.of(context).pop();
+            final pickerFile = await picker.pickImage(source: ImageSource.camera, maxHeight: 900, maxWidth: 1000,preferredCameraDevice: CameraDevice.rear);
+            try{
+              if(pickerFile != null){
+                setState(() {
+                  chqPhotoFile = pickerFile.path;
+                });
+              } else{
+                print("Not picker any image");
+              }
+            }catch(e){
+              print(e.toString());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Widget _pdfImageWidget(String fileName) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 41,
+          backgroundColor: Colors.blue.shade900,
+          child: CircleAvatar(
+              radius: 40,
+              backgroundColor: Colors.white,
+              child: ClipRRect(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Image.asset('assets/images/pdf_icon.png'),
+                ),
+              )),
+        ),
+        Text(fileName.split(Platform.pathSeparator).last),
+      ],
+    );
+  }
+
+  Widget _fileImage({File fileImage,}) {
     if (fileImage.path.isNotEmpty) {
       return CircleAvatar(
         radius: 41,
