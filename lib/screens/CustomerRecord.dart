@@ -13,9 +13,9 @@ class CustomerRecord extends StatefulWidget {
 }
 
 class CustomerRecordState extends BaseState<CustomerRecord> {
-  bool _checkInBtnStatus = false;
-  bool _checkOutBtnStatus = false;
-  bool _checkOutBtnboth = false;
+  bool _mobileData = false;
+  bool _wifiData = false;
+  bool _bothTypeData = false;
   bool canProceed = true;
   bool isOffline = false;
   bool dialogIsVisible = false;
@@ -43,7 +43,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
   }
 
   Future fetchCustomerDataList() async {
-    if (_checkOutBtnboth) {
+    if (_bothTypeData) {
       int count = 0;
       for (int i = 0; i < customerRegistrationList.length; i++) {
         SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
@@ -158,7 +158,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
 
 
   Future fetchCustomerDataSingle({int index}) async {
-    if (_checkOutBtnboth) {
+    if (_bothTypeData) {
       setState(() {
         isLoading = true;
       });
@@ -281,13 +281,13 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   _buildBox(
-                      color: _checkInBtnStatus ? Colors.green : Colors.red,
+                      color: _mobileData ? Colors.green : Colors.red,
                       textTitle: "MOBILE DATA"),
                   _buildBox(
-                      color: _checkOutBtnStatus ? Colors.green : Colors.red,
+                      color: _wifiData ? Colors.green : Colors.red,
                       textTitle: "WI-FI"),
                   _buildBox(
-                    color: _checkOutBtnboth ? Colors.green : Colors.red,
+                    color: _bothTypeData ? Colors.green : Colors.red,
                     textTitle:isLoading ? "Loading" : "Submit",
                     onTap: () async {
                       fetchCustomerDataList();
@@ -487,8 +487,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         setState(() {
           isOffline = false;
           dialogIsVisible = false;
-          _checkOutBtnStatus = true;
-          _checkOutBtnboth = true;
+          _wifiData = true;
+          _bothTypeData = true;
         });
         break;
       case ConnectivityResult.mobile:
@@ -496,8 +496,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         setState(() {
           isOffline = true;
           dialogIsVisible = false;
-          _checkInBtnStatus = true;
-          _checkOutBtnboth = true;
+          _mobileData = true;
+          _bothTypeData = true;
         });
         break;
       case ConnectivityResult.wifi:
@@ -505,8 +505,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         setState(() {
           isOffline = false;
           dialogIsVisible = false;
-          _checkOutBtnStatus = true;
-          _checkOutBtnboth = true;
+          _wifiData = true;
+          _bothTypeData = true;
         });
         break;
       case ConnectivityResult.mobile:
@@ -514,17 +514,17 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         setState(() {
           isOffline = true;
           dialogIsVisible = false;
-          _checkInBtnStatus = true;
-          _checkOutBtnboth = true;
+          _mobileData = true;
+          _bothTypeData = true;
         });
         break;
       case ConnectivityResult.none:
         if (!mounted) return;
         setState(() {
           isOffline = true;
-          _checkInBtnStatus = false;
-          _checkOutBtnStatus = false;
-          _checkOutBtnboth = false;
+          _mobileData = false;
+          _wifiData = false;
+          _bothTypeData = false;
           CustomToast.showToast("ERROR!!!!!\n INTERNET DISCONNECTED");
         });
         break;

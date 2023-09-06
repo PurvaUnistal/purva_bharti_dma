@@ -781,7 +781,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   leadingImg:  Column(
                     children: [
                       _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
-                      nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
+                      nocFrontImgFile != null
                           ? nocFrontImgFile.split('.').last == "pdf"
                           ? _pdfImageWidget(nocFrontImgFile)
                           :  ImageCircle(
@@ -793,7 +793,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   trailingImg: Column(
                     children: [
                       _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
-                      nocBackImgFile != null && nocBackImgFile.isNotEmpty
+                      nocBackImgFile != null
                           ? nocBackImgFile.split('.').last == "pdf"
                           ? _pdfImageWidget(nocBackImgFile)
                           :  ImageCircle(
@@ -807,7 +807,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   leadingImg:  Column(
                     children: [
                       _imageNameWidget(imageName: AppStrings.customerImgLabel),
-                      uploadCustomerImgFile != null && uploadCustomerImgFile.isNotEmpty
+                      uploadCustomerImgFile != null
                           ? uploadCustomerImgFile.split('.').last == "pdf"
                           ? _pdfImageWidget(uploadCustomerImgFile)
                           : ImageCircle(
@@ -819,7 +819,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   trailingImg: Column(
                     children: [
                       _imageNameWidget(imageName: AppStrings.houseImgLabel),
-                      uploadHouseImgFile != null && uploadHouseImgFile.isNotEmpty
+                      uploadHouseImgFile != null
                           ? uploadHouseImgFile.split('.').last == "pdf"
                           ? _pdfImageWidget(uploadHouseImgFile)
                           : ImageCircle(fileImage1: File(uploadHouseImgFile.toString()),
@@ -845,7 +845,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   leadingImg:  Column(
                     children: [
                       _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
-                      ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
+                      ownerConsentImageFile != null
                           ? ownerConsentImageFile.split('.').last == "pdf"
                           ? _pdfImageWidget(ownerConsentImageFile)
                           : ImageCircle(
@@ -857,7 +857,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   trailingImg: Column(
                     children: [
                       _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
-                      chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty
+                      chqCancelledPhotoFile != null
                           ? chqCancelledPhotoFile.split('.').last == "pdf"
                           ? _pdfImageWidget(chqCancelledPhotoFile)
                           : ImageCircle(fileImage1: File(chqCancelledPhotoFile.toString()), pathImage: chqCancelledPhotoFile.toString())
@@ -934,7 +934,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         child: Column(
                           children: [
                             _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-                            chqPhotoFile != null && chqPhotoFile.isNotEmpty
+                            chqPhotoFile != null
                                 ? chqPhotoFile.split('.').last == "pdf"
                                 ? _pdfImageWidget(chqPhotoFile)
                                 : ImageCircle(
@@ -1890,7 +1890,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
         _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
         InkWell(
             onTap: () => _openNocFrontImgSource(context),
-            child: nocFrontImgFile != null && nocFrontImgFile.isNotEmpty ? _fileImage(fileImage: File(nocFrontImgFile)) : _localBorderImg()),
+            child: nocFrontImgFile != null && nocFrontImgFile.isNotEmpty ? nocFrontImgFile.split('.').last == "pdf"
+                ? _pdfImageWidget(nocFrontImgFile)
+                : _fileImage(fileImage: File(nocFrontImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -1901,7 +1903,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
         _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
         InkWell(
             onTap: () => _openNocBackImgSource(context),
-            child: nocBackImgFile != null && nocBackImgFile.isNotEmpty ? _fileImage(fileImage: File(nocBackImgFile)) : _localBorderImg()),
+            child: nocBackImgFile != null && nocBackImgFile.isNotEmpty ? nocBackImgFile.split('.').last == "pdf"
+                ? _pdfImageWidget(nocBackImgFile)
+                : _fileImage(fileImage: File(nocBackImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -1912,7 +1916,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
         _imageNameWidget(imageName: AppStrings.customerImgLabel),
         InkWell(
             onTap: () => _openCustomerImgSource(context),
-            child: uploadCustomerImgFile != null && uploadCustomerImgFile.isNotEmpty ? _fileImage(fileImage: File(uploadCustomerImgFile)) : _localBorderImg()),
+            child: uploadCustomerImgFile != null && uploadCustomerImgFile.isNotEmpty ? uploadCustomerImgFile.split('.').last == "pdf"
+                ? _pdfImageWidget(uploadCustomerImgFile)
+                : _fileImage(fileImage: File(uploadCustomerImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -1935,7 +1941,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
         _imageNameWidget(imageName: AppStrings.houseImgLabel),
         InkWell(
             onTap: () => _openHouseImgSource(context),
-            child: uploadHouseImgFile != null && uploadHouseImgFile.isNotEmpty ? _fileImage(fileImage: File(uploadHouseImgFile)) : _localBorderImg()),
+            child: uploadHouseImgFile != null && uploadHouseImgFile.isNotEmpty ? uploadHouseImgFile.split('.').last == "pdf"
+                ? _pdfImageWidget(uploadHouseImgFile)
+                : _fileImage(fileImage: File(uploadHouseImgFile)) : _localBorderImg()),
       ],
     );
   }
@@ -1946,7 +1954,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
         _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
         InkWell(
             onTap: () => _openOwnerConsentImgSource(context),
-            child: ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty ? _fileImage(fileImage: File(ownerConsentImageFile)) : _localBorderImg()),
+            child: ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty ? ownerConsentImageFile.split('.').last == "pdf"
+                ? _pdfImageWidget(ownerConsentImageFile)
+                : _fileImage(fileImage: File(ownerConsentImageFile)) : _localBorderImg()),
       ],
     );
   }
@@ -1957,7 +1967,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
         _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
         InkWell(
             onTap: () => _openChqCancelledImgSource(context),
-            child: chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty ? _fileImage(fileImage: File(chqCancelledPhotoFile)) : _localBorderImg()),
+            child: chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty ? chqCancelledPhotoFile.split('.').last == "pdf"
+                ? _pdfImageWidget(chqCancelledPhotoFile)
+                : _fileImage(fileImage: File(chqCancelledPhotoFile)) : _localBorderImg()),
       ],
     );
   }
@@ -1969,7 +1981,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
         _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
         InkWell(
             onTap: () => _openChqImgSource(context),
-            child: chqPhotoFile != null && chqPhotoFile.isNotEmpty ? _fileImage(fileImage: File(chqPhotoFile)) : _localBorderImg()),
+            child: chqPhotoFile != null && chqPhotoFile.isNotEmpty ? chqPhotoFile.split('.').last == "pdf"
+                ? _pdfImageWidget(chqPhotoFile)
+                : _fileImage(fileImage: File(chqPhotoFile)) : _localBorderImg()),
       ],
     );
   }
@@ -2451,10 +2465,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   Future<void> _openEleBackSource(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
+    return showDialog<void>(context: context, barrierDismissible: false, builder: (BuildContext context) {
         return OpenImageSource(
           onTapGallery: () async {
             Navigator.of(context).pop();
@@ -2492,10 +2503,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   Future<void> _openNocFrontImgSource(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
+    return showDialog<void>(context: context, barrierDismissible: false, builder: (BuildContext context) {
         return OpenImageSource(
           onTapGallery: () async {
             Navigator.of(context).pop();
@@ -2504,6 +2512,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
               if (result != null) {
                 setState(() {
                   nocFrontImgFile = result.files.single.path;
+                  print("nocFrontImgFile-->"+nocFrontImgFile);
                 });
               } else {
                 print("User canceled the picker");

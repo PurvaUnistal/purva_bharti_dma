@@ -52,7 +52,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
     prefs.setString(GlobalConstants.firstNameLabel, steps.firstname);
     prefs.setString(GlobalConstants.lastNameLabel, steps.lastname);
     prefs.setString(GlobalConstants.middleNameLabel, steps.middlename);
-    prefs.setString(GlobalConstants.btnSubmit, steps.button);
     customerRegLabel = steps.reg;
     customerKycLabel = steps.kyc;
     customerPhotoLabel = steps.photo;
@@ -183,7 +182,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 16-08-2023",
+                      "Date : 06-09-2023",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -223,9 +222,33 @@ class _RegistrationFormState extends State<RegistrationForm> {
         title: "Customer Registration Form",
         icon: Icons.picture_in_picture,
         onTap: () async {
+          final deviceInfo = await DeviceInfoPlugin().androidInfo;
+          var status = await Permission.manageExternalStorage.request();
+          print("asdfghjgfdszxcv--->$status");
+          print("asdfghjgfdszxcv--->${deviceInfo.version.sdkInt}");
+          if(deviceInfo.version.sdkInt > 32){
+            if (status.isGranted) {
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => CustomInputForm(
+                      isUpdate: false,
+                      position: 0,
+                      studentModel: null
+                  )));
+            } else if (status.isPermanentlyDenied) {
+              openAppSettings();
+            }
+          } else{
+            Navigator.push(context, MaterialPageRoute(
+                builder: (context) => CustomInputForm(
+                    isUpdate: false,
+                    position: 0,
+                    studentModel: null
+                )));
+          }
+
        //   await _download(context);
-          Navigator.push(context, MaterialPageRoute(
-              builder: (context) => CustomInputForm(isUpdate: false, position: 0, studentModel: null)));
+          /*Navigator.push(context, MaterialPageRoute(
+              builder: (context) => CustomInputForm(isUpdate: false, position: 0, studentModel: null)));*/
         }
         )
     );
@@ -276,16 +299,21 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<bool> _multipleRequstPermission() async {
     Map<Permission, PermissionStatus> statuses = await [
-      Permission.location,Permission.storage, Permission.camera,
-    ].request();
+      Permission.location, Permission.camera,Permission.audio,Permission.photos,Permission.manageExternalStorage,].request();
     if(statuses[Permission.location].isGranted){
       print("Location permission is isGranted.");
     }
     if(statuses[Permission.camera].isGranted){
       print("Camera permission is isGranted.");
     }
-    if(statuses[Permission.storage].isGranted){
-      print("Camera permission is isGranted.");
+    if(statuses[Permission.photos].isGranted){
+      print("photos permission is isGranted.");
+    }
+    if(statuses[Permission.audio].isGranted){
+      print("audio permission is isGranted.");
+    }
+    if(statuses[Permission.manageExternalStorage].isGranted){
+      print("storage permission is isGranted.");
     }
     return true;
   }
@@ -647,7 +675,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           isOffline = true;
           dialogIsVisible = false;
           _isMobileType = true;
-          _isWifiTypea = true;
+          _isBothType = true;
         });
         break;
       case ConnectivityResult.wifi:
@@ -665,7 +693,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           isOffline = true;
           dialogIsVisible = false;
           _isMobileType = true;
-          _isWifiTypea = true;
+          _isBothType = true;
         });
         break;
       case ConnectivityResult.none:
