@@ -170,7 +170,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Version : 1.1,",
+                      "Version : 1.2,",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -182,7 +182,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 06-09-2023",
+                      "Date : 04-12-2023",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),

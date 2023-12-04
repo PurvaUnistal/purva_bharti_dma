@@ -23,7 +23,7 @@
     <application
         android:requestLegacyExternalStorage="true"
         android:name="${applicationName}"
-        android:label="hpcl dma app"
+        android:label="HPCL DMA"
         android:icon="@drawable/ic_launcher">
         <activity
             android:name=".MainActivity"

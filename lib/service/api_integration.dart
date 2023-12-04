@@ -21,13 +21,12 @@ class ApiIntegration {
     return null;
   }
 
-  Future<SaveCustomerRegistrationModel> saveCustRegApi(
-      SaveCustRegReqModel saveCustRegReqModel) async {
+  Future<SaveCustomerRegistrationModel> saveCustRegApi(SaveCustRegReqModel saveCustRegReqModel) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(GlobalConstants.token);
     Map<String, String> headers = {"Authorization": token};
     String url = GlobalConstants.saveCustomerRegistrationOffline;
-    print("url" + url);
+    try {
     var request = await http.MultipartRequest("Post", Uri.parse(url));
     Map<String, String> requestBody = {
       "schema": saveCustRegReqModel.schema ?? "",
@@ -68,8 +67,8 @@ class ApiIntegration {
       "kyc_document_1_number": saveCustRegReqModel.kycDocument1Number ?? "",
       "kyc_document_2": saveCustRegReqModel.kycDocument2 ?? "",
       "kyc_document_2_number": saveCustRegReqModel.kycDocument2Number ?? "",
-      "kyc_document_3": saveCustRegReqModel.kycDocument3 ?? "",
-      "kyc_document_3_number": saveCustRegReqModel.kycDocument3Number ?? "",
+      "kyc_document_3": saveCustRegReqModel.kycDocument3,
+      "kyc_document_3_number": saveCustRegReqModel.kycDocument3Number,
       "name_of_bank": saveCustRegReqModel.nameOfBank ?? "",
       "bank_account_number": saveCustRegReqModel.bankAccountNumber ?? "",
       "bank_ifsc_code": saveCustRegReqModel.bankIfscCode ?? "",
@@ -87,15 +86,12 @@ class ApiIntegration {
 
 
     };
-    print("requestBody-->" + requestBody.toString());
     request.headers.addAll(headers);
     request.fields.addAll(requestBody);
-
     if (saveCustRegReqModel.backSideImg1.isNotEmpty) {
       var backSide1Image = await http.MultipartFile.fromPath(
           "backside1", saveCustRegReqModel.backSideImg1);
       request.files.add(backSide1Image);
-      print("backside1-->" + backSide1Image.toString());
     } else {
       request.fields["backside1"] = "";
     }
@@ -103,7 +99,6 @@ class ApiIntegration {
       var backSide2Image = await http.MultipartFile.fromPath(
           "backside2", saveCustRegReqModel.backSideImg2);
       request.files.add(backSide2Image..toString());
-      print("backside2-->" + backSide2Image.toString());
     } else {
       request.fields["backside2"] = "";
     }
@@ -111,15 +106,12 @@ class ApiIntegration {
       var backSide3Image = await http.MultipartFile.fromPath(
           "backside3", saveCustRegReqModel.backSideImg3);
       request.files.add(backSide3Image);
-      print("backside3-->" + backSide3Image.toString());
     } else {
       request.fields["backside3"] = "";
     }
     if (saveCustRegReqModel.docUploadsImg1.isNotEmpty) {
-      var docUploads1Image = await http.MultipartFile.fromPath(
-          "document_uploads_1", saveCustRegReqModel.docUploadsImg1);
+      var docUploads1Image = await http.MultipartFile.fromPath("document_uploads_1", saveCustRegReqModel.docUploadsImg1);
       request.files.add(docUploads1Image);
-      print("docUploads1Image-->" + docUploads1Image.toString());
     } else {
       request.fields["document_uploads_1"] = "";
     }
@@ -127,7 +119,6 @@ class ApiIntegration {
       var docUploads2Image = await http.MultipartFile.fromPath(
           "document_uploads_2", saveCustRegReqModel.docUploadsImg2);
       request.files.add(docUploads2Image);
-      print("docUploads2Image-->" + docUploads2Image.toString());
     } else {
       request.fields["document_uploads_2"] = "";
     }
@@ -135,14 +126,12 @@ class ApiIntegration {
       var docUploads3Image = await http.MultipartFile.fromPath(
           "document_uploads_3", saveCustRegReqModel.docUploadsImg3);
       request.files.add(docUploads3Image);
-      print("docUploads3Image-->" + docUploads3Image.toString());
     } else {
       request.fields["document_uploads_3"] = "";
     }
     if (saveCustRegReqModel.uploadCustomerPhoto.isNotEmpty) {
       var uploadCustImage = await http.MultipartFile.fromPath("upload_customer_photo", saveCustRegReqModel.uploadCustomerPhoto);
       request.files.add(uploadCustImage);
-      print("uploadCustImage-->" + uploadCustImage.toString());
     } else {
       request.fields["upload_customer_photo"] = "";
     }
@@ -150,15 +139,12 @@ class ApiIntegration {
       var uploadHouseImage = await http.MultipartFile.fromPath(
           "upload_house_photo", saveCustRegReqModel.uploadHousePhoto);
       request.files.add(uploadHouseImage);
-      print("uploadHouseImage-->" + uploadHouseImage.toString());
     } else {
       request.fields["upload_house_photo"] = "";
     }
     if (saveCustRegReqModel.ownerConsent.isNotEmpty) {
       var ownerConsentImage = await http.MultipartFile.fromPath("owner_consent", saveCustRegReqModel.ownerConsent);
       request.files.add(ownerConsentImage);
-      print("ownerConsentLength-->" +ownerConsentImage.length.toString());
-      print("ownerConsentImage-->" + ownerConsentImage.toString());
     } else {
       request.fields["owner_consent"] = "";
     }
@@ -166,39 +152,37 @@ class ApiIntegration {
       var customerConsentImage = await http.MultipartFile.fromPath(
           "customer_consent", saveCustRegReqModel.customerConsent);
       request.files.add(customerConsentImage);
-      print("customerConsentImage-->" + customerConsentImage.toString());
     } else {
       request.fields["customer_consent"] = "";
     }
     if (saveCustRegReqModel.canceledCheque.isNotEmpty) {
       var canceledChqImage = await http.MultipartFile.fromPath("canceled_cheque", saveCustRegReqModel.canceledCheque);
       request.files.add(canceledChqImage);
-      print("canceledChqImage-->" + canceledChqImage.toString());
     } else {
       request.fields["canceled_cheque"] = "";
     }
     if (saveCustRegReqModel.chequePhoto.isNotEmpty) {
       var chequeImage = await http.MultipartFile.fromPath("cheque_photo", saveCustRegReqModel.chequePhoto);
       request.files.add(chequeImage);
-      print("chequeImage-->" + chequeImage.toString());
     } else {
       request.fields["cheque_photo"] = "";
     }
-    print("requestBody-->" + requestBody.toString());
-    try {
-      var response = await request.send();
-      var responseData = await response.stream.toBytes();
-      var responseString = String.fromCharCodes(responseData);
-      print("Response-->" + response.toString());
-      print("responseString :" + responseString);
-      if (response.statusCode == 200) {
-        return SaveCustomerRegistrationModel.fromJson(
-            json.decode(responseString));
-      }
-    } catch (e) {
-      print("Failed------------>" + e.toString());
+    try{
+        var response = await request.send().timeout(const Duration(seconds: 10));
+        var responseData = await response.stream.toBytes();
+        var responseString = String.fromCharCodes(responseData);
+        print("responseString : ==>" + responseString);
+        if (response.statusCode == 200) {
+          return SaveCustomerRegistrationModel.fromJson(json.decode(responseString));
+        } else {
+          print(responseString.toString());
+        }
+      }catch(e){
       CustomToast.showToast(e.toString());
-      throw Exception(e.toString());
+        throw Exception('Failed to load data! ==>${e.toString()}');
+      }
+    } catch(exception ) {
+      print("request exception-->"+ exception.toString());
     }
   }
 }

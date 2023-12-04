@@ -41,7 +41,6 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
     customerRegistrationList = customerRegistrationBox.values.toList();
     super.initState();
   }
-
   Future fetchCustomerDataList() async {
     if (_bothTypeData) {
       int count = 0;
@@ -52,88 +51,87 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           isLoading = true;
         });
         saveCustRegReqModel = SaveCustRegReqModel(
-          schema: saveCustRegOffModel.schema,
-          interested: saveCustRegOffModel.interested,
-          societyAllowedMdpe: saveCustRegOffModel.societyAllowedMdpe,
-          areaId: saveCustRegOffModel.areaId,
-          firstName: saveCustRegOffModel.firstName,
-          middleName: saveCustRegOffModel.middleName,
-          lastName: saveCustRegOffModel.lastName,
-          mobileNumber: saveCustRegOffModel.mobileNumber,
-          emailId: saveCustRegOffModel.emailId,
-          guardianType: saveCustRegOffModel.guardianType,
-          guardianName: saveCustRegOffModel.guardianName,
-          propertyCategoryId: saveCustRegOffModel.propertyCategoryId,
-          propertyClassId: saveCustRegOffModel.propertyClassId,
-          reasonForHold: saveCustRegOffModel.reasonForHold,
-          dmaUserId: saveCustRegOffModel.dmaUserId,
-          dmaUserName: saveCustRegOffModel.dmaUserName,
-          houseNumber: saveCustRegOffModel.houseNumber,
-          colonySocietyApartment: saveCustRegOffModel.colonySocietyApartment,
-          streetName: saveCustRegOffModel.streetName,
-          town: saveCustRegOffModel.town,
-          districtId: saveCustRegOffModel.districtId,
-          pinCode: saveCustRegOffModel.pinCode,
-          residentStatus: saveCustRegOffModel.residentStatus,
-          noOfKitchen: saveCustRegOffModel.noOfKitchen,
-          noOfBathroom: saveCustRegOffModel.noOfBathroom,
-          existingCookingFuel: saveCustRegOffModel.existingCookingFuel,
-          noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers,
-          latitude: saveCustRegOffModel.latitude,
-          longitude: saveCustRegOffModel.longitude,
-          remarks: saveCustRegOffModel.remarks,
-          kycDocument1: saveCustRegOffModel.kycDocument1,
-          kycDocument1Number: saveCustRegOffModel.kycDocument1Number,
-          kycDocument2: saveCustRegOffModel.kycDocument2,
-          kycDocument2Number: saveCustRegOffModel.kycDocument2Number,
-          kycDocument3: saveCustRegOffModel.kycDocument3,
-          initialAmount: saveCustRegOffModel.initialAmount,
-          bankAccountNumber: saveCustRegOffModel.bankAccountNumber,
-          bankAddress: saveCustRegOffModel.bankAddress,
-          bankIfscCode: saveCustRegOffModel.bankIfscCode,
-          chequeBankAccount: saveCustRegOffModel.chequeBankAccount,
-          chequeNumber: saveCustRegOffModel.chequeNumber,
+          schema: saveCustRegOffModel.schema.toString(),
+          interested: saveCustRegOffModel.interested.toString(),
+          societyAllowedMdpe: saveCustRegOffModel.societyAllowedMdpe.toString(),
+          areaId: saveCustRegOffModel.areaId.toString(),
+          firstName: saveCustRegOffModel.firstName.toString(),
+          middleName: saveCustRegOffModel.middleName.toString(),
+          lastName: saveCustRegOffModel.lastName.toString(),
+          mobileNumber: saveCustRegOffModel.mobileNumber.toString(),
+          emailId: saveCustRegOffModel.emailId.toString(),
+          guardianType: saveCustRegOffModel.guardianType.toString(),
+          guardianName: saveCustRegOffModel.guardianName.toString(),
+          propertyCategoryId: saveCustRegOffModel.propertyCategoryId.toString(),
+          propertyClassId: saveCustRegOffModel.propertyClassId.toString(),
+          reasonForHold: saveCustRegOffModel.reasonForHold.toString(),
+          dmaUserId: saveCustRegOffModel.dmaUserId.toString(),
+          dmaUserName: saveCustRegOffModel.dmaUserName.toString(),
+          houseNumber: saveCustRegOffModel.houseNumber.toString(),
+          colonySocietyApartment: saveCustRegOffModel.colonySocietyApartment.toString(),
+          streetName: saveCustRegOffModel.streetName.toString(),
+          town: saveCustRegOffModel.town.toString(),
+          districtId: saveCustRegOffModel.districtId.toString(),
+          pinCode: saveCustRegOffModel.pinCode.toString(),
+          residentStatus: saveCustRegOffModel.residentStatus.toString(),
+          noOfKitchen: saveCustRegOffModel.noOfKitchen.toString(),
+          noOfBathroom: saveCustRegOffModel.noOfBathroom.toString(),
+          existingCookingFuel: saveCustRegOffModel.existingCookingFuel.toString(),
+          noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers.toString(),
+          latitude: saveCustRegOffModel.latitude.toString(),
+          longitude: saveCustRegOffModel.longitude.toString(),
+          remarks: saveCustRegOffModel.remarks.toString(),
+          kycDocument1: saveCustRegOffModel.kycDocument1.toString(),
+          kycDocument1Number: saveCustRegOffModel.kycDocument1Number.toString(),
+          kycDocument2: saveCustRegOffModel.kycDocument2.toString(),
+          kycDocument2Number: saveCustRegOffModel.kycDocument2Number.toString(),
+          kycDocument3: saveCustRegOffModel.kycDocument3.toString(),
+          kycDocument3Number: saveCustRegOffModel.kycDocument3Number.toString(),
+          initialAmount: saveCustRegOffModel.initialAmount.toString(),
+          bankAccountNumber: saveCustRegOffModel.bankAccountNumber.toString(),
+          bankAddress: saveCustRegOffModel.bankAddress.toString(),
+          bankIfscCode: saveCustRegOffModel.bankIfscCode.toString(),
+          chequeBankAccount: saveCustRegOffModel.chequeBankAccount.toString(),
+          chequeNumber: saveCustRegOffModel.chequeNumber.toString(),
+          depositeType: saveCustRegOffModel.depositeType.toString(),
+          initialDepositeDate: saveCustRegOffModel.initialDepositeDate.toString(),
+          initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus.toString(),
+          modeOfDeposite: saveCustRegOffModel.modeOfDeposite.toString(),
+          nameOfBank: saveCustRegOffModel.nameOfBank.toString().toString(),
+          payementBankName: saveCustRegOffModel.payementBankName.toString(),
+          backSideImg1: saveCustRegOffModel.backSidePhoto1.toString(),
+          backSideImg2: saveCustRegOffModel.backSidePhoto2.toString(),
+          backSideImg3: saveCustRegOffModel.backSidePhoto3.toString(),
+          canceledCheque: saveCustRegOffModel.canceledChequePhoto.toString(),
+          chequePhoto: saveCustRegOffModel.chequePhoto.toString(),
+          uploadCustomerPhoto: saveCustRegOffModel.uploadCustomerPhoto.toString(),
+          uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto.toString(),
+          docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1.toString(),
+          docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2.toString(),
+          docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
           customerConsent: saveCustRegOffModel.customerConsentPhoto,
-          depositeType: saveCustRegOffModel.depositeType,
-          initialDepositeDate: saveCustRegOffModel.initialDepositeDate,
-          initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus,
-          modeOfDeposite: saveCustRegOffModel.modeOfDeposite,
-          nameOfBank: saveCustRegOffModel.nameOfBank,
-          ownerConsent: saveCustRegOffModel.ownerConsent,
-          payementBankName: saveCustRegOffModel.payementBankName,
-          backSideImg1: saveCustRegOffModel.backSidePhoto1,
-          backSideImg2: saveCustRegOffModel.backSidePhoto2,
-          backSideImg3: saveCustRegOffModel.backSidePhoto3,
-          canceledCheque: saveCustRegOffModel.canceledChequePhoto,
-          chequePhoto: saveCustRegOffModel.chequePhoto,
-          uploadCustomerPhoto: saveCustRegOffModel.uploadCustomerPhoto,
-          uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto,
-          docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1,
-          docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2,
-          docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3,
-          acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy,
-          acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost,
-          micr: saveCustRegOffModel.micr,
-          buildingNumber: saveCustRegOffModel.buildingNumber,
+          ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
+          acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy.toString(),
+          acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost.toString(),
+          micr: saveCustRegOffModel.micr.toString(),
+          buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
+
         );
         print("saveCustRegReqModel--->" + saveCustRegReqModel.toJson().toString());
-        var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
-        print(response.toString());
         try {
+          var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
+          print(response.toString());
           if (response != null) {
             setState(() {
               isLoading = false;
-            });
-            setState(() {
               count++;
             });
             CustomToast.showToast(response.message[0].message.toString());
-
           } else {
             setState(() {
               isLoading = false;
             });
-            CustomToast.showToast(response.message[0].message.toString());
+          //  CustomToast.showToast(response.message[0].message.toString());
           }
         } catch (e) {
           setState(() {
@@ -148,14 +146,12 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
       }
       if (count == customerRegistrationList.length) {
         await SaveCusRegHiveDataStore.box.clear();
-        CustomToast.showToast('Great Success! \n Record Save');
       }
-      customerRegistrationList.removeRange(0, count);
-
-  //    CustomToast.showToast("Data saved successfully");
+      print("ASDFGHNJGFDS-->${customerRegistrationList.length}");
+    customerRegistrationList.removeRange(0, count);
+      //   CustomToast.showToast("Data saved successfully");
     }
   }
-
 
   Future fetchCustomerDataSingle({int index}) async {
     if (_bothTypeData) {
@@ -231,23 +227,26 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
 
       );
-      print(
-          "saveCustRegReqModel--->" + saveCustRegReqModel.toJson().toString());
       var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
-      print(response.toString());
       try {
-         if(response.message != null){
-           setState(() {
-             isLoading = false;
-           });
+        if(response != null){
+          setState(() {
+            isLoading = false;
+          });
           customerRegistrationList.removeAt(index);
           customerRegistrationBox.deleteAt(index);
           CustomToast.showToast(response.message[0].message);
+          print("submit${response.message[0].message}");
+        } else{
+          setState(() {
+            isLoading = false;
+          });
         }
       } catch (e) {
         setState(() {
           isLoading = false;
         });
+        print("catch${e.toString()}");
         CustomToast.showToast(e.toString());
       }
     }
@@ -322,8 +321,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                     shadowColor: Colors.red,
                                     color: Colors.white,
                                     shape: Border(
-                                        left: BorderSide(color: Colors.red.withOpacity(.7), width: 3),
-                                        right: BorderSide(color: Colors.blue.shade900.withOpacity(.7), width: 3),
+                                      left: BorderSide(color: Colors.red.withOpacity(.7), width: 3),
+                                      right: BorderSide(color: Colors.blue.shade900.withOpacity(.7), width: 3),
                                     ),
                                     child: Column(
                                       children: [
@@ -342,7 +341,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                                     style: appbarHeadingStyle,
                                                   ),
                                                   Spacer(),
-                                                   IconButton(
+                                                  IconButton(
                                                     icon: Icon(
                                                       Icons.sync,
                                                       color: Colors.blue.shade900,
@@ -356,42 +355,42 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                                         await showDialog(
                                                           context: context,
                                                           builder: (context) => Dialog(
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets.all(18.0),
-                                                                  child: Column(
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(18.0),
+                                                              child: Column(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: [
+                                                                  Text("HPCL DMA",style: TextStyle(fontWeight: FontWeight.bold),),
+                                                                  Text('Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
+                                                                  Row(
                                                                     mainAxisSize: MainAxisSize.min,
                                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                                     children: [
-                                                                      Text("HPCL DMA",style: TextStyle(fontWeight: FontWeight.bold),),
-                                                                      Text('Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
-                                                                      Row(
-                                                                        mainAxisSize: MainAxisSize.min,
-                                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                                        children: [
-                                                                          Flexible(
-                                                                            child: ButtonWidget(
-                                                                              textButton: "Yes",
-                                                                              onPressed: () async {
-                                                                                Navigator.pop(context, false);
-                                                                                customerRegistrationList.removeAt(position);
-                                                                                customerRegistrationBox.deleteAt(position);
-                                                                              },
-                                                                            ),
-                                                                          ),
-                                                                          Flexible(
-                                                                            child: ButtonWidget(
-                                                                              textButton: "No",
-                                                                              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                                                                            ),
-                                                                          ),
-                                                                        ],
+                                                                      Flexible(
+                                                                        child: ButtonWidget(
+                                                                          textButton: "Yes",
+                                                                          onPressed: () async {
+                                                                            Navigator.pop(context, false);
+                                                                            customerRegistrationList.removeAt(position);
+                                                                            customerRegistrationBox.deleteAt(position);
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                      Flexible(
+                                                                        child: ButtonWidget(
+                                                                          textButton: "No",
+                                                                          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                                                        ),
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                ),
+                                                                ],
                                                               ),
+                                                            ),
+                                                          ),
                                                         );
                                                       },
                                                       child: Icon(
@@ -410,7 +409,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                                                             MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                        CustomInputForm(
+                                                                    CustomInputForm(
                                                                       isUpdate: true,
                                                                       position: position,
                                                                       studentModel: getStudent,
