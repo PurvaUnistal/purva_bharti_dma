@@ -115,7 +115,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
             child: CustomAppBar(
               titleAppBar: "HPCL DMA",
               actions: <Widget>[
-                Text(nameUser.toString(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
+                Text(
+                  nameUser.toString(),
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                ),
                 IconButton(
                   icon: Icon(
                     Icons.settings_power,
@@ -123,7 +126,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   ),
                   onPressed: () {
                     _exitApp(context);
-                    },
+                  },
                 )
               ],
             ),
@@ -139,8 +142,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         _buildBox(
-                            color:
-                            _isMobileType ? Colors.green : Colors.red,
+                            color: _isMobileType ? Colors.green : Colors.red,
                             textTitle: "MOBILE DATA"),
                         _buildBox(
                             color: _isWifiTypea ? Colors.green : Colors.red,
@@ -151,10 +153,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           onTap: () async {
                             print("_isMobileType$_isMobileType");
                             if (_isWifiTypea.toString().contains("true")) {
-                             await _download(context);
-                             CustomToast.showToast("Loading Successfully...");
+                              await _download(context);
+                              CustomToast.showToast("Loading Successfully...");
                             } else {
-                              CustomToast.showToast("ERROR!!!!!\n INTERNET CONNECTION");
+                              CustomToast.showToast(
+                                  "ERROR!!!!!\n INTERNET CONNECTION");
                             }
                           },
                         ),
@@ -170,7 +173,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Version : 1.2,",
+                      "Version : 1.3,",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -182,7 +185,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 04-12-2023",
+                      "Date : 21-12-2023",
                       style: TextStyle(
                           color: Colors.blue.shade900,
                           fontWeight: FontWeight.bold),
@@ -217,41 +220,37 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   get _itemList {
     List<Widget> list = [];
-    list.add(
-        listItem(
+    list.add(listItem(
         title: "Customer Registration Form",
         icon: Icons.picture_in_picture,
         onTap: () async {
           final deviceInfo = await DeviceInfoPlugin().androidInfo;
-          var status = await Permission.manageExternalStorage.request();
+          // var status = await Permission.manageExternalStorage.request();
+          var status = await Permission.storage.request();
           print("asdfghjgfdszxcv--->$status");
           print("asdfghjgfdszxcv--->${deviceInfo.version.sdkInt}");
-          if(deviceInfo.version.sdkInt > 32){
+          if (deviceInfo.version.sdkInt > 32) {
             if (status.isGranted) {
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => CustomInputForm(
-                      isUpdate: false,
-                      position: 0,
-                      studentModel: null
-                  )));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CustomInputForm(
+                          isUpdate: false, position: 0, studentModel: null)));
             } else if (status.isPermanentlyDenied) {
               openAppSettings();
             }
-          } else{
-            Navigator.push(context, MaterialPageRoute(
-                builder: (context) => CustomInputForm(
-                    isUpdate: false,
-                    position: 0,
-                    studentModel: null
-                )));
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CustomInputForm(
+                        isUpdate: false, position: 0, studentModel: null)));
           }
 
-       //   await _download(context);
+          //   await _download(context);
           /*Navigator.push(context, MaterialPageRoute(
               builder: (context) => CustomInputForm(isUpdate: false, position: 0, studentModel: null)));*/
-        }
-        )
-    );
+        }));
     list.add(listItem(
         title: "View and Sync Records",
         icon: Icons.receipt,
@@ -273,16 +272,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
               children: <Widget>[
                 icon != null
                     ? Container(
-                  padding: EdgeInsets.all(11),
-                  margin: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.red)),
-                  child: new Icon(
-                    icon,
-                  ),
-                  alignment: Alignment.centerLeft,
-                )
+                        padding: EdgeInsets.all(11),
+                        margin: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.red)),
+                        child: new Icon(
+                          icon,
+                        ),
+                        alignment: Alignment.centerLeft,
+                      )
                     : Container(),
                 Text(
                   title,
@@ -299,25 +298,29 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<bool> _multipleRequstPermission() async {
     Map<Permission, PermissionStatus> statuses = await [
-      Permission.location, Permission.camera,Permission.audio,Permission.photos,Permission.manageExternalStorage,].request();
-    if(statuses[Permission.location].isGranted){
+      Permission.location,
+      Permission.camera,
+      Permission.audio,
+      Permission.photos,
+      Permission.manageExternalStorage,
+    ].request();
+    if (statuses[Permission.location].isGranted) {
       print("Location permission is isGranted.");
     }
-    if(statuses[Permission.camera].isGranted){
+    if (statuses[Permission.camera].isGranted) {
       print("Camera permission is isGranted.");
     }
-    if(statuses[Permission.photos].isGranted){
+    if (statuses[Permission.photos].isGranted) {
       print("photos permission is isGranted.");
     }
-    if(statuses[Permission.audio].isGranted){
+    if (statuses[Permission.audio].isGranted) {
       print("audio permission is isGranted.");
     }
-    if(statuses[Permission.manageExternalStorage].isGranted){
+    if (statuses[Permission.manageExternalStorage].isGranted) {
       print("storage permission is isGranted.");
     }
     return true;
   }
-
 
   final List<String> titleList = <String>[
     'Customer Registration Form',
@@ -327,8 +330,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
     Icons.picture_in_picture,
     Icons.receipt
   ];
-
-
 
   Widget _buildCardButton() {
     return Card(
@@ -351,28 +352,28 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<bool> _exitApp(BuildContext context) {
     return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Do you want to logout this application?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                _getLoggedOut();
-              },
-              child: Text('Yes'),
-            ),
-            TextButton(
-              onPressed: () {
-                print("you choose no");
-                Navigator.of(context).pop(false);
-              },
-              child: Text('No'),
-            ),
-          ],
-        );
-      },
-    ) ??
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Do you want to logout this application?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    _getLoggedOut();
+                  },
+                  child: Text('Yes'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    print("you choose no");
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text('No'),
+                ),
+              ],
+            );
+          },
+        ) ??
         false;
   }
 
@@ -382,7 +383,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),
-          (Route<dynamic> route) => false,
+      (Route<dynamic> route) => false,
     );
     return null;
   }
@@ -412,14 +413,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
             ),
             title == 'Internet'
                 ? TextButton(
-              child: Text('Refresh'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                //  checkInternet();
+                    child: Text('Refresh'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      //  checkInternet();
 
-                checkWifi();
-              },
-            )
+                      checkWifi();
+                    },
+                  )
                 : Container(),
           ],
         );
@@ -714,73 +715,73 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   void buildAlertDialog(String message) {
     SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {
-      if (isOffline && !dialogIsVisible) {
-        dialogIsVisible = true;
-        showDialog(
-            barrierDismissible: false,
-            context: ctx,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14.0),
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(
-                      Icons.portable_wifi_off,
-                      color: Colors.redAccent,
-                      size: 36.0,
-                    ),
-                    canProceed
-                        ? Text(
-                      "Check your internet connection before proceeding.",
+          if (isOffline && !dialogIsVisible) {
+            dialogIsVisible = true;
+            showDialog(
+                barrierDismissible: false,
+                context: ctx,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(
+                      message,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12.0),
-                    )
-                        : Text(
-                      "Please! proceed by connecting to a internet connection",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 12.0, color: Colors.red),
+                      style: TextStyle(fontSize: 14.0),
                     ),
-                  ],
-                ),
-                actions: <Widget>[
-                  ButtonWidget(
-                    textButton:"CLOSE THE APP",
-                    onPressed: () {
-                      SystemChannels.platform
-                          .invokeMethod('SystemNavigator.pop');
-                    },
-                  ),
-                  ButtonWidget(
-                    textButton:"CLOSE THE APP",
-                    onPressed: () {
-                      SystemChannels.platform
-                          .invokeMethod('SystemNavigator.pop');
-                    },
-                  ),
-                  ButtonWidget(
-                    textButton:"PROCEED",
-                    onPressed: () {
-                      if (isOffline) {
-                        setState(() {
-                          canProceed = false;
-                        });
-                      } else {
-                        Navigator.pop(ctx);
-                        //your code
-                      }
-                    },
-                  ),
-                ],
-              );
-            });
-      }
-    }));
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.portable_wifi_off,
+                          color: Colors.redAccent,
+                          size: 36.0,
+                        ),
+                        canProceed
+                            ? Text(
+                                "Check your internet connection before proceeding.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 12.0),
+                              )
+                            : Text(
+                                "Please! proceed by connecting to a internet connection",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 12.0, color: Colors.red),
+                              ),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      ButtonWidget(
+                        textButton: "CLOSE THE APP",
+                        onPressed: () {
+                          SystemChannels.platform
+                              .invokeMethod('SystemNavigator.pop');
+                        },
+                      ),
+                      ButtonWidget(
+                        textButton: "CLOSE THE APP",
+                        onPressed: () {
+                          SystemChannels.platform
+                              .invokeMethod('SystemNavigator.pop');
+                        },
+                      ),
+                      ButtonWidget(
+                        textButton: "PROCEED",
+                        onPressed: () {
+                          if (isOffline) {
+                            setState(() {
+                              canProceed = false;
+                            });
+                          } else {
+                            Navigator.pop(ctx);
+                            //your code
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                });
+          }
+        }));
   }
 
   Future<void> initConnectivity() async {
@@ -799,9 +800,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
     _updateConnectionStatus(result);
   }
 }
-
-
-
 
 class ApiProvider {
   static Future<dynamic> getData({var urlEndPoint, var setApiData}) async {
