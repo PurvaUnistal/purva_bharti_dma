@@ -8,9 +8,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   bool isLoggedIn = false;
-  bool isLoading=true;
+  bool isLoading = true;
   final formKey = new GlobalKey<FormState>();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -20,38 +19,29 @@ class _SplashScreenState extends State<SplashScreen> {
     checkLogin();
   }
 
-
-  Future<bool>  checkLogin()async {
+  Future<bool> checkLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    isLoggedIn =  prefs.getBool(GlobalConstants.isUserLogIn) ?? false;
+    isLoggedIn = prefs.getBool(GlobalConstants.isUserLogIn) ?? false;
     String changePassword = prefs.getString(GlobalConstants.changePassword);
-      if(isLoggedIn){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegistrationForm()));
-       /* if(changePassword == "0"){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChangePasswordPage()));
-        } else{
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegistrationForm()));
-        }*/
-      }else{
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      }
+    if (isLoggedIn) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => RegistrationForm()));
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown,DeviceOrientation.portraitUp]);
-    context=context;
-    return MaterialApp(
-      home: Scaffold(
-          backgroundColor: Colors.white,
-          body:  Container(
-              color: Colors.white,
-              child:Center(
-                child: Container(
-                  child: Image.asset('assets/images/ic_launcher.png'),
-                ),
-              ))),
-      debugShowCheckedModeBanner: false,
-    );
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: Container(
+            color: Colors.white,
+            child: Center(
+              child: Container(
+                child: Image.asset('assets/images/pbg_logo.png'),
+              ),
+            )));
   }
 }

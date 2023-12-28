@@ -1,4 +1,4 @@
-package com.unistal.hpcl_app;
+package com.unistal.pbg_app;
 
 import io.flutter.embedding.android.FlutterActivity;
 

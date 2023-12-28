@@ -22,11 +22,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      //Initiate Bindings we have created with GETX
       initialBinding: NetworkBinding(),
-      title: 'HPCL',
+      title: 'PBG DMA',
       theme: ThemeData(
-        primaryColor: Colors.blue.shade900,
+        primaryColor: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: SplashScreen(),

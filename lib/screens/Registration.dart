@@ -45,6 +45,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
     final response = await http.get(
       Uri.parse(strUrl),
     );
+    print(strUrl);
+    print(strUrl + "-->" + response.body.toString());
     HpclLabals album = HpclLabals.fromJson(json.decode(response.body));
     prefs.setString(GlobalConstants.AllLEBELS, response.body);
     Steps steps = album.steps;
@@ -113,12 +115,15 @@ class _RegistrationFormState extends State<RegistrationForm> {
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
             child: CustomAppBar(
-              titleAppBar: "HPCL DMA",
-              actions: <Widget>[
-                Text(
+              titleAppBar: "PBG DMA",
+              leading: Center(
+                child: Text(
                   nameUser.toString(),
+                  textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                 ),
+              ),
+              actions: <Widget>[
                 IconButton(
                   icon: Icon(
                     Icons.settings_power,
@@ -151,8 +156,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           color: _isBothType ? Colors.green : Colors.red,
                           textTitle: "UPDATE",
                           onTap: () async {
-                            print("_isMobileType$_isMobileType");
-                            if (_isWifiTypea.toString().contains("true")) {
+                            print("_isMobileType$_isBothType");
+                            if (_isBothType.toString().contains("true")) {
                               await _download(context);
                               CustomToast.showToast("Loading Successfully...");
                             } else {
@@ -173,21 +178,21 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Version : 1.3,",
+                      "Version : 1,",
                       style: TextStyle(
-                          color: Colors.blue.shade900,
+                          color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "GA : $schema,",
                       style: TextStyle(
-                          color: Colors.blue.shade900,
+                          color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 21-12-2023",
+                      "Date : 28-12-2023",
                       style: TextStyle(
-                          color: Colors.blue.shade900,
+                          color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -224,38 +229,19 @@ class _RegistrationFormState extends State<RegistrationForm> {
         title: "Customer Registration Form",
         icon: Icons.picture_in_picture,
         onTap: () async {
-          final deviceInfo = await DeviceInfoPlugin().androidInfo;
-          // var status = await Permission.manageExternalStorage.request();
-          var status = await Permission.storage.request();
-          print("asdfghjgfdszxcv--->$status");
-          print("asdfghjgfdszxcv--->${deviceInfo.version.sdkInt}");
-          if (deviceInfo.version.sdkInt > 32) {
-            if (status.isGranted) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CustomInputForm(
-                          isUpdate: false, position: 0, studentModel: null)));
-            } else if (status.isPermanentlyDenied) {
-              openAppSettings();
-            }
-          } else {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CustomInputForm(
-                        isUpdate: false, position: 0, studentModel: null)));
-          }
-
-          //   await _download(context);
-          /*Navigator.push(context, MaterialPageRoute(
-              builder: (context) => CustomInputForm(isUpdate: false, position: 0, studentModel: null)));*/
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CustomInputForm(
+                      isUpdate: false, position: 0, studentModel: null)));
         }));
     list.add(listItem(
         title: "View and Sync Records",
         icon: Icons.receipt,
-        onTap: () => Navigator.push(context,
-            MaterialPageRoute(builder: (context) => CustomerRecord()))));
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SaveCustomerRegistrationPage()))));
     return list;
   }
 
@@ -300,24 +286,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
     Map<Permission, PermissionStatus> statuses = await [
       Permission.location,
       Permission.camera,
-      Permission.audio,
       Permission.photos,
-      Permission.manageExternalStorage,
+      Permission.storage,
     ].request();
-    if (statuses[Permission.location].isGranted) {
-      print("Location permission is isGranted.");
-    }
-    if (statuses[Permission.camera].isGranted) {
-      print("Camera permission is isGranted.");
-    }
-    if (statuses[Permission.photos].isGranted) {
-      print("photos permission is isGranted.");
-    }
-    if (statuses[Permission.audio].isGranted) {
-      print("audio permission is isGranted.");
-    }
-    if (statuses[Permission.manageExternalStorage].isGranted) {
-      print("storage permission is isGranted.");
+    if (statuses[Permission.location].isGranted ||
+        statuses[Permission.camera].isGranted ||
+        statuses[Permission.photos].isGranted ||
+        statuses[Permission.storage].isGranted) {
+      print("All permission are isGranted");
+    } else {
+      openAppSettings();
     }
     return true;
   }
@@ -333,7 +311,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Widget _buildCardButton() {
     return Card(
-      shape: Border(left: BorderSide(color: Colors.blue.shade900, width: 15)),
+      shape: Border(left: BorderSide(color: Colors.green.shade800, width: 15)),
       elevation: 5,
       shadowColor: Colors.lightBlueAccent,
       color: Colors.white,
@@ -807,14 +785,14 @@ class ApiProvider {
     var token = prefs.getString(GlobalConstants.token);
     try {
       String url = urlEndPoint;
-      log(url);
       final response = await get(
         Uri.parse(url.toString()),
         headers: {
           "authorization": token,
         },
       );
-      log(response.body);
+      log(url);
+      log(url + "-->" + response.body);
       if (response.statusCode == 200) {
         prefs.setString(setApiData, response.body);
         return jsonDecode(response.body);

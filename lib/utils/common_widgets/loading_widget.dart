@@ -14,13 +14,13 @@ class LoadingWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircularProgressIndicator(
-                  backgroundColor: Colors.blue.shade900,
-            valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
-
-
-        ),
-              SizedBox(width: 8,),
-              Text("Loading..." ,style: TextStyle(fontWeight: FontWeight.bold)),
+                backgroundColor: Colors.green.shade800,
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Text("Loading...", style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
         ),

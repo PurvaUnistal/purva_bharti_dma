@@ -5,14 +5,27 @@ import 'package:hpcl_app/utils/common_widgets/loading_widget.dart';
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
 
-class CustomerRecord extends StatefulWidget {
+class SaveCustomerRegistrationPage extends StatefulWidget {
+  const SaveCustomerRegistrationPage({Key key}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() {
-    return CustomerRecordState();
-  }
+  State<SaveCustomerRegistrationPage> createState() =>
+      _SaveCustomerRegistrationPageState();
 }
 
-class CustomerRecordState extends BaseState<CustomerRecord> {
+class _SaveCustomerRegistrationPageState
+    extends State<SaveCustomerRegistrationPage> {
+  @override
+  void initState() {
+    initConnectivity();
+    apiIntegration = ApiIntegration();
+    customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(
+        SaveCusRegHiveDataStore.saveCustRegDataBoxName);
+    customerRegistrationList = customerRegistrationBox.values.toList();
+    // TODO: implement initState
+    super.initState();
+  }
+
   bool _mobileData = false;
   bool _wifiData = false;
   bool _bothTypeData = false;
@@ -21,7 +34,6 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
   bool dialogIsVisible = false;
   final Connectivity _connectivity = Connectivity();
   var syncColors = Colors.red;
-
 
   Box<SaveCustomerRegistrationOfflineModel> customerRegistrationBox;
   List<SaveCustomerRegistrationOfflineModel> customerRegistrationList;
@@ -32,21 +44,12 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
   final SaveCusRegHiveDataStore dataStore = SaveCusRegHiveDataStore();
   ValueNotifier<bool> isUpdate = ValueNotifier<bool>(false);
 
-  @override
-  void initState() {
-    initConnectivity();
-    apiIntegration = ApiIntegration();
-    customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(
-        SaveCusRegHiveDataStore.saveCustRegDataBoxName);
-    customerRegistrationList = customerRegistrationBox.values.toList();
-    super.initState();
-  }
   Future fetchCustomerDataList() async {
     if (_bothTypeData) {
       int count = 0;
       for (int i = 0; i < customerRegistrationList.length; i++) {
         SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
-        customerRegistrationList[i];
+            customerRegistrationList[i];
         setState(() {
           isLoading = true;
         });
@@ -68,7 +71,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           dmaUserId: saveCustRegOffModel.dmaUserId.toString(),
           dmaUserName: saveCustRegOffModel.dmaUserName.toString(),
           houseNumber: saveCustRegOffModel.houseNumber.toString(),
-          colonySocietyApartment: saveCustRegOffModel.colonySocietyApartment.toString(),
+          colonySocietyApartment:
+              saveCustRegOffModel.colonySocietyApartment.toString(),
           streetName: saveCustRegOffModel.streetName.toString(),
           town: saveCustRegOffModel.town.toString(),
           districtId: saveCustRegOffModel.districtId.toString(),
@@ -76,7 +80,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           residentStatus: saveCustRegOffModel.residentStatus.toString(),
           noOfKitchen: saveCustRegOffModel.noOfKitchen.toString(),
           noOfBathroom: saveCustRegOffModel.noOfBathroom.toString(),
-          existingCookingFuel: saveCustRegOffModel.existingCookingFuel.toString(),
+          existingCookingFuel:
+              saveCustRegOffModel.existingCookingFuel.toString(),
           noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers.toString(),
           latitude: saveCustRegOffModel.latitude.toString(),
           longitude: saveCustRegOffModel.longitude.toString(),
@@ -94,8 +99,10 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           chequeBankAccount: saveCustRegOffModel.chequeBankAccount.toString(),
           chequeNumber: saveCustRegOffModel.chequeNumber.toString(),
           depositeType: saveCustRegOffModel.depositeType.toString(),
-          initialDepositeDate: saveCustRegOffModel.initialDepositeDate.toString(),
-          initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus.toString(),
+          initialDepositeDate:
+              saveCustRegOffModel.initialDepositeDate.toString(),
+          initialDepositeStatus:
+              saveCustRegOffModel.initialDepositeStatus.toString(),
           modeOfDeposite: saveCustRegOffModel.modeOfDeposite.toString(),
           nameOfBank: saveCustRegOffModel.nameOfBank.toString().toString(),
           payementBankName: saveCustRegOffModel.payementBankName.toString(),
@@ -104,22 +111,26 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           backSideImg3: saveCustRegOffModel.backSidePhoto3.toString(),
           canceledCheque: saveCustRegOffModel.canceledChequePhoto.toString(),
           chequePhoto: saveCustRegOffModel.chequePhoto.toString(),
-          uploadCustomerPhoto: saveCustRegOffModel.uploadCustomerPhoto.toString(),
+          uploadCustomerPhoto:
+              saveCustRegOffModel.uploadCustomerPhoto.toString(),
           uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto.toString(),
           docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1.toString(),
           docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2.toString(),
           docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
           customerConsent: saveCustRegOffModel.customerConsentPhoto,
           ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
-          acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy.toString(),
-          acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost.toString(),
+          acceptConversionPolicy:
+              saveCustRegOffModel.acceptConversionPolicy.toString(),
+          acceptExtraFittingCost:
+              saveCustRegOffModel.acceptExtraFittingCost.toString(),
           micr: saveCustRegOffModel.micr.toString(),
           buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
-
         );
-        print("saveCustRegReqModel--->" + saveCustRegReqModel.toJson().toString());
+        print("saveCustRegReqModel--->" +
+            saveCustRegReqModel.toJson().toString());
         try {
-          var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
+          var response =
+              await apiIntegration.saveCustRegApi(saveCustRegReqModel);
           print(response.toString());
           if (response != null) {
             setState(() {
@@ -131,7 +142,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
             setState(() {
               isLoading = false;
             });
-          //  CustomToast.showToast(response.message[0].message.toString());
+            //  CustomToast.showToast(response.message[0].message.toString());
           }
         } catch (e) {
           setState(() {
@@ -148,8 +159,116 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         await SaveCusRegHiveDataStore.box.clear();
       }
       print("ASDFGHNJGFDS-->${customerRegistrationList.length}");
-    customerRegistrationList.removeRange(0, count);
+      customerRegistrationList.removeRange(0, count);
       //   CustomToast.showToast("Data saved successfully");
+    }
+  }
+
+  Future fetchCustomerDataGrpList() async {
+    if (_bothTypeData) {
+      for (int i = 0; i < customerRegistrationList.length; i++) {
+        SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
+            customerRegistrationList[i];
+        setState(() {
+          isLoading = true;
+        });
+        saveCustRegReqModel = SaveCustRegReqModel(
+          schema: saveCustRegOffModel.schema.toString(),
+          interested: saveCustRegOffModel.interested.toString(),
+          societyAllowedMdpe: saveCustRegOffModel.societyAllowedMdpe.toString(),
+          areaId: saveCustRegOffModel.areaId.toString(),
+          firstName: saveCustRegOffModel.firstName.toString(),
+          middleName: saveCustRegOffModel.middleName.toString(),
+          lastName: saveCustRegOffModel.lastName.toString(),
+          mobileNumber: saveCustRegOffModel.mobileNumber.toString(),
+          emailId: saveCustRegOffModel.emailId.toString(),
+          guardianType: saveCustRegOffModel.guardianType.toString(),
+          guardianName: saveCustRegOffModel.guardianName.toString(),
+          propertyCategoryId: saveCustRegOffModel.propertyCategoryId.toString(),
+          propertyClassId: saveCustRegOffModel.propertyClassId.toString(),
+          reasonForHold: saveCustRegOffModel.reasonForHold.toString(),
+          dmaUserId: saveCustRegOffModel.dmaUserId.toString(),
+          dmaUserName: saveCustRegOffModel.dmaUserName.toString(),
+          houseNumber: saveCustRegOffModel.houseNumber.toString(),
+          colonySocietyApartment:
+              saveCustRegOffModel.colonySocietyApartment.toString(),
+          streetName: saveCustRegOffModel.streetName.toString(),
+          town: saveCustRegOffModel.town.toString(),
+          districtId: saveCustRegOffModel.districtId.toString(),
+          pinCode: saveCustRegOffModel.pinCode.toString(),
+          residentStatus: saveCustRegOffModel.residentStatus.toString(),
+          noOfKitchen: saveCustRegOffModel.noOfKitchen.toString(),
+          noOfBathroom: saveCustRegOffModel.noOfBathroom.toString(),
+          existingCookingFuel:
+              saveCustRegOffModel.existingCookingFuel.toString(),
+          noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers.toString(),
+          latitude: saveCustRegOffModel.latitude.toString(),
+          longitude: saveCustRegOffModel.longitude.toString(),
+          remarks: saveCustRegOffModel.remarks.toString(),
+          kycDocument1: saveCustRegOffModel.kycDocument1.toString(),
+          kycDocument1Number: saveCustRegOffModel.kycDocument1Number.toString(),
+          kycDocument2: saveCustRegOffModel.kycDocument2.toString(),
+          kycDocument2Number: saveCustRegOffModel.kycDocument2Number.toString(),
+          kycDocument3: saveCustRegOffModel.kycDocument3.toString(),
+          kycDocument3Number: saveCustRegOffModel.kycDocument3Number.toString(),
+          initialAmount: saveCustRegOffModel.initialAmount.toString(),
+          bankAccountNumber: saveCustRegOffModel.bankAccountNumber.toString(),
+          bankAddress: saveCustRegOffModel.bankAddress.toString(),
+          bankIfscCode: saveCustRegOffModel.bankIfscCode.toString(),
+          chequeBankAccount: saveCustRegOffModel.chequeBankAccount.toString(),
+          chequeNumber: saveCustRegOffModel.chequeNumber.toString(),
+          depositeType: saveCustRegOffModel.depositeType.toString(),
+          initialDepositeDate:
+              saveCustRegOffModel.initialDepositeDate.toString(),
+          initialDepositeStatus:
+              saveCustRegOffModel.initialDepositeStatus.toString(),
+          modeOfDeposite: saveCustRegOffModel.modeOfDeposite.toString(),
+          nameOfBank: saveCustRegOffModel.nameOfBank.toString().toString(),
+          payementBankName: saveCustRegOffModel.payementBankName.toString(),
+          backSideImg1: saveCustRegOffModel.backSidePhoto1.toString(),
+          backSideImg2: saveCustRegOffModel.backSidePhoto2.toString(),
+          backSideImg3: saveCustRegOffModel.backSidePhoto3.toString(),
+          canceledCheque: saveCustRegOffModel.canceledChequePhoto.toString(),
+          chequePhoto: saveCustRegOffModel.chequePhoto.toString(),
+          uploadCustomerPhoto:
+              saveCustRegOffModel.uploadCustomerPhoto.toString(),
+          uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto.toString(),
+          docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1.toString(),
+          docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2.toString(),
+          docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
+          customerConsent: saveCustRegOffModel.customerConsentPhoto,
+          ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
+          acceptConversionPolicy:
+              saveCustRegOffModel.acceptConversionPolicy.toString(),
+          acceptExtraFittingCost:
+              saveCustRegOffModel.acceptExtraFittingCost.toString(),
+          micr: saveCustRegOffModel.micr.toString(),
+          buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
+        );
+        print("saveCustRegReqModel--->" +
+            saveCustRegReqModel.toJson().toString());
+        try {
+          var response =
+              await apiIntegration.saveCustRegApi(saveCustRegReqModel);
+          print("response-->${response.toString()}");
+          if (response != null) {
+            setState(() {
+              isLoading = false;
+            });
+            CustomToast.showToast(response.message[i].message.toString());
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+            //  CustomToast.showToast(response.message[0].message.toString());
+          }
+        } catch (e) {
+          setState(() {
+            isLoading = false;
+          });
+          CustomToast.showToast(e.toString());
+        }
+      }
     }
   }
 
@@ -159,7 +278,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         isLoading = true;
       });
       SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
-      customerRegistrationList[index];
+          customerRegistrationList[index];
       saveCustRegReqModel = SaveCustRegReqModel(
         schema: saveCustRegOffModel.schema.toString(),
         interested: saveCustRegOffModel.interested.toString(),
@@ -178,7 +297,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         dmaUserId: saveCustRegOffModel.dmaUserId.toString(),
         dmaUserName: saveCustRegOffModel.dmaUserName.toString(),
         houseNumber: saveCustRegOffModel.houseNumber.toString(),
-        colonySocietyApartment: saveCustRegOffModel.colonySocietyApartment.toString(),
+        colonySocietyApartment:
+            saveCustRegOffModel.colonySocietyApartment.toString(),
         streetName: saveCustRegOffModel.streetName.toString(),
         town: saveCustRegOffModel.town.toString(),
         districtId: saveCustRegOffModel.districtId.toString(),
@@ -205,7 +325,8 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         chequeNumber: saveCustRegOffModel.chequeNumber.toString(),
         depositeType: saveCustRegOffModel.depositeType.toString(),
         initialDepositeDate: saveCustRegOffModel.initialDepositeDate.toString(),
-        initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus.toString(),
+        initialDepositeStatus:
+            saveCustRegOffModel.initialDepositeStatus.toString(),
         modeOfDeposite: saveCustRegOffModel.modeOfDeposite.toString(),
         nameOfBank: saveCustRegOffModel.nameOfBank.toString().toString(),
         payementBankName: saveCustRegOffModel.payementBankName.toString(),
@@ -221,15 +342,16 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
         docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
         customerConsent: saveCustRegOffModel.customerConsentPhoto,
         ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
-        acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy.toString(),
-        acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost.toString(),
+        acceptConversionPolicy:
+            saveCustRegOffModel.acceptConversionPolicy.toString(),
+        acceptExtraFittingCost:
+            saveCustRegOffModel.acceptExtraFittingCost.toString(),
         micr: saveCustRegOffModel.micr.toString(),
         buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
-
       );
       var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
       try {
-        if(response != null){
+        if (response != null) {
           setState(() {
             isLoading = false;
           });
@@ -237,7 +359,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
           customerRegistrationBox.deleteAt(index);
           CustomToast.showToast(response.message[0].message);
           print("submit${response.message[0].message}");
-        } else{
+        } else {
           setState(() {
             isLoading = false;
           });
@@ -253,7 +375,7 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
   }
 
   @override
-  Widget buildView(BuildContext context) {
+  Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => Future.value(false),
       child: Scaffold(
@@ -287,9 +409,10 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                       textTitle: "WI-FI"),
                   _buildBox(
                     color: _bothTypeData ? Colors.green : Colors.red,
-                    textTitle:isLoading ? "Loading" : "Submit",
+                    textTitle: isLoading ? "Loading" : "Submit",
                     onTap: () async {
                       fetchCustomerDataList();
+                      //  fetchCustomerDataGrpList();
                     },
                   ),
                 ],
@@ -307,155 +430,211 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
                           return customerRegistrationList.length == 0
                               ? const Center(child: Text("No Data Found"))
                               : ListView.builder(
-                              shrinkWrap: true,
-                              physics: ClampingScrollPhysics(),
-                              itemCount: customerRegistrationList.length,
-                              itemBuilder: (context, position) {
-                                SaveCustomerRegistrationOfflineModel
-                                getStudent =
-                                customerRegistrationList[position];
-                                return Visibility(
-                                  visible: true,
-                                  child: Card(
-                                    elevation: 5,
-                                    shadowColor: Colors.red,
-                                    color: Colors.white,
-                                    shape: Border(
-                                      left: BorderSide(color: Colors.red.withOpacity(.7), width: 3),
-                                      right: BorderSide(color: Colors.blue.shade900.withOpacity(.7), width: 3),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        ListTile(
-                                          title: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.end,
+                                  shrinkWrap: true,
+                                  physics: ClampingScrollPhysics(),
+                                  itemCount: customerRegistrationList.length,
+                                  itemBuilder: (context, position) {
+                                    SaveCustomerRegistrationOfflineModel
+                                        getStudent =
+                                        customerRegistrationList[position];
+                                    return Visibility(
+                                      visible: true,
+                                      child: Card(
+                                        elevation: 5,
+                                        shadowColor: Colors.red,
+                                        color: Colors.white,
+                                        shape: Border(
+                                          left: BorderSide(
+                                              color: Colors.red.withOpacity(.7),
+                                              width: 3),
+                                          right: BorderSide(
+                                              color: Colors.green.shade800
+                                                  .withOpacity(.7),
+                                              width: 3),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            ListTile(
+                                              title: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    "Records : ${position + 1}",
-                                                    style: appbarHeadingStyle,
-                                                  ),
-                                                  Spacer(),
-                                                  IconButton(
-                                                    icon: Icon(
-                                                      Icons.sync,
-                                                      color: Colors.blue.shade900,
-                                                    ),
-                                                    onPressed: () =>
-                                                        fetchCustomerDataSingle(
-                                                            index: position),
-                                                  ),
-                                                  InkWell(
-                                                      onTap: () async {
-                                                        await showDialog(
-                                                          context: context,
-                                                          builder: (context) => Dialog(
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.all(18.0),
-                                                              child: Column(
-                                                                mainAxisSize: MainAxisSize.min,
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                                children: [
-                                                                  Text("HPCL DMA",style: TextStyle(fontWeight: FontWeight.bold),),
-                                                                  Text('Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
-                                                                  Row(
-                                                                    mainAxisSize: MainAxisSize.min,
-                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Text(
+                                                        "Records : ${position + 1}",
+                                                        style:
+                                                            appbarHeadingStyle,
+                                                      ),
+                                                      Spacer(),
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.sync,
+                                                          color: Colors
+                                                              .blue.shade900,
+                                                        ),
+                                                        onPressed: () =>
+                                                            fetchCustomerDataSingle(
+                                                                index:
+                                                                    position),
+                                                      ),
+                                                      InkWell(
+                                                          onTap: () async {
+                                                            await showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (context) =>
+                                                                      Dialog(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          18.0),
+                                                                  child: Column(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
                                                                     children: [
-                                                                      Flexible(
-                                                                        child: ButtonWidget(
-                                                                          textButton: "Yes",
-                                                                          onPressed: () async {
-                                                                            Navigator.pop(context, false);
-                                                                            customerRegistrationList.removeAt(position);
-                                                                            customerRegistrationBox.deleteAt(position);
-                                                                          },
-                                                                        ),
+                                                                      Text(
+                                                                        "PBG DMA",
+                                                                        style: TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
                                                                       ),
-                                                                      Flexible(
-                                                                        child: ButtonWidget(
-                                                                          textButton: "No",
-                                                                          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                                                                        ),
+                                                                      Text(
+                                                                          'Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
+                                                                      Row(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.min,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          Flexible(
+                                                                            child:
+                                                                                ButtonWidget(
+                                                                              textButton: "Yes",
+                                                                              onPressed: () async {
+                                                                                Navigator.pop(context, false);
+                                                                                customerRegistrationList.removeAt(position);
+                                                                                customerRegistrationBox.deleteAt(position);
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                          Flexible(
+                                                                            child:
+                                                                                ButtonWidget(
+                                                                              textButton: "No",
+                                                                              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                                                            ),
+                                                                          ),
+                                                                        ],
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                ],
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                      child: Icon(
-                                                        Icons.delete,
-                                                        size: 30,
-                                                        color: Colors
-                                                            .blue.shade900,
-                                                      )),
-                                                  IconButton(
-                                                      icon: Icon(Icons.edit,
-                                                          color: Colors
-                                                              .blue.shade900),
-                                                      onPressed: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                    CustomInputForm(
-                                                                      isUpdate: true,
-                                                                      position: position,
-                                                                      studentModel: getStudent,
-                                                                    )));
-                                                      })
+                                                            );
+                                                          },
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            size: 30,
+                                                            color: Colors
+                                                                .blue.shade900,
+                                                          )),
+                                                      IconButton(
+                                                          icon: Icon(Icons.edit,
+                                                              color: Colors.blue
+                                                                  .shade900),
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            CustomInputForm(
+                                                                              isUpdate: true,
+                                                                              position: position,
+                                                                              studentModel: getStudent,
+                                                                            )));
+                                                          })
+                                                    ],
+                                                  ),
+                                                  Divider(),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Text(
+                                                          "Mobile No",
+                                                          style:
+                                                              appbarHeadingStyle,
+                                                        ),
+                                                        Spacer(),
+                                                        Text(
+                                                          getStudent
+                                                              .mobileNumber,
+                                                          style:
+                                                              appbarHeadingStyle,
+                                                        ),
+                                                      ]),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Divider(),
+                                                  Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Text(
+                                                          "Name",
+                                                          style:
+                                                              appbarHeadingStyle,
+                                                        ),
+                                                        Spacer(),
+                                                        Text(
+                                                          getStudent.firstName +
+                                                              " " +
+                                                              getStudent
+                                                                  .middleName +
+                                                              " " +
+                                                              getStudent
+                                                                  .lastName,
+                                                          style:
+                                                              appbarHeadingStyle,
+                                                        ),
+                                                      ]),
                                                 ],
                                               ),
-                                              Divider(),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: [
-                                                    Text("Mobile No", style: appbarHeadingStyle,),
-                                                    Spacer(),
-                                                    Text(getStudent.mobileNumber, style: appbarHeadingStyle,),
-                                                  ]),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Divider(),
-                                              Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: [
-                                                    Text("Name", style: appbarHeadingStyle,),
-                                                    Spacer(),
-                                                    Text(getStudent.firstName+" "+getStudent.middleName+" "+getStudent.lastName, style: appbarHeadingStyle,
-                                                    ),
-                                                  ]),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              });
+                                      ),
+                                    );
+                                  });
                         }),
                   ),
-                  isLoading ? Center(child: LoadingWidget()) :Container()
+                  isLoading ? Center(child: LoadingWidget()) : Container()
                 ],
               )
-
             ],
           ),
         ),
@@ -536,78 +715,78 @@ class CustomerRecordState extends BaseState<CustomerRecord> {
 
   void buildAlertDialog(String message, BuildContext context) {
     SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {
-      if (isOffline && !dialogIsVisible) {
-        dialogIsVisible = true;
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14.0),
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(
-                      Icons.portable_wifi_off,
-                      color: Colors.redAccent,
-                      size: 36.0,
-                    ),
-                    canProceed
-                        ? Text(
-                      "Check your internet connection before proceeding.",
+          if (isOffline && !dialogIsVisible) {
+            dialogIsVisible = true;
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(
+                      message,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12.0),
-                    )
-                        : Text(
-                      "Please! proceed by connecting to a internet connection",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 12.0, color: Colors.red),
+                      style: TextStyle(fontSize: 14.0),
                     ),
-                  ],
-                ),
-                actions: <Widget>[
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 10,
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.portable_wifi_off,
+                          color: Colors.redAccent,
+                          size: 36.0,
+                        ),
+                        canProceed
+                            ? Text(
+                                "Check your internet connection before proceeding.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 12.0),
+                              )
+                            : Text(
+                                "Please! proceed by connecting to a internet connection",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 12.0, color: Colors.red),
+                              ),
+                      ],
                     ),
-                    onPressed: () {
-                      SystemChannels.platform
-                          .invokeMethod('SystemNavigator.pop');
-                    },
-                    child: Text(
-                      "CLOSE THE APP",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 10,
-                    ),
-                    onPressed: () {
-                      if (isOffline) {
-                        setState(() {
-                          canProceed = false;
-                        });
-                      } else {
-                        Navigator.pop(context);
-                        //your code
-                      }
-                    },
-                    child: Text(
-                      "PROCEED",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              );
-            });
-      }
-    }));
+                    actions: <Widget>[
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 10,
+                        ),
+                        onPressed: () {
+                          SystemChannels.platform
+                              .invokeMethod('SystemNavigator.pop');
+                        },
+                        child: Text(
+                          "CLOSE THE APP",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 10,
+                        ),
+                        onPressed: () {
+                          if (isOffline) {
+                            setState(() {
+                              canProceed = false;
+                            });
+                          } else {
+                            Navigator.pop(context);
+                            //your code
+                          }
+                        },
+                        child: Text(
+                          "PROCEED",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  );
+                });
+          }
+        }));
   }
 
   Widget _buildBox({Color color, String textTitle, Function onTap}) {

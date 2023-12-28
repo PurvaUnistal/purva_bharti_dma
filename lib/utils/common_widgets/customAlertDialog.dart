@@ -4,7 +4,7 @@ import 'package:hpcl_app/ExportFile/export_file.dart';
 class CustomAlertDialog{
   static alert({String imageFile, BuildContext context }) {
     return AlertDialog(
-      title: Text("HPCL DMA"),
+      title: Text("PBG DMA"),
       content: Image.file(File(imageFile)),
       actions: [
         TextButton(
