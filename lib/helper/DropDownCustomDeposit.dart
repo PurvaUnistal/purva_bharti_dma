@@ -12,10 +12,10 @@ class SelectDropListDeposit extends StatefulWidget {
 
   SelectDropListDeposit(this.dropListModel,
       {this.icon,
-        this.itemSelected,
-        this.controller,
-        this.decoration,
-        this.onOptionSelected}) {
+      this.itemSelected,
+      this.controller,
+      this.decoration,
+      this.onOptionSelected}) {
     if (controller != null)
       controller.selectedItem =
           itemSelected ?? dropListModel.listOptionItems[0];
@@ -92,23 +92,23 @@ class _SelectDropListDepositState extends State<SelectDropListDeposit>
                 ),
                 Expanded(
                     child: GestureDetector(
-                      onTap: () {
-                        this.isShow = !this.isShow;
-                        _runExpandCheck();
-                        setState(() {});
-                      },
-                      child: Text(
-                        optionItemSelected.title,
-                        style: TextStyle(
-                            color:Theme.of(context).textTheme.headline6.color,
-                            fontSize: 16),
-                      ),
-                    )),
+                  onTap: () {
+                    this.isShow = !this.isShow;
+                    _runExpandCheck();
+                    setState(() {});
+                  },
+                  child: Text(
+                    optionItemSelected.title,
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.headline6.color,
+                        fontSize: 16),
+                  ),
+                )),
                 Align(
                   alignment: Alignment(1, 0),
                   child: Icon(
                     isShow ? Icons.arrow_drop_down : Icons.arrow_right,
-                    color:Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline6.color,
                     size: 20,
                   ),
                 ),
@@ -136,7 +136,7 @@ class _SelectDropListDepositState extends State<SelectDropListDeposit>
     );
   }
 
-  Widget _buildSubMenu(DepositItem  item, BuildContext context) {
+  Widget _buildSubMenu(DepositItem item, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 26.0, top: 5, bottom: 5),
       child: GestureDetector(
@@ -178,9 +178,8 @@ class _SelectDropListDepositState extends State<SelectDropListDeposit>
 }
 
 class DropDownControllerDeposit {
-  DepositItem  selectedItem;
+  DepositItem selectedItem;
 }
-
 
 class DropListDepositModel {
   DropListDepositModel(this.listOptionItems);
@@ -188,33 +187,45 @@ class DropListDepositModel {
   final List<DepositItem> listOptionItems;
 }
 
-
-
-
 class DepositItem {
   final dynamic id;
-  final String title;
-  final String amount;
-  final int firstamount;
-  final int schememonth;
-  final int gas_amount;
-  final String scheme_type;
-  final String scheme_code;
-  final String deposit_name;
-  final String deposit_amount;
-  final String equipment_deposit_amount;
-  final String interest_amount;
-  final String registration_gst;
-  final String totalAmount;
-  final String nextCycleAmount;
-  final String registration_tax_name;
-  final int total_amount;
-  final String interest_tax_amt;
+  final dynamic title;
+  final dynamic amount;
+  final dynamic firstamount;
+  final dynamic schememonth;
+  final dynamic gas_amount;
+  final dynamic scheme_type;
+  final dynamic scheme_code;
+  final dynamic deposit_name;
+  final dynamic deposit_amount;
+  final dynamic equipment_deposit_amount;
+  final dynamic interest_amount;
+  final dynamic registration_gst;
+  final dynamic totalAmount;
+  final dynamic nextCycleAmount;
+  final dynamic registration_tax_name;
+  final dynamic total_amount;
+  final dynamic interest_tax_amt;
   final String reg_tax;
 
-  DepositItem({@required this.id, @required this.title,@required this.amount,@required this.firstamount,@required this.schememonth,@required this.gas_amount,
-    @required this.scheme_type, @required this.scheme_code, this.deposit_name,@required this.deposit_amount,@required this.equipment_deposit_amount,@required this.interest_amount,
-    @required this.registration_gst, @required this.totalAmount,@required this.nextCycleAmount,@required this.registration_tax_name, this.total_amount,@required this.interest_tax_amt,
-    @required this.reg_tax});
-
+  DepositItem(
+      {@required this.id,
+      @required this.title,
+      @required this.amount,
+      @required this.firstamount,
+      @required this.schememonth,
+      @required this.gas_amount,
+      @required this.scheme_type,
+      @required this.scheme_code,
+      this.deposit_name,
+      @required this.deposit_amount,
+      @required this.equipment_deposit_amount,
+      @required this.interest_amount,
+      @required this.registration_gst,
+      @required this.totalAmount,
+      @required this.nextCycleAmount,
+      @required this.registration_tax_name,
+      this.total_amount,
+      @required this.interest_tax_amt,
+      @required this.reg_tax});
 }

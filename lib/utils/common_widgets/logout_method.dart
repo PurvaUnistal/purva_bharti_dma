@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import '../../ExportFile/export_file.dart';
 
 class LogOutMethod {
-
-static logOut(BuildContext context) async {
+  static logOut(BuildContext context) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool(GlobalConstants.isUserLogIn, false);
@@ -16,10 +15,10 @@ static logOut(BuildContext context) async {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
-            (Route<dynamic> route) => false,
+        (Route<dynamic> route) => false,
       );
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
   }
 }

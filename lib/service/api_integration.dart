@@ -1,9 +1,72 @@
-import 'package:hpcl_app/models/save_customer_registration_model.dart';
+import 'package:pbg_app/models/save_customer_registration_model.dart';
 import 'package:http/http.dart' as http;
 import '../ExportFile/export_file.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiIntegration {
+  static Future<dynamic> getTestData({var endPoint}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString(GlobalConstants.token);
+    try {
+      String url = endPoint;
+      final response = await get(
+        Uri.parse(url.toString()),
+      );
+      log(url);
+      log(url + "-->" + response.body);
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return Api.error;
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        log("SocketException : ${e.toString()}");
+        //  CustomToast.showToast(e.toString());
+      } else if (e is TimeoutException) {
+        log("TimeoutException : ${e.toString()}");
+        // CustomToast.showToast(e.toString());
+      } else {
+        log("Unhandled exception : ${e.toString()}");
+        // CustomToast.showToast(e.toString());
+      }
+    }
+    return null;
+  }
+
+  static Future<dynamic> getData({var urlEndPoint, var setApiData}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString(GlobalConstants.token);
+    try {
+      String url = urlEndPoint;
+      final response = await get(
+        Uri.parse(url.toString()),
+        headers: {
+          "authorization": token,
+        },
+      );
+      log(url);
+      log(url + "-->" + response.body);
+      if (response.statusCode == 200) {
+        prefs.setString(setApiData, response.body);
+        return jsonDecode(response.body);
+        // return response.body;
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        log("SocketException : ${e.toString()}");
+        //  CustomToast.showToast(e.toString());
+      } else if (e is TimeoutException) {
+        log("TimeoutException : ${e.toString()}");
+        // CustomToast.showToast(e.toString());
+      } else {
+        log("Unhandled exception : ${e.toString()}");
+        // CustomToast.showToast(e.toString());
+      }
+    }
+    return null;
+  }
+
   Future<ChangePasswordModel> changePasswordApi(
       ChangePasswordResponse changePasswordResponse) async {
     String url = GlobalConstants.resetPassword;
@@ -13,10 +76,10 @@ class ApiIntegration {
       if (res != null) {
         return ChangePasswordModel.fromJson(res);
       } else {
-        print("Null Data");
+        log("Null Data");
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
       CustomToast.showToast(e.toString());
     }
     return null;
@@ -27,10 +90,11 @@ class ApiIntegration {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(GlobalConstants.token);
     Map<String, String> headers = {
-      "Authorization": token,
+      // "Authorization": token,
       "Content-Type": "multipart/form-data"
     };
     String url = GlobalConstants.saveCustomerRegistrationOffline;
+    log("saveCustomerRegistrationOffline-->${url}");
     try {
       var request = await http.MultipartRequest("Post", Uri.parse(url));
 
@@ -94,8 +158,16 @@ class ApiIntegration {
         "cheque_bank_account": saveCustRegReqModel.chequeBankAccount ?? "",
         "micr": saveCustRegReqModel.micr ?? "",
       };
-      request.headers.addAll(headers);
+      if (requestBody['interested'] == "0") {
+        requestBody.remove("initial_deposite_status");
+        requestBody.remove("deposite_type");
+        requestBody.remove("initial_amount");
+        requestBody.remove("accept_conversion_policy");
+        requestBody.remove("accept_extra_fitting_cost");
+      }
       request.fields.addAll(requestBody);
+      request.headers.addAll(headers);
+      print("request.fields.addAll-->${requestBody}");
 
       if (saveCustRegReqModel.backSideImg1.isNotEmpty) {
         var backSide1Image = await http.MultipartFile.fromPath(
@@ -103,7 +175,7 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.backSideImg1.split('.').last));
         request.files.add(backSide1Image);
-        print(
+        log(
           "chequeImage" + saveCustRegReqModel.backSideImg1,
         );
       } else {
@@ -115,7 +187,7 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.backSideImg2.split('.').last));
         request.files.add(backSide2Image);
-        print("chequeImage" + saveCustRegReqModel.backSideImg2);
+        log("chequeImage" + saveCustRegReqModel.backSideImg2);
       } else {
         request.fields["backside2"] = "";
       }
@@ -125,7 +197,7 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.backSideImg3.split('.').last));
         request.files.add(backSide3Image);
-        print("chequeImage" + saveCustRegReqModel.backSideImg3);
+        log("chequeImage" + saveCustRegReqModel.backSideImg3);
       } else {
         request.fields["backside3"] = "";
       }
@@ -135,7 +207,7 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.docUploadsImg1.split('.').last));
         request.files.add(docUploads1Image);
-        print("chequeImage" + saveCustRegReqModel.docUploadsImg1);
+        log("chequeImage" + saveCustRegReqModel.docUploadsImg1);
       } else {
         request.fields["document_uploads_1"] = "";
       }
@@ -145,7 +217,7 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.docUploadsImg2.split('.').last));
         request.files.add(docUploads2Image);
-        print("chequeImage" + saveCustRegReqModel.docUploadsImg2);
+        log("chequeImage" + saveCustRegReqModel.docUploadsImg2);
       } else {
         request.fields["document_uploads_2"] = "";
       }
@@ -155,7 +227,7 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.docUploadsImg3.split('.').last));
         request.files.add(docUploads3Image);
-        print("chequeImage" + saveCustRegReqModel.docUploadsImg3);
+        log("chequeImage" + saveCustRegReqModel.docUploadsImg3);
       } else {
         request.fields["document_uploads_3"] = "";
       }
@@ -165,7 +237,7 @@ class ApiIntegration {
             contentType: MediaType("image",
                 saveCustRegReqModel.uploadCustomerPhoto.split('.').last));
         request.files.add(uploadCustImage);
-        print("chequeImage" + saveCustRegReqModel.uploadCustomerPhoto);
+        log("chequeImage" + saveCustRegReqModel.uploadCustomerPhoto);
       } else {
         request.fields["upload_customer_photo"] = "";
       }
@@ -175,7 +247,7 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.uploadHousePhoto.split('.').last));
         request.files.add(uploadHouseImage);
-        print("chequeImage" + saveCustRegReqModel.uploadHousePhoto);
+        log("chequeImage" + saveCustRegReqModel.uploadHousePhoto);
       } else {
         request.fields["upload_house_photo"] = "";
       }
@@ -185,7 +257,7 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.ownerConsent.split('.').last));
         request.files.add(ownerConsentImage);
-        print("chequeImage" + saveCustRegReqModel.ownerConsent);
+        log("chequeImage" + saveCustRegReqModel.ownerConsent);
       } else {
         request.fields["owner_consent"] = "";
       }
@@ -195,7 +267,7 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.customerConsent.split('.').last));
         request.files.add(customerConsentImage);
-        print("chequeImage" + saveCustRegReqModel.customerConsent);
+        log("chequeImage" + saveCustRegReqModel.customerConsent);
       } else {
         request.fields["customer_consent"] = "";
       }
@@ -205,7 +277,7 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.canceledCheque.split('.').last));
         request.files.add(canceledChqImage);
-        print("chequeImage" + saveCustRegReqModel.canceledCheque);
+        log("chequeImage" + saveCustRegReqModel.canceledCheque);
       } else {
         request.fields["canceled_cheque"] = "";
       }
@@ -215,37 +287,26 @@ class ApiIntegration {
             contentType: MediaType(
                 "image", saveCustRegReqModel.chequePhoto.split('.').last));
         request.files.add(chequeImage);
-        print("chequeImage" + saveCustRegReqModel.chequePhoto);
+        log("chequeImage" + saveCustRegReqModel.chequePhoto);
       } else {
         request.fields["cheque_photo"] = "";
       }
-      /* http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        print(await response.stream.bytesToString());
-      }
-      else {
-        print(response.reasonPhrase);
-      }*/
-
       try {
         var response = await request.send().timeout(const Duration(minutes: 4));
         var responseData = await response.stream.bytesToString();
-        // var responseString = String.fromCharCodes(responseData);
-        //   var responseString = String.fromCharCodes(responseData);
-        print("responseString : ==>" + responseData);
+        log("responseString : ==>" + responseData);
         if (response.statusCode == 200) {
           return SaveCustomerRegistrationModel.fromJson(
               json.decode(responseData));
         } else {
-          print(responseData.toString());
+          log(responseData.toString());
         }
       } catch (e) {
         CustomToast.showToast(e.toString());
         throw Exception('Failed to load data! ==>${e.toString()}');
       }
     } catch (exception) {
-      print("request exception-->" + exception.toString());
+      log("request exception-->" + exception.toString());
     }
   }
 }

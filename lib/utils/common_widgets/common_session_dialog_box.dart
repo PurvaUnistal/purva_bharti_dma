@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../screens/LoginPage.dart';
@@ -10,7 +12,8 @@ class SessionDialogUtils {
 
   factory SessionDialogUtils() => _instance;
 
-  static void showCustomDialog(BuildContext context,{@required Function okBtnFunction}) {
+  static void showCustomDialog(BuildContext context,
+      {@required Function okBtnFunction}) {
     showDialog(
         context: context,
         builder: (_) {
@@ -46,10 +49,10 @@ class SessionDialogUtils {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
-            (Route<dynamic> route) => false,
+        (Route<dynamic> route) => false,
       );
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
   }
 }

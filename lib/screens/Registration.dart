@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hpcl_app/screens/custom_input_form_screen.dart';
-import 'package:http/http.dart' as http;
+import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/models/GetAllDistrictModel.dart';
+import 'package:pbg_app/screens/BookingRegistrationForm/presentation/page/booking_registration_form.dart';
+import 'package:pbg_app/screens/custom_input_form_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../ExportFile/export_file.dart';
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({Key key}) : super(key: key);
@@ -35,50 +36,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
   bool _isBothType = false;
   bool _isWifiTypea = false;
 
-  static const APP_STORE_URL = 'https://apps.apple.com/us/app/appname/idAPP-ID';
-  static const PLAY_STORE_URL =
-      'https://play.google.com/store/apps/details?id=APP-ID';
-
-  Future<void> fetchLabals() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String strUrl = GlobalConstants.getLabels;
-    final response = await http.get(
-      Uri.parse(strUrl),
-    );
-    print(strUrl);
-    print(strUrl + "-->" + response.body.toString());
-    HpclLabals album = HpclLabals.fromJson(json.decode(response.body));
-    prefs.setString(GlobalConstants.AllLEBELS, response.body);
-    Steps steps = album.steps;
-    prefs.setString(GlobalConstants.mobileNoLabel, steps.mobile);
-    prefs.setString(GlobalConstants.firstNameLabel, steps.firstname);
-    prefs.setString(GlobalConstants.lastNameLabel, steps.lastname);
-    prefs.setString(GlobalConstants.middleNameLabel, steps.middlename);
-    customerRegLabel = steps.reg;
-    customerKycLabel = steps.kyc;
-    customerPhotoLabel = steps.photo;
-    customerConsentLabel = steps.consent;
-    customerDepositLabel = steps.deposit;
-    step1Label = steps.step1;
-    step2Label = steps.step2;
-    step3Label = steps.step3;
-    step4Label = steps.step4;
-    step5Label = steps.step5;
-    print(response.body);
-    if (!mounted) return;
-    setState(() {
-      gettingLabel = false;
-    });
-  }
-
   checkInternet() async {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        print('connected');
+        log('connected');
       }
     } on SocketException catch (_) {
-      print('not connected');
+      log('not connected');
       setState(() {
         isInternet = true;
       });
@@ -87,14 +52,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
     }
   }
 
-  ServerApi serverApi;
-  List<ChargeAreaModel> listChargeArea;
-
   @override
   void initState() {
     super.initState();
     _multipleRequstPermission();
-    serverApi = ServerApi();
     _download(context);
     initConnectivity();
     _connectivitySubscription =
@@ -156,7 +117,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           color: _isBothType ? Colors.green : Colors.red,
                           textTitle: "UPDATE",
                           onTap: () async {
-                            print("_isMobileType$_isBothType");
+                            log("_isMobileType$_isBothType");
                             if (_isBothType.toString().contains("true")) {
                               await _download(context);
                               CustomToast.showToast("Loading Successfully...");
@@ -178,7 +139,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Version : 1,",
+                      "Version : 1.0,",
                       style: TextStyle(
                           color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
@@ -190,7 +151,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 28-12-2023",
+                      "Date : 01-02-2024",
                       style: TextStyle(
                           color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
@@ -226,7 +187,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   get _itemList {
     List<Widget> list = [];
     list.add(listItem(
-        title: "Customer Registration Form",
+        title: "DPNG Registration Form",
         icon: Icons.picture_in_picture,
         onTap: () async {
           Navigator.push(
@@ -242,6 +203,13 @@ class _RegistrationFormState extends State<RegistrationForm> {
             context,
             MaterialPageRoute(
                 builder: (context) => SaveCustomerRegistrationPage()))));
+    /*list.add(listItem(
+        title: "DPNG Booking Registration Form",
+        icon: Icons.book,
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BookingRegistrationFormView()))));*/
     return list;
   }
 
@@ -293,7 +261,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         statuses[Permission.camera].isGranted ||
         statuses[Permission.photos].isGranted ||
         statuses[Permission.storage].isGranted) {
-      print("All permission are isGranted");
+      log("All permission are isGranted");
     } else {
       openAppSettings();
     }
@@ -343,7 +311,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
                 TextButton(
                   onPressed: () {
-                    print("you choose no");
+                    log("you choose no");
                     Navigator.of(context).pop(false);
                   },
                   child: Text('No'),
@@ -411,7 +379,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     fetchLabals();
     fetchArea();
     fetchChargeAreaList();
-    interestedDorpdownList();
+    interestedList();
     _getPropertyCategory();
     _getPropertyClass();
     _getSocietyAllow();
@@ -428,24 +396,35 @@ class _RegistrationFormState extends State<RegistrationForm> {
     _getMdeOfDeposite();
     _getInitialDepositeStatusList();
     _getInitialDepositeScheme();
+    getAllTestDistrictApi();
     getAllDistrictApi();
   }
 
+  SharedPreferences prefs;
   String schema, token, nameUser;
 
   getSharedPrefer() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     setState(() {
       schema = prefs.getString(GlobalConstants.schema);
       nameUser = prefs.getString(GlobalConstants.name);
       token = prefs.getString(GlobalConstants.token);
-      print("schema------------->" + schema);
+      log("schema------------->" + schema);
     });
+  }
+
+  Future<void> fetchLabals() async {
+    String url = GlobalConstants.getLabels;
+    var res = await ApiIntegration.getData(
+      urlEndPoint: url,
+      setApiData: GlobalConstants.AllLEBELS,
+    );
+    return res;
   }
 
   Future<void> fetchArea() async {
     String url = GlobalConstants.getAllArea + "?schema=" + schema;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.area,
     );
@@ -454,16 +433,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> fetchChargeAreaList() async {
     String url = GlobalConstants.getChargeAreaList + "?schema=" + schema;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.chargeAreaName,
     );
     return res;
   }
 
-  Future<void> interestedDorpdownList() async {
+  Future<void> interestedList() async {
     String url = GlobalConstants.getNoInterested;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.Interested,
     );
@@ -472,7 +451,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getPropertyCategory() async {
     String url = GlobalConstants.getPropertyCategory + "?schema=" + schema;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.PropertyCategory,
     );
@@ -481,7 +460,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getPropertyClass() async {
     String url = GlobalConstants.getProClasssCategory + "?schema=" + schema;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.propertyclass,
     );
@@ -490,7 +469,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getSocietyAllow() async {
     String url = GlobalConstants.getSocietyAllow;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.sociaty_allow,
     );
@@ -499,7 +478,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getResidentStatus() async {
     String url = GlobalConstants.getResidentStatus;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.ResidentStatus,
     );
@@ -508,7 +487,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getExistingCookingFuel() async {
     String url = GlobalConstants.getExistingCookingFuel;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.CookingFuel,
     );
@@ -517,7 +496,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getGuardianType() async {
     String url = GlobalConstants.getGuardianType;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.GuardianType,
     );
@@ -526,7 +505,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getIdProofArray() async {
     String url = GlobalConstants.getIdentityProof;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.IdentityProof,
     );
@@ -535,7 +514,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getAddressProofArray() async {
     String url = GlobalConstants.getOwnershipProof;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.OwnershipProof,
     );
@@ -544,7 +523,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getKycProofArray() async {
     String url = GlobalConstants.getKycDoc;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.KycDoc,
     );
@@ -553,7 +532,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getBank() async {
     String url = GlobalConstants.getAllBanks;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.AllBanks,
     );
@@ -562,7 +541,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getBillingModeList() async {
     String url = GlobalConstants.getEbilling;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.Ebilling,
     );
@@ -571,7 +550,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getAcceptConversionPolicyList() async {
     String url = GlobalConstants.getAcceptConversionPolicy;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.ConversionPolicy,
     );
@@ -580,7 +559,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getAcceptExtraFittingCostList() async {
     String url = GlobalConstants.getAcceptExtraFittingCost;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.ExtraFittingCost,
     );
@@ -589,7 +568,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getMdeOfDeposite() async {
     String url = GlobalConstants.getMdeOfDeposite;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.MdeOfDeposite,
     );
@@ -598,16 +577,33 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getInitialDepositeStatusList() async {
     String url = GlobalConstants.getInitialDepositeStatus;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.DepositeStatus,
     );
     return res;
   }
 
+  Future<List<GetAllDistrictModel>> getAllTestDistrictApi() async {
+    String url = GlobalConstants.getAllDistrict + "?schema=" + schema;
+    try {
+      final res = await ApiIntegration.getTestData(
+        endPoint: url,
+      );
+      if (res != null) {
+        prefs.setString(SPrefsKey.getAllDistrict, res);
+        return getAllDistrictModelFromJson(res);
+        //  return List<GetAllDistrictModel>.from(json.map((x) => GetAllDistrictModel.fromJson(x)));
+      }
+    } catch (e) {
+      print("GetAllDistrictModel-->${e.toString()}");
+    }
+    return null;
+  }
+
   Future<void> getAllDistrictApi() async {
     String url = GlobalConstants.getAllDistrict + "?schema=" + schema;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.AllDistrict,
     );
@@ -616,7 +612,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _getInitialDepositeScheme() async {
     String url = GlobalConstants.getSchemeType + "?schema=" + schema;
-    var res = ApiProvider.getData(
+    var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.SchemeType,
     );
@@ -768,7 +764,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
 
     if (!mounted) {
@@ -776,39 +772,5 @@ class _RegistrationFormState extends State<RegistrationForm> {
     }
 
     _updateConnectionStatus(result);
-  }
-}
-
-class ApiProvider {
-  static Future<dynamic> getData({var urlEndPoint, var setApiData}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString(GlobalConstants.token);
-    try {
-      String url = urlEndPoint;
-      final response = await get(
-        Uri.parse(url.toString()),
-        headers: {
-          "authorization": token,
-        },
-      );
-      log(url);
-      log(url + "-->" + response.body);
-      if (response.statusCode == 200) {
-        prefs.setString(setApiData, response.body);
-        return jsonDecode(response.body);
-      }
-    } catch (e) {
-      if (e is SocketException) {
-        log("SocketException : ${e.toString()}");
-        //  CustomToast.showToast(e.toString());
-      } else if (e is TimeoutException) {
-        log("TimeoutException : ${e.toString()}");
-        // CustomToast.showToast(e.toString());
-      } else {
-        log("Unhandled exception : ${e.toString()}");
-        // CustomToast.showToast(e.toString());
-      }
-    }
-    return null;
   }
 }

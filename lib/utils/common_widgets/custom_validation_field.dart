@@ -18,7 +18,8 @@ class CustomPasswordValidatedFields extends StatefulWidget {
   final Iterable<String> autofillHints;
   final TextInputType keyboardType;
 
-  CustomPasswordValidatedFields({Key key,
+  CustomPasswordValidatedFields({
+    Key key,
     this.inputDecoration = const InputDecoration(
         hintText: "Enter password",
         prefixIcon: Icon(Icons.lock),
@@ -44,7 +45,8 @@ class CustomPasswordValidatedFields extends StatefulWidget {
       _CustomPasswordValidatedFieldsState();
 }
 
-class _CustomPasswordValidatedFieldsState extends State<CustomPasswordValidatedFields> {
+class _CustomPasswordValidatedFieldsState
+    extends State<CustomPasswordValidatedFields> {
   String _pass = "";
   final formGlobalKey = GlobalKey<FormState>();
   @override
@@ -101,8 +103,7 @@ class _CustomPasswordValidatedFieldsState extends State<CustomPasswordValidatedF
             TextFormField(
               maxLength: 20,
               inputFormatters: [
-                FilteringTextInputFormatter.deny(
-                    RegExp(r'\s')),
+                FilteringTextInputFormatter.deny(RegExp(r'\s')),
               ],
               autofillHints: [AutofillHints.password],
               textInputAction: widget.textInputAction,
@@ -121,7 +122,7 @@ class _CustomPasswordValidatedFieldsState extends State<CustomPasswordValidatedF
                   _pass = value;
                   formGlobalKey.currentState.validate();
                   value = widget.textEditingController.text.trim().toString();
-                  print(_pass);
+                  log(_pass);
                 });
               },
               validator: passwordValidation,
@@ -133,15 +134,18 @@ class _CustomPasswordValidatedFieldsState extends State<CustomPasswordValidatedF
   }
 
   String passwordValidation(String value) {
-    bool passValid = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$').hasMatch(value);
+    bool passValid =
+        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$')
+            .hasMatch(value);
     if (value.trim().isEmpty) {
       return "Password cannot be emtpy!";
-    } if(value.length < 6){
+    }
+    if (value.length < 6) {
       return "Password must be atleast 6 characters long";
     }
-    if(value.length > 20){
+    if (value.length > 20) {
       return "Password must be less than 20 characters";
-    }else if (!passValid) {
+    } else if (!passValid) {
       return "Requirement(s) missing!";
     }
     return null;

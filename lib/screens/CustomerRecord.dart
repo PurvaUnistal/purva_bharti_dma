@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hpcl_app/models/save_customer_registration_model.dart';
-import 'package:hpcl_app/screens/custom_input_form_screen.dart';
-import 'package:hpcl_app/utils/common_widgets/loading_widget.dart';
+import 'package:pbg_app/models/save_customer_registration_model.dart';
+import 'package:pbg_app/screens/custom_input_form_screen.dart';
+import 'package:pbg_app/utils/common_widgets/loading_widget.dart';
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
 
@@ -126,12 +126,12 @@ class _SaveCustomerRegistrationPageState
           micr: saveCustRegOffModel.micr.toString(),
           buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
         );
-        print("saveCustRegReqModel--->" +
+        log("saveCustRegReqModel--->" +
             saveCustRegReqModel.toJson().toString());
         try {
           var response =
               await apiIntegration.saveCustRegApi(saveCustRegReqModel);
-          print(response.toString());
+          log(response.toString());
           if (response != null) {
             setState(() {
               isLoading = false;
@@ -158,7 +158,7 @@ class _SaveCustomerRegistrationPageState
       if (count == customerRegistrationList.length) {
         await SaveCusRegHiveDataStore.box.clear();
       }
-      print("ASDFGHNJGFDS-->${customerRegistrationList.length}");
+      log("ASDFGHNJGFDS-->${customerRegistrationList.length}");
       customerRegistrationList.removeRange(0, count);
       //   CustomToast.showToast("Data saved successfully");
     }
@@ -245,12 +245,12 @@ class _SaveCustomerRegistrationPageState
           micr: saveCustRegOffModel.micr.toString(),
           buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
         );
-        print("saveCustRegReqModel--->" +
+        log("saveCustRegReqModel--->" +
             saveCustRegReqModel.toJson().toString());
         try {
           var response =
               await apiIntegration.saveCustRegApi(saveCustRegReqModel);
-          print("response-->${response.toString()}");
+          log("response-->${response.toString()}");
           if (response != null) {
             setState(() {
               isLoading = false;
@@ -358,7 +358,6 @@ class _SaveCustomerRegistrationPageState
           customerRegistrationList.removeAt(index);
           customerRegistrationBox.deleteAt(index);
           CustomToast.showToast(response.message[0].message);
-          print("submit${response.message[0].message}");
         } else {
           setState(() {
             isLoading = false;
@@ -368,7 +367,7 @@ class _SaveCustomerRegistrationPageState
         setState(() {
           isLoading = false;
         });
-        print("catch${e.toString()}");
+        log("catch${e.toString()}");
         CustomToast.showToast(e.toString());
       }
     }
@@ -648,7 +647,7 @@ class _SaveCustomerRegistrationPageState
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
 
     if (!mounted) {

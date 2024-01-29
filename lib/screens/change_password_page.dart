@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
-import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
+import 'package:pbg_app/utils/common_widgets/button_widget.dart';
+import 'package:pbg_app/utils/common_widgets/custom_app_bar.dart';
 import '../ExportFile/export_file.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -45,7 +45,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         controller.text = "";
       });
     }
-    print("controller==>" + controller.text);
+    log("controller==>" + controller.text);
   }
 
   Future getChangeData() async {
@@ -83,11 +83,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       password: newPasswordController.text.trim().toString(),
       confirmPassword: conformPasswordController.text.trim().toString(),
     );
-    print("changePasswordResponse==>" +
+    log("changePasswordResponse==>" +
         changePasswordResponse.toJson().toString());
     var res = await apiIntegration.changePasswordApi(changePasswordResponse);
     if (res != null) {
-      print("Not Null");
+      log("Not Null");
       CommonDialogBox.showCommonDialog(
           context: context,
           title: "Password Updated",
@@ -95,7 +95,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               "Your password has been reset Successfully! \n Now login with your new password",
           okBtnFunction: () => LogOutMethod.logOut(context));
     } else {
-      print("Null Data");
+      log("Null Data");
     }
   }
 

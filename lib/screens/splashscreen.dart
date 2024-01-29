@@ -40,7 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
             color: Colors.white,
             child: Center(
               child: Container(
-                child: Image.asset('assets/images/pbg_logo.png'),
+                child: Image.asset('assets/images/pbg_logo.png', width: 200,
+                  height: 200,),
               ),
             )));
   }

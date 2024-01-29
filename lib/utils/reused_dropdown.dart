@@ -28,14 +28,14 @@ class ReusedDropDownString extends StatelessWidget {
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 12),
+                  fontSize: 10),
             ),
           ),
           DropdownButtonFormField(
             style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.normal,
-                fontSize: 12),
+                fontSize: 10),
             decoration: InputDecoration(
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(4)),
@@ -57,7 +57,7 @@ class ReusedDropDownString extends StatelessWidget {
               errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                   borderSide: BorderSide(width: 1, color: Colors.red)),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
             ),
             items: items,
             value: value,
@@ -66,11 +66,12 @@ class ReusedDropDownString extends StatelessWidget {
               style: TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.normal,
-                  fontSize: 12),
+                  fontSize: 10),
             ),
             onChanged: onChanged,
             isExpanded: true,
-            isDense: true,
+            isDense: false,
+            iconEnabledColor: Colors.green,
           ),
         ],
       ),
@@ -95,20 +96,21 @@ class ReusedDropDownOptionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0, right: 12),
+      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 5, right: 12),
       child: Column(children: [
         Align(
           alignment: Alignment.topLeft,
           child: Text(
             textLabel,
             style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 10),
           ),
         ),
         DropdownButtonFormField(
           isDense: false,
+          iconEnabledColor: Colors.green,
           style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
+              color: Colors.black, fontWeight: FontWeight.normal, fontSize: 10),
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(4)),
@@ -140,7 +142,7 @@ class ReusedDropDownOptionItem extends StatelessWidget {
             style: TextStyle(
                 color: Colors.grey,
                 fontWeight: FontWeight.normal,
-                fontSize: 12),
+                fontSize: 10),
           ),
           onChanged: onChanged,
           isExpanded: true,

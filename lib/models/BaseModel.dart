@@ -1,8 +1,4 @@
-
-
-
-import 'package:hpcl_app/models/ServerError.dart';
-
+import 'package:pbg_app/models/ServerError.dart';
 
 class BaseModel<T> {
   ServerError _error;

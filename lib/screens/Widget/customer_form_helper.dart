@@ -1,10 +1,11 @@
 import 'dart:io';
-import 'package:hpcl_app/ExportFile/export_file.dart';
-import 'package:hpcl_app/utils/common_widgets/custom_toast.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/utils/common_widgets/custom_toast.dart';
 
 class CustomerFormHelper {
   static bool textFieldValidationCheck({
     String isInterestedId,
+  //  String reasonNotInterested,
     String acceptConversionPolicyValueId,
     String acceptExtraFittingCostValueId,
     String chargeAreaType,
@@ -16,11 +17,11 @@ class CustomerFormHelper {
     // String emailIdController,
     String propertyTypeId,
     String propertyClassId,
-    String buildingNumberController,
+  //  String buildingNumberController,
     String houseNumberController,
     String colonySocietyApartmentController,
     String streetNameController,
-    String townController,
+   // String townController,
     String district,
     String pinCodeController,
     String mdpeValue,
@@ -49,12 +50,16 @@ class CustomerFormHelper {
     String chequePhoto,
   }) {
     try {
-      if (acceptConversionPolicyValueId != "1") {
+      if (acceptConversionPolicyValueId.isEmpty) {
         CustomToast.showToast("Please select Accept Conversion Policy");
         return false;
       }
-      if (acceptExtraFittingCostValueId != "1") {
+      if (acceptExtraFittingCostValueId.isEmpty) {
         CustomToast.showToast("Please select Accept Extra Fitting CostValue");
+        return false;
+      }
+      if (isInterestedId == "") {
+        CustomToast.showToast("Please select Interested Id");
         return false;
       }
       if (chargeAreaType == "0" ||
@@ -79,11 +84,13 @@ class CustomerFormHelper {
         CustomToast.showToast("Please enter last name");
         return false;
       }
-      if (guardianNameController == "") {
-        CustomToast.showToast("Please enter guardian name");
-        return false;
+      if (isInterestedId == "1") {
+        if (guardianNameController == "") {
+          CustomToast.showToast("Please enter guardian name");
+          return false;
+        }
       }
-      if (propertyTypeId == "0") {
+       if (propertyTypeId == "0") {
         CustomToast.showToast("Please select Property Category");
         return false;
       }
@@ -91,10 +98,10 @@ class CustomerFormHelper {
         CustomToast.showToast("Please select property class id");
         return false;
       }
-      if (buildingNumberController == "") {
+   /*   if (buildingNumberController == "") {
         CustomToast.showToast("Please enter the building number");
         return false;
-      }
+      }*/
       if (houseNumberController == "") {
         CustomToast.showToast("Please enter the house number");
         return false;
@@ -226,7 +233,7 @@ class CustomerFormHelper {
 
       return true;
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
       CustomToast.showToast(e.toString());
       return null;
     }
@@ -240,7 +247,7 @@ class CustomerFormHelper {
       }
       return textValidation;
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
       CustomToast.showToast(e.toString());
       return null;
     }

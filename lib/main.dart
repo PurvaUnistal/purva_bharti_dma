@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:hpcl_app/screens/Internet/network_binding.dart';
-import '../../ExportFile/export_file.dart';
-import 'models/optioin_item_class.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pbg_app/screens/BookingRegistrationForm/domain/bloc/booking_registration_form_bloc.dart';
+import 'package:pbg_app/screens/BookingRegistrationForm/presentation/widget/app_string.dart';
+import 'ExportFile/export_file.dart';
 
 String dataBoxName = "dataBoxName";
 
@@ -11,7 +11,6 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<SaveCustomerRegistrationOfflineModel>(
       SaveCustomerRegistrationOfflineModelAdapter());
-  Hive.registerAdapter<OptionItemClass>(OptionItemClassAdapter());
   await Hive.openBox<SaveCustomerRegistrationOfflineModel>(
       "saveCustRegDataBoxName");
 
@@ -21,16 +20,19 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      initialBinding: NetworkBinding(),
-      title: 'PBG DMA',
-      theme: ThemeData(
-        primaryColor: Colors.green,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (BuildContext context) => BookingRegistrationFormBloc()),
+      ],
+      child: MaterialApp(
+        title: AppString.appName,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Colors.green,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: SplashScreen(),
       ),
-      home: SplashScreen(),
-      builder: EasyLoading.init(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }

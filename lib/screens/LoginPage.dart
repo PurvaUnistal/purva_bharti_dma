@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hpcl_app/utils/common_widgets/button_widget.dart';
-import 'package:hpcl_app/utils/common_widgets/custom_app_bar.dart';
+import 'package:pbg_app/utils/common_widgets/button_widget.dart';
+import 'package:pbg_app/utils/common_widgets/custom_app_bar.dart';
 import 'package:http/http.dart' as http;
 import '../ExportFile/export_file.dart';
 
@@ -59,6 +59,7 @@ class LoginPage extends State<LoginScreen> {
     var deviceId = await getUniqueDeviceId();
     final data = {"email": username, "password": password, "device": deviceId};
     final jsonString = json.encode(data);
+    print("GlobalConstants.Login-->${GlobalConstants.Login}");
     var res =
         await http.post((Uri.parse(GlobalConstants.Login)), body: jsonString);
 
@@ -259,8 +260,8 @@ class LoginPage extends State<LoginScreen> {
       var jwt = await attemptLogIn(username, password);
       try {
         LoginDetails lgd = new LoginDetails.fromJson(json.decode(jwt));
-        print("Login API---> $jwt");
-        print("Login role--->" + lgd.user.role);
+        log("Login API---> $jwt");
+        log("Login role--->" + lgd.user.role);
         if ((lgd.status == 200) && (lgd.user.role == 'dma')) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setBool(GlobalConstants.isUserLogIn, true);

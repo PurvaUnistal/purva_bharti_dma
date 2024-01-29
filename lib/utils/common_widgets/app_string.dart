@@ -5,13 +5,15 @@ class AppStrings {
   static String locationLat = 'Latitude';
   static String locationLong = 'Longitude';
   static String star = "*";
-  static String interestedLabel = star + 'Interested';
-  static String conversionPolicyLabel = star + 'accept conversion Policy';
-  static String fittingCostLabel = star + 'accept extra fitting cost';
+  static String interestedLabel = star + 'Registration Type';
+  static String conversionPolicyLabel = star + 'Accept Conversion Policy';
+  static String fittingCostLabel = star + 'Accept Extra Fitting Cost';
   static String areaLabel = star + 'Select Area';
   static String chargeAreaLabel = star + 'Select Charge Area';
   static String getAllDistrictLabel = star + 'All District';
   static String mobileNoLabel = star + "Mobile No";
+  static String searchBpNpLabel = star + "Search BP Number";
+  static String searchLabel = star + "Search...";
   static String firstNameLabel = star + 'First Name';
   static String middleNameLabel = 'Middle Name';
   static String lastNameLabel = star + 'Last Name';
@@ -22,9 +24,9 @@ class AppStrings {
   static String propertyClassLabel = 'Property Class';
   static String addressLabel = star + 'Colony/Society/Apartment';
 
-  static String reasonInterestedLabel = 'Reason Not Interested Status';
+  static String reasonInterestedLabel = 'Remarks';
   static String reasonDepositLabel = 'Reason Deposit Status';
-  static String buildingNumberLabel = star + 'Building Number';
+  static String buildingNumberLabel =  'Building Number';
   static String houseNumberLabel = star + 'House Number';
   static String apartmentLabel = star + 'Colony/Society/Apartment';
   static String streetNameLabel = star + 'Street Name';
@@ -33,7 +35,8 @@ class AppStrings {
   static String customerConsentImgLabel = 'Customer Consent';
   static String pinCodeLabel = star + 'Pin Code';
   static String districtLabel = star + 'District';
-  static String mdpeAllowLabel = 'Society Allows MDPE';
+  // static String mdpeAllowLabel = 'Society Allows MDPE';
+  static String mdpeAllowLabel = 'Society Allow MDPE';
   static String residentStatusLabel = 'Resident Status';
   static String noOfKitchenLabel = 'Number of Kitchen';
   static String noOfBathroomLabel = 'Number of Bathroom';
