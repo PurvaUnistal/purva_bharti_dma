@@ -1,6 +1,14 @@
 import '../../ExportFile/export_file.dart';
 
+class AppIcon{
+  static  String appLogo = 'assets/images/place_holder.png';
+  static  String imageCaptureIcon = 'assets/images/ic_image.png';
+}
+
 class AppStrings {
+
+
+
   static Position position = position;
   static String blankSpace = 'Blank space';
   static String locationLat = 'Latitude';

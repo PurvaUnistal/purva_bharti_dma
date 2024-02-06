@@ -24,8 +24,9 @@ class AppStyle{
  }
 
  static vertical(BuildContext context){
+   print("height-->${MediaQuery.of(context).size.height * 0.002}");
    return SizedBox(
-     height: MediaQuery.of(context).size.height *0.01,
+     height: MediaQuery.of(context).size.height * 0.002,
    );
  }
 

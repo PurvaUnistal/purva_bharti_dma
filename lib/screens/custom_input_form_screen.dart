@@ -14,6 +14,7 @@ import 'package:pbg_app/models/GetLabelModel.dart';
 import 'package:pbg_app/models/save_customer_registration_offline_model.dart';
 import 'package:pbg_app/screens/Registration.dart';
 import 'package:pbg_app/screens/Widget/customer_form_helper.dart';
+import 'package:pbg_app/utils/common_widgets/app_color.dart';
 import 'package:pbg_app/utils/common_widgets/app_string.dart';
 import 'package:pbg_app/utils/common_widgets/app_style.dart';
 import 'package:pbg_app/utils/common_widgets/button_widget.dart';
@@ -374,7 +375,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
               _areaDropDown(),
               AppStyle.vertical(context),
               _mobileWidget(),
-              AppStyle.vertical(context),
               _firstNameWidget(),
               AppStyle.vertical(context),
               _middleWidget(),
@@ -406,24 +406,22 @@ class _CustomInputFormState extends State<CustomInputForm> {
               _districtWidget(),
               AppStyle.vertical(context),
               _pinCodeWidget(),
-              AppStyle.vertical(context),
               if(interestedId == '1')...[
                 _residentStatusDropdownWidget(),
                 AppStyle.vertical(context),
                 _noKitchenWidget(),
-                AppStyle.vertical(context),
                 _noBathroomWidget(),
                 AppStyle.vertical(context),
                 _fuelDropdownWidget(),
                 AppStyle.vertical(context),
                 _noFamilyWidget(),
-                AppStyle.vertical(context),
               ],
               _locationWidget(),
-              AppStyle.vertical(context),
               if (interestedId == '1') ...[
                 interestedId == '1' ? _landmarkWidget() : Container(),
+                AppStyle.vertical(context),
                 _kYCDoc1DropDown(),
+                AppStyle.vertical(context),
                 _kYCDoc1NoWidget(),
                 _rowWidget(
                   widget1: _frontImageWidget(),
@@ -2057,20 +2055,21 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   Widget _frontImageWidget() {
-    return Column(
-      children: [
-        // _imageNameWidget(imageName: AppStrings.idFrontImgSide),
-        InkWell(
-            onTap: () => _openFrontImageSource(
-              context,
-            ),
-            child: frontImageFile != null && frontImageFile.isNotEmpty
-                ? frontImageFile.split('.').last == "pdf"
-                ? _pdfImageWidget(frontImageFile)
-                : _fileImage(fileImage: File(frontImageFile))
-                : _localBorderImg()),
-        Text(AppStrings.idFrontImgSide)
-      ],
+    return Card(
+      child: Column(
+        children: [
+          Text(AppStrings.idFrontImgSide,style: AppStyle.styleB()),
+          InkWell(
+              onTap: () => _openFrontImageSource(
+                context,
+              ),
+              child: frontImageFile != null && frontImageFile.isNotEmpty
+                  ? frontImageFile.split('.').last == "pdf"
+                  ? _pdfImageWidget(frontImageFile)
+                  : _fileImage(fileImage: File(frontImageFile))
+                  : _localBorderImg()),
+        ],
+      ),
     );
   }
 
@@ -2594,16 +2593,19 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _localBorderImg() {
     return CircleAvatar(
       radius: 41,
-      backgroundColor: Colors.green.shade800,
+      backgroundColor:AppColor.appColor1,
       child: CircleAvatar(
           radius: 40,
           backgroundColor: Colors.white,
-          child: ClipRRect(
+          backgroundImage: AssetImage(AppIcon.imageCaptureIcon),
+
+          /*ClipRRect(
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Image.asset('assets/images/place_holder.png'),
             ),
-          )),
+          )*/
+      ),
     );
   }
 
@@ -3914,8 +3916,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   _width(){
+    print(MediaQuery.of(context).size.width * 0.03,);
     return SizedBox(
-      height: MediaQuery.of(context).size.width * 0.02,
+      width: MediaQuery.of(context).size.width * 0.03,
     );
   }
 }
