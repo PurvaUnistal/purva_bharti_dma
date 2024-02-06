@@ -88,12 +88,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     var res = await apiIntegration.changePasswordApi(changePasswordResponse);
     if (res != null) {
       log("Not Null");
-      CommonDialogBox.showCommonDialog(
+      /*CommonDialogBox.showCommonDialog(
           context: context,
           title: "Password Updated",
           subTitle:
               "Your password has been reset Successfully! \n Now login with your new password",
-          okBtnFunction: () => LogOutMethod.logOut(context));
+          okBtnFunction: () => LogOutMethod.logOut(context));*/
     } else {
       log("Null Data");
     }

@@ -2,6 +2,7 @@ import '../../ExportFile/export_file.dart';
 
 class AppStrings {
   static Position position = position;
+  static String blankSpace = 'Blank space';
   static String locationLat = 'Latitude';
   static String locationLong = 'Longitude';
   static String star = "*";

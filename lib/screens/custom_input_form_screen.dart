@@ -15,8 +15,9 @@ import 'package:pbg_app/models/save_customer_registration_offline_model.dart';
 import 'package:pbg_app/screens/Registration.dart';
 import 'package:pbg_app/screens/Widget/customer_form_helper.dart';
 import 'package:pbg_app/utils/common_widgets/app_string.dart';
+import 'package:pbg_app/utils/common_widgets/app_style.dart';
 import 'package:pbg_app/utils/common_widgets/button_widget.dart';
-import 'package:pbg_app/utils/common_widgets/common_text_fields.dart';
+import 'package:pbg_app/utils/common_widgets/text_form_field_widget.dart';
 import 'package:pbg_app/utils/common_widgets/custom_app_bar.dart';
 import 'package:pbg_app/utils/common_widgets/custom_toast.dart';
 import 'package:pbg_app/utils/common_widgets/global_constant.dart';
@@ -360,208 +361,232 @@ class _CustomInputFormState extends State<CustomInputForm> {
       scrollDirection: Axis.vertical,
       child: Form(
         key: formGlobalKey,
-        child: Column(
-          children: <Widget>[
-            // _searchWidget(),
-            _interestedDropDown(),
-            interestedId == '0' ? _reasonInterestedWidget() : Container(),
-            _chargeAreaDropDown(),
-            _areaDropDown(),
-            _mobileWidget(),
-            _firstNameWidget(),
-            _middleWidget(),
-            _lastNameWidget(),
-            _guardianTypeDropDown(),
-            _guardianNameWidget(),
-            _emailWidget(),
-            interestedId == '1' ? _propertyCategoryDropDown() : Container(),
-            interestedId == '1' ? _propertyClassDropDown() : Container(),
-            _buildingNumberWidget(),
-            _houseNumberWidget(),
-            _apartmentWidget(),
-            _streetNameWidget(),
-            _townWidget(),
-            /* Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(flex: 4, child: _districtWidget()),
-                Flexible(flex: 4, child: _pinCodeWidget()),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              _interestedDropDown(),
+              AppStyle.vertical(context),
+              interestedId == '0' ? _reasonInterestedWidget() : Container(),
+              AppStyle.vertical(context),
+              _chargeAreaDropDown(),
+              AppStyle.vertical(context),
+              _areaDropDown(),
+              AppStyle.vertical(context),
+              _mobileWidget(),
+              AppStyle.vertical(context),
+              _firstNameWidget(),
+              AppStyle.vertical(context),
+              _middleWidget(),
+              AppStyle.vertical(context),
+              _lastNameWidget(),
+              AppStyle.vertical(context),
+              _guardianTypeDropDown(),
+              AppStyle.vertical(context),
+              _guardianNameWidget(),
+              AppStyle.vertical(context),
+              _emailWidget(),
+              AppStyle.vertical(context),
+              if(interestedId == '1')...[
+                _propertyCategoryDropDown(),
+                AppStyle.vertical(context),
+                _propertyClassDropDown(),
+                AppStyle.vertical(context),
               ],
-            ),*/
-            _districtWidget(),
-            _pinCodeWidget(),
-            interestedId == '1' ? _residentStatusDropdownWidget() : Container(),
-            interestedId == '1' ? _noKitchenWidget() : Container(),
-            interestedId == '1' ? _noBathroomWidget() : Container(),
-            interestedId == '1' ? _fuelDropdownWidget() : Container(),
-            interestedId == '1' ? _noFamilyWidget() : Container(),
-            _locationWidget(),
-            if (interestedId == '1') ...[
-              interestedId == '1' ? _landmarkWidget() : Container(),
-              _kYCDoc1DropDown(),
-              _kYCDoc1NoWidget(),
-              _rowWidget(
-                widget1: _frontImageWidget(),
-                widget2: _backImageWidget(),
-              ),
-              //   _buildCardWidget(text: AppStrings.ownershipProofHeading),
-              _kYCDoc2DropDown(),
-              _kYCDoc2NoWidget(),
-              _rowWidget(
-                widget1: _electricBillFrontImgWidget(),
-                widget2: _electricBillBackImgWidget(),
-              ),
-              // _buildCardWidget(text: AppStrings.nocLabel),
-              _kYCDoc3DropDown(),
-              _kYCDoc3NoWidget(),
-              _rowWidget(
-                widget1: _nocFrontImageWidget(),
-                widget2: _nocBackImageWidget(),
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              _rowWidget(
-                widget1: _customerImageWidget(),
-                widget2: _houseNumImageWidget(),
-              ),
-              _ownerConsentImageWidget(),
-              _buildCardWidget(text: AppStrings.customerConsentLabel),
-              _rowWidget(
-                widget1: _consentImageWidget(),
-                widget2: _cancelChqImageWidget(),
-              ),
-              _billModeDropDown(),
-              _customerBankDropDown(),
-              _customerBackNoWidget(),
-              _customerIFSCCodeWidget(),
-              _customerBankAddWidget(),
-              _buildCardWidget(text: AppStrings.securityDepositLabel),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding:
-                    const EdgeInsets.only(left: 12.0, top: 12, right: 15),
-                    child: Text(AppStrings.initialDepositStatusLabel,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12)),
-                  ),
-                  Flexible(child: _depositStatusDropDown())
-                ],
-              ),
-              _depositStatusId != "1"
-                  ? _reasonDepositStatusWidget()
-                  : Container(),
-              _depositTypeDropDown(),
-              _depositAmountWidget(),
-              _modeDepositDropDown(),
-              if (modeOfDepositString == "1") ...[
-                Column(
+              _buildingNumberWidget(),
+              AppStyle.vertical(context),
+              _houseNumberWidget(),
+              AppStyle.vertical(context),
+              _apartmentWidget(),
+              AppStyle.vertical(context),
+              _streetNameWidget(),
+              AppStyle.vertical(context),
+              _townWidget(),
+              AppStyle.vertical(context),
+              _districtWidget(),
+              AppStyle.vertical(context),
+              _pinCodeWidget(),
+              AppStyle.vertical(context),
+              if(interestedId == '1')...[
+                _residentStatusDropdownWidget(),
+                AppStyle.vertical(context),
+                _noKitchenWidget(),
+                AppStyle.vertical(context),
+                _noBathroomWidget(),
+                AppStyle.vertical(context),
+                _fuelDropdownWidget(),
+                AppStyle.vertical(context),
+                _noFamilyWidget(),
+                AppStyle.vertical(context),
+              ],
+              _locationWidget(),
+              AppStyle.vertical(context),
+              if (interestedId == '1') ...[
+                interestedId == '1' ? _landmarkWidget() : Container(),
+                _kYCDoc1DropDown(),
+                _kYCDoc1NoWidget(),
+                _rowWidget(
+                  widget1: _frontImageWidget(),
+                  widget2: _backImageWidget(),
+                ),
+                //   _buildCardWidget(text: AppStrings.ownershipProofHeading),
+                _kYCDoc2DropDown(),
+                _kYCDoc2NoWidget(),
+                _rowWidget(
+                  widget1: _electricBillFrontImgWidget(),
+                  widget2: _electricBillBackImgWidget(),
+                ),
+                // _buildCardWidget(text: AppStrings.nocLabel),
+                _kYCDoc3DropDown(),
+                _kYCDoc3NoWidget(),
+                _rowWidget(
+                  widget1: _nocFrontImageWidget(),
+                  widget2: _nocBackImageWidget(),
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                _rowWidget(
+                  widget1: _customerImageWidget(),
+                  widget2: _houseNumImageWidget(),
+                ),
+                _ownerConsentImageWidget(),
+                _buildCardWidget(text: AppStrings.customerConsentLabel),
+                _rowWidget(
+                  widget1: _consentImageWidget(),
+                  widget2: _cancelChqImageWidget(),
+                ),
+                _billModeDropDown(),
+                _customerBankDropDown(),
+                _customerBackNoWidget(),
+                _customerIFSCCodeWidget(),
+                _customerBankAddWidget(),
+                _buildCardWidget(text: AppStrings.securityDepositLabel),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _chqNoWidget(),
-                    _chequeDateWidget(),
-                    _payementBankNameDropDown(),
-                    _chequeAccountNoWidget(),
-                    _chequeMICRNoWidget(),
-                    _chequeImageWidget(),
+                    Padding(
+                      padding:
+                      const EdgeInsets.only(left: 12.0, top: 12, right: 15),
+                      child: Text(AppStrings.initialDepositStatusLabel,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12)),
+                    ),
+                    Flexible(child: _depositStatusDropDown())
                   ],
-                )
-              ] else ...[
-                Container(),
-              ],
-              SizedBox(
-                height: 12,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Flexible(flex: 5, child: _conversionPolicyDropDown()),
-                  Flexible(flex: 4, child: _fittingCostDropDown()),
-                  Flexible(
-                    flex: 4,
-                    child: interestedId == '1' ? _mdpeDropdown() : Container(),
-                  ),
+                ),
+                _depositStatusId != "1"
+                    ? _reasonDepositStatusWidget()
+                    : Container(),
+                _depositTypeDropDown(),
+                _depositAmountWidget(),
+                _modeDepositDropDown(),
+                if (modeOfDepositString == "1") ...[
+                  Column(
+                    children: [
+                      _chqNoWidget(),
+                      _chequeDateWidget(),
+                      _payementBankNameDropDown(),
+                      _chequeAccountNoWidget(),
+                      _chequeMICRNoWidget(),
+                      _chequeImageWidget(),
+                    ],
+                  )
+                ] else ...[
+                  Container(),
                 ],
-              ),
-            ] else ...[
-              Container()
-            ],
-            ButtonWidget(
-              textButton: !widget.isUpdate ? "Preview" : "Update",
-              onPressed: () async {
-                chargeAreaId =
-                chargeAreaType == null ? chargeAreaId : chargeAreaType.id;
-                _areaTypeId =
-                areaTypeValue == null ? _areaTypeId : areaTypeValue.id;
-                getAllDistrictId =
-                districtValue == null ? getAllDistrictId : districtValue.id;
-                modeOfDepositString = modeDepositValue == null
-                    ? modeOfDepositString
-                    : modeDepositValue.id;
-                _depositTypeString = _depositTypeValue == null
-                    ? _depositTypeString
-                    : _depositTypeValue.id;
+                SizedBox(
+                  height: 12,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(flex: 5, child: _conversionPolicyDropDown()),
+                    Flexible(flex: 4, child: _fittingCostDropDown()),
+                    Flexible(
+                      flex: 4,
+                      child: interestedId == '1' ? _mdpeDropdown() : Container(),
+                    ),
+                  ],
+                ),
+              ] else ...[
+                Container()
+              ],
+              ButtonWidget(
+                textButton: !widget.isUpdate ? "Preview" : "Update",
+                onPressed: () async {
+                  chargeAreaId =
+                  chargeAreaType == null ? chargeAreaId : chargeAreaType.id;
+                  _areaTypeId =
+                  areaTypeValue == null ? _areaTypeId : areaTypeValue.id;
+                  getAllDistrictId =
+                  districtValue == null ? getAllDistrictId : districtValue.id;
+                  modeOfDepositString = modeDepositValue == null
+                      ? modeOfDepositString
+                      : modeDepositValue.id;
+                  _depositTypeString = _depositTypeValue == null
+                      ? _depositTypeString
+                      : _depositTypeValue.id;
 
-                var textFieldValidationCheck =
-                CustomerFormHelper.textFieldValidationCheck(
-                  isInterestedId: interestedId.toString(),
-                  // reasonNotInterested: reasonInterestedController.text.trim().toString(),
-                  titleLocation: latitudeController.text.trim().toString(),
-                  acceptConversionPolicyValueId:
-                  __acceptConversionPolicyValueId.toString(),
-                  acceptExtraFittingCostValueId:
-                  __acceptExtraFittingCostValueId.toString(),
-                  chargeAreaType: chargeAreaId.toString(),
-                  areaTypeId: _areaTypeId.toString(),
-                  mobileNoController: mobileNoController.text.toString(),
-                  firstNameController: firstNameController.text.toString(),
-                  lastNameController: lastNameController.text.toString(),
-                  guardianNameController:
-                  guardianNameController.text.toString(),
-                  propertyTypeId: propertyCategoryValue.toString(),
-                  propertyClassId: propertyClassValue.toString(),
-                  //  buildingNumberController: buildingNumberController.text.toString(),
-                  houseNumberController: houseNumberController.text.toString(),
-                  colonySocietyApartmentController:
-                  colonySocietyApartmentController.text.toString(),
-                  streetNameController: streetNameController.text.toString(),
-                  //   townController: townController.text.toString(),
-                  district: getAllDistrictId.toString(),
-                  pinCodeController: pinCodeController.text.toString(),
-                  noOfKitchen: kitchenController.text.toString(),
-                  noOfBathroom: bathroomController.text.toString(),
-                  cookInFuelValue: cookInFuelValue.toString(),
-                  noOfFamilyMembers: familyMemController.text.trim().toString(),
-                  addressProofNo: _kYCDoc1Value.id.toString(),
-                  idProofNo: kYCDoc1NoController.text.trim().toString(),
-                  idFrontImage: frontImageFile.toString(),
-                  idBackImage: backImageFile.toString(),
-                  consentImage: ownerConsentImageFile.toString(),
-                  modeOfDeposit: modeOfDepositString.toString(),
-                  depositType: _depositTypeString.toString(),
-                  chequeNo: chqNOController.text.trim().toString(),
-                  chequeDate: chequeDateController.text.trim().toString(),
-                  payementBankName: _payementBankValue,
-                  bankAccNo: chequeAccountNoController.text.trim().toString(),
-                  micrCode: chequeMICRNoController.text.trim().toString(),
-                  chequePhoto: chqPhotoFile.toString(),
-                  mdpeValue: _mdpeValue.toString(),
-                  residentStatusValue: _residentStatusValue.toString(),
-                );
-                if (textFieldValidationCheck == true) {
-                  if (formGlobalKey.currentState.validate()) {
-                    formGlobalKey.currentState.save();
-                    _showDialog();
+                  var textFieldValidationCheck =
+                  CustomerFormHelper.textFieldValidationCheck(
+                    isInterestedId: interestedId.toString(),
+                    // reasonNotInterested: reasonInterestedController.text.trim().toString(),
+                    titleLocation: latitudeController.text.trim().toString(),
+                    acceptConversionPolicyValueId:
+                    __acceptConversionPolicyValueId.toString(),
+                    acceptExtraFittingCostValueId:
+                    __acceptExtraFittingCostValueId.toString(),
+                    chargeAreaType: chargeAreaId.toString(),
+                    areaTypeId: _areaTypeId.toString(),
+                    mobileNoController: mobileNoController.text.toString(),
+                    firstNameController: firstNameController.text.toString(),
+                    lastNameController: lastNameController.text.toString(),
+                    guardianNameController:
+                    guardianNameController.text.toString(),
+                    propertyTypeId: propertyCategoryValue.toString(),
+                    propertyClassId: propertyClassValue.toString(),
+                    //  buildingNumberController: buildingNumberController.text.toString(),
+                    houseNumberController: houseNumberController.text.toString(),
+                    colonySocietyApartmentController:
+                    colonySocietyApartmentController.text.toString(),
+                    streetNameController: streetNameController.text.toString(),
+                    //   townController: townController.text.toString(),
+                    district: getAllDistrictId.toString(),
+                    pinCodeController: pinCodeController.text.toString(),
+                    noOfKitchen: kitchenController.text.toString(),
+                    noOfBathroom: bathroomController.text.toString(),
+                    cookInFuelValue: cookInFuelValue.toString(),
+                    noOfFamilyMembers: familyMemController.text.trim().toString(),
+                    addressProofNo: _kYCDoc1Value.id.toString(),
+                    idProofNo: kYCDoc1NoController.text.trim().toString(),
+                    idFrontImage: frontImageFile.toString(),
+                    idBackImage: backImageFile.toString(),
+                    consentImage: ownerConsentImageFile.toString(),
+                    modeOfDeposit: modeOfDepositString.toString(),
+                    depositType: _depositTypeString.toString(),
+                    chequeNo: chqNOController.text.trim().toString(),
+                    chequeDate: chequeDateController.text.trim().toString(),
+                    payementBankName: _payementBankValue,
+                    bankAccNo: chequeAccountNoController.text.trim().toString(),
+                    micrCode: chequeMICRNoController.text.trim().toString(),
+                    chequePhoto: chqPhotoFile.toString(),
+                    mdpeValue: _mdpeValue.toString(),
+                    residentStatusValue: _residentStatusValue.toString(),
+                  );
+                  if (textFieldValidationCheck == true) {
+                    if (formGlobalKey.currentState.validate()) {
+                      formGlobalKey.currentState.save();
+                      _showDialog();
+                    }
                   }
-                }
-              },
-            ),
-          ],
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1315,7 +1340,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       hintText: AppStrings.reasonInterestedLabel,
       validator: (value) {
         if (value != reasonInterestedController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         }
         return null;
       },
@@ -1365,7 +1390,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         maxLength: 10,
         validator: (value) {
           if (value != mobileNoController.text.trim()) {
-            return "Blank space";
+            return AppStrings.blankSpace;
           } else if (value.isEmpty) {
             return "Please enter Mobile Number";
           } else if (value.length <= 9) {
@@ -1389,7 +1414,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       ],
       validator: (value) {
         if (value != firstNameController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         } else if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
           return "Enter First Name";
         } else if (value.length <= 2) {
@@ -1412,7 +1437,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
         if (value != middleNameController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         }
         return null;
       },
@@ -1428,7 +1453,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
         if (value != lastNameController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         } else if (value.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
           return "Enter Last Name";
         }
@@ -1462,7 +1487,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       validator: (value) {
         if(interestedId == "1"){
           if (value != guardianNameController.text.trim()) {
-            return "Blank space";
+            return AppStrings.blankSpace;
           } else if (value.isEmpty) {
             return "Please enter Guardian name";
           } else if (!RegExp('.*[A-Z].*').hasMatch(value ?? '')) {
@@ -1495,7 +1520,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       ],*/
       validator: (value) {
         if (value != emailIdController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         }
         /* else if(!emailValid.hasMatch(value)){
           return "enter invalid format";
@@ -1542,7 +1567,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.number,
       validator: (value) {
         if (value != depositAmountController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         }
         return null;
       },
@@ -1704,7 +1729,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != houseNumberController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         } else if (value.isEmpty) {
           return "Please enter house number";
         }
@@ -1724,7 +1749,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       /*validator: (value) {
         if (value != buildingNumberController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         } else if (value.isEmpty) {
           return "Please enter building number";
         }
@@ -1744,7 +1769,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != colonySocietyApartmentController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         } else if (value.isEmpty) {
           return "Please enter Colony/Society/Apartment";
         }
@@ -1764,7 +1789,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != streetNameController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         } else if (value.isEmpty) {
           return "Please enter street name";
         }
@@ -1784,7 +1809,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.name,
       /*validator: (value) {
         if (value != townController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         } else if (value.isEmpty) {
           return "Please enter the town";
         }
@@ -1828,7 +1853,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         maxLength: 6,
         validator: (value) {
           if (value != pinCodeController.text.trim()) {
-            return "Blank space";
+            return AppStrings.blankSpace;
           } else if (value.isEmpty) {
             return "Please enter Pin Number";
           } else if (value.length <= 5) {
@@ -1873,7 +1898,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _locationWidget() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Flexible(
@@ -1901,6 +1926,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
               hintText: AppStrings.locationLat,
               controller: latitudeController,
             )),
+        _width(),
         Flexible(
           flex: 3,
           child: TextFieldWidget(
@@ -1922,7 +1948,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != landmarkController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         }
         return null;
       },
@@ -1976,7 +2002,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         textInputType: TextInputType.text,
         validator: (value) {
           if (value != chequeAccountNoController.text.trim()) {
-            return "Blank space";
+            return AppStrings.blankSpace;
           } else if (value.isEmpty) {
             return "Please enter bank account number";
           } else if (value.length <= 7) {
@@ -1998,7 +2024,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         textInputType: TextInputType.number,
         validator: (value) {
           if (value != chequeMICRNoController.text.trim()) {
-            return "Blank space";
+            return AppStrings.blankSpace;
           } else if (value.isEmpty) {
             return "Please enter MICR Code";
           } else if (value.length <= 8) {
@@ -2233,7 +2259,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       maxLength: 20,
       validator: (value) {
         if (value != kYCDoc3NoController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         }
         return null;
       },
@@ -2249,7 +2275,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       maxLength: 20,
       validator: (value) {
         if (value != kYCDoc1NoController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         } else if (value.isEmpty) {
           return "Please enter id proof no.";
         }
@@ -2267,7 +2293,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       maxLength: 20,
       validator: (value) {
         if (value != kYCDoc2NoController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         }
         return null;
       },
@@ -2348,7 +2374,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       maxLength: 20,
       /*  validator: (value) {
           if (value != customerAccountNum.text.trim()) {
-            return "Blank space";
+            return AppStrings.blankSpace;
           } else if (value.isEmpty) {
             return "Please enter Customer Account Number";
           } else if (value.length <= 16) {
@@ -2371,7 +2397,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       maxLength: 11,
       /*  validator: (value) {
           if (value != IFSCController.text.trim()) {
-            return "Blank space";
+            return AppStrings.blankSpace;
           } else if (value.isEmpty) {
             return "Please enter Customer Ifsc Code";
           } else if (value.length <= 10) {
@@ -2393,7 +2419,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       /*  validator: (value) {
         if (value != bank_address.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         } else if (value.isEmpty) {
           return "Please enter the customer bank address";
         }
@@ -2431,7 +2457,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       textInputType: TextInputType.text,
       validator: (value) {
         if (value != reasonDepositStatusController.text.trim()) {
-          return "Blank space";
+          return AppStrings.blankSpace;
         }
         return null;
       },
@@ -2479,7 +2505,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         textInputType: TextInputType.number,
         validator: (value) {
           if (value != chqNOController.text.trim()) {
-            return "Blank space";
+            return AppStrings.blankSpace;
           } else if (value.isEmpty) {
             return "Please enter Cheque Number";
           } else if (value.length <= 5) {
@@ -3884,6 +3910,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
           ),
         ),
       ),
+    );
+  }
+
+  _width(){
+    return SizedBox(
+      height: MediaQuery.of(context).size.width * 0.02,
     );
   }
 }

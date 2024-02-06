@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pbg_app/utils/common_widgets/app_color.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String titleAppBar;
@@ -17,12 +18,10 @@ class CustomAppBar extends StatelessWidget {
       elevation: 0,
       flexibleSpace: Container(
         decoration: BoxDecoration(
-          // color: Colors.green.shade800
-          // decoration: BoxDecoration(color: Colors.yellow.shade800
           gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              colors: <Color>[Colors.green.shade800, Colors.yellow.shade800]),
+              colors: <Color>[AppColor.appColor1,AppColor.appColor2]),
         ),
       ),
       centerTitle: true,
