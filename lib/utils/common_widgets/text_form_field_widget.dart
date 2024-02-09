@@ -5,6 +5,7 @@ import 'package:pbg_app/utils/common_widgets/app_style.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final TextEditingController controller;
+  final String star;
   final String headingLabel;
   final TextInputType textInputType;
   final int maxLength;
@@ -23,6 +24,7 @@ class TextFieldWidget extends StatelessWidget {
 
   const TextFieldWidget({Key key,
     this.controller,
+    this.star,
     this.headingLabel,
     this.textInputType,
     this.maxLength,
@@ -46,7 +48,12 @@ class TextFieldWidget extends StatelessWidget {
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Text(headingLabel ?? "", style: AppStyle.styleB(),),
+          child: Row(
+            children: [
+              Text(star ?? "", style: AppStyle.styleAlter(),),
+              Text(headingLabel ?? "", style: AppStyle.styleB(),),
+            ],
+          ),
         ),
         _vertical(context),
         TextFormField(
@@ -62,7 +69,7 @@ class TextFieldWidget extends StatelessWidget {
           textCapitalization:textCapitalization?? TextCapitalization.words,
           textInputAction: TextInputAction.next,
           inputFormatters : inputFormatters,
-          cursorColor: AppColor.green,
+          cursorColor: AppColor.black,
           decoration: InputDecoration(
             suffix: suffixIcon,
             prefixIcon: prefixIcon,
@@ -72,10 +79,10 @@ class TextFieldWidget extends StatelessWidget {
             hintStyle: AppStyle.styleN(),
             labelStyle: AppStyle.styleN(),
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            focusedBorder: AppStyle.border(color: AppColor.green),
+            focusedBorder: AppStyle.border(color: AppColor.black),
             disabledBorder: AppStyle.border(color: AppColor.grey),
-            enabledBorder: AppStyle.border(color: AppColor.green),
-            border:AppStyle.border(color: AppColor.green),
+            enabledBorder: AppStyle.border(color: AppColor.black),
+            border:AppStyle.border(color: AppColor.black),
             errorBorder:AppStyle.border(color: AppColor.red),
           ),
           onChanged: onChanged,

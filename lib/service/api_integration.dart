@@ -96,6 +96,7 @@ class ApiIntegration {
     String url = GlobalConstants.saveCustomerRegistrationOffline;
     log("saveCustomerRegistrationOffline-->${url}");
     try {
+      if(await isInternetConnected() == true){
       var request = await http.MultipartRequest("Post", Uri.parse(url));
 
       Map<String, String> requestBody = {
@@ -104,9 +105,9 @@ class ApiIntegration {
         "dma_user_id": saveCustRegReqModel.dmaUserId ?? "",
         "interested": saveCustRegReqModel.interested ?? "",
         "accept_conversion_policy":
-            saveCustRegReqModel.acceptConversionPolicy ?? "",
+        saveCustRegReqModel.acceptConversionPolicy ?? "",
         "accept_extra_fitting_cost":
-            saveCustRegReqModel.acceptExtraFittingCost ?? "",
+        saveCustRegReqModel.acceptExtraFittingCost ?? "",
         "area_id": saveCustRegReqModel.areaId ?? "",
         "mobile_number": saveCustRegReqModel.mobileNumber ?? "",
         "first_name": saveCustRegReqModel.firstName ?? "",
@@ -147,7 +148,7 @@ class ApiIntegration {
         "bank_ifsc_code": saveCustRegReqModel.bankIfscCode ?? "",
         "bank_address": saveCustRegReqModel.bankAddress ?? "",
         "initial_deposite_status":
-            saveCustRegReqModel.initialDepositeStatus ?? "",
+        saveCustRegReqModel.initialDepositeStatus ?? "",
         "reason_for_hold": saveCustRegReqModel.reasonForHold ?? "",
         "deposite_type": saveCustRegReqModel.depositeType ?? "",
         "initial_amount": saveCustRegReqModel.initialAmount ?? "",
@@ -173,7 +174,9 @@ class ApiIntegration {
         var backSide1Image = await http.MultipartFile.fromPath(
             "backside1", saveCustRegReqModel.backSideImg1,
             contentType: MediaType(
-                "image", saveCustRegReqModel.backSideImg1.split('.').last));
+                "image", saveCustRegReqModel.backSideImg1
+                .split('.')
+                .last));
         request.files.add(backSide1Image);
         log(
           "chequeImage" + saveCustRegReqModel.backSideImg1,
@@ -185,7 +188,9 @@ class ApiIntegration {
         var backSide2Image = await http.MultipartFile.fromPath(
             "backside2", saveCustRegReqModel.backSideImg2,
             contentType: MediaType(
-                "image", saveCustRegReqModel.backSideImg2.split('.').last));
+                "image", saveCustRegReqModel.backSideImg2
+                .split('.')
+                .last));
         request.files.add(backSide2Image);
         log("chequeImage" + saveCustRegReqModel.backSideImg2);
       } else {
@@ -195,7 +200,9 @@ class ApiIntegration {
         var backSide3Image = await http.MultipartFile.fromPath(
             "backside3", saveCustRegReqModel.backSideImg3,
             contentType: MediaType(
-                "image", saveCustRegReqModel.backSideImg3.split('.').last));
+                "image", saveCustRegReqModel.backSideImg3
+                .split('.')
+                .last));
         request.files.add(backSide3Image);
         log("chequeImage" + saveCustRegReqModel.backSideImg3);
       } else {
@@ -205,7 +212,9 @@ class ApiIntegration {
         var docUploads1Image = await http.MultipartFile.fromPath(
             "document_uploads_1", saveCustRegReqModel.docUploadsImg1,
             contentType: MediaType(
-                "image", saveCustRegReqModel.docUploadsImg1.split('.').last));
+                "image", saveCustRegReqModel.docUploadsImg1
+                .split('.')
+                .last));
         request.files.add(docUploads1Image);
         log("chequeImage" + saveCustRegReqModel.docUploadsImg1);
       } else {
@@ -215,7 +224,9 @@ class ApiIntegration {
         var docUploads2Image = await MultipartFile.fromPath(
             "document_uploads_2", saveCustRegReqModel.docUploadsImg2,
             contentType: MediaType(
-                "image", saveCustRegReqModel.docUploadsImg2.split('.').last));
+                "image", saveCustRegReqModel.docUploadsImg2
+                .split('.')
+                .last));
         request.files.add(docUploads2Image);
         log("chequeImage" + saveCustRegReqModel.docUploadsImg2);
       } else {
@@ -225,7 +236,9 @@ class ApiIntegration {
         var docUploads3Image = await http.MultipartFile.fromPath(
             "document_uploads_3", saveCustRegReqModel.docUploadsImg3,
             contentType: MediaType(
-                "image", saveCustRegReqModel.docUploadsImg3.split('.').last));
+                "image", saveCustRegReqModel.docUploadsImg3
+                .split('.')
+                .last));
         request.files.add(docUploads3Image);
         log("chequeImage" + saveCustRegReqModel.docUploadsImg3);
       } else {
@@ -235,7 +248,9 @@ class ApiIntegration {
         var uploadCustImage = await http.MultipartFile.fromPath(
             "upload_customer_photo", saveCustRegReqModel.uploadCustomerPhoto,
             contentType: MediaType("image",
-                saveCustRegReqModel.uploadCustomerPhoto.split('.').last));
+                saveCustRegReqModel.uploadCustomerPhoto
+                    .split('.')
+                    .last));
         request.files.add(uploadCustImage);
         log("chequeImage" + saveCustRegReqModel.uploadCustomerPhoto);
       } else {
@@ -245,7 +260,9 @@ class ApiIntegration {
         var uploadHouseImage = await http.MultipartFile.fromPath(
             "upload_house_photo", saveCustRegReqModel.uploadHousePhoto,
             contentType: MediaType(
-                "image", saveCustRegReqModel.uploadHousePhoto.split('.').last));
+                "image", saveCustRegReqModel.uploadHousePhoto
+                .split('.')
+                .last));
         request.files.add(uploadHouseImage);
         log("chequeImage" + saveCustRegReqModel.uploadHousePhoto);
       } else {
@@ -255,7 +272,9 @@ class ApiIntegration {
         var ownerConsentImage = await http.MultipartFile.fromPath(
             "owner_consent", saveCustRegReqModel.ownerConsent,
             contentType: MediaType(
-                "image", saveCustRegReqModel.ownerConsent.split('.').last));
+                "image", saveCustRegReqModel.ownerConsent
+                .split('.')
+                .last));
         request.files.add(ownerConsentImage);
         log("chequeImage" + saveCustRegReqModel.ownerConsent);
       } else {
@@ -265,7 +284,9 @@ class ApiIntegration {
         var customerConsentImage = await http.MultipartFile.fromPath(
             "customer_consent", saveCustRegReqModel.customerConsent,
             contentType: MediaType(
-                "image", saveCustRegReqModel.customerConsent.split('.').last));
+                "image", saveCustRegReqModel.customerConsent
+                .split('.')
+                .last));
         request.files.add(customerConsentImage);
         log("chequeImage" + saveCustRegReqModel.customerConsent);
       } else {
@@ -275,7 +296,9 @@ class ApiIntegration {
         var canceledChqImage = await http.MultipartFile.fromPath(
             "canceled_cheque", saveCustRegReqModel.canceledCheque,
             contentType: MediaType(
-                "image", saveCustRegReqModel.canceledCheque.split('.').last));
+                "image", saveCustRegReqModel.canceledCheque
+                .split('.')
+                .last));
         request.files.add(canceledChqImage);
         log("chequeImage" + saveCustRegReqModel.canceledCheque);
       } else {
@@ -285,7 +308,9 @@ class ApiIntegration {
         var chequeImage = await http.MultipartFile.fromPath(
             "cheque_photo", saveCustRegReqModel.chequePhoto,
             contentType: MediaType(
-                "image", saveCustRegReqModel.chequePhoto.split('.').last));
+                "image", saveCustRegReqModel.chequePhoto
+                .split('.')
+                .last));
         request.files.add(chequeImage);
         log("chequeImage" + saveCustRegReqModel.chequePhoto);
       } else {
@@ -305,8 +330,24 @@ class ApiIntegration {
         CustomToast.showToast(e.toString());
         throw Exception('Failed to load data! ==>${e.toString()}');
       }
-    } catch (exception) {
+    }
+  }catch (exception) {
       log("request exception-->" + exception.toString());
     }
   }
+
+  static Future<bool> isInternetConnected() async {
+    bool isConnect = false;
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        isConnect = true;
+      }
+    } on SocketException catch (_) {}
+
+    return isConnect;
+  }
+
+
+
 }

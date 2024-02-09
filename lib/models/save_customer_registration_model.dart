@@ -105,6 +105,7 @@ class SaveCusRegData {
   final String chequeBankAccount;
   final String areaId;
   final String mobileNumber;
+  final String alternateNumber;
   final String middleName;
   final String guardianName;
   final String emailId;
@@ -173,6 +174,7 @@ class SaveCusRegData {
     this.chequeBankAccount,
     this.areaId,
     this.mobileNumber,
+    this.alternateNumber,
     this.middleName,
     this.guardianName,
     this.emailId,
@@ -247,6 +249,7 @@ class SaveCusRegData {
     chequeBankAccount: json["cheque_bank_account"] ?? "",
     areaId: json["area_id"] ?? "",
     mobileNumber: json["mobile_number"] ?? "",
+    alternateNumber: json["alternateMobile"] ?? "",
     middleName: json["middle_name"] ?? "",
     guardianName: json["guardian_name"] ?? "",
     emailId: json["email_id"] ?? "",
@@ -317,6 +320,7 @@ class SaveCusRegData {
     "cheque_bank_account": chequeBankAccount,
     "area_id": areaId,
     "mobile_number": mobileNumber,
+    "alternateMobile": alternateNumber,
     "middle_name": middleName,
     "guardian_name": guardianName,
     "email_id": emailId,
@@ -361,6 +365,7 @@ class SaveCusRegData {
 class SaveCustRegReqModel {
   String areaId;
   String mobileNumber;
+  String alternateNumber;
   String firstName;
   String middleName;
   String lastName;
@@ -435,6 +440,7 @@ class SaveCustRegReqModel {
         this.middleName,
         this.lastName,
         this.mobileNumber,
+        this.alternateNumber,
         this.schema,
         this.emailId,
         this.bankAccountNumber,
@@ -494,6 +500,7 @@ class SaveCustRegReqModel {
     Map<String, dynamic> map = {
       "area_id": areaId.toString() ?? "",
       "mobile_number": mobileNumber.toString() ?? "",
+      "alternateMobile": alternateNumber.toString() ?? "",
       "first_name": firstName.toString() ?? "",
       "middle_name": middleName.toString() ?? "",
       "last_name": lastName.toString() ?? "",

@@ -11,12 +11,17 @@ class AppStyle{
 
  static TextStyle styleB(){
     return TextStyle(
-        color: Colors.black, fontWeight: FontWeight.bold, fontSize: 10);
+        color: Colors.black, fontWeight: FontWeight.bold, fontSize: 11,decoration: TextDecoration.none);
   }
+
+ static TextStyle styleAlter(){
+   return TextStyle(
+       color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12,decoration: TextDecoration.none);
+ }
 
  static TextStyle styleN(){
    return TextStyle(
-       color: Colors.black, fontWeight: FontWeight.normal, fontSize: 10);
+       color: Colors.black, fontWeight: FontWeight.normal, fontSize: 13,decoration: TextDecoration.none);
  }
 
  static TextStyle btn(){
@@ -24,9 +29,8 @@ class AppStyle{
  }
 
  static vertical(BuildContext context){
-   print("height-->${MediaQuery.of(context).size.height * 0.002}");
-   return SizedBox(
-     height: MediaQuery.of(context).size.height * 0.002,
+    return SizedBox(
+     height: MediaQuery.of(context).size.height * 0.015,
    );
  }
 

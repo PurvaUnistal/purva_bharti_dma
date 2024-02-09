@@ -4,12 +4,13 @@ import 'package:pbg_app/utils/common_widgets/app_style.dart';
 import '../../ExportFile/export_file.dart';
 
 class ReusedDropDownString extends StatelessWidget {
-  final String hint, textLabel;
+  final String hint, textLabel, star;
   final List<DropdownMenuItem<String>> items;
   final String value;
   final Function(String) onChanged;
   const ReusedDropDownString(
       {Key key,
+        this.star,
         this.hint,
         this.value,
         this.onChanged,
@@ -23,7 +24,12 @@ class ReusedDropDownString extends StatelessWidget {
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Text(textLabel, style: AppStyle.styleB(),),
+          child: Row(
+            children: [
+              Text(star ?? "", style: AppStyle.styleAlter(),),
+              Text(textLabel, style: AppStyle.styleB(),),
+            ],
+          ),
         ),
         _vertical(context),
         DropdownButtonFormField(
@@ -34,12 +40,12 @@ class ReusedDropDownString extends StatelessWidget {
           onChanged: onChanged,
           isExpanded: true,
           isDense: false,
-          iconEnabledColor: AppColor.green,
+          iconEnabledColor: AppColor.black,
           decoration: InputDecoration(
-            focusedBorder: AppStyle.border(color: AppColor.green),
-            disabledBorder: AppStyle.border(color: AppColor.grey),
-            enabledBorder: AppStyle.border(color: AppColor.green),
-            border: AppStyle.border(color: AppColor.green),
+            focusedBorder: AppStyle.border(color: AppColor.black),
+            disabledBorder: AppStyle.border(color: AppColor.black),
+            enabledBorder: AppStyle.border(color: AppColor.black),
+            border: AppStyle.border(color: AppColor.black),
             errorBorder: AppStyle.border(color: AppColor.red),
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
           ),
@@ -50,13 +56,14 @@ class ReusedDropDownString extends StatelessWidget {
 }
 
 class ReusedDropDownOptionItem extends StatelessWidget {
-  final String hint, textLabel;
+  final String hint, textLabel, star;
   final List<DropdownMenuItem<OptionItem>> items;
   final OptionItem value;
   final Function(OptionItem) onChanged;
   const ReusedDropDownOptionItem(
       {Key key,
         this.hint,
+        this.star,
         this.value,
         this.onChanged,
         this.items,
@@ -69,7 +76,12 @@ class ReusedDropDownOptionItem extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topLeft,
-            child: Text(textLabel, style:  AppStyle.styleB()),
+            child: Row(
+              children: [
+                Text(star ?? "", style: AppStyle.styleAlter(),),
+                Text(textLabel, style:  AppStyle.styleB()),
+              ],
+            ),
           ),
           _vertical(context),
           DropdownButtonFormField(
@@ -79,14 +91,14 @@ class ReusedDropDownOptionItem extends StatelessWidget {
             onChanged: onChanged,
             isExpanded: true,
             isDense: false,
-            iconEnabledColor: Colors.green,
+            iconEnabledColor:  AppColor.black,
             style: AppStyle.styleN(),
             decoration: InputDecoration(
-              focusedBorder: AppStyle.border(color: Colors.green),
-              disabledBorder: AppStyle.border(color: Colors.grey),
-              enabledBorder: AppStyle.border(color: Colors.green),
-              border: AppStyle.border(color: Colors.green),
-              errorBorder: AppStyle.border(color: Colors.red),
+              focusedBorder: AppStyle.border(color: AppColor.black),
+              disabledBorder: AppStyle.border(color: AppColor.grey),
+              enabledBorder: AppStyle.border(color:  AppColor.black),
+              border: AppStyle.border(color:  AppColor.black),
+              errorBorder: AppStyle.border(color: AppColor.red),
               contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
             ),
           ),

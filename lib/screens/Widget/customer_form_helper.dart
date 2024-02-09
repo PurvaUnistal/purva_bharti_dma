@@ -5,7 +5,7 @@ import 'package:pbg_app/utils/common_widgets/custom_toast.dart';
 class CustomerFormHelper {
   static bool textFieldValidationCheck({
     String isInterestedId,
-  //  String reasonNotInterested,
+    String reasonNotInterested,
     String acceptConversionPolicyValueId,
     String acceptExtraFittingCostValueId,
     String chargeAreaType,
@@ -14,14 +14,14 @@ class CustomerFormHelper {
     String firstNameController,
     String lastNameController,
     String guardianNameController,
-    // String emailIdController,
+     String emailIdController,
     String propertyTypeId,
     String propertyClassId,
-  //  String buildingNumberController,
+    String buildingNumberController,
     String houseNumberController,
     String colonySocietyApartmentController,
     String streetNameController,
-   // String townController,
+    String townController,
     String district,
     String pinCodeController,
     String mdpeValue,
@@ -31,11 +31,18 @@ class CustomerFormHelper {
     String cookInFuelValue,
     String titleLocation,
     String noOfFamilyMembers,
-    String addressProofNo,
-    String idProofNo,
+    String selectIdentification,
+    String identificationProofNo,
     String idFrontImage,
     String idBackImage,
+    String selectAddressProof,
+    String addressProofNumber,
+    String addressProofFront,
+    String addressProofBack,
+    String selectOwnershipType,
+    String nocImage,
     String consentImage,
+    String customerConsentImage,
     String customerBankName,
     String customerAccNo,
     String customerIfscCode,
@@ -142,34 +149,52 @@ class CustomerFormHelper {
         CustomToast.showToast("Please press get location");
         return false;
       }
-      if (isInterestedId == "") {
-        CustomToast.showToast("Please select Interested Id");
+      if (selectIdentification.isEmpty) {
+        CustomToast.showToast("Select the Identification Proof ");
         return false;
-      } else if (isInterestedId == "1") {
-        if (addressProofNo == "0") {
-          CustomToast.showToast("Please select the address proof no.");
-          return false;
-        }
-        if (idProofNo == "") {
-          CustomToast.showToast("Please enter the id proof no.");
-          return false;
-        }
-        if (idFrontImage == null ||
-            idFrontImage.isEmpty ||
-            idFrontImage == "") {
-          CustomToast.showToast("Please select front image");
-          return false;
-        }
-        if (idBackImage == null || idBackImage.isEmpty || idBackImage == "") {
+      }
+      if (identificationProofNo == "") {
+        CustomToast.showToast("Enter the Identification Proof No.");
+        return false;
+      }
+      if (idFrontImage == null ||
+          idFrontImage.isEmpty ||
+          idFrontImage == "") {
+        CustomToast.showToast("Upload Identification Front Image");
+        return false;
+      }
+      /*if (idBackImage == null || idBackImage.isEmpty || idBackImage == "") {
           CustomToast.showToast("Please select back image");
           return false;
-        }
-        if (consentImage == null ||
-            consentImage.isEmpty ||
-            consentImage == "") {
-          CustomToast.showToast("Please select consent photo");
+        }*/
+      if(isInterestedId == "1"){
+        if (selectAddressProof.isEmpty) {
+          CustomToast.showToast("Select the Address Proof ");
           return false;
         }
+        if (addressProofNumber == "") {
+          CustomToast.showToast("Enter the Address Proof No.");
+          return false;
+        }
+        if (addressProofFront == null ||
+            addressProofFront.isEmpty ||
+            addressProofFront == "") {
+          CustomToast.showToast("Upload Address Proof Front Image");
+          return false;
+        }
+        if (customerConsentImage == null ||
+            customerConsentImage.isEmpty ||
+            customerConsentImage == "") {
+          CustomToast.showToast("Upload Customer Consent Image");
+          return false;
+        }
+        if (nocImage == null ||
+            nocImage.isEmpty ||
+            nocImage == "") {
+          CustomToast.showToast("Upload NOC Image");
+          return false;
+        }
+
         /* if (customerBankName == null) {
         CustomToast.showToast("Please select customer bank account name");
         return false;

@@ -87,13 +87,14 @@ class SaveCustomerRegistrationOfflineModelAdapter
       streetName: fields[66] as String,
       ownerConsentText: fields[67] as String,
       isDepositCheq: fields[68] as bool,
+      alternateMobileNo: fields[69] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, SaveCustomerRegistrationOfflineModel obj) {
     writer
-      ..writeByte(69)
+      ..writeByte(70)
       ..writeByte(0)
       ..write(obj.areaId)
       ..writeByte(1)
@@ -231,7 +232,9 @@ class SaveCustomerRegistrationOfflineModelAdapter
       ..writeByte(67)
       ..write(obj.ownerConsentText)
       ..writeByte(68)
-      ..write(obj.isDepositCheq);
+      ..write(obj.isDepositCheq)
+      ..writeByte(69)
+      ..write(obj.alternateMobileNo);
   }
 
   @override

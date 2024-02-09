@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/utils/common_widgets/button_widget.dart';
 import 'package:pbg_app/utils/common_widgets/custom_app_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:pbg_app/utils/common_widgets/dotted_loader_widget.dart';
+import 'package:pbg_app/utils/common_widgets/message_box_two_button_pop.dart';
 import '../ExportFile/export_file.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -74,23 +76,7 @@ class LoginPage extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => showDialog<bool>(
-        context: context,
-        builder: (c) => AlertDialog(
-          title: Text('Warning'),
-          content: Text('Do you really want to exit'),
-          actions: [
-            TextButton(
-              child: Text('Yes'),
-              onPressed: () => Navigator.pop(c, true),
-            ),
-            TextButton(
-              child: Text('No'),
-              onPressed: () => Navigator.pop(c, false),
-            ),
-          ],
-        ),
-      ),
+      onWillPop: _onWillPop,
       child: Scaffold(
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
@@ -100,9 +86,7 @@ class LoginPage extends State<LoginScreen> {
           ),
           body: Center(
             child: SingleChildScrollView(
-                child: Stack(
-              children: [
-                Padding(
+                child: Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 18.0, vertical: 12),
                   child: Column(
@@ -164,41 +148,32 @@ class LoginPage extends State<LoginScreen> {
                       SizedBox(
                         height: 30,
                       ),
-                      ButtonWidget(
+                     _showProgress? DottedLoaderWidget(): ButtonWidget(
                         textButton: "LOG IN",
                         onPressed: () {
                           TextInput.finishAutofillContext();
                           btnClick(context);
                         },
-                      ),
+                      ) ,
                       SizedBox(
                         height: 20,
                       ),
                     ],
                   ),
-                ),
-                (_showProgress)
-                    ? Container(
-                        color: Colors.white60,
-                        child: Center(
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            child: Card(
-                              elevation: 5,
-                              child: Container(
-                                padding: EdgeInsets.all(10.0),
-                                child: CircularProgressIndicator(),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container()
-              ],
-            )),
+                )),
           )),
     );
+  }
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+        context: context,
+        builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
+            message: "Do you want to exit an App?",
+            okButtonText: "Exit",
+            onPressed: () =>  Navigator.of(context).pop(true)
+        ))
+    ) ?? false;
   }
 
   Widget _textField({

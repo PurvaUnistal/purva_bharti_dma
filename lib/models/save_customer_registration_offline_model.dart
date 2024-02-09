@@ -142,6 +142,8 @@ class SaveCustomerRegistrationOfflineModel{
   String ownerConsentText;
   @HiveField(68)
   bool isDepositCheq;
+  @HiveField(69)
+  String alternateMobileNo;
 
   SaveCustomerRegistrationOfflineModel({
     this.areaId,
@@ -213,5 +215,6 @@ class SaveCustomerRegistrationOfflineModel{
     this.streetName,
     this.ownerConsentText,
     this.isDepositCheq= false,
+    this.alternateMobileNo,
   });
 }

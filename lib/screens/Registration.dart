@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/models/GetAllDistrictModel.dart';
 import 'package:pbg_app/screens/BookingRegistrationForm/presentation/page/booking_registration_form.dart';
-import 'package:pbg_app/screens/custom_input_form_screen.dart';
+import 'package:pbg_app/screens/custom_input_form/presentation/page/custom_input_form_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RegistrationForm extends StatefulWidget {
@@ -139,7 +139,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Version : 1.0,",
+                      "Version : 1.1,",
                       style: TextStyle(
                           color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
@@ -151,7 +151,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 01-02-2024",
+                      "Date : 09-02-2024",
                       style: TextStyle(
                           color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
@@ -326,6 +326,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   Future<bool> _getLoggedOut() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.clear();
+    Hive.box('saveCustRegDataBoxName').clear();
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -482,6 +483,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
       urlEndPoint: url,
       setApiData: GlobalConstants.ResidentStatus,
     );
+    print("residentStatus-->${res}");
     return res;
   }
 

@@ -14,10 +14,13 @@ import 'package:pbg_app/models/GetLabelModel.dart';
 import 'package:pbg_app/models/save_customer_registration_offline_model.dart';
 import 'package:pbg_app/screens/Registration.dart';
 import 'package:pbg_app/screens/Widget/customer_form_helper.dart';
+import 'package:pbg_app/screens/custom_input_form/presentation/widget/border_form_widget.dart';
+import 'package:pbg_app/screens/custom_input_form/presentation/widget/card_image_widget.dart';
 import 'package:pbg_app/utils/common_widgets/app_color.dart';
 import 'package:pbg_app/utils/common_widgets/app_string.dart';
 import 'package:pbg_app/utils/common_widgets/app_style.dart';
 import 'package:pbg_app/utils/common_widgets/button_widget.dart';
+import 'package:pbg_app/utils/common_widgets/message_box_two_button_pop.dart';
 import 'package:pbg_app/utils/common_widgets/text_form_field_widget.dart';
 import 'package:pbg_app/utils/common_widgets/custom_app_bar.dart';
 import 'package:pbg_app/utils/common_widgets/custom_toast.dart';
@@ -115,6 +118,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   updateValue() {
     if (widget.isUpdate) {
       mobileNoController.text = widget.studentModel.mobileNumber;
+      alternateMobileNoController.text = widget.studentModel.alternateMobileNo;
       firstNameController.text = widget.studentModel.firstName;
       middleNameController.text = widget.studentModel.middleName;
       lastNameController.text = widget.studentModel.lastName;
@@ -177,24 +181,39 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(50),
-          child: CustomAppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios_rounded),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RegistrationForm()));
-              },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(50),
+            child: CustomAppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios_rounded),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RegistrationForm()));
+                },
+              ),
+              titleAppBar: "Customer Input",
+              actions: [],
             ),
-            titleAppBar: "Customer Input",
-            actions: [],
           ),
-        ),
-        body: _buildLayout());
+          body: _buildLayout()),
+    );
+  }
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+        context: context,
+        builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
+            message: "Do you want to exit an App?",
+            okButtonText: "Exit",
+            onPressed: () =>  Navigator.of(context).pop(true)
+        ))
+    ) ?? false;
   }
 
   Future<Position> _getCurrentLocation() async {
@@ -222,6 +241,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   TextEditingController searchController = TextEditingController();
   TextEditingController mobileNoController = TextEditingController();
+  TextEditingController alternateMobileNoController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController middleNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -375,6 +395,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
               _areaDropDown(),
               AppStyle.vertical(context),
               _mobileWidget(),
+              _alternateMobileWidget(),
               _firstNameWidget(),
               AppStyle.vertical(context),
               _middleWidget(),
@@ -406,20 +427,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
               _districtWidget(),
               AppStyle.vertical(context),
               _pinCodeWidget(),
-              if(interestedId == '1')...[
-                _residentStatusDropdownWidget(),
-                AppStyle.vertical(context),
-                _noKitchenWidget(),
-                _noBathroomWidget(),
-                AppStyle.vertical(context),
-                _fuelDropdownWidget(),
-                AppStyle.vertical(context),
-                _noFamilyWidget(),
-              ],
               _locationWidget(),
-              if (interestedId == '1') ...[
-                interestedId == '1' ? _landmarkWidget() : Container(),
-                AppStyle.vertical(context),
+              if(interestedId == '0')...[
                 _kYCDoc1DropDown(),
                 AppStyle.vertical(context),
                 _kYCDoc1NoWidget(),
@@ -427,91 +436,123 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   widget1: _frontImageWidget(),
                   widget2: _backImageWidget(),
                 ),
-                //   _buildCardWidget(text: AppStrings.ownershipProofHeading),
+                AppStyle.vertical(context),
                 _kYCDoc2DropDown(),
+                AppStyle.vertical(context),
                 _kYCDoc2NoWidget(),
                 _rowWidget(
                   widget1: _electricBillFrontImgWidget(),
                   widget2: _electricBillBackImgWidget(),
                 ),
-                // _buildCardWidget(text: AppStrings.nocLabel),
+              ],
+              if(interestedId == '1')...[
+                /*  _residentStatusDropdownWidget(),
+                AppStyle.vertical(context),*/
+                _noKitchenWidget(),
+                _noBathroomWidget(),
+                AppStyle.vertical(context),
+                _fuelDropdownWidget(),
+                AppStyle.vertical(context),
+                _noFamilyWidget(),
+                /*interestedId == '1' ? _landmarkWidget() : Container(),
+                AppStyle.vertical(context),*/
+                _kYCDoc1DropDown(),
+                AppStyle.vertical(context),
+                _kYCDoc1NoWidget(),
+                _rowWidget(
+                  widget1: _frontImageWidget(),
+                  widget2: _backImageWidget(),
+                ),
+                AppStyle.vertical(context),
+                _kYCDoc2DropDown(),
+                AppStyle.vertical(context),
+                _kYCDoc2NoWidget(),
+                _rowWidget(
+                  widget1: _electricBillFrontImgWidget(),
+                  widget2: _electricBillBackImgWidget(),
+                ),
+                AppStyle.vertical(context),
                 _kYCDoc3DropDown(),
-                _kYCDoc3NoWidget(),
-                _rowWidget(
-                  widget1: _nocFrontImageWidget(),
-                  widget2: _nocBackImageWidget(),
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                _rowWidget(
-                  widget1: _customerImageWidget(),
-                  widget2: _houseNumImageWidget(),
-                ),
-                _ownerConsentImageWidget(),
-                _buildCardWidget(text: AppStrings.customerConsentLabel),
-                _rowWidget(
-                  widget1: _consentImageWidget(),
-                  widget2: _cancelChqImageWidget(),
-                ),
-                _billModeDropDown(),
-                _customerBankDropDown(),
-                _customerBackNoWidget(),
-                _customerIFSCCodeWidget(),
-                _customerBankAddWidget(),
-                _buildCardWidget(text: AppStrings.securityDepositLabel),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                AppStyle.vertical(context),
+                BorderWidget(
                   children: [
-                    Padding(
-                      padding:
-                      const EdgeInsets.only(left: 12.0, top: 12, right: 15),
-                      child: Text(AppStrings.initialDepositStatusLabel,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12)),
+                    Text("Consent Form",style: AppStyle.styleB(),),
+                    /*  AppStyle.vertical(context),
+                      _billModeDropDown(),
+                      AppStyle.vertical(context),
+                    _customerBankDropDown(),
+                    AppStyle.vertical(context),
+                    _customerBackNoWidget(),
+                    _customerIFSCCodeWidget(),
+                    _customerBankAddWidget(),*/
+                    _rowWidget(
+                    //  widget1: _consentImageWidget(),
+                      widget1: _ownerConsentImageWidget(),
+                   //   widget2: _kYCDocument3Value.id == '2'? _nocFrontImageWidget() :_ownerConsentImageWidget(),
+                      widget2: _nocFrontImageWidget(),
                     ),
-                    Flexible(child: _depositStatusDropDown())
-                  ],
-                ),
-                _depositStatusId != "1"
-                    ? _reasonDepositStatusWidget()
-                    : Container(),
-                _depositTypeDropDown(),
-                _depositAmountWidget(),
-                _modeDepositDropDown(),
-                if (modeOfDepositString == "1") ...[
-                  Column(
-                    children: [
-                      _chqNoWidget(),
-                      _chequeDateWidget(),
-                      _payementBankNameDropDown(),
-                      _chequeAccountNoWidget(),
-                      _chequeMICRNoWidget(),
-                      _chequeImageWidget(),
-                    ],
-                  )
-                ] else ...[
-                  Container(),
-                ],
-                SizedBox(
-                  height: 12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Flexible(flex: 5, child: _conversionPolicyDropDown()),
-                    Flexible(flex: 4, child: _fittingCostDropDown()),
-                    Flexible(
-                      flex: 4,
-                      child: interestedId == '1' ? _mdpeDropdown() : Container(),
+                    AppStyle.vertical(context),
+                    _rowWidget(
+                      widget1: _customerImageWidget(),
+                      widget2: _houseNumImageWidget(),
+                    ),
+                    AppStyle.vertical(context),
+                    _rowWidget(
+                      widget1:_cancelChqImageWidget(),
+                    widget2: Container()
+                    //  widget2: _kYCDocument3Value.id == '1'? Container() :_ownerConsentImageWidget(),
+                    ),
+                    AppStyle.vertical(context),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(flex: 2, child: _conversionPolicyDropDown()),
+                        _width(),
+                        Flexible(flex: 2, child: _fittingCostDropDown()),
+                        _width(),
+                        Flexible(
+                          flex: 2,
+                          child: interestedId == '1' ? _mdpeDropdown() : Container(),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ] else ...[
-                Container()
+                AppStyle.vertical(context),
+                BorderWidget(
+                  children: [
+                    Text(AppStrings.securityDepositLabel,style: AppStyle.styleB(),),
+                    AppStyle.vertical(context),
+                    _depositStatusDropDown(),
+                    AppStyle.vertical(context),
+                    _depositStatusId != "1" ? _reasonDepositStatusWidget() : Container(),
+                    AppStyle.vertical(context),
+                    _depositTypeDropDown("Mode Of Deposit", AppStrings.star,),
+                    AppStyle.vertical(context),
+                    _depositAmountWidget(),
+                    AppStyle.vertical(context),
+                    _modeDepositDropDown(),
+                    AppStyle.vertical(context),
+                    if (modeOfDepositString == "1") ...[
+                      Column(
+                        children: [
+                          _chqNoWidget(),
+                          AppStyle.vertical(context),
+                          _chequeDateWidget(),
+                          AppStyle.vertical(context),
+                          _chequeAccountNoWidget(),
+                          _payementBankNameDropDown(),
+                          AppStyle.vertical(context),
+                          _chequeAccountNoWidget(),
+                          _chequeMICRNoWidget(),
+                          _chequeImageWidget(),
+                        ],
+                      )
+                    ]
+                  ],
+                ),
+
               ],
               ButtonWidget(
                 textButton: !widget.isUpdate ? "Preview" : "Update",
@@ -532,7 +573,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   var textFieldValidationCheck =
                   CustomerFormHelper.textFieldValidationCheck(
                     isInterestedId: interestedId.toString(),
-                    // reasonNotInterested: reasonInterestedController.text.trim().toString(),
+                    reasonNotInterested: reasonInterestedController.text.trim().toString(),
                     titleLocation: latitudeController.text.trim().toString(),
                     acceptConversionPolicyValueId:
                     __acceptConversionPolicyValueId.toString(),
@@ -547,23 +588,28 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     guardianNameController.text.toString(),
                     propertyTypeId: propertyCategoryValue.toString(),
                     propertyClassId: propertyClassValue.toString(),
-                    //  buildingNumberController: buildingNumberController.text.toString(),
+                    buildingNumberController: buildingNumberController.text.toString(),
                     houseNumberController: houseNumberController.text.toString(),
                     colonySocietyApartmentController:
                     colonySocietyApartmentController.text.toString(),
                     streetNameController: streetNameController.text.toString(),
-                    //   townController: townController.text.toString(),
+                    townController: townController.text.toString(),
                     district: getAllDistrictId.toString(),
                     pinCodeController: pinCodeController.text.toString(),
                     noOfKitchen: kitchenController.text.toString(),
                     noOfBathroom: bathroomController.text.toString(),
                     cookInFuelValue: cookInFuelValue.toString(),
                     noOfFamilyMembers: familyMemController.text.trim().toString(),
-                    addressProofNo: _kYCDoc1Value.id.toString(),
-                    idProofNo: kYCDoc1NoController.text.trim().toString(),
+                    selectIdentification: _kYCDoc1Value.id.toString(),
+                    identificationProofNo: kYCDoc1NoController.text.trim().toString(),
                     idFrontImage: frontImageFile.toString(),
                     idBackImage: backImageFile.toString(),
-                    consentImage: ownerConsentImageFile.toString(),
+                    selectAddressProof: _kYCDoc2Value.id.toString(),
+                    addressProofNumber: kYCDoc2NoController.text.trim().toString(),
+                    addressProofFront: electricBillFrontImgFile.toString(),
+                    selectOwnershipType:_kYCDocument3Value.id.toString(),
+                    customerConsentImage: customerConsentImageFile.toString(),
+                    nocImage:nocFrontImgFile.toString(),
                     modeOfDeposit: modeOfDepositString.toString(),
                     depositType: _depositTypeString.toString(),
                     chequeNo: chqNOController.text.trim().toString(),
@@ -647,6 +693,11 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         mobileNoController.text.trim().toString() ?? "-",
                       ),
                       _buildRow(
+                        leading: AppStrings.alternateMobileNoLabel,
+                        trailing:
+                        alternateMobileNoController.text.trim().toString() ?? "-",
+                      ),
+                      _buildRow(
                         leading: AppStrings.firstNameLabel,
                         trailing:
                         firstNameController.text.trim().toString() ?? "-",
@@ -666,7 +717,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         trailing: guardianTypeValue.toString() ?? "-",
                       ),
                       _buildRow(
-                        leading: AppStrings.guardianNameLabel,
+                        leading: interestedId == "1" ? AppStrings.guardianNameS : AppStrings.guardianNameNot,
                         trailing:
                         guardianNameController.text.trim().toString() ?? "-",
                       ),
@@ -730,6 +781,82 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         trailing:
                         longitudeController.text.trim().toString() ?? "-",
                       ),
+                      if(interestedId == '0')...[
+                        _buildCardWidget(
+                            text: AppStrings.identificationProofLabel),
+                        _buildRow(
+                          leading: AppStrings.kycDoc1,
+                          trailing: _kYCDoc1Value.title.toString() ?? "-",
+                        ),
+                        _buildRow(
+                          leading: AppStrings.kycDoc1No,
+                          trailing:
+                          kYCDoc1NoController.text.trim().toString() ?? "-",
+                        ),
+                        _imageColumn(
+                          leadingImg: CardImageWidget(
+                            imgString: AppStrings.idFrontImgSide,
+                            children: frontImageFile != null && frontImageFile.isNotEmpty
+                                ? frontImageFile.split('.').last == "pdf"
+                                ? _pdfImageWidget(frontImageFile)
+                                : ImageCircle(
+                              fileImage1:
+                              File(frontImageFile.toString()),
+                              pathImage: frontImageFile.toString(),
+                            )
+                                : _localBorderImg(),),
+                          trailingImg: CardImageWidget(
+                            imgString: AppStrings.idBackImgSide,
+                            children: backImageFile != null && backImageFile.isNotEmpty
+                                ? backImageFile.split('.').last == "pdf"
+                                ? _pdfImageWidget(backImageFile)
+                                : ImageCircle(
+                              fileImage1:
+                              File(backImageFile.toString()),
+                              pathImage: backImageFile.toString(),
+                            )
+                                : _localBorderImg(),
+                          ),
+                        ),
+                        _buildCardWidget(text: AppStrings.ownershipProofHeading),
+                        _buildRow(
+                          leading: AppStrings.kycDoc2No,
+                          trailing: _kYCDoc2Value.title.toString() ?? "-",
+                        ),
+                        _buildRow(
+                          leading: AppStrings.kycDoc2,
+                          trailing: kYCDoc2NoController.text.toString() ?? "-",
+                        ),
+                        _imageColumn(
+                          leadingImg: CardImageWidget(
+                            imgString: AppStrings.electricBillFrontImgLabel,
+                            children: electricBillFrontImgFile != null &&
+                                electricBillFrontImgFile.isNotEmpty
+                                ? electricBillFrontImgFile.split('.').last ==
+                                "pdf"
+                                ? _pdfImageWidget(electricBillFrontImgFile)
+                                : ImageCircle(fileImage1: File(electricBillFrontImgFile.toString()),
+                              pathImage:
+                              electricBillFrontImgFile.toString(),
+                            ) : _localBorderImg(),
+                          ),
+                          trailingImg:CardImageWidget(
+                            imgString: AppStrings.electricBillBackImgLabel,
+                            children:  electricBillBackImgFile != null &&
+                                electricBillBackImgFile.isNotEmpty
+                                ? electricBillBackImgFile.split('.').last ==
+                                "pdf"
+                                ? _pdfImageWidget(electricBillBackImgFile)
+                                : ImageCircle(
+                              fileImage1: File(
+                                  electricBillBackImgFile.toString()),
+                              pathImage:
+                              electricBillBackImgFile.toString(),
+                            )
+                                : _localBorderImg(),
+                          ),
+                        ),
+                      ],
                       if(interestedId == '1')...[
                         _buildRow(
                           leading: AppStrings.residentStatusLabel,
@@ -756,200 +883,100 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           familyMemController.text.trim().toString() ??
                               "-",
                         ),
-                        _buildRow(
+                        /* _buildRow(
                           leading: AppStrings.landmarkLabel,
                           trailing:
                           landmarkController.text.trim().toString() ??
                               "-",
-                        ),
+                        ),*/
                         _buildCardWidget(
                             text: AppStrings.identificationProofLabel),
                         _buildRow(
-                          leading: AppStrings.kYCDoc1Label,
+                          leading: AppStrings.kycDoc1,
                           trailing: _kYCDoc1Value.title.toString() ?? "-",
                         ),
                         _buildRow(
-                          leading: AppStrings.kYCDoc1NoLabel,
+                          leading: AppStrings.kycDoc1No,
                           trailing:
                           kYCDoc1NoController.text.trim().toString() ?? "-",
                         ),
                         _imageColumn(
-                          leadingImg: Column(
-                            children: [
-                              // _imageNameWidget(imageName: AppStrings.idFrontImgSide),
-                              frontImageFile != null && frontImageFile.isNotEmpty
-                                  ? frontImageFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(frontImageFile)
-                                  : ImageCircle(
-                                fileImage1:
-                                File(frontImageFile.toString()),
-                                pathImage: frontImageFile.toString(),
-                              )
-                                  : _localBorderImg(),
-                              Text(AppStrings.idFrontImgSide, style:TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                            ],
-                          ),
-                          trailingImg: Column(
-                            children: [
-                              // _imageNameWidget(imageName: AppStrings.idBackImgSide),
-                              backImageFile != null && backImageFile.isNotEmpty
-                                  ? backImageFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(backImageFile)
-                                  : ImageCircle(
-                                fileImage1:
-                                File(backImageFile.toString()),
-                                pathImage: backImageFile.toString(),
-                              )
-                                  : _localBorderImg(),
-                              Text(AppStrings.idBackImgSide, style:TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                            ],
+                          leadingImg: CardImageWidget(
+                            imgString: AppStrings.idFrontImgSide,
+                            children: frontImageFile != null && frontImageFile.isNotEmpty
+                                ? frontImageFile.split('.').last == "pdf"
+                                ? _pdfImageWidget(frontImageFile)
+                                : ImageCircle(
+                              fileImage1:
+                              File(frontImageFile.toString()),
+                              pathImage: frontImageFile.toString(),
+                            )
+                                : _localBorderImg(),),
+                          trailingImg: CardImageWidget(
+                            imgString: AppStrings.idBackImgSide,
+                            children: backImageFile != null && backImageFile.isNotEmpty
+                                ? backImageFile.split('.').last == "pdf"
+                                ? _pdfImageWidget(backImageFile)
+                                : ImageCircle(
+                              fileImage1:
+                              File(backImageFile.toString()),
+                              pathImage: backImageFile.toString(),
+                            )
+                                : _localBorderImg(),
                           ),
                         ),
                         _buildCardWidget(text: AppStrings.ownershipProofHeading),
                         _buildRow(
-                          leading: AppStrings.kYCDoc2Label,
+                          leading: AppStrings.kycDoc2No,
                           trailing: _kYCDoc2Value.title.toString() ?? "-",
                         ),
                         _buildRow(
-                          leading: AppStrings.kYCDoc2NoLabel,
+                          leading: AppStrings.kycDoc2,
                           trailing: kYCDoc2NoController.text.toString() ?? "-",
                         ),
                         _imageColumn(
-                          leadingImg: Column(
-                            children: [
-                              // _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
-                              electricBillFrontImgFile != null &&
-                                  electricBillFrontImgFile.isNotEmpty
-                                  ? electricBillFrontImgFile.split('.').last ==
-                                  "pdf"
-                                  ? _pdfImageWidget(electricBillFrontImgFile)
-                                  : ImageCircle(
-                                fileImage1: File(
-                                    electricBillFrontImgFile
-                                        .toString()),
-                                pathImage:
-                                electricBillFrontImgFile.toString(),
-                              )
-                                  : _localBorderImg(),
-                              Text(AppStrings.electricBillFrontImgLabel, style:TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                            ],
+                          leadingImg: CardImageWidget(
+                            imgString: AppStrings.electricBillFrontImgLabel,
+                            children: electricBillFrontImgFile != null &&
+                                electricBillFrontImgFile.isNotEmpty
+                                ? electricBillFrontImgFile.split('.').last ==
+                                "pdf"
+                                ? _pdfImageWidget(electricBillFrontImgFile)
+                                : ImageCircle(fileImage1: File(electricBillFrontImgFile.toString()),
+                              pathImage:
+                              electricBillFrontImgFile.toString(),
+                            ) : _localBorderImg(),
                           ),
-                          trailingImg: Column(
-                            children: [
-                              //   _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
-                              electricBillBackImgFile != null &&
-                                  electricBillBackImgFile.isNotEmpty
-                                  ? electricBillBackImgFile.split('.').last ==
-                                  "pdf"
-                                  ? _pdfImageWidget(electricBillBackImgFile)
-                                  : ImageCircle(
-                                fileImage1: File(
-                                    electricBillBackImgFile.toString()),
-                                pathImage:
-                                electricBillBackImgFile.toString(),
-                              )
-                                  : _localBorderImg(),
-                              Text(AppStrings.electricBillBackImgLabel, style:TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                            ],
+                          trailingImg:CardImageWidget(
+                            imgString: AppStrings.electricBillBackImgLabel,
+                            children:  electricBillBackImgFile != null &&
+                                electricBillBackImgFile.isNotEmpty
+                                ? electricBillBackImgFile.split('.').last ==
+                                "pdf"
+                                ? _pdfImageWidget(electricBillBackImgFile)
+                                : ImageCircle(
+                              fileImage1: File(
+                                  electricBillBackImgFile.toString()),
+                              pathImage:
+                              electricBillBackImgFile.toString(),
+                            )
+                                : _localBorderImg(),
                           ),
                         ),
-                        _buildCardWidget(text: AppStrings.nocLabel),
+                        _buildCardWidget(text: AppStrings.nocDoc),
                         _buildRow(
-                          leading: AppStrings.kYCDoc3Label,
+                          leading: AppStrings.kYCDoc3,
                           trailing: _kYCDocument3Value.title.toString() ?? "-",
                         ),
-                        _buildRow(
-                          leading: AppStrings.kYCDoc3NoLabel,
+                        /* _buildRow(
+                          leading: AppStrings.nocDocNumber,
                           trailing: kYCDoc3NoController.text.toString() ?? "-",
-                        ),
+                        ),*/
+
                         _imageColumn(
-                          leadingImg: Column(
-                            children: [
-                              //    _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
-                              nocFrontImgFile != null &&
-                                  nocFrontImgFile.isNotEmpty
-                                  ? nocFrontImgFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(nocFrontImgFile)
-                                  : ImageCircle(
-                                fileImage1:
-                                File(nocFrontImgFile.toString()),
-                                pathImage: nocFrontImgFile.toString(),
-                              )
-                                  : _localBorderImg(),
-                              Text(AppStrings.nocFrontImgLabel, style:TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                            ],
-                          ),
-                          trailingImg: Column(
-                            children: [
-                              //  _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
-                              nocBackImgFile != null && nocBackImgFile.isNotEmpty
-                                  ? nocBackImgFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(nocBackImgFile)
-                                  : ImageCircle(
-                                fileImage1:
-                                File(nocBackImgFile.toString()),
-                                pathImage: nocBackImgFile.toString(),
-                              )
-                                  : _localBorderImg(),
-                              Text(AppStrings.nocBackImgLabel, style:TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                            ],
-                          ),
-                        ),
-                        _imageColumn(
-                          leadingImg: Column(
-                            children: [
-                              //  _imageNameWidget(imageName: AppStrings.customerImgLabel),
-                              uploadCustomerImgFile != null &&
-                                  uploadCustomerImgFile.isNotEmpty
-                                  ? uploadCustomerImgFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(uploadCustomerImgFile)
-                                  : ImageCircle(
-                                fileImage1: File(
-                                    uploadCustomerImgFile.toString()),
-                                pathImage:
-                                uploadCustomerImgFile.toString(),
-                              )
-                                  : _localBorderImg(),
-                              Text(AppStrings.customerImgLabel, style:TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                            ],
-                          ),
-                          trailingImg: Column(
-                            children: [
-                              //  _imageNameWidget(imageName: AppStrings.houseImgLabel),
-                              uploadHouseImgFile != null &&
-                                  uploadHouseImgFile.isNotEmpty
-                                  ? uploadHouseImgFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(uploadHouseImgFile)
-                                  : ImageCircle(
-                                  fileImage1:
-                                  File(uploadHouseImgFile.toString()),
-                                  pathImage:
-                                  uploadHouseImgFile.toString())
-                                  : _localBorderImg(),
-                              Text(AppStrings.houseImgLabel, style:TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                            ],
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            //  _imageNameWidget(imageName: AppStrings.customerConsentImgLabel),
-                            customerConsentImageFile != null &&
+                          leadingImg: CardImageWidget(
+                            imgString: AppStrings.customerConsentImgLabel,
+                            children:  customerConsentImageFile != null &&
                                 customerConsentImageFile.isNotEmpty
                                 ? customerConsentImageFile.split('.').last ==
                                 "pdf"
@@ -960,52 +987,69 @@ class _CustomInputFormState extends State<CustomInputForm> {
                                 pathImage:
                                 customerConsentImageFile.toString())
                                 : _localBorderImg(),
-                            Text(AppStrings.customerConsentImgLabel, style:TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                          ],
+                          ),
+                          trailingImg:  CardImageWidget(
+                            imgString: AppStrings.nocDoc,
+                            children:nocFrontImgFile != null &&
+                                nocFrontImgFile.isNotEmpty
+                                ? nocFrontImgFile.split('.').last == "pdf"
+                                ? _pdfImageWidget(nocFrontImgFile)
+                                : ImageCircle(
+                              fileImage1:
+                              File(nocFrontImgFile.toString()),
+                              pathImage: nocFrontImgFile.toString(),
+                            )
+                                : _localBorderImg(),
+                          )
+                        ),
+                        _imageColumn(
+                          leadingImg: CardImageWidget(
+                            imgString: AppStrings.customerImgLabel,
+                            children: uploadCustomerImgFile != null &&
+                                uploadCustomerImgFile.isNotEmpty
+                                ? uploadCustomerImgFile.split('.').last == "pdf"
+                                ? _pdfImageWidget(uploadCustomerImgFile)
+                                : ImageCircle(
+                              fileImage1: File(
+                                  uploadCustomerImgFile.toString()),
+                              pathImage:
+                              uploadCustomerImgFile.toString(),
+                            )
+                                : _localBorderImg(),
+                          ),
+                          trailingImg: CardImageWidget(
+                            imgString: AppStrings.houseImgLabel,
+                            children: uploadHouseImgFile != null &&
+                                uploadHouseImgFile.isNotEmpty
+                                ? uploadHouseImgFile.split('.').last == "pdf"
+                                ? _pdfImageWidget(uploadHouseImgFile)
+                                : ImageCircle(
+                                fileImage1:
+                                File(uploadHouseImgFile.toString()),
+                                pathImage:
+                                uploadHouseImgFile.toString())
+                                : _localBorderImg(),
+                          ),
+                        ),
+                        _imageColumn(
+                          leadingImg: CardImageWidget(
+                            imgString: AppStrings.chqCancelledPhotoLabel,
+                            children:  chqCancelledPhotoFile != null &&
+                                chqCancelledPhotoFile.isNotEmpty
+                                ? chqCancelledPhotoFile.split('.').last == "pdf"
+                                ? _pdfImageWidget(chqCancelledPhotoFile)
+                                : ImageCircle(
+                                fileImage1: File(
+                                    chqCancelledPhotoFile.toString()),
+                                pathImage:
+                                chqCancelledPhotoFile.toString())
+                                : _localBorderImg(),
+                          ),
+                          trailingImg: Container(),
                         ),
                         Divider(),
-                        _buildCardWidget(text: AppStrings.customerConsentLabel,),
-                        _imageColumn(
-                          leadingImg: Column(
-                            children: [
-                              //   _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
-                              ownerConsentImageFile != null &&
-                                  ownerConsentImageFile.isNotEmpty
-                                  ? ownerConsentImageFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(ownerConsentImageFile)
-                                  : ImageCircle(
-                                fileImage1: File(
-                                    ownerConsentImageFile.toString()),
-                                pathImage:
-                                ownerConsentImageFile.toString(),
-                              )
-                                  : _localBorderImg(),
-                              Text(AppStrings.consentPhotoLabel,style:TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                            ],
-                          ),
-                          trailingImg: Column(
-                            children: [
-                              //  _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
-                              chqCancelledPhotoFile != null &&
-                                  chqCancelledPhotoFile.isNotEmpty
-                                  ? chqCancelledPhotoFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(chqCancelledPhotoFile)
-                                  : ImageCircle(
-                                  fileImage1: File(
-                                      chqCancelledPhotoFile.toString()),
-                                  pathImage:
-                                  chqCancelledPhotoFile.toString())
-                                  : _localBorderImg(),
-                              Text(AppStrings.chqCancelledPhotoLabel,style:TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
-                            ],
-                          ),
-                        ),
+                        /* _buildCardWidget(text: AppStrings.customerConsentLabel,),
+
                         _buildRow(
                           leading: AppStrings.billingModeLabel,
                           trailing: billingModeValue.title.toString() ?? "-",
@@ -1032,7 +1076,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           trailing:
                           customerBankAddController.text.trim().toString() ??
                               "-",
-                        ),
+                        ),*/
                         _buildCardWidget(text: AppStrings.securityDepositLabel),
                         _buildRow(
                           leading: AppStrings.depositStatusLabel,
@@ -1167,6 +1211,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       chargeArea: chargeAreaType.id.toString(),
       areaId: areaTypeValue.id.toString(),
       mobileNumber: mobileNoController.text.trim().toString(),
+      alternateMobileNo: alternateMobileNoController.text.trim().toString(),
       firstName: firstNameController.text.trim().toString(),
       middleName: middleNameController.text.trim().toString(),
       lastName: lastNameController.text.trim().toString(),
@@ -1261,6 +1306,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _interestedDropDown() {
     return ReusedDropDownOptionItem(
+      star: AppStrings.star,
       textLabel: AppStrings.interestedLabel,
       hint: AppStrings.interestedLabel,
       items: interestedListItems,
@@ -1289,6 +1335,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _conversionPolicyDropDown() {
     return ReusedDropDownOptionItem(
+      star: AppStrings.star,
       textLabel: AppStrings.conversionPolicyLabel,
       hint: AppStrings.conversionPolicyLabel,
       items: _acceptConversionPolicyList,
@@ -1304,6 +1351,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _fittingCostDropDown() {
     return ReusedDropDownOptionItem(
+      star: AppStrings.star,
       textLabel: AppStrings.fittingCostLabel,
       hint: AppStrings.fittingCostLabel,
       items: _acceptExtraFittingCostList,
@@ -1347,6 +1395,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _chargeAreaDropDown() {
     return ReusedDropDownOptionItem(
+      star: AppStrings.star,
       textLabel: AppStrings.chargeAreaLabel,
       hint: AppStrings.chargeAreaLabel,
       items: chargeAreaItems,
@@ -1365,6 +1414,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _areaDropDown() {
     return ReusedDropDownOptionItem(
+      star: AppStrings.star,
       textLabel: AppStrings.areaLabel,
       hint: AppStrings.areaLabel,
       items: areaItems,
@@ -1380,6 +1430,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _mobileWidget() {
     return TextFieldWidget(
+        star: AppStrings.star,
         headingLabel: AppStrings.mobileNoLabel,
         hintText: AppStrings.mobileNoLabel,
         controller: mobileNoController,
@@ -1401,8 +1452,21 @@ class _CustomInputFormState extends State<CustomInputForm> {
         });
   }
 
+  Widget _alternateMobileWidget() {
+    return TextFieldWidget(
+      headingLabel: AppStrings.alternateMobileNoLabel,
+      hintText: AppStrings.alternateMobileNoLabel,
+      controller: alternateMobileNoController,
+      textInputType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
+      maxLength: 10,
+
+    );
+  }
+
   Widget _firstNameWidget() {
     return TextFieldWidget(
+      star: AppStrings.star,
       headingLabel: AppStrings.firstNameLabel,
       hintText: AppStrings.firstNameLabel,
       controller: firstNameController,
@@ -1444,6 +1508,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _lastNameWidget() {
     return TextFieldWidget(
+      star: AppStrings.star,
       headingLabel: AppStrings.lastNameLabel,
       hintText: AppStrings.lastNameLabel,
       controller: lastNameController,
@@ -1465,6 +1530,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _guardianTypeDropDown() {
     return ReusedDropDownString(
+      star:interestedId == "1" ? AppStrings.star : "",
       textLabel: AppStrings.guardianTypeLabel,
       onChanged: (String value) {
         setState(() => guardianTypeValue = value);
@@ -1477,8 +1543,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _guardianNameWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.guardianNameLabel,
-      hintText: AppStrings.guardianNameLabel,
+        star:interestedId == "1"? AppStrings.star : "",
+      headingLabel:AppStrings.guardianNameNot,
+      hintText: interestedId == "1" ? AppStrings.guardianNameS : AppStrings.guardianNameNot,
       controller: guardianNameController,
       textInputType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
@@ -1530,6 +1597,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _propertyCategoryDropDown() {
     return ReusedDropDownOptionItem(
+      star: AppStrings.star,
       textLabel: AppStrings.propertyCategoryLabel,
       onChanged: (OptionItem value) {
         setState(() {
@@ -1544,6 +1612,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _propertyClassDropDown() {
     return ReusedDropDownOptionItem(
+      star: AppStrings.star,
       textLabel: AppStrings.propertyClassLabel,
       onChanged: (OptionItem value) {
         setState(() {
@@ -1558,6 +1627,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _depositAmountWidget() {
     return TextFieldWidget(
+      star: AppStrings.star,
       enabled: false,
       headingLabel: AppStrings.depositAmountControllerLabel,
       hintText: AppStrings.depositAmountControllerLabel,
@@ -1572,117 +1642,107 @@ class _CustomInputFormState extends State<CustomInputForm> {
     );
   }
 
-  Widget _depositTypeDropDown() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0, right: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            flex: 4,
-            child: DropdownButtonFormField<DepositItem>(
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 12),
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                  borderSide: BorderSide(width: 1, color: Colors.green),
+  Widget _depositTypeDropDown(String headingLabel,star) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          flex: 4,
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Row(
+                  children: [
+                    Text(star ?? "", style: AppStyle.styleAlter(),),
+                    Text(headingLabel ?? "", style: AppStyle.styleB(),),
+                  ],
                 ),
-                disabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                  borderSide: BorderSide(width: 1, color: Colors.grey),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                  borderSide: BorderSide(width: 1, color: Colors.green),
-                ),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                    borderSide: BorderSide(
-                      width: 1,
-                    )),
-                errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                    borderSide: BorderSide(width: 1, color: Colors.red)),
-                contentPadding: EdgeInsets.symmetric(horizontal: 10),
               ),
-              items: _depositTypeList,
-              value: _depositTypeValue,
-              hint: Text(
-                AppStrings.depositTypeLabel,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.normal),
+              DropdownButtonFormField<DepositItem>(
+                style:  AppStyle.styleN(),
+                isExpanded: true,
+                isDense: false,
+                iconEnabledColor:  AppColor.black,
+                decoration: InputDecoration(
+                  focusedBorder: AppStyle.border(color: AppColor.black),
+                  disabledBorder: AppStyle.border(color: AppColor.grey),
+                  enabledBorder: AppStyle.border(color: AppColor.black),
+                  border: AppStyle.border(color: AppColor.black),
+                  errorBorder:AppStyle.border(color: AppColor.red),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                ),
+                items: _depositTypeList,
+                value: _depositTypeValue,
+                hint: Text(
+                    AppStrings.depositTypeLabel,
+                    style:  AppStyle.styleN()),
+                onChanged: (DepositItem value) {
+                  setState(() {
+                    _depositTypeValue = value;
+                    _depositTypeString = _depositTypeValue.id.toString();
+                    _schemeMonth = value.schememonth;
+                    log("_schemeMonth-->" + _schemeMonth.toString());
+                    if (_schemeMonth > 0) {
+                      _depositTypeValue = value;
+                      depositAmountController.text = value.firstamount.toString();
+                      log(depositAmountController.text.toString());
+                      log("_isDepositId-->" + _depositTypeString.toString());
+                    } else {
+                      _depositTypeValue = value;
+                      depositAmountController.text = value.amount.toString();
+                      log(depositAmountController.text.toString());
+                      log("_isDepositId-->" + _depositTypeString.toString());
+                    }
+                    AppStrings.depositName = value.title;
+                    AppStrings.depositAmountController = value.amount.toString();
+                    gasDepositAmountController = value.gas_amount;
+                    schemeId = value.id;
+                    AppStrings.schemeType = value.scheme_type.toString();
+                    AppStrings.schemeCode = value.scheme_code.toString();
+                    AppStrings.depositAmount = value.deposit_amount.toString();
+                    AppStrings.equipmentDepositAmount =
+                        value.equipment_deposit_amount.toString();
+                    AppStrings.interestAmount = value.interest_amount.toString();
+                    AppStrings.registrationGST =
+                        value.registration_gst.toString();
+                    AppStrings.interestTaxAmt = value.interest_tax_amt.toString();
+                    AppStrings.totalAmount = value.totalAmount.toString();
+                    AppStrings.nextCycleAmount = value.nextCycleAmount.toString();
+                    AppStrings.registrationTaxName =
+                        value.registration_tax_name.toString();
+                    depositTotalAmount = value.total_amount;
+                    AppStrings.interestTaxAmt = value.interest_tax_amt.toString();
+                    AppStrings.regTax = value.reg_tax.toString();
+                    AppStrings.msgSchemeDetail = "Deposit Name = " +
+                        AppStrings.depositName +
+                        "\nDeposit Amount = " +
+                        AppStrings.depositAmountController.toString() +
+                        "\nSchemeMonth = " +
+                        _schemeMonth.toString() +
+                        "\nEquipment Deposit Amount = " +
+                        AppStrings.equipmentDepositAmount +
+                        "\nGAS Amount = " +
+                        gasDepositAmountController.toString() +
+                        "\nFirst Deposit Amount = " +
+                        value.firstamount.toString();
+                  });
+                },
               ),
-              onChanged: (DepositItem value) {
-                setState(() {
-                  _depositTypeValue = value;
-                  _depositTypeString = _depositTypeValue.id.toString();
-                  _schemeMonth = value.schememonth;
-                  log("_schemeMonth-->" + _schemeMonth.toString());
-                  if (_schemeMonth > 0) {
-                    _depositTypeValue = value;
-                    depositAmountController.text = value.firstamount.toString();
-                    log(depositAmountController.text.toString());
-                    log("_isDepositId-->" + _depositTypeString.toString());
-                  } else {
-                    _depositTypeValue = value;
-                    depositAmountController.text = value.amount.toString();
-                    log(depositAmountController.text.toString());
-                    log("_isDepositId-->" + _depositTypeString.toString());
-                  }
-                  AppStrings.depositName = value.title;
-                  AppStrings.depositAmountController = value.amount.toString();
-                  gasDepositAmountController = value.gas_amount;
-                  schemeId = value.id;
-                  AppStrings.schemeType = value.scheme_type.toString();
-                  AppStrings.schemeCode = value.scheme_code.toString();
-                  AppStrings.depositAmount = value.deposit_amount.toString();
-                  AppStrings.equipmentDepositAmount =
-                      value.equipment_deposit_amount.toString();
-                  AppStrings.interestAmount = value.interest_amount.toString();
-                  AppStrings.registrationGST =
-                      value.registration_gst.toString();
-                  AppStrings.interestTaxAmt = value.interest_tax_amt.toString();
-                  AppStrings.totalAmount = value.totalAmount.toString();
-                  AppStrings.nextCycleAmount = value.nextCycleAmount.toString();
-                  AppStrings.registrationTaxName =
-                      value.registration_tax_name.toString();
-                  depositTotalAmount = value.total_amount;
-                  AppStrings.interestTaxAmt = value.interest_tax_amt.toString();
-                  AppStrings.regTax = value.reg_tax.toString();
-                  AppStrings.msgSchemeDetail = "Deposit Name = " +
-                      AppStrings.depositName +
-                      "\nDeposit Amount = " +
-                      AppStrings.depositAmountController.toString() +
-                      "\nSchemeMonth = " +
-                      _schemeMonth.toString() +
-                      "\nEquipment Deposit Amount = " +
-                      AppStrings.equipmentDepositAmount +
-                      "\nGAS Amount = " +
-                      gasDepositAmountController.toString() +
-                      "\nFirst Deposit Amount = " +
-                      value.firstamount.toString();
-                });
-              },
-              isExpanded: true,
-              isDense: true,
-            ),
+            ],
           ),
-          Flexible(
-            flex: 2,
-            child: ButtonWidget(
-                textButton: "Detail",
-                onPressed: () {
-                  _showdepositAmountControllerDialog(
-                      AppStrings.msgSchemeDetail);
-                }),
-          )
-        ],
-      ),
+        ),
+
+        Flexible(
+          flex: 2,
+          child: ButtonWidget(
+              textButton: "Detail",
+              onPressed: () {
+                _showdepositAmountControllerDialog(
+                    AppStrings.msgSchemeDetail);
+              }),
+        )
+      ],
     );
   }
 
@@ -1721,6 +1781,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _houseNumberWidget() {
     return TextFieldWidget(
+      star: AppStrings.star,
       headingLabel: AppStrings.houseNumberLabel,
       hintText: AppStrings.houseNumberLabel,
       controller: houseNumberController,
@@ -1761,6 +1822,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _apartmentWidget() {
     return TextFieldWidget(
+      star: AppStrings.star,
       headingLabel: AppStrings.addressLabel,
       hintText: AppStrings.addressLabel,
       controller: colonySocietyApartmentController,
@@ -1781,6 +1843,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _streetNameWidget() {
     return TextFieldWidget(
+      star: AppStrings.star,
       headingLabel: AppStrings.streetNameLabel,
       hintText: AppStrings.streetNameLabel,
       controller: streetNameController,
@@ -1829,6 +1892,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }*/
   Widget _districtWidget() {
     return ReusedDropDownOptionItem(
+      star: AppStrings.star,
       textLabel: AppStrings.districtLabel,
       items: getAllDistrictItems,
       value: districtValue,
@@ -1844,6 +1908,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _pinCodeWidget() {
     return TextFieldWidget(
+        star: AppStrings.star,
         headingLabel: AppStrings.pinCodeLabel,
         hintText: AppStrings.pinCodeLabel,
         controller: pinCodeController,
@@ -1979,8 +2044,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   _kYCDoc1DropDown() {
     return ReusedDropDownOptionItem(
-      textLabel: AppStrings.kYCDoc1Label,
-      hint: AppStrings.kYCDoc1Label,
+      star: AppStrings.star,
+      textLabel: AppStrings.kycDoc1,
+      hint: AppStrings.kycDoc1,
       items: _kYCDoc1List,
       value: _kYCDoc1Value,
       onChanged: (OptionItem value) {
@@ -1993,6 +2059,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _chequeAccountNoWidget() {
     return TextFieldWidget(
+        star: AppStrings.star,
         maxLength: 20,
         headingLabel: AppStrings.chequeAccountNoLabel,
         hintText: AppStrings.chequeAccountNoLabel,
@@ -2015,6 +2082,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _chequeMICRNoWidget() {
     return TextFieldWidget(
+        star: AppStrings.star,
         headingLabel: AppStrings.chequeMICRNoLabel,
         hintText: AppStrings.chequeMICRNoLabel,
         maxLength: 9,
@@ -2036,223 +2104,190 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   Widget _ownerConsentImageWidget() {
-    return Column(
-      children: [
-        // _imageNameWidget(imageName: AppStrings.customerConsentImgLabel),
-        InkWell(
-            onTap: () => _openCustomerConsentImgSource(
-              context,
-            ),
-            child: customerConsentImageFile != null &&
-                customerConsentImageFile.isNotEmpty
-                ? customerConsentImageFile.split('.').last == "pdf"
-                ? _pdfImageWidget(customerConsentImageFile)
-                : _fileImage(fileImage: File(customerConsentImageFile))
-                : _localBorderImg()),
-        Text(AppStrings.customerConsentImgLabel)
-      ],
+    return CardImageWidget(
+      star: AppStrings.star,
+      imgString: AppStrings.customerConsentImgLabel,
+      children:InkWell(
+          onTap: () => _openCustomerConsentImgSource(context,),
+          child: customerConsentImageFile != null &&
+              customerConsentImageFile.isNotEmpty
+              ? customerConsentImageFile.split('.').last == "pdf"
+              ? _pdfImageWidget(customerConsentImageFile)
+              : _fileImage(fileImage: File(customerConsentImageFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _frontImageWidget() {
-    return Card(
-      child: Column(
-        children: [
-          Text(AppStrings.idFrontImgSide,style: AppStyle.styleB()),
-          InkWell(
-              onTap: () => _openFrontImageSource(
-                context,
-              ),
-              child: frontImageFile != null && frontImageFile.isNotEmpty
-                  ? frontImageFile.split('.').last == "pdf"
-                  ? _pdfImageWidget(frontImageFile)
-                  : _fileImage(fileImage: File(frontImageFile))
-                  : _localBorderImg()),
-        ],
-      ),
+    return CardImageWidget(
+      star: AppStrings.star,
+      imgString: AppStrings.idFrontImgSide,
+      children: InkWell(
+          onTap: () => _openFrontImageSource(
+            context,
+          ),
+          child: frontImageFile != null && frontImageFile.isNotEmpty
+              ? frontImageFile.split('.').last == "pdf"
+              ? _pdfImageWidget(frontImageFile)
+              : _fileImage(fileImage: File(frontImageFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _backImageWidget() {
-    return Column(
-      children: [
-        // _imageNameWidget(imageName: AppStrings.idBackImgSide),
-        InkWell(
-            onTap: () => _openBackImageSource(context),
-            child: backImageFile != null && backImageFile.isNotEmpty
-                ? backImageFile.split('.').last == "pdf"
-                ? _pdfImageWidget(backImageFile)
-                : _fileImage(fileImage: File(backImageFile))
-                : _localBorderImg()),
-        Text(AppStrings.idBackImgSide)
-      ],
+    return CardImageWidget(
+
+      imgString: AppStrings.idBackImgSide,
+      children:InkWell(
+          onTap: () => _openBackImageSource(context),
+          child: backImageFile != null && backImageFile.isNotEmpty
+              ? backImageFile.split('.').last == "pdf"
+              ? _pdfImageWidget(backImageFile)
+              : _fileImage(fileImage: File(backImageFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _electricBillFrontImgWidget() {
-    return Column(
-      children: [
-        // _imageNameWidget(imageName: AppStrings.electricBillFrontImgLabel),
-        InkWell(
-            onTap: () => _openEleBillFrontSource(context),
-            child: electricBillFrontImgFile != null &&
-                electricBillFrontImgFile.isNotEmpty
-                ? electricBillFrontImgFile.split('.').last == "pdf"
-                ? _pdfImageWidget(electricBillFrontImgFile)
-                : _fileImage(fileImage: File(electricBillFrontImgFile))
-                : _localBorderImg()),
-        Text(AppStrings.electricBillFrontImgLabel)
-      ],
+    return CardImageWidget(
+      star: interestedId == "1" ? AppStrings.star : "",
+      imgString: AppStrings.electricBillFrontImgLabel,
+      children:InkWell(
+          onTap: () => _openEleBillFrontSource(context),
+          child: electricBillFrontImgFile != null &&
+              electricBillFrontImgFile.isNotEmpty
+              ? electricBillFrontImgFile.split('.').last == "pdf"
+              ? _pdfImageWidget(electricBillFrontImgFile)
+              : _fileImage(fileImage: File(electricBillFrontImgFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _electricBillBackImgWidget() {
-    return Column(
-      children: [
-        // _imageNameWidget(imageName: AppStrings.electricBillBackImgLabel),
-        InkWell(
-            onTap: () => _openEleBackSource(context),
-            child: electricBillBackImgFile != null &&
-                electricBillBackImgFile.isNotEmpty
-                ? electricBillBackImgFile.split('.').last == "pdf"
-                ? _pdfImageWidget(electricBillBackImgFile)
-                : _fileImage(fileImage: File(electricBillBackImgFile))
-                : _localBorderImg()),
-        Text(AppStrings.electricBillBackImgLabel)
-      ],
+    return CardImageWidget(
+      imgString: AppStrings.electricBillBackImgLabel,
+      children:InkWell(
+          onTap: () => _openEleBackSource(context),
+          child: electricBillBackImgFile != null &&
+              electricBillBackImgFile.isNotEmpty
+              ? electricBillBackImgFile.split('.').last == "pdf"
+              ? _pdfImageWidget(electricBillBackImgFile)
+              : _fileImage(fileImage: File(electricBillBackImgFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _nocFrontImageWidget() {
-    return Column(
-      children: [
-        //    _imageNameWidget(imageName: AppStrings.nocFrontImgLabel),
-        InkWell(
-            onTap: () => _openNocFrontImgSource(context),
-            child: nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
-                ? nocFrontImgFile.split('.').last == "pdf"
-                ? _pdfImageWidget(nocFrontImgFile)
-                : _fileImage(fileImage: File(nocFrontImgFile))
-                : _localBorderImg()),
-        Text(AppStrings.nocFrontImgLabel)
-      ],
+    return CardImageWidget(
+      star: AppStrings.star,
+      imgString: AppStrings.nocDoc,
+      children:InkWell(
+          onTap: () => _openNocFrontImgSource(context),
+          child: nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
+              ? nocFrontImgFile.split('.').last == "pdf"
+              ? _pdfImageWidget(nocFrontImgFile)
+              : _fileImage(fileImage: File(nocFrontImgFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _nocBackImageWidget() {
-    return Column(
-      children: [
-        // _imageNameWidget(imageName: AppStrings.nocBackImgLabel),
-        InkWell(
-            onTap: () => _openNocBackImgSource(context),
-            child: nocBackImgFile != null && nocBackImgFile.isNotEmpty
-                ? nocBackImgFile.split('.').last == "pdf"
-                ? _pdfImageWidget(nocBackImgFile)
-                : _fileImage(fileImage: File(nocBackImgFile))
-                : _localBorderImg()),
-        Text(AppStrings.nocBackImgLabel)
-      ],
+    return CardImageWidget(
+      imgString: AppStrings.nocBackImgLabel,
+      children:InkWell(
+          onTap: () => _openNocBackImgSource(context),
+          child: nocBackImgFile != null && nocBackImgFile.isNotEmpty
+              ? nocBackImgFile.split('.').last == "pdf"
+              ? _pdfImageWidget(nocBackImgFile)
+              : _fileImage(fileImage: File(nocBackImgFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _customerImageWidget() {
-    return Column(
-      children: [
-        // _imageNameWidget(imageName: AppStrings.customerImgLabel),
-        InkWell(
-            onTap: () => _openCustomerImgSource(context),
-            child: uploadCustomerImgFile != null &&
-                uploadCustomerImgFile.isNotEmpty
-                ? uploadCustomerImgFile.split('.').last == "pdf"
-                ? _pdfImageWidget(uploadCustomerImgFile)
-                : _fileImage(fileImage: File(uploadCustomerImgFile))
-                : _localBorderImg()),
-        Text(AppStrings.customerImgLabel)
-      ],
+    return CardImageWidget(
+      imgString: AppStrings.customerImgLabel,
+      children:InkWell(
+          onTap: () => _openCustomerImgSource(context),
+          child: uploadCustomerImgFile != null &&
+              uploadCustomerImgFile.isNotEmpty
+              ? uploadCustomerImgFile.split('.').last == "pdf"
+              ? _pdfImageWidget(uploadCustomerImgFile)
+              : _fileImage(fileImage: File(uploadCustomerImgFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _rowWidget({Widget widget1, Widget widget2}) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8, left: 12, bottom: 0, right: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Flexible(child: widget1), Flexible(child: widget2)],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+            child: widget1),
+        Flexible(
+            child: widget2)],
     );
   }
 
   Widget _houseNumImageWidget() {
-    return Column(
-      children: [
-        //   _imageNameWidget(imageName: AppStrings.houseImgLabel),
-        InkWell(
-            onTap: () => _openHouseImgSource(context),
-            child: uploadHouseImgFile != null && uploadHouseImgFile.isNotEmpty
-                ? uploadHouseImgFile.split('.').last == "pdf"
-                ? _pdfImageWidget(uploadHouseImgFile)
-                : _fileImage(fileImage: File(uploadHouseImgFile))
-                : _localBorderImg()),
-        Text(AppStrings.houseImgLabel)
-      ],
+    return CardImageWidget(
+      imgString: AppStrings.houseImgLabel,
+      children:InkWell(
+          onTap: () => _openHouseImgSource(context),
+          child: uploadHouseImgFile != null && uploadHouseImgFile.isNotEmpty
+              ? uploadHouseImgFile.split('.').last == "pdf"
+              ? _pdfImageWidget(uploadHouseImgFile)
+              : _fileImage(fileImage: File(uploadHouseImgFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _consentImageWidget() {
-    return Column(
-      children: [
-        // _imageNameWidget(imageName: AppStrings.consentPhotoLabel),
-        InkWell(
-            onTap: () => _openOwnerConsentImgSource(context),
-            child: ownerConsentImageFile != null &&
-                ownerConsentImageFile.isNotEmpty
-                ? ownerConsentImageFile.split('.').last == "pdf"
-                ? _pdfImageWidget(ownerConsentImageFile)
-                : _fileImage(fileImage: File(ownerConsentImageFile))
-                : _localBorderImg()),
-        Text(AppStrings.consentPhotoLabel)
-      ],
+    return CardImageWidget(
+      imgString: AppStrings.consentPhotoLabel,
+      children:InkWell(
+          onTap: () => _openOwnerConsentImgSource(context),
+          child: ownerConsentImageFile != null &&
+              ownerConsentImageFile.isNotEmpty
+              ? ownerConsentImageFile.split('.').last == "pdf"
+              ? _pdfImageWidget(ownerConsentImageFile)
+              : _fileImage(fileImage: File(ownerConsentImageFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _cancelChqImageWidget() {
-    return Column(
-      children: [
-        // _imageNameWidget(imageName: AppStrings.chqCancelledPhotoLabel),
-        InkWell(
-            onTap: () => _openChqCancelledImgSource(context),
-            child: chqCancelledPhotoFile != null &&
-                chqCancelledPhotoFile.isNotEmpty
-                ? chqCancelledPhotoFile.split('.').last == "pdf"
-                ? _pdfImageWidget(chqCancelledPhotoFile)
-                : _fileImage(fileImage: File(chqCancelledPhotoFile))
-                : _localBorderImg()),
-        Text(AppStrings.chqCancelledPhotoLabel)
-      ],
+    return CardImageWidget(
+      imgString: AppStrings.chqCancelledPhotoLabel,
+      children:InkWell(
+          onTap: () => _openChqCancelledImgSource(context),
+          child: chqCancelledPhotoFile != null &&
+              chqCancelledPhotoFile.isNotEmpty
+              ? chqCancelledPhotoFile.split('.').last == "pdf"
+              ? _pdfImageWidget(chqCancelledPhotoFile)
+              : _fileImage(fileImage: File(chqCancelledPhotoFile))
+              : _localBorderImg()),
     );
   }
 
   Widget _chequeImageWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        //_imageNameWidget(imageName: AppStrings.chqPhotoLabel),
-        InkWell(
-            onTap: () => _openChqImgSource(context),
-            child: chqPhotoFile != null && chqPhotoFile.isNotEmpty
-                ? chqPhotoFile.split('.').last == "pdf"
-                ? _pdfImageWidget(chqPhotoFile)
-                : _fileImage(fileImage: File(chqPhotoFile))
-                : _localBorderImg()),
-        Text(AppStrings.chqPhotoLabel)
-      ],
+    return CardImageWidget(
+      star: AppStrings.star,
+      imgString: AppStrings.chqPhotoLabel,
+      children:InkWell(
+          onTap: () => _openChqImgSource(context),
+          child: chqPhotoFile != null && chqPhotoFile.isNotEmpty
+              ? chqPhotoFile.split('.').last == "pdf"
+              ? _pdfImageWidget(chqPhotoFile)
+              : _fileImage(fileImage: File(chqPhotoFile))
+              : _localBorderImg()),
     );
   }
 
-  Widget _kYCDoc3NoWidget() {
+  Widget _nocDocNumberController() {
     return TextFieldWidget(
-      headingLabel: AppStrings.kYCDoc3NoLabel,
-      hintText: AppStrings.kYCDoc3NoLabel,
+      headingLabel: AppStrings.nocDocNumber,
+      hintText: AppStrings.nocDocNumber,
       controller: kYCDoc3NoController,
       textInputType: TextInputType.text,
       maxLength: 20,
@@ -2267,8 +2302,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _kYCDoc1NoWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.kYCDoc1NoLabel,
-      hintText: AppStrings.kYCDoc1NoLabel,
+      star: AppStrings.star,
+      headingLabel: AppStrings.kycDoc1No,
+      hintText: AppStrings.kycDoc1No,
       controller: kYCDoc1NoController,
       textInputType: TextInputType.text,
       maxLength: 20,
@@ -2285,8 +2321,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _kYCDoc2NoWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.kYCDoc2NoLabel,
-      hintText: AppStrings.kYCDoc2NoLabel,
+      star: interestedId == "1" ? AppStrings.star : "",
+      headingLabel: AppStrings.kycDoc2No,
+      hintText: AppStrings.kycDoc2No,
       controller: kYCDoc2NoController,
       textInputType: TextInputType.text,
       maxLength: 20,
@@ -2301,8 +2338,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _kYCDoc2DropDown() {
     return ReusedDropDownOptionItem(
-      textLabel: AppStrings.kYCDoc2Label,
-      hint: AppStrings.kYCDoc2Label,
+      star: interestedId == "1" ? AppStrings.star : "",
+      textLabel: AppStrings.kycDoc2,
+      hint: AppStrings.kycDoc2,
       items: _kYCDoc2List,
       value: _kYCDoc2Value,
       onChanged: (OptionItem value) {
@@ -2317,12 +2355,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _kYCDoc3DropDown() {
     return ReusedDropDownOptionItem(
-      textLabel: AppStrings.kYCDoc3Label,
-      hint: AppStrings.kYCDoc3Label,
+      star:AppStrings.star,
+      textLabel: AppStrings.kYCDoc3,
+      hint: AppStrings.kYCDoc3,
       items: _kycProofDropdownItems,
       value: _kYCDocument3Value,
       onChanged: (value) {
-        log(value.id);
+        log("_kYCDocument3Value-->${value.id}");
         setState(() {
           _kYCDocument3Value = value;
         });
@@ -2432,7 +2471,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _depositStatusDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel: "",
+      textLabel: AppStrings.initialDepositStatusLabel,
       hint: AppStrings.depositStatusLabel,
       items: dropListDepositStatusList,
       value: depositStatusValue,
@@ -2465,6 +2504,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _modeDepositDropDown() {
     return ReusedDropDownOptionItem(
+        star:AppStrings.star,
         textLabel: AppStrings.modeOfDepositLabel,
         hint: AppStrings.modeOfDepositLabel,
         items: modeOfDepositList,
@@ -2497,6 +2537,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _chqNoWidget() {
     return TextFieldWidget(
+        star:AppStrings.star,
         headingLabel: AppStrings.chqNoLabel,
         hintText: AppStrings.chqNoLabel,
         controller: chqNOController,
@@ -2519,8 +2560,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _chequeDateWidget() {
     return TextFieldWidget(
+      star:AppStrings.star,
       headingLabel: AppStrings.depositDateLabel,
-      prefixIcon: Icon(Icons.calendar_today),
+      prefixIcon: Icon(Icons.calendar_today, color: AppColor.appColor1,),
       hintText: AppStrings.depositDateLabel,
       controller: chequeDateController,
       readOnly: true,
@@ -2546,6 +2588,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _payementBankNameDropDown() {
     return ReusedDropDownString(
+      star:AppStrings.star,
       textLabel: AppStrings.payementBankNameLabel,
       hint: AppStrings.payementBankNameLabel,
       items: _payementBankNameList.map((String item) {
@@ -2592,20 +2635,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _localBorderImg() {
     return CircleAvatar(
-      radius: 41,
-      backgroundColor:AppColor.appColor1,
-      child: CircleAvatar(
+        radius: 41,
+        backgroundColor:AppColor.appColor1,
+        child: CircleAvatar(
           radius: 40,
-          backgroundColor: Colors.white,
-          backgroundImage: AssetImage(AppIcon.imageCaptureIcon),
-
-          /*ClipRRect(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Image.asset('assets/images/place_holder.png'),
-            ),
-          )*/
-      ),
+          backgroundColor: AppColor.white,
+          child: Image.asset(AppIcon.imageCaptureIcon,fit :BoxFit.cover,width: 60,height: 60,),
+        )
     );
   }
 
@@ -3220,16 +3256,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
             children: [
               Flexible(
                   child: Text(
-                    leading.toUpperCase(),
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black,fontSize: 12,
-                      decoration: TextDecoration.none,
-                    ),
+                      leading.toUpperCase(), style: AppStyle.styleB()
                   )),
               Flexible(
-                  child: Text(trailing,
-                      style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 12, color: Colors.black,decoration: TextDecoration.none,)
+                  child: Text(trailing, style: AppStyle.styleN()
                   )
               )
             ],
