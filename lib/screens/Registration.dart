@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/models/GetAllDistrictModel.dart';
-import 'package:pbg_app/screens/BookingRegistrationForm/presentation/page/booking_registration_form.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/page/custom_input_form_screen.dart';
+import 'package:pbg_app/utils/common_widgets/message_box_two_button_pop.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RegistrationForm extends StatefulWidget {
@@ -13,10 +13,7 @@ class RegistrationForm extends StatefulWidget {
 }
 
 class _RegistrationFormState extends State<RegistrationForm> {
-  String customerRegLabel = '',
-      customerKycLabel = '',
-      customerPhotoLabel = '',
-      customerConsentLabel = '';
+  String customerRegLabel = '', customerKycLabel = '', customerPhotoLabel = '', customerConsentLabel = '';
   String customerDepositLabel = '';
   String step1Label = '', step2Label = '', step3Label = '', step4Label = '';
   String step5Label = '';
@@ -47,8 +44,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
       setState(() {
         isInternet = true;
       });
-      _showMyDialog(
-          context, 'Internet', 'Please Check Your Internet Connection!');
+      _showMyDialog(context, 'Internet', 'Please Check Your Internet Connection!');
     }
   }
 
@@ -58,8 +54,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     _multipleRequstPermission();
     _download(context);
     initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
   @override
@@ -91,7 +86,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    _exitApp(context);
+                    _exitApp();
                   },
                 )
               ],
@@ -107,12 +102,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        _buildBox(
-                            color: _isMobileType ? Colors.green : Colors.red,
-                            textTitle: "MOBILE DATA"),
-                        _buildBox(
-                            color: _isWifiTypea ? Colors.green : Colors.red,
-                            textTitle: "WI-FI"),
+                        _buildBox(color: _isMobileType ? Colors.green : Colors.red, textTitle: "MOBILE DATA"),
+                        _buildBox(color: _isWifiTypea ? Colors.green : Colors.red, textTitle: "WI-FI"),
                         _buildBox(
                           color: _isBothType ? Colors.green : Colors.red,
                           textTitle: "UPDATE",
@@ -122,8 +113,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                               await _download(context);
                               CustomToast.showToast("Loading Successfully...");
                             } else {
-                              CustomToast.showToast(
-                                  "ERROR!!!!!\n INTERNET CONNECTION");
+                              CustomToast.showToast("ERROR!!!!!\n INTERNET CONNECTION");
                             }
                           },
                         ),
@@ -140,21 +130,15 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   children: [
                     Text(
                       "Version : 1.1,",
-                      style: TextStyle(
-                          color: Colors.green.shade800,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Colors.green.shade800, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "GA : $schema,",
-                      style: TextStyle(
-                          color: Colors.green.shade800,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Colors.green.shade800, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "Date : 09-02-2024",
-                      style: TextStyle(
-                          color: Colors.green.shade800,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Colors.green.shade800, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -172,13 +156,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         color: color,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Text(textTitle,
-              textAlign: TextAlign.center,
-              style: new TextStyle(
-                  color: Colors.white,
-                  fontSize: 12.0,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold)),
+          child: Text(textTitle, textAlign: TextAlign.center, style: new TextStyle(color: Colors.white, fontSize: 12.0, fontFamily: 'Montserrat', fontWeight: FontWeight.bold)),
         ),
       ),
     );
@@ -190,19 +168,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
         title: "DPNG Registration Form",
         icon: Icons.picture_in_picture,
         onTap: () async {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CustomInputForm(
-                      isUpdate: false, position: 0, studentModel: null)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CustomInputForm(isUpdate: false, position: 0, studentModel: null)));
         }));
     list.add(listItem(
-        title: "View and Sync Records",
-        icon: Icons.receipt,
-        onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SaveCustomerRegistrationPage()))));
+        title: "View and Sync Records", icon: Icons.receipt, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SaveCustomerRegistrationPage()))));
     /*list.add(listItem(
         title: "DPNG Booking Registration Form",
         icon: Icons.book,
@@ -228,9 +197,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     ? Container(
                         padding: EdgeInsets.all(11),
                         margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.red)),
+                        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.red)),
                         child: new Icon(
                           icon,
                         ),
@@ -257,10 +224,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
       Permission.photos,
       Permission.storage,
     ].request();
-    if (statuses[Permission.location].isGranted ||
-        statuses[Permission.camera].isGranted ||
-        statuses[Permission.photos].isGranted ||
-        statuses[Permission.storage].isGranted) {
+    if (statuses[Permission.location].isGranted || statuses[Permission.camera].isGranted || statuses[Permission.photos].isGranted || statuses[Permission.storage].isGranted) {
       log("All permission are isGranted");
     } else {
       openAppSettings();
@@ -268,14 +232,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
     return true;
   }
 
-  final List<String> titleList = <String>[
-    'Customer Registration Form',
-    'View and Sync Records'
-  ];
-  final List<IconData> iconList = <IconData>[
-    Icons.picture_in_picture,
-    Icons.receipt
-  ];
+  final List<String> titleList = <String>['Customer Registration Form', 'View and Sync Records'];
+  final List<IconData> iconList = <IconData>[Icons.picture_in_picture, Icons.receipt];
 
   Widget _buildCardButton() {
     return Card(
@@ -296,37 +254,22 @@ class _RegistrationFormState extends State<RegistrationForm> {
     );
   }
 
-  Future<bool> _exitApp(BuildContext context) {
-    return showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Do you want to logout this application?'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    _getLoggedOut();
-                  },
-                  child: Text('Yes'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    log("you choose no");
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text('No'),
-                ),
-              ],
-            );
-          },
-        ) ??
+  Future<bool> _exitApp() async {
+    return (await showDialog(
+            context: context,
+            builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
+                message: "Do you want to logout this App?",
+                okButtonText: "Yes",
+                onPressed: () {
+                  _getLoggedOut();
+                }))) ??
         false;
   }
 
   Future<bool> _getLoggedOut() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.clear();
-    Hive.box('saveCustRegDataBoxName').clear();
+    //  Hive.box('saveCustRegDataBoxName').clear();
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -335,8 +278,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     return null;
   }
 
-  Future<void> _showMyDialog(
-      BuildContext mContext, String title, String _msg) async {
+  Future<void> _showMyDialog(BuildContext mContext, String title, String _msg) async {
     return showDialog<void>(
       context: mContext,
       barrierDismissible: false, // user must tap button!
@@ -630,8 +572,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     if (isNetworkPresent) {
       fetchLabals();
     } else {
-      _showMyDialog(
-          context, 'Internet', 'Please Check Wi-fi Internet Connection!');
+      _showMyDialog(context, 'Internet', 'Please Check Wi-fi Internet Connection!');
     }
   }
 
@@ -720,8 +661,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                             : Text(
                                 "Please! proceed by connecting to a internet connection",
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 12.0, color: Colors.red),
+                                style: TextStyle(fontSize: 12.0, color: Colors.red),
                               ),
                       ],
                     ),
@@ -729,15 +669,13 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       ButtonWidget(
                         textButton: "CLOSE THE APP",
                         onPressed: () {
-                          SystemChannels.platform
-                              .invokeMethod('SystemNavigator.pop');
+                          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                         },
                       ),
                       ButtonWidget(
                         textButton: "CLOSE THE APP",
                         onPressed: () {
-                          SystemChannels.platform
-                              .invokeMethod('SystemNavigator.pop');
+                          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                         },
                       ),
                       ButtonWidget(

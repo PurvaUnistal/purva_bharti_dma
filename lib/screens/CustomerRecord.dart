@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/models/save_customer_registration_model.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/page/custom_input_form_screen.dart';
-import 'package:pbg_app/utils/common_widgets/loading_widget.dart';
+import 'package:pbg_app/utils/common_widgets/spin_loader.dart';
+
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
 
@@ -9,20 +10,15 @@ class SaveCustomerRegistrationPage extends StatefulWidget {
   const SaveCustomerRegistrationPage({Key key}) : super(key: key);
 
   @override
-  State<SaveCustomerRegistrationPage> createState() =>
-      _SaveCustomerRegistrationPageState();
+  State<SaveCustomerRegistrationPage> createState() => _SaveCustomerRegistrationPageState();
 }
 
-class _SaveCustomerRegistrationPageState
-    extends State<SaveCustomerRegistrationPage> {
+class _SaveCustomerRegistrationPageState extends State<SaveCustomerRegistrationPage> {
   @override
   void initState() {
     initConnectivity();
     apiIntegration = ApiIntegration();
-    customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(
-        SaveCusRegHiveDataStore.saveCustRegDataBoxName);
-    customerRegistrationList = customerRegistrationBox.values.toList();
-    // TODO: implement initState
+    customerRegistrationList = SaveCusRegHiveDataStore.getAll();
     super.initState();
   }
 
@@ -34,8 +30,6 @@ class _SaveCustomerRegistrationPageState
   bool dialogIsVisible = false;
   final Connectivity _connectivity = Connectivity();
   var syncColors = Colors.red;
-
-  Box<SaveCustomerRegistrationOfflineModel> customerRegistrationBox;
   List<SaveCustomerRegistrationOfflineModel> customerRegistrationList;
   ApiIntegration apiIntegration;
   SaveCustRegReqModel saveCustRegReqModel;
@@ -45,11 +39,10 @@ class _SaveCustomerRegistrationPageState
   ValueNotifier<bool> isUpdate = ValueNotifier<bool>(false);
 
   Future fetchCustomerDataList() async {
-    if (_bothTypeData) {
+    if (await ApiIntegration.isInternetConnected() == true) {
       int count = 0;
       for (int i = 0; i < customerRegistrationList.length; i++) {
-        SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
-        customerRegistrationList[i];
+        SaveCustomerRegistrationOfflineModel saveCustRegOffModel = customerRegistrationList[i];
         setState(() {
           isLoading = true;
         });
@@ -72,8 +65,7 @@ class _SaveCustomerRegistrationPageState
           dmaUserId: saveCustRegOffModel.dmaUserId.toString(),
           dmaUserName: saveCustRegOffModel.dmaUserName.toString(),
           houseNumber: saveCustRegOffModel.houseNumber.toString(),
-          colonySocietyApartment:
-          saveCustRegOffModel.colonySocietyApartment.toString(),
+          colonySocietyApartment: saveCustRegOffModel.colonySocietyApartment.toString(),
           streetName: saveCustRegOffModel.streetName.toString(),
           town: saveCustRegOffModel.town.toString(),
           districtId: saveCustRegOffModel.districtId.toString(),
@@ -81,8 +73,7 @@ class _SaveCustomerRegistrationPageState
           residentStatus: saveCustRegOffModel.residentStatus.toString(),
           noOfKitchen: saveCustRegOffModel.noOfKitchen.toString(),
           noOfBathroom: saveCustRegOffModel.noOfBathroom.toString(),
-          existingCookingFuel:
-          saveCustRegOffModel.existingCookingFuel.toString(),
+          existingCookingFuel: saveCustRegOffModel.existingCookingFuel.toString(),
           noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers.toString(),
           latitude: saveCustRegOffModel.latitude.toString(),
           longitude: saveCustRegOffModel.longitude.toString(),
@@ -100,10 +91,8 @@ class _SaveCustomerRegistrationPageState
           chequeBankAccount: saveCustRegOffModel.chequeBankAccount.toString(),
           chequeNumber: saveCustRegOffModel.chequeNumber.toString(),
           depositeType: saveCustRegOffModel.depositeType.toString(),
-          initialDepositeDate:
-          saveCustRegOffModel.initialDepositeDate.toString(),
-          initialDepositeStatus:
-          saveCustRegOffModel.initialDepositeStatus.toString(),
+          initialDepositeDate: saveCustRegOffModel.initialDepositeDate.toString(),
+          initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus.toString(),
           modeOfDeposite: saveCustRegOffModel.modeOfDeposite.toString(),
           nameOfBank: saveCustRegOffModel.nameOfBank.toString().toString(),
           payementBankName: saveCustRegOffModel.payementBankName.toString(),
@@ -112,26 +101,22 @@ class _SaveCustomerRegistrationPageState
           backSideImg3: saveCustRegOffModel.backSidePhoto3.toString(),
           canceledCheque: saveCustRegOffModel.canceledChequePhoto.toString(),
           chequePhoto: saveCustRegOffModel.chequePhoto.toString(),
-          uploadCustomerPhoto:
-          saveCustRegOffModel.uploadCustomerPhoto.toString(),
+          uploadCustomerPhoto: saveCustRegOffModel.uploadCustomerPhoto.toString(),
           uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto.toString(),
           docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1.toString(),
           docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2.toString(),
           docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
           customerConsent: saveCustRegOffModel.customerConsentPhoto,
           ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
-          acceptConversionPolicy:
-          saveCustRegOffModel.acceptConversionPolicy.toString(),
-          acceptExtraFittingCost:
-          saveCustRegOffModel.acceptExtraFittingCost.toString(),
+          acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy.toString(),
+          acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost.toString(),
           micr: saveCustRegOffModel.micr.toString(),
           buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
         );
-        log("saveCustRegReqModel--->" +
-            saveCustRegReqModel.toJson().toString());
+        log("saveCustRegReqModelLength--->" + saveCustRegReqModel.toJson().length.toString());
+        log("saveCustRegReqModel--->" + saveCustRegReqModel.toJson().toString());
         try {
-          var response =
-          await apiIntegration.saveCustRegApi(saveCustRegReqModel);
+          var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
           log(response.toString());
           if (response != null) {
             setState(() {
@@ -154,11 +139,12 @@ class _SaveCustomerRegistrationPageState
       }
       for (int i = count - 1; i >= 0; i--) {
         customerRegistrationList.removeAt(i);
-        await customerRegistrationBox.deleteAt(i);
+        await SaveCusRegHiveDataStore.deleteAt(i);
       }
       if (count == customerRegistrationList.length) {
-        await SaveCusRegHiveDataStore.box.clear();
+        await SaveCusRegHiveDataStore.clearBox();
       }
+      log("ASDFGHNJGFDSsaveCustRegReqModellength-->${saveCustRegReqModel.toJson().length}");
       log("ASDFGHNJGFDS-->${customerRegistrationList.length}");
       customerRegistrationList.removeRange(0, count);
       //   CustomToast.showToast("Data saved successfully");
@@ -166,10 +152,9 @@ class _SaveCustomerRegistrationPageState
   }
 
   Future fetchCustomerDataGrpList() async {
-    if (_bothTypeData) {
+    if (await ApiIntegration.isInternetConnected() == true) {
       for (int i = 0; i < customerRegistrationList.length; i++) {
-        SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
-        customerRegistrationList[i];
+        SaveCustomerRegistrationOfflineModel saveCustRegOffModel = customerRegistrationList[i];
         setState(() {
           isLoading = true;
         });
@@ -192,8 +177,7 @@ class _SaveCustomerRegistrationPageState
           dmaUserId: saveCustRegOffModel.dmaUserId.toString(),
           dmaUserName: saveCustRegOffModel.dmaUserName.toString(),
           houseNumber: saveCustRegOffModel.houseNumber.toString(),
-          colonySocietyApartment:
-          saveCustRegOffModel.colonySocietyApartment.toString(),
+          colonySocietyApartment: saveCustRegOffModel.colonySocietyApartment.toString(),
           streetName: saveCustRegOffModel.streetName.toString(),
           town: saveCustRegOffModel.town.toString(),
           districtId: saveCustRegOffModel.districtId.toString(),
@@ -201,8 +185,7 @@ class _SaveCustomerRegistrationPageState
           residentStatus: saveCustRegOffModel.residentStatus.toString(),
           noOfKitchen: saveCustRegOffModel.noOfKitchen.toString(),
           noOfBathroom: saveCustRegOffModel.noOfBathroom.toString(),
-          existingCookingFuel:
-          saveCustRegOffModel.existingCookingFuel.toString(),
+          existingCookingFuel: saveCustRegOffModel.existingCookingFuel.toString(),
           noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers.toString(),
           latitude: saveCustRegOffModel.latitude.toString(),
           longitude: saveCustRegOffModel.longitude.toString(),
@@ -220,10 +203,8 @@ class _SaveCustomerRegistrationPageState
           chequeBankAccount: saveCustRegOffModel.chequeBankAccount.toString(),
           chequeNumber: saveCustRegOffModel.chequeNumber.toString(),
           depositeType: saveCustRegOffModel.depositeType.toString(),
-          initialDepositeDate:
-          saveCustRegOffModel.initialDepositeDate.toString(),
-          initialDepositeStatus:
-          saveCustRegOffModel.initialDepositeStatus.toString(),
+          initialDepositeDate: saveCustRegOffModel.initialDepositeDate.toString(),
+          initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus.toString(),
           modeOfDeposite: saveCustRegOffModel.modeOfDeposite.toString(),
           nameOfBank: saveCustRegOffModel.nameOfBank.toString().toString(),
           payementBankName: saveCustRegOffModel.payementBankName.toString(),
@@ -232,26 +213,21 @@ class _SaveCustomerRegistrationPageState
           backSideImg3: saveCustRegOffModel.backSidePhoto3.toString(),
           canceledCheque: saveCustRegOffModel.canceledChequePhoto.toString(),
           chequePhoto: saveCustRegOffModel.chequePhoto.toString(),
-          uploadCustomerPhoto:
-          saveCustRegOffModel.uploadCustomerPhoto.toString(),
+          uploadCustomerPhoto: saveCustRegOffModel.uploadCustomerPhoto.toString(),
           uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto.toString(),
           docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1.toString(),
           docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2.toString(),
           docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
           customerConsent: saveCustRegOffModel.customerConsentPhoto,
           ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
-          acceptConversionPolicy:
-          saveCustRegOffModel.acceptConversionPolicy.toString(),
-          acceptExtraFittingCost:
-          saveCustRegOffModel.acceptExtraFittingCost.toString(),
+          acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy.toString(),
+          acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost.toString(),
           micr: saveCustRegOffModel.micr.toString(),
           buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
         );
-        log("saveCustRegReqModel--->" +
-            saveCustRegReqModel.toJson().toString());
+        log("saveCustRegReqModel--->" + saveCustRegReqModel.toJson().toString());
         try {
-          var response =
-          await apiIntegration.saveCustRegApi(saveCustRegReqModel);
+          var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
           log("response-->${response.toString()}");
           if (response != null) {
             setState(() {
@@ -275,12 +251,11 @@ class _SaveCustomerRegistrationPageState
   }
 
   Future fetchCustomerDataSingle({int index}) async {
-    if(await ApiIntegration.isInternetConnected() == true){
+    if (await ApiIntegration.isInternetConnected() == true) {
       setState(() {
         isLoading = true;
       });
-      SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
-      customerRegistrationList[index];
+      SaveCustomerRegistrationOfflineModel saveCustRegOffModel = customerRegistrationList[index];
       saveCustRegReqModel = SaveCustRegReqModel(
         schema: saveCustRegOffModel.schema.toString(),
         interested: saveCustRegOffModel.interested.toString(),
@@ -300,8 +275,7 @@ class _SaveCustomerRegistrationPageState
         dmaUserId: saveCustRegOffModel.dmaUserId.toString(),
         dmaUserName: saveCustRegOffModel.dmaUserName.toString(),
         houseNumber: saveCustRegOffModel.houseNumber.toString(),
-        colonySocietyApartment:
-        saveCustRegOffModel.colonySocietyApartment.toString(),
+        colonySocietyApartment: saveCustRegOffModel.colonySocietyApartment.toString(),
         streetName: saveCustRegOffModel.streetName.toString(),
         town: saveCustRegOffModel.town.toString(),
         districtId: saveCustRegOffModel.districtId.toString(),
@@ -328,8 +302,7 @@ class _SaveCustomerRegistrationPageState
         chequeNumber: saveCustRegOffModel.chequeNumber.toString(),
         depositeType: saveCustRegOffModel.depositeType.toString(),
         initialDepositeDate: saveCustRegOffModel.initialDepositeDate.toString(),
-        initialDepositeStatus:
-        saveCustRegOffModel.initialDepositeStatus.toString(),
+        initialDepositeStatus: saveCustRegOffModel.initialDepositeStatus.toString(),
         modeOfDeposite: saveCustRegOffModel.modeOfDeposite.toString(),
         nameOfBank: saveCustRegOffModel.nameOfBank.toString().toString(),
         payementBankName: saveCustRegOffModel.payementBankName.toString(),
@@ -345,10 +318,8 @@ class _SaveCustomerRegistrationPageState
         docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
         customerConsent: saveCustRegOffModel.customerConsentPhoto,
         ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
-        acceptConversionPolicy:
-        saveCustRegOffModel.acceptConversionPolicy.toString(),
-        acceptExtraFittingCost:
-        saveCustRegOffModel.acceptExtraFittingCost.toString(),
+        acceptConversionPolicy: saveCustRegOffModel.acceptConversionPolicy.toString(),
+        acceptExtraFittingCost: saveCustRegOffModel.acceptExtraFittingCost.toString(),
         micr: saveCustRegOffModel.micr.toString(),
         buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
       );
@@ -359,7 +330,7 @@ class _SaveCustomerRegistrationPageState
             isLoading = false;
           });
           customerRegistrationList.removeAt(index);
-          customerRegistrationBox.deleteAt(index);
+          await SaveCusRegHiveDataStore.deleteAt(index);
           CustomToast.showToast(response.message[0].message);
         } else {
           setState(() {
@@ -387,10 +358,7 @@ class _SaveCustomerRegistrationPageState
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios_rounded),
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RegistrationForm()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationForm()));
               },
             ),
             titleAppBar: "Customer Records",
@@ -403,15 +371,11 @@ class _SaveCustomerRegistrationPageState
               new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  _buildBox(
-                      color: _mobileData ? Colors.green : Colors.red,
-                      textTitle: "MOBILE DATA"),
-                  _buildBox(
-                      color: _wifiData ? Colors.green : Colors.red,
-                      textTitle: "WI-FI"),
+                  _buildBox(color: _mobileData ? Colors.green : Colors.red, textTitle: "MOBILE DATA"),
+                  _buildBox(color: _wifiData ? Colors.green : Colors.red, textTitle: "WI-FI"),
                   _buildBox(
                     color: _bothTypeData ? Colors.green : Colors.red,
-                    textTitle: isLoading ? "Loading" : "Submit",
+                    textTitle: "Submit",
                     onTap: () async {
                       fetchCustomerDataList();
                       //  fetchCustomerDataGrpList();
@@ -427,116 +391,83 @@ class _SaveCustomerRegistrationPageState
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ValueListenableBuilder(
-                        valueListenable: customerRegistrationBox.listenable(),
+                        valueListenable: SaveCusRegHiveDataStore.box.listenable(),
+                        //kro
                         builder: (context, box, _) {
                           return customerRegistrationList.length == 0
-                              ? const Center(child: Text("No Data Found"))
+                              ? SizedBox(height: MediaQuery.of(context).size.height * 0.7, child: const Center(child: Text("No Data Found")))
                               : ListView.builder(
-                              shrinkWrap: true,
-                              physics: ClampingScrollPhysics(),
-                              itemCount: customerRegistrationList.length,
-                              itemBuilder: (context, position) {
-                                SaveCustomerRegistrationOfflineModel
-                                getStudent =
-                                customerRegistrationList[position];
-                                return Visibility(
-                                  visible: true,
-                                  child: Card(
-                                    elevation: 5,
-                                    shadowColor: Colors.red,
-                                    color: Colors.white,
-                                    shape: Border(
-                                      left: BorderSide(
-                                          color: Colors.red.withOpacity(.7),
-                                          width: 3),
-                                      right: BorderSide(
-                                          color: Colors.green.shade800
-                                              .withOpacity(.7),
-                                          width: 3),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        ListTile(
-                                          title: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisSize:
-                                                MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.end,
+                                  shrinkWrap: true,
+                                  physics: ClampingScrollPhysics(),
+                                  itemCount: customerRegistrationList.length,
+                                  itemBuilder: (context, position) {
+                                    SaveCustomerRegistrationOfflineModel getStudent = customerRegistrationList[position];
+                                    return Visibility(
+                                      visible: true,
+                                      child: Card(
+                                        elevation: 5,
+                                        shadowColor: Colors.red,
+                                        color: Colors.white,
+                                        shape: Border(
+                                          left: BorderSide(color: Colors.red.withOpacity(.7), width: 3),
+                                          right: BorderSide(color: Colors.green.shade800.withOpacity(.7), width: 3),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            ListTile(
+                                              title: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    "Records : ${position + 1}",
-                                                    style:
-                                                    appbarHeadingStyle,
-                                                  ),
-                                                  Spacer(),
-                                                  IconButton(
-                                                    icon: Icon(
-                                                      Icons.sync,
-                                                      color: Colors
-                                                          .blue.shade900,
-                                                    ),
-                                                    onPressed: () =>
-                                                        fetchCustomerDataSingle(
-                                                            index:
-                                                            position),
-                                                  ),
-                                                  InkWell(
-                                                      onTap: () async {
-                                                        await showDialog(
-                                                          context: context,
-                                                          builder:
-                                                              (context) =>
-                                                              Dialog(
+                                                  Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    children: [
+                                                      Text(
+                                                        "Records : ${position + 1}",
+                                                        style: appbarHeadingStyle,
+                                                      ),
+                                                      Spacer(),
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.sync,
+                                                          color: Colors.blue.shade900,
+                                                        ),
+                                                        onPressed: () => fetchCustomerDataSingle(index: position),
+                                                      ),
+                                                      InkWell(
+                                                          onTap: () async {
+                                                            await showDialog(
+                                                              context: context,
+                                                              builder: (context) => Dialog(
                                                                 child: Padding(
-                                                                  padding:
-                                                                  const EdgeInsets
-                                                                      .all(
-                                                                      18.0),
+                                                                  padding: const EdgeInsets.all(18.0),
                                                                   child: Column(
-                                                                    mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                    mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                    crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
+                                                                    mainAxisSize: MainAxisSize.min,
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
                                                                     children: [
                                                                       Text(
                                                                         "PBG DMA",
-                                                                        style: TextStyle(
-                                                                            fontWeight:
-                                                                            FontWeight.bold),
+                                                                        style: TextStyle(fontWeight: FontWeight.bold),
                                                                       ),
-                                                                      Text(
-                                                                          'Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
+                                                                      Text('Are you sure you want to delete :- ${getStudent.mobileNumber}?'),
                                                                       Row(
-                                                                        mainAxisSize:
-                                                                        MainAxisSize.min,
-                                                                        mainAxisAlignment:
-                                                                        MainAxisAlignment.center,
-                                                                        crossAxisAlignment:
-                                                                        CrossAxisAlignment.center,
+                                                                        mainAxisSize: MainAxisSize.min,
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
                                                                         children: [
                                                                           Flexible(
-                                                                            child:
-                                                                            ButtonWidget(
+                                                                            child: ButtonWidget(
                                                                               textButton: "Yes",
                                                                               onPressed: () async {
                                                                                 Navigator.pop(context, false);
                                                                                 customerRegistrationList.removeAt(position);
-                                                                                customerRegistrationBox.deleteAt(position);
+                                                                                await saveCusRegHiveDataStore.deleteAt(position);
                                                                               },
                                                                             ),
                                                                           ),
                                                                           Flexible(
-                                                                            child:
-                                                                            ButtonWidget(
+                                                                            child: ButtonWidget(
                                                                               textButton: "No",
                                                                               onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
                                                                             ),
@@ -547,94 +478,68 @@ class _SaveCustomerRegistrationPageState
                                                                   ),
                                                                 ),
                                                               ),
-                                                        );
-                                                      },
-                                                      child: Icon(
-                                                        Icons.delete,
-                                                        size: 30,
-                                                        color: Colors
-                                                            .blue.shade900,
-                                                      )),
-                                                  IconButton(
-                                                      icon: Icon(Icons.edit,
-                                                          color: Colors.blue
-                                                              .shade900),
-                                                      onPressed: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                    CustomInputForm(
-                                                                      isUpdate: true,
-                                                                      position: position,
-                                                                      studentModel: getStudent,
-                                                                    )));
-                                                      })
-                                                ],
-                                              ),
-                                              Divider(),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                  mainAxisSize:
-                                                  MainAxisSize.min,
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                                  children: [
+                                                            );
+                                                          },
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            size: 30,
+                                                            color: Colors.blue.shade900,
+                                                          )),
+                                                      IconButton(
+                                                          icon: Icon(Icons.edit, color: Colors.blue.shade900),
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (context) => CustomInputForm(
+                                                                          isUpdate: true,
+                                                                          position: position,
+                                                                          studentModel: getStudent,
+                                                                        )));
+                                                          })
+                                                    ],
+                                                  ),
+                                                  Divider(),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.end, children: [
                                                     Text(
                                                       "Mobile No",
-                                                      style:
-                                                      appbarHeadingStyle,
+                                                      style: appbarHeadingStyle,
                                                     ),
                                                     Spacer(),
                                                     Text(
-                                                      getStudent
-                                                          .mobileNumber,
-                                                      style:
-                                                      appbarHeadingStyle,
+                                                      getStudent.mobileNumber,
+                                                      style: appbarHeadingStyle,
                                                     ),
                                                   ]),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Divider(),
-                                              Row(
-                                                  mainAxisSize:
-                                                  MainAxisSize.min,
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                                  children: [
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Divider(),
+                                                  Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.end, children: [
                                                     Text(
                                                       "Name",
-                                                      style:
-                                                      appbarHeadingStyle,
+                                                      style: appbarHeadingStyle,
                                                     ),
                                                     Spacer(),
                                                     Text(
-                                                      getStudent.firstName +
-                                                          " " +
-                                                          getStudent
-                                                              .middleName +
-                                                          " " +
-                                                          getStudent
-                                                              .lastName,
-                                                      style:
-                                                      appbarHeadingStyle,
+                                                      getStudent.firstName + " " + getStudent.middleName + " " + getStudent.lastName,
+                                                      style: appbarHeadingStyle,
                                                     ),
                                                   ]),
-                                            ],
-                                          ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              });
+                                      ),
+                                    );
+                                  });
                         }),
                   ),
-                  isLoading ? Center(child: LoadingWidget()) : Container()
+                  isLoading ? SizedBox(height: MediaQuery.of(context).size.height * 0.7, child: Center(child: SpinLoader())) : Container()
                 ],
               )
             ],
@@ -717,78 +622,76 @@ class _SaveCustomerRegistrationPageState
 
   void buildAlertDialog(String message, BuildContext context) {
     SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {
-      if (isOffline && !dialogIsVisible) {
-        dialogIsVisible = true;
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14.0),
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(
-                      Icons.portable_wifi_off,
-                      color: Colors.redAccent,
-                      size: 36.0,
-                    ),
-                    canProceed
-                        ? Text(
-                      "Check your internet connection before proceeding.",
+          if (isOffline && !dialogIsVisible) {
+            dialogIsVisible = true;
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(
+                      message,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12.0),
-                    )
-                        : Text(
-                      "Please! proceed by connecting to a internet connection",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 12.0, color: Colors.red),
+                      style: TextStyle(fontSize: 14.0),
                     ),
-                  ],
-                ),
-                actions: <Widget>[
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 10,
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.portable_wifi_off,
+                          color: Colors.redAccent,
+                          size: 36.0,
+                        ),
+                        canProceed
+                            ? Text(
+                                "Check your internet connection before proceeding.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 12.0),
+                              )
+                            : Text(
+                                "Please! proceed by connecting to a internet connection",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 12.0, color: Colors.red),
+                              ),
+                      ],
                     ),
-                    onPressed: () {
-                      SystemChannels.platform
-                          .invokeMethod('SystemNavigator.pop');
-                    },
-                    child: Text(
-                      "CLOSE THE APP",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 10,
-                    ),
-                    onPressed: () {
-                      if (isOffline) {
-                        setState(() {
-                          canProceed = false;
-                        });
-                      } else {
-                        Navigator.pop(context);
-                        //your code
-                      }
-                    },
-                    child: Text(
-                      "PROCEED",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              );
-            });
-      }
-    }));
+                    actions: <Widget>[
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 10,
+                        ),
+                        onPressed: () {
+                          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                        },
+                        child: Text(
+                          "CLOSE THE APP",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 10,
+                        ),
+                        onPressed: () {
+                          if (isOffline) {
+                            setState(() {
+                              canProceed = false;
+                            });
+                          } else {
+                            Navigator.pop(context);
+                            //your code
+                          }
+                        },
+                        child: Text(
+                          "PROCEED",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  );
+                });
+          }
+        }));
   }
 
   Widget _buildBox({Color color, String textTitle, Function onTap}) {
@@ -799,13 +702,7 @@ class _SaveCustomerRegistrationPageState
         color: color,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Text(textTitle,
-              textAlign: TextAlign.center,
-              style: new TextStyle(
-                  color: Colors.white,
-                  fontSize: 12.0,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold)),
+          child: Text(textTitle, textAlign: TextAlign.center, style: new TextStyle(color: Colors.white, fontSize: 12.0, fontFamily: 'Montserrat', fontWeight: FontWeight.bold)),
         ),
       ),
     );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pbg_app/HiveDataStore/customer_reg_data_store.dart';
 import 'package:pbg_app/screens/BookingRegistrationForm/domain/bloc/booking_registration_form_bloc.dart';
 import 'package:pbg_app/screens/BookingRegistrationForm/presentation/widget/app_string.dart';
+
 import 'ExportFile/export_file.dart';
 
 String dataBoxName = "dataBoxName";
@@ -9,10 +11,8 @@ String dataBoxName = "dataBoxName";
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  Hive.registerAdapter<SaveCustomerRegistrationOfflineModel>(
-      SaveCustomerRegistrationOfflineModelAdapter());
-  await Hive.openBox<SaveCustomerRegistrationOfflineModel>(
-      "saveCustRegDataBoxName");
+  Hive.registerAdapter<SaveCustomerRegistrationOfflineModel>(SaveCustomerRegistrationOfflineModelAdapter());
+  await Hive.openBox<SaveCustomerRegistrationOfflineModel>(SaveCusRegHiveDataStore.saveCustRegDataBoxName);
 
   runApp(MyApp());
 }
