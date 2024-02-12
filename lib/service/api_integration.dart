@@ -312,7 +312,7 @@ class ApiIntegration {
                 .split('.')
                 .last));
         request.files.add(chequeImage);
-        log("chequeImage" + saveCustRegReqModel.chequePhoto);
+        log("chequeImage-->" + saveCustRegReqModel.chequePhoto);
       } else {
         request.fields["cheque_photo"] = "";
       }

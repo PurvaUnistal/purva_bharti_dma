@@ -3,6 +3,7 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/models/GetAllDistrictModel.dart';
 import 'package:pbg_app/screens/BookingRegistrationForm/presentation/page/booking_registration_form.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/page/custom_input_form_screen.dart';
+import 'package:pbg_app/utils/common_widgets/message_box_two_button_pop.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RegistrationForm extends StatefulWidget {
@@ -91,7 +92,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    _exitApp(context);
+                    _exitApp();
                   },
                 )
               ],
@@ -139,7 +140,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Version : 1.1,",
+                      "Version : 1.3,",
                       style: TextStyle(
                           color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
@@ -151,7 +152,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 09-02-2024",
+                      "Date : 12-02-2024",
                       style: TextStyle(
                           color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
@@ -296,37 +297,22 @@ class _RegistrationFormState extends State<RegistrationForm> {
     );
   }
 
-  Future<bool> _exitApp(BuildContext context) {
-    return showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Do you want to logout this application?'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    _getLoggedOut();
-                  },
-                  child: Text('Yes'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    log("you choose no");
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text('No'),
-                ),
-              ],
-            );
-          },
-        ) ??
-        false;
+  Future<bool> _exitApp() async {
+    return (await showDialog(
+        context: context,
+        builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
+            message: "Do you want to logout this App?",
+            okButtonText: "Yes",
+            onPressed: (){
+              _getLoggedOut();
+            }
+        ))
+    ) ?? false;
   }
 
   Future<bool> _getLoggedOut() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.clear();
-    Hive.box('saveCustRegDataBoxName').clear();
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),

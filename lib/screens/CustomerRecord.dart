@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/models/save_customer_registration_model.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/page/custom_input_form_screen.dart';
-import 'package:pbg_app/utils/common_widgets/loading_widget.dart';
+import 'package:pbg_app/utils/common_widgets/spin_loader.dart';
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class SaveCustomerRegistrationPage extends StatefulWidget {
   const SaveCustomerRegistrationPage({Key key}) : super(key: key);
@@ -45,7 +46,7 @@ class _SaveCustomerRegistrationPageState
   ValueNotifier<bool> isUpdate = ValueNotifier<bool>(false);
 
   Future fetchCustomerDataList() async {
-    if (_bothTypeData) {
+    if(await ApiIntegration.isInternetConnected() == true){
       int count = 0;
       for (int i = 0; i < customerRegistrationList.length; i++) {
         SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
@@ -127,8 +128,6 @@ class _SaveCustomerRegistrationPageState
           micr: saveCustRegOffModel.micr.toString(),
           buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
         );
-        log("saveCustRegReqModel--->" +
-            saveCustRegReqModel.toJson().toString());
         try {
           var response =
           await apiIntegration.saveCustRegApi(saveCustRegReqModel);
@@ -152,21 +151,36 @@ class _SaveCustomerRegistrationPageState
           CustomToast.showToast(e.toString());
         }
       }
-      for (int i = count - 1; i >= 0; i--) {
-        customerRegistrationList.removeAt(i);
-        await customerRegistrationBox.deleteAt(i);
-      }
       if (count == customerRegistrationList.length) {
-        await SaveCusRegHiveDataStore.box.clear();
+        customerRegistrationList.clear();
+        await customerRegistrationBox.clear();
+        clearCache();
       }
-      log("ASDFGHNJGFDS-->${customerRegistrationList.length}");
-      customerRegistrationList.removeRange(0, count);
-      //   CustomToast.showToast("Data saved successfully");
     }
   }
 
+  Future<void> clearCache() async {
+    Directory path = Directory("/data/user/0/com.unistal.pbg_app/cache/");
+
+    if(await path.exists()) {
+      List<FileSystemEntity> files = path.listSync();
+      for(FileSystemEntity f in files) {
+        if(f is File) {
+          await f.delete();
+        }
+      }
+    }
+
+    Directory path2 = Directory("/data/user/0/com.unistal.pbg_app/cache/file_picker/");
+
+    if(await path2.exists()) {
+      path2.deleteSync(recursive: true);
+    }
+}
+
+
   Future fetchCustomerDataGrpList() async {
-    if (_bothTypeData) {
+    if(await ApiIntegration.isInternetConnected() == true){
       for (int i = 0; i < customerRegistrationList.length; i++) {
         SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
         customerRegistrationList[i];
@@ -249,6 +263,7 @@ class _SaveCustomerRegistrationPageState
         );
         log("saveCustRegReqModel--->" +
             saveCustRegReqModel.toJson().toString());
+        log("saveCustRegReqModellengthlengthlength--->" + saveCustRegReqModel.toJson().length.toString());
         try {
           var response =
           await apiIntegration.saveCustRegApi(saveCustRegReqModel);
@@ -257,6 +272,10 @@ class _SaveCustomerRegistrationPageState
             setState(() {
               isLoading = false;
             });
+            clearCache();
+            imageCache.clear();
+            imageCache.clearLiveImages();
+            customerRegistrationBox.clear();
             CustomToast.showToast(response.message[i].message.toString());
           } else {
             setState(() {
@@ -352,6 +371,7 @@ class _SaveCustomerRegistrationPageState
         micr: saveCustRegOffModel.micr.toString(),
         buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
       );
+      log("saveCustRegReqModellengthlengthlength--->" + saveCustRegReqModel.toJson().length.toString());
       var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
       try {
         if (response != null) {
@@ -360,6 +380,9 @@ class _SaveCustomerRegistrationPageState
           });
           customerRegistrationList.removeAt(index);
           customerRegistrationBox.deleteAt(index);
+          clearCache();
+          imageCache.clear();
+          imageCache.clearLiveImages();
           CustomToast.showToast(response.message[0].message);
         } else {
           setState(() {
@@ -430,7 +453,7 @@ class _SaveCustomerRegistrationPageState
                         valueListenable: customerRegistrationBox.listenable(),
                         builder: (context, box, _) {
                           return customerRegistrationList.length == 0
-                              ? const Center(child: Text("No Data Found"))
+                              ? SizedBox(height: MediaQuery.of(context).size.height * 0.7,child: const Center(child: Text("No Data Found")))
                               : ListView.builder(
                               shrinkWrap: true,
                               physics: ClampingScrollPhysics(),
@@ -634,7 +657,7 @@ class _SaveCustomerRegistrationPageState
                               });
                         }),
                   ),
-                  isLoading ? Center(child: LoadingWidget()) : Container()
+                  isLoading ? SizedBox(height: MediaQuery.of(context).size.height * 0.7, child: Center(child: SpinLoader())) : Container()
                 ],
               )
             ],

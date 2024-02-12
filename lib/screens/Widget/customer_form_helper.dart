@@ -182,18 +182,25 @@ class CustomerFormHelper {
           CustomToast.showToast("Upload Address Proof Front Image");
           return false;
         }
+        if (selectOwnershipType == "") {
+          CustomToast.showToast("Select the Ownership Type");
+          return false;
+        }
         if (customerConsentImage == null ||
             customerConsentImage.isEmpty ||
             customerConsentImage == "") {
           CustomToast.showToast("Upload Customer Consent Image");
           return false;
         }
-        if (nocImage == null ||
-            nocImage.isEmpty ||
-            nocImage == "") {
-          CustomToast.showToast("Upload NOC Image");
-          return false;
+        if(selectOwnershipType == "2"){
+          if (nocImage == null ||
+              nocImage.isEmpty ||
+              nocImage == "") {
+            CustomToast.showToast("Upload NOC Image");
+            return false;
+          }
         }
+
 
         /* if (customerBankName == null) {
         CustomToast.showToast("Please select customer bank account name");

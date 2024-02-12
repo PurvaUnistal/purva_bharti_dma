@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pbg_app/screens/BookingRegistrationForm/domain/bloc/booking_registration_form_bloc.dart';
 import 'package:pbg_app/screens/BookingRegistrationForm/presentation/widget/app_string.dart';
 import 'ExportFile/export_file.dart';
+import 'HiveDataStore/customer_reg_data_store.dart';
 
 String dataBoxName = "dataBoxName";
 
@@ -29,6 +30,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: Colors.green,
+          accentColor: Colors.green,
+
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: SplashScreen(),

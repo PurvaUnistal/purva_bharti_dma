@@ -1,38 +1,15 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pbg_app/helper/DropDownCustom.dart';
-import 'package:pbg_app/helper/DropDownCustomDeposit.dart';
+import 'package:intl/intl.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/models/GetAllDistrictModel.dart';
 import 'package:pbg_app/models/GetLabelModel.dart';
-import 'package:pbg_app/models/save_customer_registration_offline_model.dart';
-import 'package:pbg_app/screens/Registration.dart';
-import 'package:pbg_app/screens/Widget/customer_form_helper.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/widget/border_form_widget.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/widget/card_image_widget.dart';
 import 'package:pbg_app/utils/common_widgets/app_color.dart';
-import 'package:pbg_app/utils/common_widgets/app_string.dart';
 import 'package:pbg_app/utils/common_widgets/app_style.dart';
-import 'package:pbg_app/utils/common_widgets/button_widget.dart';
 import 'package:pbg_app/utils/common_widgets/message_box_two_button_pop.dart';
-import 'package:pbg_app/utils/common_widgets/text_form_field_widget.dart';
-import 'package:pbg_app/utils/common_widgets/custom_app_bar.dart';
-import 'package:pbg_app/utils/common_widgets/custom_toast.dart';
-import 'package:pbg_app/utils/common_widgets/global_constant.dart';
-import 'package:pbg_app/utils/common_widgets/open_image_source.dart';
-import 'package:pbg_app/utils/common_widgets/photo_controller.dart';
-import 'package:pbg_app/utils/reused_dropdown.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'dart:io';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomInputForm extends StatefulWidget {
   final bool isUpdate;
@@ -486,10 +463,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     _customerIFSCCodeWidget(),
                     _customerBankAddWidget(),*/
                     _rowWidget(
-                    //  widget1: _consentImageWidget(),
+                      //  widget1: _consentImageWidget(),
                       widget1: _ownerConsentImageWidget(),
-                   //   widget2: _kYCDocument3Value.id == '2'? _nocFrontImageWidget() :_ownerConsentImageWidget(),
-                      widget2: _nocFrontImageWidget(),
+                      //   widget2: _kYCDocument3Value.id == '2'? _nocFrontImageWidget() :_ownerConsentImageWidget(),
+                      widget2: _kYCDocument3Value.id == '2'? _nocFrontImageWidget() :_cancelChqImageWidget(),
                     ),
                     AppStyle.vertical(context),
                     _rowWidget(
@@ -498,9 +475,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     ),
                     AppStyle.vertical(context),
                     _rowWidget(
-                      widget1:_cancelChqImageWidget(),
-                    widget2: Container()
-                    //  widget2: _kYCDocument3Value.id == '1'? Container() :_ownerConsentImageWidget(),
+                        widget1:  _kYCDocument3Value.id == '2'? _cancelChqImageWidget():Container(),
+                        widget2: Container()
+                      //  widget2: _kYCDocument3Value.id == '1'? Container() :_ownerConsentImageWidget(),
                     ),
                     AppStyle.vertical(context),
                     Row(
@@ -974,33 +951,45 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         ),*/
 
                         _imageColumn(
-                          leadingImg: CardImageWidget(
-                            imgString: AppStrings.customerConsentImgLabel,
-                            children:  customerConsentImageFile != null &&
-                                customerConsentImageFile.isNotEmpty
-                                ? customerConsentImageFile.split('.').last ==
-                                "pdf"
-                                ? _pdfImageWidget(customerConsentImageFile)
-                                : ImageCircle(
-                                fileImage1: File(
-                                    customerConsentImageFile.toString()),
-                                pathImage:
-                                customerConsentImageFile.toString())
-                                : _localBorderImg(),
-                          ),
-                          trailingImg:  CardImageWidget(
-                            imgString: AppStrings.nocDoc,
-                            children:nocFrontImgFile != null &&
-                                nocFrontImgFile.isNotEmpty
-                                ? nocFrontImgFile.split('.').last == "pdf"
-                                ? _pdfImageWidget(nocFrontImgFile)
-                                : ImageCircle(
-                              fileImage1:
-                              File(nocFrontImgFile.toString()),
-                              pathImage: nocFrontImgFile.toString(),
+                            leadingImg: CardImageWidget(
+                              imgString: AppStrings.customerConsentImgLabel,
+                              children:  customerConsentImageFile != null &&
+                                  customerConsentImageFile.isNotEmpty
+                                  ? customerConsentImageFile.split('.').last ==
+                                  "pdf"
+                                  ? _pdfImageWidget(customerConsentImageFile)
+                                  : ImageCircle(
+                                  fileImage1: File(
+                                      customerConsentImageFile.toString()),
+                                  pathImage:
+                                  customerConsentImageFile.toString())
+                                  : _localBorderImg(),
+                            ),
+                            trailingImg:_kYCDocument3Value.id == '2' ?  CardImageWidget(
+                                imgString: AppStrings.nocDoc,
+                                children:nocFrontImgFile != null &&
+                                    nocFrontImgFile.isNotEmpty
+                                    ? nocFrontImgFile.split('.').last == "pdf"
+                                    ? _pdfImageWidget(nocFrontImgFile)
+                                    : ImageCircle(
+                                  fileImage1:
+                                  File(nocFrontImgFile.toString()),
+                                  pathImage: nocFrontImgFile.toString(),
+                                )
+                                    : _localBorderImg()
+                            ): CardImageWidget(
+                              imgString: AppStrings.chqCancelledPhotoLabel,
+                              children:  chqCancelledPhotoFile != null &&
+                                  chqCancelledPhotoFile.isNotEmpty
+                                  ? chqCancelledPhotoFile.split('.').last == "pdf"
+                                  ? _pdfImageWidget(chqCancelledPhotoFile)
+                                  : ImageCircle(
+                                  fileImage1: File(
+                                      chqCancelledPhotoFile.toString()),
+                                  pathImage:
+                                  chqCancelledPhotoFile.toString())
+                                  : _localBorderImg(),
                             )
-                                : _localBorderImg(),
-                          )
                         ),
                         _imageColumn(
                           leadingImg: CardImageWidget(
@@ -1032,7 +1021,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           ),
                         ),
                         _imageColumn(
-                          leadingImg: CardImageWidget(
+                          leadingImg:_kYCDocument3Value.id == '2'? CardImageWidget(
                             imgString: AppStrings.chqCancelledPhotoLabel,
                             children:  chqCancelledPhotoFile != null &&
                                 chqCancelledPhotoFile.isNotEmpty
@@ -1044,7 +1033,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
                                 pathImage:
                                 chqCancelledPhotoFile.toString())
                                 : _localBorderImg(),
-                          ),
+                          )
+                              :  Container(),
                           trailingImg: Container(),
                         ),
                         Divider(),
@@ -1297,7 +1287,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         await box.add(data);
         CustomToast.showToast('Great Success! Add Record Save');
       } else {
-        CustomToast.showToast('Error !!!! \n Please Uploade Previous record');
+        CustomToast.showToast('Error !!!! \n Please Upload Previous record');
       }
     }
     Navigator.pushAndRemoveUntil(context,
@@ -1543,7 +1533,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _guardianNameWidget() {
     return TextFieldWidget(
-        star:interestedId == "1"? AppStrings.star : "",
+      star:interestedId == "1"? AppStrings.star : "",
       headingLabel:AppStrings.guardianNameNot,
       hintText: interestedId == "1" ? AppStrings.guardianNameS : AppStrings.guardianNameNot,
       controller: guardianNameController,
@@ -2669,7 +2659,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
                 source: ImageSource.camera,
                 maxHeight: 900,
                 maxWidth: 1000,
@@ -2714,11 +2704,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
                 source: ImageSource.camera,
                 maxHeight: 900,
                 maxWidth: 1000,
                 preferredCameraDevice: CameraDevice.rear);
+            log("pickerFile-->${pickerFile}");
             try {
               if (pickerFile != null) {
                 setState(() {
@@ -2759,7 +2750,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
                 source: ImageSource.camera,
                 maxHeight: 900,
                 maxWidth: 1000,
@@ -2804,7 +2795,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
                 source: ImageSource.camera,
                 maxHeight: 900,
                 maxWidth: 1000,
@@ -2850,7 +2841,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
                 source: ImageSource.camera,
                 maxHeight: 900,
                 maxWidth: 1000,
@@ -2895,7 +2886,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
               source: ImageSource.camera,
               maxHeight: 900,
               maxWidth: 1000,
@@ -2941,7 +2932,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
                 source: ImageSource.camera,
                 maxHeight: 900,
                 maxWidth: 1000,
@@ -2975,6 +2966,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
               FilePickerResult result = await FilePicker.platform.pickFiles();
               if (result != null) {
                 setState(() {
+
                   uploadHouseImgFile = result.files.single.path;
                 });
               } else {
@@ -2986,7 +2978,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
                 source: ImageSource.camera,
                 maxHeight: 900,
                 maxWidth: 1000,
@@ -3031,7 +3023,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
                 source: ImageSource.camera,
                 maxHeight: 900,
                 maxWidth: 1000,
@@ -3076,7 +3068,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
               source: ImageSource.camera,
               maxHeight: 900,
               maxWidth: 1000,
@@ -3121,7 +3113,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
                 source: ImageSource.camera,
                 maxHeight: 900,
                 maxWidth: 1000,
@@ -3166,7 +3158,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           },
           onTapCamera: () async {
             Navigator.of(context).pop();
-            final pickerFile = await picker.pickImage(
+            final pickerFile = await ImagePicker().pickImage(
                 source: ImageSource.camera,
                 maxHeight: 900,
                 maxWidth: 1000,

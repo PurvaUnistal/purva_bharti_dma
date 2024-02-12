@@ -6,8 +6,8 @@ class SaveCusRegHiveDataStore {
   static String saveCustRegDataBoxName = "saveCustRegDataBoxName";
 
   // Get reference to an already opened box
-  static Box<SaveCustomerRegistrationOfflineModel> box =
-      Hive.box<SaveCustomerRegistrationOfflineModel>(saveCustRegDataBoxName);
+  static LazyBox<SaveCustomerRegistrationOfflineModel> box =
+      Hive.lazyBox<SaveCustomerRegistrationOfflineModel>(saveCustRegDataBoxName);
 
   /// Add new user
   Future<void> addUser({SaveCustomerRegistrationOfflineModel userModel}) async {
