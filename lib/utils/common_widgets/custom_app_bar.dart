@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:pbg_app/utils/common_widgets/app_color.dart';
+import 'package:pbg_app/features/common/Utils/common_widget/app_color.dart';
 
 class CustomAppBar extends StatelessWidget {
-  final String titleAppBar;
-  final Widget leading;
-  final Widget child;
-  final List<Widget> actions;
+  final String? titleAppBar;
+  final Widget? leading;
+  final Widget? child;
+  final List<Widget>? actions;
   const CustomAppBar(
-      {Key key, this.titleAppBar, this.leading, this.actions, this.child})
+      {Key? key, this.titleAppBar, this.leading, this.actions, this.child})
       : super(key: key);
 
   @override
@@ -15,19 +15,18 @@ class CustomAppBar extends StatelessWidget {
     return AppBar(
       leading: leading,
       automaticallyImplyLeading: false,
-      elevation: 0,
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              colors: <Color>[AppColor.appColor1,AppColor.appColor2]),
+              colors: <Color>[AppColor.appRedColor, AppColor.appBlueColor]),
         ),
       ),
       centerTitle: true,
       title: Text(
-        titleAppBar,
-        style: TextStyle(fontSize: 18),
+        titleAppBar!,
+        style: TextStyle(fontSize: 18, color: Colors.white),
       ),
       actions: actions,
     );

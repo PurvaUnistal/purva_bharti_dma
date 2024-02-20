@@ -2,8 +2,9 @@
 class Assets {
   Assets._();
 
+  static const String imagesHpLogo = 'assets/images/hp_logo.png';
+  static const String imagesIcImageCapture = 'assets/images/ic_imag.png';
   static const String imagesIcLauncher = 'assets/images/ic_launcher.png';
-  static const String imagesPbgLogo = 'assets/images/pbg_logo.png';
   static const String imagesPdfIcon = 'assets/images/pdf_icon.png';
   static const String imagesPlaceHolder = 'assets/images/place_holder.png';
   static const String montserratMontserratBlack =

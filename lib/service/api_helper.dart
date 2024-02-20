@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import '../ExportFile/export_file.dart';
+import 'package:http/http.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 
 class ApiHelper {
   static get baseUrl => GlobalConstants.BaseUrl;
 
   static Future<dynamic> getData(
-      {@required String url, @required BuildContext context}) async {
+      {required String url, required BuildContext context}) async {
     try {
       Uri uri = Uri.parse(baseUrl + url);
       var res = await get(uri);
@@ -21,28 +22,28 @@ class ApiHelper {
   }
 
   static Future<dynamic> postData(
-      {@required String url, @required var body}) async {
+      {required String url, required var body}) async {
     try {
       var res = await post(Uri.parse(url), body: body);
-      log(res.body);
+      print(res.body);
       if (res.statusCode == 200) {
         return jsonDecode(res.body);
       } else {
         return Api.error;
       }
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
       CustomToast.showToast(e.toString());
       return Api.error;
     }
   }
 
   static Future<dynamic> postDataWithFile(
-      {String url, var body, String filePath}) async {
+      {required String url, var body, required String filePath}) async {
     try {
       Uri uri = Uri.parse(baseUrl + url);
-      log(url);
-      log(body.toString());
+      print(url);
+      print(body.toString());
       var uploadFile = await MultipartFile.fromPath("PHOTO", filePath);
       var request = new MultipartRequest("POST", uri);
       request.files.add(uploadFile);
@@ -51,7 +52,7 @@ class ApiHelper {
       if (response.statusCode == 200) {
         var responseData = await response.stream.toBytes();
         var result = json.decode(String.fromCharCodes(responseData));
-        log(result.toString());
+        print(result.toString());
         return result;
       } else {
         return Api.error;

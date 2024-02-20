@@ -1,451 +1,658 @@
+import 'dart:convert';
+
+HpclLabals hpclLabalsFromJson(String str) =>
+    HpclLabals.fromJson(json.decode(str));
+
+String hpclLabalsToJson(HpclLabals data) => json.encode(data.toJson());
+
 class HpclLabals {
-  Steps steps;
-  Registration registration;
-  Photo photo;
-  Kyc kyc;
-  Deposit deposit;
-  Consent consent;
-  Lmc lmc;
-  HpclLabals(
-      {this.steps,
-        this.registration,
-        this.photo,
-        this.kyc,
-        this.deposit,
-        this.consent,
-        this.lmc});
+  final Steps steps;
+  final Registration registration;
+  final Inspection inspection;
+  final Photo photo;
+  final Kyc kyc;
+  final Deposit deposit;
+  final Consent consent;
+  final Lmc lmc;
 
-  HpclLabals.fromJson(Map<String, dynamic> json) {
-    steps = json['steps'] != null ? new Steps.fromJson(json['steps']) : null;
-    registration = json['registration'] != null
-        ? new Registration.fromJson(json['registration'])
-        : null;
-    photo = json['photo'] != null ? new Photo.fromJson(json['photo']) : null;
-    kyc = json['kyc'] != null ? new Kyc.fromJson(json['kyc']) : null;
-    deposit =
-    json['deposit'] != null ? new Deposit.fromJson(json['deposit']) : null;
-    consent =
-    json['consent'] != null ? new Consent.fromJson(json['consent']) : null;
-    lmc = json['lmc'] != null ? new Lmc.fromJson(json['lmc']) : null;
-  }
+  HpclLabals({
+    required this.steps,
+    required this.registration,
+    required this.inspection,
+    required this.photo,
+    required this.kyc,
+    required this.deposit,
+    required this.consent,
+    required this.lmc,
+  });
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.steps != null) {
-      data['steps'] = this.steps.toJson();
-    }
-    if (this.registration != null) {
-      data['registration'] = this.registration.toJson();
-    }
-    if (this.photo != null) {
-      data['photo'] = this.photo.toJson();
-    }
-    if (this.kyc != null) {
-      data['kyc'] = this.kyc.toJson();
-    }
-    if (this.deposit != null) {
-      data['deposit'] = this.deposit.toJson();
-    }
-    if (this.consent != null) {
-      data['consent'] = this.consent.toJson();
-    }
-    if (this.lmc != null) {
-      data['lmc'] = this.lmc.toJson();
-    }
-    return data;
-  }
-}
+  factory HpclLabals.fromJson(Map<String, dynamic> json) => HpclLabals(
+        steps: Steps.fromJson(json["steps"]),
+        registration: Registration.fromJson(json["registration"]),
+        inspection: Inspection.fromJson(json["inspection"]),
+        photo: Photo.fromJson(json["photo"]),
+        kyc: Kyc.fromJson(json["kyc"]),
+        deposit: Deposit.fromJson(json["deposit"]),
+        consent: Consent.fromJson(json["consent"]),
+        lmc: Lmc.fromJson(json["lmc"]),
+      );
 
-class Steps {
-  String reg;
-  String kyc;
-  String photo;
-  String consent;
-  String deposit;
-  String step1;
-  String step2;
-  String step3;
-  String step4;
-  String step5;
-  String mobile;
-  String firstname;
-  String middlename;
-  String lastname;
-  String button;
-
-  Steps(
-      {this.reg,
-        this.kyc,
-        this.photo,
-        this.consent,
-        this.deposit,
-        this.step1,
-        this.step2,
-        this.step3,
-        this.step4,
-        this.step5,
-        this.mobile,
-        this.firstname,
-        this.middlename,
-        this.lastname,
-        this.button});
-
-  Steps.fromJson(Map<String, dynamic> json) {
-    reg = json['reg'];
-    kyc = json['kyc'];
-    photo = json['photo'];
-    consent = json['consent'];
-    deposit = json['deposit'];
-    step1 = json['step1'];
-    step2 = json['step2'];
-    step3 = json['step3'];
-    step4 = json['step4'];
-    step5 = json['step5'];
-    mobile = json['mobile'];
-    firstname = json['firstname'];
-    middlename = json['middlename'];
-    lastname = json['lastname'];
-    button = json['button'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['reg'] = this.reg;
-    data['kyc'] = this.kyc;
-    data['photo'] = this.photo;
-    data['consent'] = this.consent;
-    data['deposit'] = this.deposit;
-    data['step1'] = this.step1;
-    data['step2'] = this.step2;
-    data['step3'] = this.step3;
-    data['step4'] = this.step4;
-    data['step5'] = this.step5;
-    data['mobile'] = this.mobile;
-    data['firstname'] = this.firstname;
-    data['middlename'] = this.middlename;
-    data['lastname'] = this.lastname;
-    data['button'] = this.button;
-    return data;
-  }
-}
-
-class Registration {
-  String area;
-  String lastname;
-  String guardian;
-  String email;
-  String propertyCategory;
-  String propertyClass;
-  String house;
-  String locality;
-  String town;
-  String pincode;
-  String district;
-  String mdpe;
-  String resident;
-  String kitchen;
-  String bathroom;
-  String fuel;
-  String family;
-  String location;
-  String long;
-  String lat;
-  String getLoc;
-  String remarks;
-  String submit;
-  String guardian_type;
-  Registration(
-      {this.area,
-        this.lastname,
-        this.guardian,
-        this.email,
-        this.propertyCategory,
-        this.propertyClass,
-        this.house,
-        this.locality,
-        this.town,
-        this.pincode,
-        this.district,
-        this.mdpe,
-        this.resident,
-        this.kitchen,
-        this.bathroom,
-        this.fuel,
-        this.family,
-        this.location,
-        this.long,
-        this.lat,
-        this.getLoc,
-        this.remarks,
-        this.submit,
-        this.guardian_type});
-
-  Registration.fromJson(Map<String, dynamic> json) {
-    area = json['area'];
-    lastname = json['lastname'];
-    guardian = json['guardian'];
-    email = json['email'];
-    propertyCategory = json['property_category'];
-    propertyClass = json['property_class'];
-    house = json['house'];
-    locality = json['locality'];
-    town = json['town'];
-    pincode = json['pincode'];
-    district = json['district'];
-    mdpe = json['mdpe'];
-    resident = json['resident'];
-    kitchen = json['kitchen'];
-    bathroom = json['bathroom'];
-    fuel = json['fuel'];
-    family = json['family'];
-    location = json['location'];
-    long = json['long'];
-    lat = json['lat'];
-    getLoc = json['getLoc'];
-    remarks = json['remarks'];
-    submit = json['submit'];
-    guardian_type = json['guardian_type'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['area'] = this.area;
-    data['lastname'] = this.lastname;
-    data['guardian'] = this.guardian;
-    data['email'] = this.email;
-    data['property_category'] = this.propertyCategory;
-    data['property_class'] = this.propertyClass;
-    data['house'] = this.house;
-    data['locality'] = this.locality;
-    data['town'] = this.town;
-    data['pincode'] = this.pincode;
-    data['district'] = this.district;
-    data['mdpe'] = this.mdpe;
-    data['resident'] = this.resident;
-    data['kitchen'] = this.kitchen;
-    data['bathroom'] = this.bathroom;
-    data['fuel'] = this.fuel;
-    data['family'] = this.family;
-    data['location'] = this.location;
-    data['long'] = this.long;
-    data['lat'] = this.lat;
-    data['getLoc'] = this.getLoc;
-    data['remarks'] = this.remarks;
-    data['submit'] = this.submit;
-    data['guardian_type'] = this.guardian_type;
-    return data;
-  }
-}
-
-class Photo {
-  String customerPhoto;
-  String homePhoto;
-
-  Photo({this.customerPhoto, this.homePhoto});
-
-  Photo.fromJson(Map<String, dynamic> json) {
-    customerPhoto = json['customer_photo'];
-    homePhoto = json['home_photo'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['customer_photo'] = this.customerPhoto;
-    data['home_photo'] = this.homePhoto;
-    return data;
-  }
-}
-
-class Kyc {
-  String uploadDoc1;
-  String uploadDoc1No;
-  String uploadDoc1Front;
-  String uploadDoc1Back;
-  String selectDoc;
-  String uploadDoc2;
-  String uploadDoc2No;
-  String uploadDoc2Front;
-  String uploadDoc2Back;
-  String uploadDoc3;
-  String uploadDoc3No;
-  String uploadDoc3Front;
-  String uploadDoc3Back;
-
-  Kyc(
-      {this.uploadDoc1,
-        this.uploadDoc1No,
-        this.uploadDoc1Front,
-        this.uploadDoc1Back,
-        this.selectDoc,
-        this.uploadDoc2,
-        this.uploadDoc2No,
-        this.uploadDoc2Front,
-        this.uploadDoc2Back,
-        this.uploadDoc3,
-        this.uploadDoc3No,
-        this.uploadDoc3Front,
-        this.uploadDoc3Back});
-
-  Kyc.fromJson(Map<String, dynamic> json) {
-    uploadDoc1 = json['uploadDoc1'];
-    uploadDoc1No = json['uploadDoc1No'];
-    uploadDoc1Front = json['uploadDoc1Front'];
-    uploadDoc1Back = json['uploadDoc1Back'];
-    selectDoc = json['selectDoc'];
-    uploadDoc2 = json['uploadDoc2'];
-    uploadDoc2No = json['uploadDoc2No'];
-    uploadDoc2Front = json['uploadDoc2Front'];
-    uploadDoc2Back = json['uploadDoc2Back'];
-    uploadDoc3 = json['uploadDoc3'];
-    uploadDoc3No = json['uploadDoc3No'];
-    uploadDoc3Front = json['uploadDoc3Front'];
-    uploadDoc3Back = json['uploadDoc3Back'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['uploadDoc1'] = this.uploadDoc1;
-    data['uploadDoc1No'] = this.uploadDoc1No;
-    data['uploadDoc1Front'] = this.uploadDoc1Front;
-    data['uploadDoc1Back'] = this.uploadDoc1Back;
-    data['selectDoc'] = this.selectDoc;
-    data['uploadDoc2'] = this.uploadDoc2;
-    data['uploadDoc2No'] = this.uploadDoc2No;
-    data['uploadDoc2Front'] = this.uploadDoc2Front;
-    data['uploadDoc2Back'] = this.uploadDoc2Back;
-    data['uploadDoc3'] = this.uploadDoc3;
-    data['uploadDoc3No'] = this.uploadDoc3No;
-    data['uploadDoc3Front'] = this.uploadDoc3Front;
-    data['uploadDoc3Back'] = this.uploadDoc3Back;
-    return data;
-  }
-}
-
-class Deposit {
-  String depositSta;
-  String modeOfDep;
-  String depositDate;
-  String depositType;
-  String depositAmt;
-  String chqNum;
-  String chqBank;
-  String bankAcc;
-  dynamic chqDate;
-  String chqPhoto;
-  String payStatus;
-  String reason;
-
-  Deposit(
-      {this.depositSta,
-        this.modeOfDep,
-        this.depositDate,
-        this.depositType,
-        this.depositAmt,
-        this.chqNum,
-        this.chqBank,
-        this.bankAcc,
-        this.chqDate,
-        this.chqPhoto,
-        this.payStatus,
-        this.reason});
-
-  Deposit.fromJson(Map<String, dynamic> json) {
-    depositSta = json['deposit_sta'];
-    modeOfDep = json['mode_of_dep'];
-    depositDate = json['deposit_date'];
-    depositType = json['deposit_type'];
-    depositAmt = json['deposit_amt'];
-    chqNum = json['chq_num'];
-    chqBank = json['chq_bank'];
-    bankAcc = json['bank_acc'];
-    chqDate = json['chq_date'];
-    chqPhoto = json['chq_photo'];
-    payStatus = json['pay_status'];
-    reason = json['reason'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['deposit_sta'] = this.depositSta;
-    data['mode_of_dep'] = this.modeOfDep;
-    data['deposit_date'] = this.depositDate;
-    data['deposit_type'] = this.depositType;
-    data['deposit_amt'] = this.depositAmt;
-    data['chq_num'] = this.chqNum;
-    data['chq_bank'] = this.chqBank;
-    data['bank_acc'] = this.bankAcc;
-    data['chq_date'] = this.chqDate;
-    data['chq_photo'] = this.chqPhoto;
-    data['pay_status'] = this.payStatus;
-    data['reason'] = this.reason;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "steps": steps.toJson(),
+        "registration": registration.toJson(),
+        "inspection": inspection.toJson(),
+        "photo": photo.toJson(),
+        "kyc": kyc.toJson(),
+        "deposit": deposit.toJson(),
+        "consent": consent.toJson(),
+        "lmc": lmc.toJson(),
+      };
 }
 
 class Consent {
-  String takePhoto;
-  String custBank;
-  String custAcc;
-  String custIfsc;
-  String custBankAdd;
-  String cancelledPhoto;
-  String preferredBilling;
-  String acceptConversionPolicy;
-  String acceptExtraCost;
+  final String takePhoto;
+  final String custBank;
+  final String custAcc;
+  final String custIfsc;
+  final String custBankAdd;
+  final String cancelledPhoto;
+  final String preferredBilling;
+  final String acceptConversionPolicy;
+  final String acceptExtraCost;
 
-  Consent(
-      {this.takePhoto,
-        this.custBank,
-        this.custAcc,
-        this.custIfsc,
-        this.custBankAdd,
-        this.cancelledPhoto,
-        this.preferredBilling,
-        this.acceptConversionPolicy,
-        this.acceptExtraCost});
+  Consent({
+    required this.takePhoto,
+    required this.custBank,
+    required this.custAcc,
+    required this.custIfsc,
+    required this.custBankAdd,
+    required this.cancelledPhoto,
+    required this.preferredBilling,
+    required this.acceptConversionPolicy,
+    required this.acceptExtraCost,
+  });
 
-  Consent.fromJson(Map<String, dynamic> json) {
-    takePhoto = json['take_photo'];
-    custBank = json['cust_bank'];
-    custAcc = json['cust_acc'];
-    custIfsc = json['cust_ifsc'];
-    custBankAdd = json['cust_bank_add'];
-    cancelledPhoto = json['cancelled_photo'];
-    preferredBilling = json['preferred_billing'];
-    acceptConversionPolicy = json['accept_conversion_policy'];
-    acceptExtraCost = json['accept_extra_cost'];
-  }
+  factory Consent.fromJson(Map<String, dynamic> json) => Consent(
+        takePhoto: json["take_photo"],
+        custBank: json["cust_bank"],
+        custAcc: json["cust_acc"],
+        custIfsc: json["cust_ifsc"],
+        custBankAdd: json["cust_bank_add"],
+        cancelledPhoto: json["cancelled_photo"],
+        preferredBilling: json["preferred_billing"],
+        acceptConversionPolicy: json["accept_conversion_policy"],
+        acceptExtraCost: json["accept_extra_cost"],
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['take_photo'] = this.takePhoto;
-    data['cust_bank'] = this.custBank;
-    data['cust_acc'] = this.custAcc;
-    data['cust_ifsc'] = this.custIfsc;
-    data['cust_bank_add'] = this.custBankAdd;
-    data['cancelled_photo'] = this.cancelledPhoto;
-    data['preferred_billing'] = this.preferredBilling;
-    data['accept_conversion_policy'] = this.acceptConversionPolicy;
-    data['accept_extra_cost'] = this.acceptExtraCost;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "take_photo": takePhoto,
+        "cust_bank": custBank,
+        "cust_acc": custAcc,
+        "cust_ifsc": custIfsc,
+        "cust_bank_add": custBankAdd,
+        "cancelled_photo": cancelledPhoto,
+        "preferred_billing": preferredBilling,
+        "accept_conversion_policy": acceptConversionPolicy,
+        "accept_extra_cost": acceptExtraCost,
+      };
+}
+
+class Deposit {
+  final String depositSta;
+  final String modeOfDep;
+  final String depositDate;
+  final String depositType;
+  final String depositAmt;
+  final String chqNum;
+  final String chqBank;
+  final String bankAcc;
+  final String chqDate;
+  final String chqPhoto;
+  final String payStatus;
+  final String reason;
+
+  Deposit({
+    required this.depositSta,
+    required this.modeOfDep,
+    required this.depositDate,
+    required this.depositType,
+    required this.depositAmt,
+    required this.chqNum,
+    required this.chqBank,
+    required this.bankAcc,
+    required this.chqDate,
+    required this.chqPhoto,
+    required this.payStatus,
+    required this.reason,
+  });
+
+  factory Deposit.fromJson(Map<String, dynamic> json) => Deposit(
+        depositSta: json["deposit_sta"],
+        modeOfDep: json["mode_of_dep"],
+        depositDate: json["deposit_date"],
+        depositType: json["deposit_type"],
+        depositAmt: json["deposit_amt"],
+        chqNum: json["chq_num"],
+        chqBank: json["chq_bank"],
+        bankAcc: json["bank_acc"],
+        chqDate: json["chq_date"],
+        chqPhoto: json["chq_photo"],
+        payStatus: json["pay_status"],
+        reason: json["reason"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "deposit_sta": depositSta,
+        "mode_of_dep": modeOfDep,
+        "deposit_date": depositDate,
+        "deposit_type": depositType,
+        "deposit_amt": depositAmt,
+        "chq_num": chqNum,
+        "chq_bank": chqBank,
+        "bank_acc": bankAcc,
+        "chq_date": chqDate,
+        "chq_photo": chqPhoto,
+        "pay_status": payStatus,
+        "reason": reason,
+      };
+}
+
+class Inspection {
+  final String inspectMeter;
+  final String inspectRegulator;
+  final String inspectOtherFittings;
+  final String asPerLmcQty;
+  final String customerSatisfication;
+  final String conversionAgreement;
+  final String photo;
+  final String conversionDate;
+  final String remarks;
+  final String extraPipe;
+  final String extraPrice;
+
+  Inspection({
+    required this.inspectMeter,
+    required this.inspectRegulator,
+    required this.inspectOtherFittings,
+    required this.asPerLmcQty,
+    required this.customerSatisfication,
+    required this.conversionAgreement,
+    required this.photo,
+    required this.conversionDate,
+    required this.remarks,
+    required this.extraPipe,
+    required this.extraPrice,
+  });
+
+  factory Inspection.fromJson(Map<String, dynamic> json) => Inspection(
+        inspectMeter: json["inspect_meter"],
+        inspectRegulator: json["inspect_regulator"],
+        inspectOtherFittings: json["inspect_other_fittings"],
+        asPerLmcQty: json["as_per_lmc_qty"],
+        customerSatisfication: json["customer_satisfication"],
+        conversionAgreement: json["conversion_agreement"],
+        photo: json["photo"],
+        conversionDate: json["conversion_date"],
+        remarks: json["remarks"],
+        extraPipe: json["extra_pipe"],
+        extraPrice: json["extra_price"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "inspect_meter": inspectMeter,
+        "inspect_regulator": inspectRegulator,
+        "inspect_other_fittings": inspectOtherFittings,
+        "as_per_lmc_qty": asPerLmcQty,
+        "customer_satisfication": customerSatisfication,
+        "conversion_agreement": conversionAgreement,
+        "photo": photo,
+        "conversion_date": conversionDate,
+        "remarks": remarks,
+        "extra_pipe": extraPipe,
+        "extra_price": extraPrice,
+      };
+}
+
+class Kyc {
+  final String uploadDoc1;
+  final String uploadDoc1No;
+  final String uploadDoc1Front;
+  final String uploadDoc1Back;
+  final String selectDoc;
+  final String uploadDoc2;
+  final String uploadDoc2No;
+  final String uploadDoc2Front;
+  final String uploadDoc2Back;
+  final String uploadDoc3;
+  final String uploadDoc3No;
+  final String uploadDoc3Front;
+  final String uploadDoc3Back;
+
+  Kyc({
+    required this.uploadDoc1,
+    required this.uploadDoc1No,
+    required this.uploadDoc1Front,
+    required this.uploadDoc1Back,
+    required this.selectDoc,
+    required this.uploadDoc2,
+    required this.uploadDoc2No,
+    required this.uploadDoc2Front,
+    required this.uploadDoc2Back,
+    required this.uploadDoc3,
+    required this.uploadDoc3No,
+    required this.uploadDoc3Front,
+    required this.uploadDoc3Back,
+  });
+
+  factory Kyc.fromJson(Map<String, dynamic> json) => Kyc(
+        uploadDoc1: json["uploadDoc1"],
+        uploadDoc1No: json["uploadDoc1No"],
+        uploadDoc1Front: json["uploadDoc1Front"],
+        uploadDoc1Back: json["uploadDoc1Back"],
+        selectDoc: json["selectDoc"],
+        uploadDoc2: json["uploadDoc2"],
+        uploadDoc2No: json["uploadDoc2No"],
+        uploadDoc2Front: json["uploadDoc2Front"],
+        uploadDoc2Back: json["uploadDoc2Back"],
+        uploadDoc3: json["uploadDoc3"],
+        uploadDoc3No: json["uploadDoc3No"],
+        uploadDoc3Front: json["uploadDoc3Front"],
+        uploadDoc3Back: json["uploadDoc3Back"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "uploadDoc1": uploadDoc1,
+        "uploadDoc1No": uploadDoc1No,
+        "uploadDoc1Front": uploadDoc1Front,
+        "uploadDoc1Back": uploadDoc1Back,
+        "selectDoc": selectDoc,
+        "uploadDoc2": uploadDoc2,
+        "uploadDoc2No": uploadDoc2No,
+        "uploadDoc2Front": uploadDoc2Front,
+        "uploadDoc2Back": uploadDoc2Back,
+        "uploadDoc3": uploadDoc3,
+        "uploadDoc3No": uploadDoc3No,
+        "uploadDoc3Front": uploadDoc3Front,
+        "uploadDoc3Back": uploadDoc3Back,
+      };
 }
 
 class Lmc {
-  String feasibilityDate;
-  String proposedDate;
+  final String feasibilityDate;
+  final String proposedDate;
+  final String additional;
+  final String material;
+  final String qty;
+  final String regulators;
+  final String installation;
+  final String feasibility;
+  final String workStart;
+  final String reasonIfDelay;
+  final String reason;
+  final String isFeasible;
+  final String followUpDate;
+  final String meterNumber;
+  final String pipe;
+  final String fitting;
+  final String meterInitialReading;
+  final String readingDate;
+  final String meterPhoto;
+  final String tfNumber;
+  final String latitudeTf;
+  final String longitudeTf;
+  final String latitudeHg;
+  final String longitudeHg;
+  final String workCompletedDate;
+  final String workCompletedImage;
+  final String ackDate;
+  final String ackImage;
+  final String conversionDate;
+  final String typeNr;
+  final String isCustomerReady;
 
-  Lmc({this.feasibilityDate, this.proposedDate});
+  Lmc({
+    required this.feasibilityDate,
+    required this.proposedDate,
+    required this.additional,
+    required this.material,
+    required this.qty,
+    required this.regulators,
+    required this.installation,
+    required this.feasibility,
+    required this.workStart,
+    required this.reasonIfDelay,
+    required this.reason,
+    required this.isFeasible,
+    required this.followUpDate,
+    required this.meterNumber,
+    required this.pipe,
+    required this.fitting,
+    required this.meterInitialReading,
+    required this.readingDate,
+    required this.meterPhoto,
+    required this.tfNumber,
+    required this.latitudeTf,
+    required this.longitudeTf,
+    required this.latitudeHg,
+    required this.longitudeHg,
+    required this.workCompletedDate,
+    required this.workCompletedImage,
+    required this.ackDate,
+    required this.ackImage,
+    required this.conversionDate,
+    required this.typeNr,
+    required this.isCustomerReady,
+  });
 
-  Lmc.fromJson(Map<String, dynamic> json) {
-    feasibilityDate = json['feasibility_date'];
-    proposedDate = json['proposed_date'];
-  }
+  factory Lmc.fromJson(Map<String, dynamic> json) => Lmc(
+        feasibilityDate: json["feasibility_date"],
+        proposedDate: json["proposed_date"],
+        additional: json["additional"],
+        material: json["material"],
+        qty: json["qty"],
+        regulators: json["regulators"],
+        installation: json["installation"],
+        feasibility: json["feasibility"],
+        workStart: json["work_start"],
+        reasonIfDelay: json["reason_if_delay"],
+        reason: json["reason"],
+        isFeasible: json["is_feasible"],
+        followUpDate: json["follow_up_date"],
+        meterNumber: json["meter_number"],
+        pipe: json["pipe"],
+        fitting: json["fitting"],
+        meterInitialReading: json["meter_initial_reading"],
+        readingDate: json["reading_date"],
+        meterPhoto: json["meter_photo"],
+        tfNumber: json["tf_number"],
+        latitudeTf: json["latitude_tf"],
+        longitudeTf: json["longitude_tf"],
+        latitudeHg: json["latitude_hg"],
+        longitudeHg: json["longitude_hg"],
+        workCompletedDate: json["work_completed_date"],
+        workCompletedImage: json["work_completed_image"],
+        ackDate: json["ack_date"],
+        ackImage: json["ack_image"],
+        conversionDate: json["conversion_date"],
+        typeNr: json["typeNr"],
+        isCustomerReady: json["is_customer_ready"],
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['feasibility_date'] = this.feasibilityDate;
-    data['proposed_date'] = this.proposedDate;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "feasibility_date": feasibilityDate,
+        "proposed_date": proposedDate,
+        "additional": additional,
+        "material": material,
+        "qty": qty,
+        "regulators": regulators,
+        "installation": installation,
+        "feasibility": feasibility,
+        "work_start": workStart,
+        "reason_if_delay": reasonIfDelay,
+        "reason": reason,
+        "is_feasible": isFeasible,
+        "follow_up_date": followUpDate,
+        "meter_number": meterNumber,
+        "pipe": pipe,
+        "fitting": fitting,
+        "meter_initial_reading": meterInitialReading,
+        "reading_date": readingDate,
+        "meter_photo": meterPhoto,
+        "tf_number": tfNumber,
+        "latitude_tf": latitudeTf,
+        "longitude_tf": longitudeTf,
+        "latitude_hg": latitudeHg,
+        "longitude_hg": longitudeHg,
+        "work_completed_date": workCompletedDate,
+        "work_completed_image": workCompletedImage,
+        "ack_date": ackDate,
+        "ack_image": ackImage,
+        "conversion_date": conversionDate,
+        "typeNr": typeNr,
+        "is_customer_ready": isCustomerReady,
+      };
+}
+
+class Photo {
+  final String customerPhoto;
+  final String homePhoto;
+
+  Photo({
+    required this.customerPhoto,
+    required this.homePhoto,
+  });
+
+  factory Photo.fromJson(Map<String, dynamic> json) => Photo(
+        customerPhoto: json["customer_photo"],
+        homePhoto: json["home_photo"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "customer_photo": customerPhoto,
+        "home_photo": homePhoto,
+      };
+}
+
+class Registration {
+  final String area;
+  final String lastname;
+  final String guardian;
+  final String email;
+  final String propertyCategory;
+  final String propertyClass;
+  final String house;
+  final String locality;
+  final String town;
+  final String pincode;
+  final String district;
+  final String mdpe;
+  final String resident;
+  final String kitchen;
+  final String bathroom;
+  final String fuel;
+  final String family;
+  final String location;
+  final String long;
+  final String lat;
+  final String getLoc;
+  final String remarks;
+  final String submit;
+  final String guardianType;
+
+  Registration({
+    required this.area,
+    required this.lastname,
+    required this.guardian,
+    required this.email,
+    required this.propertyCategory,
+    required this.propertyClass,
+    required this.house,
+    required this.locality,
+    required this.town,
+    required this.pincode,
+    required this.district,
+    required this.mdpe,
+    required this.resident,
+    required this.kitchen,
+    required this.bathroom,
+    required this.fuel,
+    required this.family,
+    required this.location,
+    required this.long,
+    required this.lat,
+    required this.getLoc,
+    required this.remarks,
+    required this.submit,
+    required this.guardianType,
+  });
+
+  factory Registration.fromJson(Map<String, dynamic> json) => Registration(
+        area: json["area"],
+        lastname: json["lastname"],
+        guardian: json["guardian"],
+        email: json["email"],
+        propertyCategory: json["property_category"],
+        propertyClass: json["property_class"],
+        house: json["house"],
+        locality: json["locality"],
+        town: json["town"],
+        pincode: json["pincode"],
+        district: json["district"],
+        mdpe: json["mdpe"],
+        resident: json["resident"],
+        kitchen: json["kitchen"],
+        bathroom: json["bathroom"],
+        fuel: json["fuel"],
+        family: json["family"],
+        location: json["location"],
+        long: json["long"],
+        lat: json["lat"],
+        getLoc: json["getLoc"],
+        remarks: json["remarks"],
+        submit: json["submit"],
+        guardianType: json["guardian_type"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "area": area,
+        "lastname": lastname,
+        "guardian": guardian,
+        "email": email,
+        "property_category": propertyCategory,
+        "property_class": propertyClass,
+        "house": house,
+        "locality": locality,
+        "town": town,
+        "pincode": pincode,
+        "district": district,
+        "mdpe": mdpe,
+        "resident": resident,
+        "kitchen": kitchen,
+        "bathroom": bathroom,
+        "fuel": fuel,
+        "family": family,
+        "location": location,
+        "long": long,
+        "lat": lat,
+        "getLoc": getLoc,
+        "remarks": remarks,
+        "submit": submit,
+        "guardian_type": guardianType,
+      };
+}
+
+class Steps {
+  final String reg;
+  final String kyc;
+  final String photo;
+  final String consent;
+  final String deposit;
+  final String step1;
+  final String step2;
+  final String step3;
+  final String step4;
+  final String step5;
+  final String mobile;
+  final String firstname;
+  final String middlename;
+  final String lastname;
+  final String button;
+  final String fromDate;
+  final String toDate;
+  final String minAmt;
+  final String maxAmt;
+  final String stepsIf;
+  final String stepsIs;
+  final String then;
+  final String amount;
+  final String back;
+  final String condition;
+  final String type;
+
+  Steps({
+    required this.reg,
+    required this.kyc,
+    required this.photo,
+    required this.consent,
+    required this.deposit,
+    required this.step1,
+    required this.step2,
+    required this.step3,
+    required this.step4,
+    required this.step5,
+    required this.mobile,
+    required this.firstname,
+    required this.middlename,
+    required this.lastname,
+    required this.button,
+    required this.fromDate,
+    required this.toDate,
+    required this.minAmt,
+    required this.maxAmt,
+    required this.stepsIf,
+    required this.stepsIs,
+    required this.then,
+    required this.amount,
+    required this.back,
+    required this.condition,
+    required this.type,
+  });
+
+  factory Steps.fromJson(Map<String, dynamic> json) => Steps(
+        reg: json["reg"],
+        kyc: json["kyc"],
+        photo: json["photo"],
+        consent: json["consent"],
+        deposit: json["deposit"],
+        step1: json["step1"],
+        step2: json["step2"],
+        step3: json["step3"],
+        step4: json["step4"],
+        step5: json["step5"],
+        mobile: json["mobile"],
+        firstname: json["firstname"],
+        middlename: json["middlename"],
+        lastname: json["lastname"],
+        button: json["button"],
+        fromDate: json["from_date"],
+        toDate: json["to_date"],
+        minAmt: json["min_amt"],
+        maxAmt: json["max_amt"],
+        stepsIf: json["if"],
+        stepsIs: json["is"],
+        then: json["then"],
+        amount: json["amount"],
+        back: json["back"],
+        condition: json["condition"],
+        type: json["type"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "reg": reg,
+        "kyc": kyc,
+        "photo": photo,
+        "consent": consent,
+        "deposit": deposit,
+        "step1": step1,
+        "step2": step2,
+        "step3": step3,
+        "step4": step4,
+        "step5": step5,
+        "mobile": mobile,
+        "firstname": firstname,
+        "middlename": middlename,
+        "lastname": lastname,
+        "button": button,
+        "from_date": fromDate,
+        "to_date": toDate,
+        "min_amt": minAmt,
+        "max_amt": maxAmt,
+        "if": stepsIf,
+        "is": stepsIs,
+        "then": then,
+        "amount": amount,
+        "back": back,
+        "condition": condition,
+        "type": type,
+      };
 }

@@ -2,8 +2,10 @@ import '../ExportFile/export_file.dart';
 
 part 'save_customer_registration_offline_model.g.dart';
 
-@HiveType(typeId: 1,)
-class SaveCustomerRegistrationOfflineModel{
+@HiveType(
+  typeId: 1,
+)
+class SaveCustomerRegistrationOfflineModel {
   @HiveField(0)
   String areaId;
   @HiveField(1)
@@ -129,7 +131,7 @@ class SaveCustomerRegistrationOfflineModel{
   @HiveField(61)
   String micr;
   @HiveField(62)
-  String modeDepositValue;
+  String? modeDepositValue;
   @HiveField(63)
   String buildingNumber;
   @HiveField(64)
@@ -139,82 +141,79 @@ class SaveCustomerRegistrationOfflineModel{
   @HiveField(66)
   String streetName;
   @HiveField(67)
-  String ownerConsentText;
+  String? ownerConsentText;
   @HiveField(68)
   bool isDepositCheq;
-  @HiveField(69)
-  String alternateMobileNo;
 
   SaveCustomerRegistrationOfflineModel({
-    this.areaId,
-    this.chequePhoto,
-    this.noOfFamilyMembers,
-    this.propertyClassId,
-    this.noOfBathroom,
-    this.noOfKitchen,
-    this.firstName,
-    this.middleName,
-    this.lastName,
-    this.mobileNumber,
-    this.schema,
-    this.emailId,
-    this.backSidePhoto1,
-    this.backSidePhoto2,
-    this.backSidePhoto3,
-    this.documentUploadsPhoto1,
-    this.documentUploadsPhoto2,
-    this.documentUploadsPhoto3,
-    this.canceledChequePhoto,
-    this.customerConsentPhoto,
-    this.bankAccountNumber,
-    this.bankAddress,
-    this.bankIfscCode,
-    this.chequeBankAccount,
-    this.chequeNumber,
-    this.depositeType,
-    this.districtId,
-    this.dmaUserId,
-    this.dmaUserName,
-    this.existingCookingFuel,
-    this.guardianName,
-    this.guardianType,
-    this.houseNumber,
-    this.initialAmount,
-    this.initialDepositeStatus,
-    this.interested,
-    this.kycDocument1,
-    this.kycDocument1Number,
-    this.kycDocument2,
-    this.kycDocument2Number,
-    this.kycDocument3,
-    this.longitude,
-    this.latitude,
-    this.colonySocietyApartment,
-    this.modeOfDeposite,
-    this.nameOfBank,
-    this.ownerConsent,
-    this.payementBankName,
-    this.pinCode,
-    this.propertyCategoryId,
-    this.reasonForHold,
-    this.remarks,
-    this.residentStatus,
-    this.societyAllowedMdpe,
-    this.town,
-    this.uploadCustomerPhoto,
-    this.uploadHousePhoto,
-    this.initialDepositeDate,
-    this.kycDocument3Number,
-    this.acceptConversionPolicy,
-    this.acceptExtraFittingCost,
-    this.micr,
+    required this.areaId,
+    required this.chequePhoto,
+    required this.noOfFamilyMembers,
+    required this.propertyClassId,
+    required this.noOfBathroom,
+    required this.noOfKitchen,
+    required this.firstName,
+    required this.middleName,
+    required this.lastName,
+    required this.mobileNumber,
+    required this.schema,
+    required this.emailId,
+    required this.backSidePhoto1,
+    required this.backSidePhoto2,
+    required this.backSidePhoto3,
+    required this.documentUploadsPhoto1,
+    required this.documentUploadsPhoto2,
+    required this.documentUploadsPhoto3,
+    required this.canceledChequePhoto,
+    required this.customerConsentPhoto,
+    required this.bankAccountNumber,
+    required this.bankAddress,
+    required this.bankIfscCode,
+    required this.chequeBankAccount,
+    required this.chequeNumber,
+    required this.depositeType,
+    required this.districtId,
+    required this.dmaUserId,
+    required this.dmaUserName,
+    required this.existingCookingFuel,
+    required this.guardianName,
+    required this.guardianType,
+    required this.houseNumber,
+    required this.initialAmount,
+    required this.initialDepositeStatus,
+    required this.interested,
+    required this.kycDocument1,
+    required this.kycDocument1Number,
+    required this.kycDocument2,
+    required this.kycDocument2Number,
+    required this.kycDocument3,
+    required this.longitude,
+    required this.latitude,
+    required this.colonySocietyApartment,
+    required this.modeOfDeposite,
+    required this.nameOfBank,
+    required this.ownerConsent,
+    required this.payementBankName,
+    required this.pinCode,
+    required this.propertyCategoryId,
+    required this.reasonForHold,
+    required this.remarks,
+    required this.residentStatus,
+    required this.societyAllowedMdpe,
+    required this.town,
+    required this.uploadCustomerPhoto,
+    required this.uploadHousePhoto,
+    required this.initialDepositeDate,
+    required this.kycDocument3Number,
+    required this.acceptConversionPolicy,
+    required this.acceptExtraFittingCost,
+    required this.micr,
     this.modeDepositValue,
-    this.buildingNumber,
-    this.chargeArea,
-    this.billingModel,
-    this.streetName,
+    required this.buildingNumber,
+    required this.chargeArea,
+    required this.billingModel,
+    required this.streetName,
     this.ownerConsentText,
-    this.isDepositCheq= false,
-    this.alternateMobileNo,
+    this.isDepositCheq = false,
   });
 }

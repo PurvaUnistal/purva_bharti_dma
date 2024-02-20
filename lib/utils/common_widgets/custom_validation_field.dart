@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import '../../ExportFile/export_file.dart';
 
 class CustomPasswordValidatedFields extends StatefulWidget {
-  final InputDecoration inputDecoration;
-  final TextEditingController textEditingController;
-  final TextInputAction textInputAction;
-  final void Function() onEditComplete;
-  final String Function(String) onFieldSubmitted;
-  final FocusNode focusNode;
-  final Color cursorColor;
-  final TextStyle textStyle;
+  final InputDecoration? inputDecoration;
+  final TextEditingController? textEditingController;
+  final TextInputAction? textInputAction;
+  final void Function()? onEditComplete;
+  final String Function(String)? onFieldSubmitted;
+  final FocusNode? focusNode;
+  final Color? cursorColor;
+  final TextStyle? textStyle;
   final IconData activeIcon;
   final IconData inActiveIcon;
   final Color activeRequirementColor;
   final Color inActiveRequirementColor;
   final bool obscureText;
-  final Iterable<String> autofillHints;
+  final Iterable<String>? autofillHints;
   final TextInputType keyboardType;
 
   CustomPasswordValidatedFields({
-    Key key,
+    Key? key,
     this.inputDecoration = const InputDecoration(
         hintText: "Enter password",
         prefixIcon: Icon(Icons.lock),
@@ -120,9 +120,9 @@ class _CustomPasswordValidatedFieldsState
               onChanged: (value) {
                 setState(() {
                   _pass = value;
-                  formGlobalKey.currentState.validate();
-                  value = widget.textEditingController.text.trim().toString();
-                  log(_pass);
+                  formGlobalKey.currentState!.validate();
+                  value = widget.textEditingController!.text.trim().toString();
+                  print(_pass);
                 });
               },
               validator: passwordValidation,
@@ -133,10 +133,10 @@ class _CustomPasswordValidatedFieldsState
     );
   }
 
-  String passwordValidation(String value) {
+  String? passwordValidation(String? value) {
     bool passValid =
         RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$')
-            .hasMatch(value);
+            .hasMatch(value!);
     if (value.trim().isEmpty) {
       return "Password cannot be emtpy!";
     }

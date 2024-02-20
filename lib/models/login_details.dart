@@ -1,85 +1,98 @@
+// To parse this JSON data, do
+//
+//     final loginDetails = loginDetailsFromJson(jsonString);
+
+import 'dart:convert';
+
+LoginDetails loginDetailsFromJson(String str) =>
+    LoginDetails.fromJson(json.decode(str));
+
+String loginDetailsToJson(LoginDetails data) => json.encode(data.toJson());
+
 class LoginDetails {
-  int status;
-  bool error;
-  String messages;
-  String token;
-  User user;
-  String exptime;
+  final int status;
+  final bool error;
+  final String messages;
+  final String token;
+  final User user;
+  final String exptime;
 
-  LoginDetails(
-      {this.status,
-        this.error,
-        this.messages,
-        this.token,
-        this.user,
-        this.exptime});
+  LoginDetails({
+    required this.status,
+    required this.error,
+    required this.messages,
+    required this.token,
+    required this.user,
+    required this.exptime,
+  });
 
-  LoginDetails.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    error = json['error'];
-    messages = json['messages'];
-    token = json['token'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
-    exptime = json['exptime'];
-  }
+  factory LoginDetails.fromJson(Map<String, dynamic> json) => LoginDetails(
+        status: json["status"],
+        error: json["error"],
+        messages: json["messages"],
+        token: json["token"],
+        user: User.fromJson(json["user"]),
+        exptime: json["exptime"],
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['error'] = this.error;
-    data['messages'] = this.messages;
-    data['token'] = this.token;
-    if (this.user != null) {
-      data['user'] = this.user.toJson();
-    }
-    data['exptime'] = this.exptime;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "status": status,
+        "error": error,
+        "messages": messages,
+        "token": token,
+        "user": user.toJson(),
+        "exptime": exptime,
+      };
 }
+
 class User {
-  String id;
-  String email;
-  String schema;
-  String role;
-  String name;
-  String userStatus;
-  String pwdChanged;
-  String modules;
+  final String id;
+  final String email;
+  final String name;
+  final String userStatus;
+  final String pwdChanged;
+  final String modules;
+  final String schema;
+  final String role;
 
-  User({this.id, this.email, this.schema, this.role, this.name, this.userStatus,
-    this.pwdChanged,
-    this.modules,});
+  User({
+    required this.id,
+    required this.email,
+    required this.name,
+    required this.userStatus,
+    required this.pwdChanged,
+    required this.modules,
+    required this.schema,
+    required this.role,
+  });
 
-  User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    email = json['email'];
-    schema = json['schema'];
-    role = json['role'];
-    name = json['name'];
-    userStatus = json['user_status'];
-    pwdChanged = json['pwd_changed'];
-    modules = json['modules'];
-  }
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        id: json["id"],
+        email: json["email"],
+        name: json["name"],
+        userStatus: json["user_status"],
+        pwdChanged: json["pwd_changed"],
+        modules: json["modules"],
+        schema: json["schema"],
+        role: json["role"],
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['email'] = this.email;
-    data['schema'] = this.schema;
-    data['role'] = this.role;
-    data['name'] = this.name;
-    data['user_status'] = this.userStatus;
-    data['pwd_changed'] = this.pwdChanged;
-    data['modules'] = this.modules;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "email": email,
+        "name": name,
+        "user_status": userStatus,
+        "pwd_changed": pwdChanged,
+        "modules": modules,
+        "schema": schema,
+        "role": role,
+      };
 }
-
 
 class LoginError {
-  int status;
-  bool error;
-  String messages;
+  int? status;
+  bool? error;
+  String? messages;
 
   LoginError({this.status, this.error, this.messages});
 

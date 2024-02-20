@@ -1,8 +1,9 @@
-import 'package:pbg_app/models/ServerError.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
+
 
 class BaseModel<T> {
-  ServerError _error;
-  T data;
+  ServerError? _error;
+  T? data;
 
   setException(ServerError error) {
     _error = error;

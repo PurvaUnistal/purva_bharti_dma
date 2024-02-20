@@ -1,15 +1,15 @@
 class OfflineResponse {
-  int success;
-  List<Message> message;
+  int? success;
+  List<Message>? message;
 
   OfflineResponse({this.success, this.message});
 
   OfflineResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     if (json['message'] != String) {
-      message = new List<Message>();
+      message = [];
       json['message'].forEach((v) {
-        message.add(new Message.fromJson(v));
+        message!.add(new Message.fromJson(v));
       });
     }
   }
@@ -18,27 +18,27 @@ class OfflineResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['success'] = this.success;
     if (this.message != String) {
-      data['message'] = this.message.map((v) => v.toJson()).toList();
+      data['message'] = this.message!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Message {
-  Data data;
-  String message;
+  Data? data;
+  String? message;
 
   Message({this.data, this.message});
 
   Message.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != String ? new Data.fromJson(json['data']) : String;
+    data = new Data.fromJson(json['data']);
     message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != String) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     data['message'] = this.message;
     return data;
@@ -46,132 +46,132 @@ class Message {
 }
 
 class Data {
-  String crn;
-  String dmaUserName;
-  String guardianType;
-  String marketingApproval;
-  String markStatusTime;
-  String marketingRejectReason;
-  String dmaUserId;
-  String dateOfRegistration;
-  String customerPhoto;
-  String housePhoto;
-  String ownerConsent;
-  String backside1;
-  String backside2;
-  String backside3;
-  String kycDocument1Image;
-  String kycDocument2Image;
-  String kycDocument3Image;
-  String chequePhoto;
-  String areaId;
-  String mobileNumber;
-  String firstName;
-  String lastName;
-  String middleName;
-  String guardianName;
-  String emailId;
-  String propertyCategoryId;
-  String propertyClassId;
-  String houseNumber;
-  String locality;
-  String town;
-  String pinCode;
-  String societyAllowedMdpe;
-  String residentStatus;
-  String noOfKitchen;
-  String noOfBathroom;
-  String existingCookingFuel;
-  String noOfFamilyMembers;
-  String longitude;
-  String latitude;
-  String remarks;
-  String schema;
-  String kycDocument1;
-  String kycDocument1Number;
-  String kycDocument2;
-  String kycDocument2Number;
-  String kycDocument3;
-  String nameOfBank;
-  String bankAccountNumber;
-  String bankIfscCode;
-  String bankAddress;
-  String initialDepositeStatus;
-  String reasonForHold;
-  String modeOfDeposite;
-  String depositeType;
-  String initialAmount;
-  String initialDepositeDate;
-  String payementBankName;
-  String chequeBankAccount;
-  String chequeNumber;
-  String interested;
-  String accept_conversion_policy;
-  String accept_extra_fitting_cost;
+  String? crn;
+  String? dmaUserName;
+  String? guardianType;
+  String? marketingApproval;
+  String? markStatusTime;
+  String? marketingRejectReason;
+  String? dmaUserId;
+  String? dateOfRegistration;
+  String? customerPhoto;
+  String? housePhoto;
+  String? ownerConsent;
+  String? backside1;
+  String? backside2;
+  String? backside3;
+  String? kycDocument1Image;
+  String? kycDocument2Image;
+  String? kycDocument3Image;
+  String? chequePhoto;
+  String? areaId;
+  String? mobileNumber;
+  String? firstName;
+  String? lastName;
+  String? middleName;
+  String? guardianName;
+  String? emailId;
+  String? propertyCategoryId;
+  String? propertyClassId;
+  String? houseNumber;
+  String? locality;
+  String? town;
+  String? pinCode;
+  String? societyAllowedMdpe;
+  String? residentStatus;
+  String? noOfKitchen;
+  String? noOfBathroom;
+  String? existingCookingFuel;
+  String? noOfFamilyMembers;
+  String? longitude;
+  String? latitude;
+  String? remarks;
+  String? schema;
+  String? kycDocument1;
+  String? kycDocument1Number;
+  String? kycDocument2;
+  String? kycDocument2Number;
+  String? kycDocument3;
+  String? nameOfBank;
+  String? bankAccountNumber;
+  String? bankIfscCode;
+  String? bankAddress;
+  String? initialDepositeStatus;
+  String? reasonForHold;
+  String? modeOfDeposite;
+  String? depositeType;
+  String? initialAmount;
+  String? initialDepositeDate;
+  String? payementBankName;
+  String? chequeBankAccount;
+  String? chequeNumber;
+  String? interested;
+  String? accept_conversion_policy;
+  String? accept_extra_fitting_cost;
 
   Data(
       {this.crn,
-        this.dmaUserName,
-        this.guardianType,
-        this.marketingApproval,
-        this.markStatusTime,
-        this.marketingRejectReason,
-        this.dmaUserId,
-        this.dateOfRegistration,
-        this.customerPhoto,
-        this.housePhoto,
-        this.ownerConsent,
-        this.backside1,
-        this.backside2,
-        this.backside3,
-        this.kycDocument1Image,
-        this.kycDocument2Image,
-        this.kycDocument3Image,
-        this.chequePhoto,
-        this.areaId,
-        this.mobileNumber,
-        this.firstName,
-        this.lastName,
-        this.middleName,
-        this.guardianName,
-        this.emailId,
-        this.propertyCategoryId,
-        this.propertyClassId,
-        this.houseNumber,
-        this.locality,
-        this.town,
-        this.pinCode,
-        this.societyAllowedMdpe,
-        this.residentStatus,
-        this.noOfKitchen,
-        this.noOfBathroom,
-        this.existingCookingFuel,
-        this.noOfFamilyMembers,
-        this.longitude,
-        this.latitude,
-        this.remarks,
-        this.schema,
-        this.kycDocument1,
-        this.kycDocument1Number,
-        this.kycDocument2,
-        this.kycDocument2Number,
-        this.kycDocument3,
-        this.nameOfBank,
-        this.bankAccountNumber,
-        this.bankIfscCode,
-        this.bankAddress,
-        this.initialDepositeStatus,
-        this.reasonForHold,
-        this.modeOfDeposite,
-        this.depositeType,
-        this.initialAmount,
-        this.initialDepositeDate,
-        this.payementBankName,
-        this.chequeBankAccount,
-        this.chequeNumber,
-        this.accept_conversion_policy,
-        this.accept_extra_fitting_cost,
-        this.interested});
+      this.dmaUserName,
+      this.guardianType,
+      this.marketingApproval,
+      this.markStatusTime,
+      this.marketingRejectReason,
+      this.dmaUserId,
+      this.dateOfRegistration,
+      this.customerPhoto,
+      this.housePhoto,
+      this.ownerConsent,
+      this.backside1,
+      this.backside2,
+      this.backside3,
+      this.kycDocument1Image,
+      this.kycDocument2Image,
+      this.kycDocument3Image,
+      this.chequePhoto,
+      this.areaId,
+      this.mobileNumber,
+      this.firstName,
+      this.lastName,
+      this.middleName,
+      this.guardianName,
+      this.emailId,
+      this.propertyCategoryId,
+      this.propertyClassId,
+      this.houseNumber,
+      this.locality,
+      this.town,
+      this.pinCode,
+      this.societyAllowedMdpe,
+      this.residentStatus,
+      this.noOfKitchen,
+      this.noOfBathroom,
+      this.existingCookingFuel,
+      this.noOfFamilyMembers,
+      this.longitude,
+      this.latitude,
+      this.remarks,
+      this.schema,
+      this.kycDocument1,
+      this.kycDocument1Number,
+      this.kycDocument2,
+      this.kycDocument2Number,
+      this.kycDocument3,
+      this.nameOfBank,
+      this.bankAccountNumber,
+      this.bankIfscCode,
+      this.bankAddress,
+      this.initialDepositeStatus,
+      this.reasonForHold,
+      this.modeOfDeposite,
+      this.depositeType,
+      this.initialAmount,
+      this.initialDepositeDate,
+      this.payementBankName,
+      this.chequeBankAccount,
+      this.chequeNumber,
+      this.accept_conversion_policy,
+      this.accept_extra_fitting_cost,
+      this.interested});
 
   Data.fromJson(Map<String, dynamic> json) {
     crn = json['crn'];

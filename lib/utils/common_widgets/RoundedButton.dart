@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../ExportFile/export_file.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 
 class RoundedButton extends StatelessWidget {
-  RoundedButton({ this.colour, this.title, this.onPressed});
-  final Color colour;
-  final String title;
-  final void Function() onPressed;
+  RoundedButton({this.colour, this.title, this.onPressed});
+  final Color? colour;
+  final String? title;
+  final void Function()? onPressed;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,7 +20,7 @@ class RoundedButton extends StatelessWidget {
           minWidth: 200.0,
           height: 42.0,
           child: Text(
-            title,
+            title!,
             style: const TextStyle(color: Colors.white),
           ),
         ),
@@ -30,18 +30,19 @@ class RoundedButton extends StatelessWidget {
 }
 
 class AppTextFormField extends StatelessWidget {
-  final VoidCallback passwordOnPressed;
-  final ValueChanged<String> onChanged;
-  final TextInputType keyboardType;
-  final  TextInputAction textInputAction;
-  final TextEditingController controller;
-  final String hintText;
-  final String labelText;
-  final int maxLength;
-  final IconData prefixIcon;
-  final Function(String) validator;
-  final Iterable<String> autofillHints;
-  const AppTextFormField({Key key,
+  final VoidCallback? passwordOnPressed;
+  final ValueChanged<String>? onChanged;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final TextEditingController? controller;
+  final String? hintText;
+  final String? labelText;
+  final int? maxLength;
+  final IconData? prefixIcon;
+  final String? Function(String?)? validator;
+  final Iterable<String>? autofillHints;
+  const AppTextFormField({
+    Key? key,
     this.passwordOnPressed,
     this.onChanged,
     this.keyboardType,
@@ -53,7 +54,6 @@ class AppTextFormField extends StatelessWidget {
     this.autofillHints,
     this.validator,
     this.maxLength,
-
   }) : super(key: key);
 
   @override
@@ -61,25 +61,25 @@ class AppTextFormField extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10.0),
       child: TextFormField(
-        maxLength:maxLength,
-        validator:validator,
+        maxLength: maxLength,
+        validator: validator!,
         keyboardType: keyboardType,
         textInputAction: textInputAction,
-        onChanged:onChanged,
+        onChanged: onChanged,
         controller: controller,
         obscureText: true,
         inputFormatters: [
-          FilteringTextInputFormatter.deny(
-              RegExp(r'\s')),
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
         ],
         textCapitalization: TextCapitalization.words,
         autofillHints: autofillHints,
-        decoration:  InputDecoration(
+        decoration: InputDecoration(
             hintText: hintText,
-            label: Text(labelText),
+            label: Text(labelText!),
             prefixIcon: Icon(prefixIcon),
             hintStyle: TextStyle(color: Colors.black),
-            contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(32.0)),
             ),
@@ -90,12 +90,8 @@ class AppTextFormField extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
               borderRadius: BorderRadius.all(Radius.circular(32.0)),
-            )
-        ),
+            )),
       ),
     );
   }
 }
-
-
-

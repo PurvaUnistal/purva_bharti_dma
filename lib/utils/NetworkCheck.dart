@@ -1,5 +1,5 @@
-import '../../ExportFile/export_file.dart';
 
+import 'package:pbg_app/ExportFile/export_file.dart';
 
 class NetworkCheck {
   Future<bool> check() async {

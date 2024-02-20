@@ -1,90 +1,88 @@
 class ScheemType {
-  String depositTypesId;
-  String depositName;
-  String depositAmount;
-  String status;
-  int schemeMonth;
-  String schemeType;
-  String dateFrom;
-  String dateTo;
-  String schemeCode;
-  int gasDepositAmount;
-  String equipmentDepositAmount;
-  String interestAmount;
-  String createdAt;
-  String updatedAt;
-  String rejectComments;
-  String customerCount;
-  String registrationGst;
-  String interestTax;
-  String rebateId;
-  String totalAmount;
-  int firstDepositAmount;
-  String nextCycleAmount;
-  String totalAmountWith;
-  String firstDepositAmountWith;
-  String depositAmountExcludingTaxWith;
-  String registrationGstWith;
-  String depositAmountWith;
-  String benifitApplicable;
-  String equipmentIncludeInBill;
-  String registrationRefunded;
-  String equipmentRefunded;
-  String gasRefunded;
-  String approvalStatus;
-  String approvalDate;
-  String depositTaxPer;
-  String interestTaxPer;
-  String registrationTaxName;
-  String interestTaxName;
-  int remainingCount;
-
-  String interestTaxAmt;
-  String regTax;
+  String? depositTypesId;
+  String? depositName;
+  String? depositAmount;
+  String? status;
+  int? schemeMonth;
+  String? schemeType;
+  String? dateFrom;
+  String? dateTo;
+  String? schemeCode;
+  int? gasDepositAmount;
+  String? equipmentDepositAmount;
+  String? interestAmount;
+  String? createdAt;
+  String? updatedAt;
+  String? rejectComments;
+  String? customerCount;
+  String? registrationGst;
+  String? interestTax;
+  String? rebateId;
+  String? totalAmount;
+  int? firstDepositAmount;
+  String? nextCycleAmount;
+  String? totalAmountWith;
+  String? firstDepositAmountWith;
+  String? depositAmountExcludingTaxWith;
+  String? registrationGstWith;
+  String? depositAmountWith;
+  String? benifitApplicable;
+  String? equipmentIncludeInBill;
+  String? registrationRefunded;
+  String? equipmentRefunded;
+  String? gasRefunded;
+  String? approvalStatus;
+  String? approvalDate;
+  String? depositTaxPer;
+  String? interestTaxPer;
+  String? registrationTaxName;
+  String? interestTaxName;
+  int? remainingCount;
+  String? interestTaxAmt;
+  String? regTax;
 
   ScheemType(
       {this.depositTypesId,
-        this.depositName,
-        this.depositAmount,
-        this.status,
-        this.schemeMonth,
-        this.schemeType,
-        this.dateFrom,
-        this.dateTo,
-        this.schemeCode,
-        this.gasDepositAmount,
-        this.equipmentDepositAmount,
-        this.interestAmount,
-        this.createdAt,
-        this.updatedAt,
-        this.rejectComments,
-        this.customerCount,
-        this.registrationGst,
-        this.interestTax,
-        this.rebateId,
-        this.totalAmount,
-        this.firstDepositAmount,
-        this.nextCycleAmount,
-        this.totalAmountWith,
-        this.firstDepositAmountWith,
-        this.depositAmountExcludingTaxWith,
-        this.registrationGstWith,
-        this.depositAmountWith,
-        this.benifitApplicable,
-        this.equipmentIncludeInBill,
-        this.registrationRefunded,
-        this.equipmentRefunded,
-        this.gasRefunded,
-        this.approvalStatus,
-        this.approvalDate,
-        this.depositTaxPer,
-        this.interestTaxPer,
-        this.registrationTaxName,
-        this.interestTaxName,
-        this.remainingCount,
-
-        this.interestTaxAmt,
-        this.regTax});
+      this.depositName,
+      this.depositAmount,
+      this.status,
+      this.schemeMonth,
+      this.schemeType,
+      this.dateFrom,
+      this.dateTo,
+      this.schemeCode,
+      this.gasDepositAmount,
+      this.equipmentDepositAmount,
+      this.interestAmount,
+      this.createdAt,
+      this.updatedAt,
+      this.rejectComments,
+      this.customerCount,
+      this.registrationGst,
+      this.interestTax,
+      this.rebateId,
+      this.totalAmount,
+      this.firstDepositAmount,
+      this.nextCycleAmount,
+      this.totalAmountWith,
+      this.firstDepositAmountWith,
+      this.depositAmountExcludingTaxWith,
+      this.registrationGstWith,
+      this.depositAmountWith,
+      this.benifitApplicable,
+      this.equipmentIncludeInBill,
+      this.registrationRefunded,
+      this.equipmentRefunded,
+      this.gasRefunded,
+      this.approvalStatus,
+      this.approvalDate,
+      this.depositTaxPer,
+      this.interestTaxPer,
+      this.registrationTaxName,
+      this.interestTaxName,
+      this.remainingCount,
+      this.interestTaxAmt,
+      this.regTax});
 
   ScheemType.fromJson(Map<String, dynamic> json) {
     depositTypesId = json['deposit_types_id'];

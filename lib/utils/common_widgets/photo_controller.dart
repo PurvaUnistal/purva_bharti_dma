@@ -1,15 +1,15 @@
 import 'dart:io';
 
 class PhotoController {
-  File frontImage;
-  File backImage;
-  File electricBillFrontImg;
-  File electricBillBackImg;
-  File nocFrontImg;
-  File nocBackImg;
-  File consentPhoto;
-  File chqCancelledPhoto;
-  File chqPhoto;
+  File? frontImage;
+  File? backImage;
+  File? electricBillFrontImg;
+  File? electricBillBackImg;
+  File? nocFrontImg;
+  File? nocBackImg;
+  File? consentPhoto;
+  File? chqCancelledPhoto;
+  File? chqPhoto;
   String frontImagePath = '';
   String backImagePath = '';
   String profileImagePath1 = '';
@@ -22,4 +22,3 @@ class PhotoController {
   String chqPhotoPath = '';
   String kycImagePath = '';
 }
-

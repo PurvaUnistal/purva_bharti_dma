@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +12,7 @@ class GetXNetworkManager extends GetxController {
   final Connectivity _connectivity = Connectivity();
 
   //Stream to keep listening to network change state
-  StreamSubscription _streamSubscription;
+  StreamSubscription? _streamSubscription;
 
   @override
   void onInit() {
@@ -28,7 +27,7 @@ class GetXNetworkManager extends GetxController {
     try {
       connectivityResult = await (_connectivity.checkConnectivity());
     } on PlatformException catch (e) {
-      log(e.toString());
+      print(e.toString());
     }
     return _updateState(connectivityResult);
   }
@@ -58,6 +57,6 @@ class GetXNetworkManager extends GetxController {
   @override
   void onClose() {
     //stop listening to network state when app is closed
-    _streamSubscription.cancel();
+    _streamSubscription!.cancel();
   }
 }

@@ -1,72 +1,59 @@
 import 'dart:io';
-import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/utils/common_widgets/custom_toast.dart';
+import 'package:hpcl_app/ExportFile/export_file.dart';
+import 'package:hpcl_app/utils/common_widgets/custom_toast.dart';
 
 class CustomerFormHelper {
-  static bool textFieldValidationCheck({
-    String isInterestedId,
-    String reasonNotInterested,
-    String acceptConversionPolicyValueId,
-    String acceptExtraFittingCostValueId,
-    String chargeAreaType,
-    String areaTypeId,
-    String mobileNoController,
-    String firstNameController,
-    String lastNameController,
-    String guardianNameController,
-     String emailIdController,
-    String propertyTypeId,
-    String propertyClassId,
-    String buildingNumberController,
-    String houseNumberController,
-    String colonySocietyApartmentController,
-    String streetNameController,
-    String townController,
-    String district,
-    String pinCodeController,
-    String mdpeValue,
-    String residentStatusValue,
-    String noOfKitchen,
-    String noOfBathroom,
-    String cookInFuelValue,
-    String titleLocation,
-    String noOfFamilyMembers,
-    String selectIdentification,
-    String identificationProofNo,
-    String idFrontImage,
-    String idBackImage,
-    String selectAddressProof,
-    String addressProofNumber,
-    String addressProofFront,
-    String addressProofBack,
-    String selectOwnershipType,
-    String nocImage,
-    String consentImage,
-    String customerConsentImage,
-    String customerBankName,
-    String customerAccNo,
-    String customerIfscCode,
-    String customerBankAdd,
-    String modeOfDeposit,
-    String chequeNo,
-    String chequeDate,
-    String payementBankName,
-    String bankAccNo,
-    String depositType,
-    String micrCode,
-    String chequePhoto,
+  static bool? textFieldValidationCheck({
+    String? acceptConversionPolicyValueId,
+    String? acceptExtraFittingCostValueId,
+    String? chargeAreaType,
+    String? areaTypeId,
+    String? mobileNoController,
+    String? firstNameController,
+    String? lastNameController,
+    String? guardianNameController,
+    // String emailIdController,
+    String? propertyTypeId,
+    String? propertyClassId,
+    String? buildingNumberController,
+    String? houseNumberController,
+    String? colonySocietyApartmentController,
+    String? streetNameController,
+    String? townController,
+    String? district,
+    String? pinCodeController,
+    String? mdpeValue,
+    String? residentStatusValue,
+    String? noOfKitchen,
+    String? noOfBathroom,
+    String? cookInFuelValue,
+    String? titleLocation,
+    String? noOfFamilyMembers,
+    String? addressProofNo,
+    String? idProofNo,
+    String? idFrontImage,
+    String? idBackImage,
+    String? consentImage,
+    String? customerBankName,
+    String? customerAccNo,
+    String? customerIfscCode,
+    String? customerBankAdd,
+    String? modeOfDeposit,
+    String? chequeNo,
+    String? chequeDate,
+    String? payementBankName,
+    String? bankAccNo,
+    String? depositType,
+    String? micrCode,
+    String? chequePhoto,
   }) {
     try {
-      if (acceptConversionPolicyValueId.isEmpty) {
+      if (acceptConversionPolicyValueId != "1") {
         CustomToast.showToast("Please select Accept Conversion Policy");
         return false;
       }
-      if (acceptExtraFittingCostValueId.isEmpty) {
+      if (acceptExtraFittingCostValueId != "1") {
         CustomToast.showToast("Please select Accept Extra Fitting CostValue");
-        return false;
-      }
-      if (isInterestedId == "") {
-        CustomToast.showToast("Please select Interested Id");
         return false;
       }
       if (chargeAreaType == "0" ||
@@ -91,13 +78,11 @@ class CustomerFormHelper {
         CustomToast.showToast("Please enter last name");
         return false;
       }
-      if (isInterestedId == "1") {
-        if (guardianNameController == "") {
-          CustomToast.showToast("Please enter guardian name");
-          return false;
-        }
+      if (guardianNameController == "") {
+        CustomToast.showToast("Please enter guardian name");
+        return false;
       }
-       if (propertyTypeId == "0") {
+      if (propertyTypeId == "0") {
         CustomToast.showToast("Please select Property Category");
         return false;
       }
@@ -105,10 +90,10 @@ class CustomerFormHelper {
         CustomToast.showToast("Please select property class id");
         return false;
       }
-   /*   if (buildingNumberController == "") {
+      if (buildingNumberController == "") {
         CustomToast.showToast("Please enter the building number");
         return false;
-      }*/
+      }
       if (houseNumberController == "") {
         CustomToast.showToast("Please enter the house number");
         return false;
@@ -149,60 +134,27 @@ class CustomerFormHelper {
         CustomToast.showToast("Please press get location");
         return false;
       }
-      if (selectIdentification.isEmpty) {
-        CustomToast.showToast("Select the Identification Proof ");
+      if (addressProofNo == "0") {
+        CustomToast.showToast("Please select the address proof no.");
         return false;
       }
-      if (identificationProofNo == "") {
-        CustomToast.showToast("Enter the Identification Proof No.");
+      if (idProofNo == "") {
+        CustomToast.showToast("Please enter the id proof no.");
         return false;
       }
-      if (idFrontImage == null ||
-          idFrontImage.isEmpty ||
-          idFrontImage == "") {
-        CustomToast.showToast("Upload Identification Front Image");
+      if (idFrontImage == null || idFrontImage.isEmpty || idFrontImage == "") {
+        CustomToast.showToast("Please select front image");
         return false;
       }
-      /*if (idBackImage == null || idBackImage.isEmpty || idBackImage == "") {
-          CustomToast.showToast("Please select back image");
-          return false;
-        }*/
-      if(isInterestedId == "1"){
-        if (selectAddressProof.isEmpty) {
-          CustomToast.showToast("Select the Address Proof ");
-          return false;
-        }
-        if (addressProofNumber == "") {
-          CustomToast.showToast("Enter the Address Proof No.");
-          return false;
-        }
-        if (addressProofFront == null ||
-            addressProofFront.isEmpty ||
-            addressProofFront == "") {
-          CustomToast.showToast("Upload Address Proof Front Image");
-          return false;
-        }
-        if (selectOwnershipType == "") {
-          CustomToast.showToast("Select the Ownership Type");
-          return false;
-        }
-        if (customerConsentImage == null ||
-            customerConsentImage.isEmpty ||
-            customerConsentImage == "") {
-          CustomToast.showToast("Upload Customer Consent Image");
-          return false;
-        }
-        if(selectOwnershipType == "2"){
-          if (nocImage == null ||
-              nocImage.isEmpty ||
-              nocImage == "") {
-            CustomToast.showToast("Upload NOC Image");
-            return false;
-          }
-        }
-
-
-        /* if (customerBankName == null) {
+      if (idBackImage == null || idBackImage.isEmpty || idBackImage == "") {
+        CustomToast.showToast("Please select back image");
+        return false;
+      }
+      if (consentImage == null || consentImage.isEmpty || consentImage == "") {
+        CustomToast.showToast("Please select consent photo");
+        return false;
+      }
+      /* if (customerBankName == null) {
         CustomToast.showToast("Please select customer bank account name");
         return false;
       }
@@ -218,60 +170,58 @@ class CustomerFormHelper {
         CustomToast.showToast("Please enter the customer back address");
         return false;
       }*/
-        if (depositType == "") {
-          CustomToast.showToast("Please select deposit Type");
-          return null;
-        }
-        if (mdpeValue.isEmpty || mdpeValue == null) {
-          CustomToast.showToast("Please select society allows MDPE");
-          return null;
-        }
-        if (residentStatusValue == null) {
-          CustomToast.showToast("Select resident status");
-          return null;
-        }
-        if (modeOfDeposit == "" ||
-            modeOfDeposit == null ||
-            modeOfDeposit.isEmpty) {
-          CustomToast.showToast("Please select mode of deposite");
+      if (depositType == "") {
+        CustomToast.showToast("Please select deposit Type");
+        return null;
+      }
+      if (mdpeValue!.isEmpty) {
+        CustomToast.showToast("Please select society allows MDPE");
+        return null;
+      }
+      if (residentStatusValue == null) {
+        CustomToast.showToast("Select resident status");
+        return null;
+      }
+      if (modeOfDeposit == "" ||
+          modeOfDeposit == null ||
+          modeOfDeposit.isEmpty) {
+        CustomToast.showToast("Please select mode of deposite");
+        return false;
+      } else if (modeOfDeposit == "1") {
+        if (chequeNo == "") {
+          CustomToast.showToast("Please enter cheque number");
           return false;
-        } else if (modeOfDeposit == "1") {
-          if (chequeNo == "") {
-            CustomToast.showToast("Please enter cheque number");
-            return false;
-          }
-          if (chequeDate == "") {
-            CustomToast.showToast("Please enter cheque date");
-            return false;
-          }
-          if (payementBankName == null || payementBankName == "") {
-            CustomToast.showToast("Please select payement bank name");
-            return false;
-          }
-          if (bankAccNo == "") {
-            CustomToast.showToast("Please enter bank account number");
-            return false;
-          }
-          if (micrCode == "") {
-            CustomToast.showToast("Please enter cheque micr code");
-            return false;
-          }
-          if (chequePhoto == null || chequePhoto.isEmpty || chequePhoto == "") {
-            CustomToast.showToast("Please select cheque image");
-            return false;
-          }
+        }
+        if (chequeDate == "") {
+          CustomToast.showToast("Please enter cheque date");
+          return false;
+        }
+        if (payementBankName == null || payementBankName == "") {
+          CustomToast.showToast("Please select payement bank name");
+          return false;
+        }
+        if (bankAccNo == "") {
+          CustomToast.showToast("Please enter bank account number");
+          return false;
+        }
+        if (micrCode == "") {
+          CustomToast.showToast("Please enter cheque micr code");
+          return false;
+        }
+        if (chequePhoto == null || chequePhoto.isEmpty || chequePhoto == "") {
+          CustomToast.showToast("Please select cheque image");
+          return false;
         }
       }
-
       return true;
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
       CustomToast.showToast(e.toString());
       return null;
     }
   }
 
-  static textValidation({String ares}) {
+  static textValidation({String? ares}) {
     try {
       if (ares == "0") {
         CustomToast.showToast("defgbf");
@@ -279,7 +229,7 @@ class CustomerFormHelper {
       }
       return textValidation;
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
       CustomToast.showToast(e.toString());
       return null;
     }

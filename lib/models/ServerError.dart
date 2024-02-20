@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart' hide Headers;
 
 class ServerError implements Exception {
-  int _errorCode;
+  int? _errorCode;
   String _errorMessage = "";
 
-  ServerError.withError({DioError error}) {
-    _handleError(error);
+  ServerError.withError({DioException? error}) {
+    _handleError(error!);
   }
 
   getErrorCode() {
@@ -16,7 +16,7 @@ class ServerError implements Exception {
     return _errorMessage;
   }
 
-  _handleError( DioError error) {
+  _handleError(DioError error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
         // TODO: Handle this case.
@@ -43,11 +43,13 @@ class ServerError implements Exception {
         break;
       case DioExceptionType.connectionError:
         // TODO: Handle this case.
-        _errorMessage = "Received invalid status code: ${error.response.statusCode}";
+        _errorMessage =
+            "Received invalid status code: ${error.response!.statusCode}";
         break;
       case DioExceptionType.unknown:
         // TODO: Handle this case.
-        _errorMessage = "Received invalid status code: ${error.response.statusCode}";
+        _errorMessage =
+            "Received invalid status code: ${error.response!.statusCode}";
         break;
     }
     return _errorMessage;

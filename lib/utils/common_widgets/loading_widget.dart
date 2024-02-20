@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({Key key}) : super(key: key);
+  const LoadingWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class LoadingWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircularProgressIndicator(
-                backgroundColor: Colors.green.shade800,
+                backgroundColor: Colors.blue.shade900,
                 valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
               ),
               SizedBox(
