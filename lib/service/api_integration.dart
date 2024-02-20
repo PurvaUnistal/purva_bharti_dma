@@ -1,6 +1,5 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:http/http.dart' as http;
-import 'package:pbg_app/models/change_password_model.dart';
 import 'package:pbg_app/models/save_customer_registration_model.dart';
 import 'package:pbg_app/service/api_helper.dart';
 

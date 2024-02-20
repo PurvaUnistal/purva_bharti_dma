@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppString {
-  static String appName = "HPCL DMA";
+  static String appName = "Purba Bharti DMA";
   static String companyNameDesc = "Unistal Private Ltd.";
-  static String appLogo = "assets/images/hp_logo.png";
+  static String appLogo = "assets/images/pbg_logo.png";
 
   static String emailLabel = "Enter User Name";
   static String passwordLabel = "Enter User Password";

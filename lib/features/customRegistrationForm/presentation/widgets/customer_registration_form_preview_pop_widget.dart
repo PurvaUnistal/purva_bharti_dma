@@ -1,5 +1,6 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
+import 'package:pbg_app/features/customRegistrationForm/domain/model/save_customer_registration_model.dart';
 
 class CustomerRegistrationFormPreviewPopWidget extends StatelessWidget {
   final SaveCusRegData cusRegData;
