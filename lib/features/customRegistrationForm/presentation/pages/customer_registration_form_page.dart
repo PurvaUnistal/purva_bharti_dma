@@ -136,22 +136,20 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Flexible(flex: 3, child: _numberKitchenWidget(stateData: stateData)),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.02,
-                ),
-                Flexible(flex: 3, child: _numberBathroomWidget(stateData: stateData)),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.02,
-                ),
-                Flexible(flex: 3, child: _familyMemberWidget(stateData: stateData)),
+                Flexible(flex: 2, child: _numberKitchenWidget(stateData: stateData)),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                Flexible(flex: 2, child: _numberBathroomWidget(stateData: stateData)),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                Flexible(flex: 2, child:  _existCookingFuelDropdown(stateData: stateData),),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                Flexible(flex: 2, child: _familyMemberWidget(stateData: stateData)),
               ],
             ),
             _verticalSpace(),
             /* _numberKitchenWidget(stateData: stateData),
             _numberBathroomWidget(stateData: stateData),*/
-            _existCookingFuelDropdown(stateData: stateData),
-            _verticalSpace(),
+           /* _existCookingFuelDropdown(stateData: stateData),
+            _verticalSpace(),*/
             // _familyMemberWidget(stateData: stateData),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
