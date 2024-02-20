@@ -409,10 +409,24 @@ class _CustomInputFormState extends State<CustomInputForm> {
               _emailWidget(),
               AppStyle.vertical(context),
               if(interestedId == '1')...[
-                _propertyCategoryDropDown(),
-                AppStyle.vertical(context),
-                _propertyClassDropDown(),
-                AppStyle.vertical(context),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 3,
+                          child:  _propertyCategoryDropDown(),),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.02,
+                        ),
+                        Flexible(
+                          flex: 3,
+                          child:  _propertyClassDropDown(),)
+                      ],
+                    ),
+                    AppStyle.vertical(context),
+                  ],
+                ),
               ],
               _buildingNumberWidget(),
               AppStyle.vertical(context),
@@ -448,12 +462,23 @@ class _CustomInputFormState extends State<CustomInputForm> {
               if(interestedId == '1')...[
                 /*  _residentStatusDropdownWidget(),
                 AppStyle.vertical(context),*/
-                _noKitchenWidget(),
-                _noBathroomWidget(),
-                AppStyle.vertical(context),
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 3,
+                      child: _noKitchenWidget(),),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                    Flexible(
+                      flex: 3,
+                      child: _noBathroomWidget(),),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                    Flexible(
+                      flex: 3,
+                      child: _noFamilyWidget(),),
+                  ],
+                ),
+                // AppStyle.vertical(context),
                 _fuelDropdownWidget(),
-                AppStyle.vertical(context),
-                _noFamilyWidget(),
                 /*interestedId == '1' ? _landmarkWidget() : Container(),
                 AppStyle.vertical(context),*/
                 _kYCDoc1DropDown(),
@@ -487,18 +512,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     _customerBankAddWidget(),*/
                     _rowWidget(
                       widget1: _ownerConsentImageWidget(),
-                      widget2: _kYCDocument3Value.id == '2'? _nocFrontImageWidget() : _cancelChqImageWidget(),
+                      widget2: _kYCDocument3Value.id == '2'? _nocFrontImageWidget() : _houseNumImageWidget(),
                     ),
                     AppStyle.vertical(context),
                     _rowWidget(
                       widget1: _customerImageWidget(),
-                      widget2: _houseNumImageWidget(),
-                    ),
-                    AppStyle.vertical(context),
-                    _rowWidget(
-                        widget1:_kYCDocument3Value.id == '1'? Container() :_cancelChqImageWidget(),
-                        widget2: Container()
-                      //  widget2: _kYCDocument3Value.id == '1'? Container() :_ownerConsentImageWidget(),
+                      widget2:_kYCDocument3Value.id == '1'? Container() :_houseNumImageWidget(),
                     ),
                     AppStyle.vertical(context),
                     Row(

@@ -50,10 +50,10 @@ class AppStrings {
   // static String mdpeAllowLabel = 'Society Allows MDPE';
   static String mdpeAllowLabel = 'Society Allow MDPE';
   static String residentStatusLabel = 'Resident Status';
-  static String noOfKitchenLabel = 'Number of Kitchen';
-  static String noOfBathroomLabel = 'Number of Bathroom';
+  static String noOfKitchenLabel = 'No of Kitchen';
+  static String noOfBathroomLabel = 'No of Bathroom';
   static String existingCookingFuelLabel = 'Existing Cooking Fuel';
-  static String noOfFamilyMembersLabel = 'Number of Family Members';
+  static String noOfFamilyMembersLabel = 'No of Family Members';
   static String locationCoordinatesLabel = 'Location coordinates';
   static String longitudeLabel = 'Longitude';
   static String latitudeLabel = 'Latitude';

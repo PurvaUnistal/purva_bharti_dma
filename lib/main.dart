@@ -29,10 +29,10 @@ class MyApp extends StatelessWidget {
         title: AppString.appName,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Colors.green,
-          accentColor: Colors.green,
-
+          primaryColor: Colors.green.shade800,
           visualDensity: VisualDensity.adaptivePlatformDensity,
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+              secondary: Colors.green.shade800),
         ),
         home: SplashScreen(),
       ),
