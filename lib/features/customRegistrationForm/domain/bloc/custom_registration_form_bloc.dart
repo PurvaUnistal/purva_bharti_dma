@@ -180,8 +180,8 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   TextEditingController latController = TextEditingController();
   TextEditingController longController = TextEditingController();
 
-  GetLabelModel _getLabelModel = GetLabelModel();
-  GetLabelModel get getLabelModel => _getLabelModel;
+  GetLabelModel _labelModel = GetLabelModel();
+  GetLabelModel get labelModel => _labelModel;
 
   List<dynamic> _getNotInterestedList = [];
   List<dynamic> get getNotInterestedList => _getNotInterestedList;
@@ -281,7 +281,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   _pageLoad(CustomRegistrationFormPageLoadEvent event, emit) async {
     emit(CustomRegistrationFormPageLoadState());
     _isPageLoader = false;
-    _getLabelModel = GetLabelModel();
+    _labelModel = GetLabelModel();
     chargeAreaValue = GetChargeAreaListModel();
     areaValue = GetAllAreaModel();
     propertyCategoryValue = GetPropertyCategoryModel();
@@ -755,7 +755,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   fetchLabelApi({required BuildContext context}) async {
     var res = await DashboardHelper.getLabelApi(context: context);
     if (res != null) {
-      _getLabelModel = res;
+      _labelModel = res;
     }
   }
 
@@ -1033,7 +1033,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   _eventCompleted(Emitter<CustomRegistrationFormState> emit) {
     emit(CustomRegistrationFormGetAllDataState(
       isPageLoader : isPageLoader,
-      getLabelModel: getLabelModel,
+      labelModel: labelModel,
       interestValue: interestValue,
       getNotInterestedList: getNotInterestedList,
       conversionPolicyValue: conversionPolicyValue,

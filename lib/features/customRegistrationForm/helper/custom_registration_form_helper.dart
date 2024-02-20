@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/features/customRegistrationForm/domain/model/save_customer_registration_model.dart';
 
 class CustomRegistrationFormHelper {
+
   static Future<dynamic> textFieldValidationCheck({
     required BuildContext context,
     required String interested,

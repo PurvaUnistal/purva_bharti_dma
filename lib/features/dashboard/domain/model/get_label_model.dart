@@ -437,6 +437,8 @@ class Photo {
 }
 
 class Registration {
+  final String registrationType;
+  final String chargeArea;
   final String area;
   final String lastname;
   final String guardian;
@@ -463,6 +465,8 @@ class Registration {
   final String guardianType;
 
   Registration({
+    required this.registrationType,
+    required this.chargeArea,
     required this.area,
     required this.lastname,
     required this.guardian,
@@ -490,6 +494,8 @@ class Registration {
   });
 
   factory Registration.fromJson(Map<String, dynamic> json) => Registration(
+    registrationType: json["registrationtype"],
+    chargeArea: json["chargearea"],
         area: json["area"],
         lastname: json["lastname"],
         guardian: json["guardian"],
@@ -517,6 +523,8 @@ class Registration {
       );
 
   Map<String, dynamic> toJson() => {
+        "registrationtype": registrationType,
+        "chargearea": chargeArea,
         "area": area,
         "lastname": lastname,
         "guardian": guardian,
