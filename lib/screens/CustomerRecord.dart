@@ -131,13 +131,16 @@ class _SaveCustomerRegistrationPageState
         try {
           var response =
           await apiIntegration.saveCustRegApi(saveCustRegReqModel);
-          log(response.toString());
+          log("response-->"+response.toString());
           if (response != null) {
             setState(() {
               isLoading = false;
               count++;
             });
-            CustomToast.showToast(response.message[0].message.toString());
+            CustomToast.showToast(response.message[i].message.toString());
+            customerRegistrationList.removeAt(i);
+            customerRegistrationBox.deleteAt(i);
+            print("azsxdfvghjm${customerRegistrationList[i]}");
           } else {
             setState(() {
               isLoading = false;
@@ -148,7 +151,7 @@ class _SaveCustomerRegistrationPageState
           setState(() {
             isLoading = false;
           });
-          CustomToast.showToast(e.toString());
+        //  CustomToast.showToast(e.toString());
         }
       }
       if (count == customerRegistrationList.length) {
@@ -437,6 +440,7 @@ class _SaveCustomerRegistrationPageState
                     textTitle: isLoading ? "Loading" : "Submit",
                     onTap: () async {
                       fetchCustomerDataList();
+
                       //  fetchCustomerDataGrpList();
                     },
                   ),
