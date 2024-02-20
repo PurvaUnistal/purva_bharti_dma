@@ -50,9 +50,11 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
           builder: (context, state) {
             if (state is CustomRegistrationFormGetAllDataState){
               return _buildLayout(stateData: state);
-            } else if(state is CustomRegistrationFormGetAllDataState){
+            }
+            /*else if(state is CustomRegistrationFormGetAllDataState){
               return editPageData(stateData: state);
-            } else {
+            } */
+            else {
               return const Center(child: SpinLoader());
             }
           },

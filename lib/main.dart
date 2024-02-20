@@ -28,6 +28,13 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: AppString.appName,
+        theme: ThemeData(
+          primaryColor: Colors.green.shade800,
+          hintColor: Colors.green.shade800,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor:  Colors.green.shade800),
+        ),
         initialRoute: RoutesName.splashView,
         onGenerateRoute: Routes.generateRoute,
         debugShowCheckedModeBanner: false,
