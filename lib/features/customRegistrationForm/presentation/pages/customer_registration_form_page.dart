@@ -14,6 +14,7 @@ class CustomerRegistrationFormPage extends StatefulWidget {
 
 class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormPage> {
 
+
   final formGlobalKey = GlobalKey<FormState>();
 
   @override
@@ -22,8 +23,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     /* BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
       context: context,
     ));*/
-
-    super.initState();
+     super.initState();
   }
 
   @override
@@ -268,8 +268,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _interestDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.registration?.registrationType,
-      hint: stateData.labelModel.registration!.registrationType,
+      label: stateData.labelModel.registration == null ? AppStrings.registrationType :stateData.labelModel.registration!.registrationType ,
+      hint: stateData.labelModel.registration == null ? AppStrings.registrationType :stateData.labelModel.registration!.registrationType ,
       dropdownValue: stateData.interestValue,
       items: stateData.getNotInterestedList,
       onChanged: (val) {
@@ -280,8 +280,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _acceptConversionPolicyDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label:stateData.labelModel.consent?.acceptConversionPolicy,
-      hint:stateData.labelModel.consent!.acceptConversionPolicy,
+      label:stateData.labelModel.consent == null ? AppStrings.conversionPolicy : stateData.labelModel.consent!.acceptConversionPolicy,
+      hint: stateData.labelModel.consent == null ? AppStrings.conversionPolicy : stateData.labelModel.consent!.acceptConversionPolicy,
       dropdownValue: stateData.conversionPolicyValue,
       items: stateData.conversionPolicyList,
       onChanged: (val) {
@@ -292,8 +292,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _acceptExtraFittingCostDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label:stateData.labelModel.consent?.acceptExtraCost,
-      hint: stateData.labelModel.consent!.acceptExtraCost,
+      label: stateData.labelModel.consent == null ? AppStrings.fittingCost :stateData.labelModel.consent!.acceptExtraCost,
+      hint: stateData.labelModel.consent == null ? AppStrings.fittingCost :stateData.labelModel.consent!.acceptExtraCost,
       dropdownValue: stateData.extraFittingValue,
       items: stateData.extraFittingCostList,
       onChanged: (val) {
@@ -304,8 +304,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _societyAllowDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label:stateData.labelModel.registration?.mdpe,
-      hint: stateData.labelModel.registration!.mdpe,
+      label: stateData.labelModel.registration == null ?AppStrings.mdpeAllow :stateData.labelModel.registration!.mdpe,
+      hint: stateData.labelModel.registration == null ?AppStrings.mdpeAllow :stateData.labelModel.registration!.mdpe,
       dropdownValue: stateData.societyAllowValue,
       items: stateData.societyAllowList,
       onChanged: (val) {
@@ -316,8 +316,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _chargeAreaDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetChargeAreaListModel>(
-      label: stateData.labelModel.registration?.chargeArea,
-      hint:stateData.labelModel.registration!.chargeArea,
+      label:stateData.labelModel.registration == null ? AppStrings.chargeArea :stateData.labelModel.registration!.chargeArea,
+      hint: stateData.labelModel.registration == null ? AppStrings.chargeArea :stateData.labelModel.registration!.chargeArea,
       dropdownValue: stateData.chargeAreaValue!.chargeAreaName != null ? stateData.chargeAreaValue:null,
       items: stateData.getChargeAreaListModel,
       onChanged: (val) {
@@ -328,8 +328,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _areaDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetAllAreaModel>(
-      label: stateData.labelModel.registration?.area,
-      hint: stateData.labelModel.registration!.area,
+      label: stateData.labelModel.registration == null ? AppStrings.area :stateData.labelModel.registration!.area,
+      hint: stateData.labelModel.registration == null ? AppStrings.area :stateData.labelModel.registration!.area,
       dropdownValue: stateData.areaValue!.areaName != null ? stateData.areaValue:null,
       items: stateData.getAllAreaModel,
       onChanged: (val) {
@@ -340,8 +340,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _mobileNumberWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-        hintText: stateData.labelModel.steps?.mobile,
-        labelText: stateData.labelModel.steps?.mobile,
+        hintText: stateData.labelModel.steps == null ? AppStrings.mobileNo : stateData.labelModel.steps!.mobile,
+        labelText: stateData.labelModel.steps == null ? AppStrings.mobileNo : stateData.labelModel.steps!.mobile,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
         maxLength: 10,
@@ -363,8 +363,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _firstNameWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.steps?.firstname,
-      hintText: stateData.labelModel.steps?.firstname,
+      labelText: stateData.labelModel.steps == null ? AppStrings.firstName : stateData.labelModel.steps!.firstname,
+      hintText: stateData.labelModel.steps == null ? AppStrings.firstName : stateData.labelModel.steps!.firstname,
       controller: stateData.firstController,
       keyboardType: TextInputType.text,
       inputFormatters: [
@@ -388,8 +388,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _middleNameWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.steps?.middlename,
-      hintText: stateData.labelModel.steps?.middlename,
+      labelText: stateData.labelModel.steps == null ? AppStrings.middleName : stateData.labelModel.steps!.middlename,
+      hintText: stateData.labelModel.steps == null ? AppStrings.middleName : stateData.labelModel.steps!.middlename,
       controller: stateData.middleController,
       keyboardType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
@@ -404,8 +404,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _lastNameWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.steps?.lastname,
-      hintText: stateData.labelModel.steps?.lastname,
+      labelText: stateData.labelModel.steps == null ? AppStrings.lastName : stateData.labelModel.steps!.lastname,
+      hintText: stateData.labelModel.steps == null ? AppStrings.lastName : stateData.labelModel.steps!.lastname,
       controller: stateData.lastController,
       keyboardType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
@@ -425,8 +425,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _guardianDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.registration?.guardianType,
-      hint: stateData.labelModel.registration!.guardianType,
+      label: stateData.labelModel.registration == null ? AppStrings.guardianType :stateData.labelModel.registration!.guardianType,
+      hint: stateData.labelModel.registration == null ? AppStrings.guardianType :stateData.labelModel.registration!.guardianType,
       dropdownValue: stateData.guardianTypeValue,
       items: stateData.getGuardianTypeList,
       onChanged: (val) {
@@ -437,8 +437,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _guardianNameWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.registration?.guardian,
-      hintText: stateData.labelModel.registration?.guardian,
+      labelText: stateData.labelModel.registration == null ? AppStrings.guardianName : stateData.labelModel.registration!.guardian,
+      hintText:stateData.labelModel.registration == null ? AppStrings.guardianName : stateData.labelModel.registration!.guardian,
       controller: stateData.guardianNameController,
       keyboardType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
@@ -462,8 +462,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _emailIdWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.registration?.email,
-      hintText: stateData.labelModel.registration?.email,
+      labelText: stateData.labelModel.registration == null ? AppStrings.emailAddress : stateData.labelModel.registration!.email,
+      hintText: stateData.labelModel.registration == null ? AppStrings.emailAddress : stateData.labelModel.registration!.email,
       controller: stateData.emailIdController,
       textCapitalization: TextCapitalization.none,
       keyboardType: TextInputType.emailAddress,
@@ -484,8 +484,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _propertyCategoryDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetPropertyCategoryModel>(
-      label: stateData.labelModel.registration?.propertyCategory,
-      hint: stateData.labelModel.registration!.propertyCategory,
+      label: stateData.labelModel.registration == null ? AppStrings.propertyCategory : stateData.labelModel.registration!.propertyCategory,
+      hint: stateData.labelModel.registration == null ? AppStrings.propertyCategory : stateData.labelModel.registration!.propertyCategory,
       dropdownValue: stateData.propertyCategoryValue!.name != null ?stateData.propertyCategoryValue :null,
       items: stateData.getPropertyCategoryModel,
       onChanged: (val) {
@@ -496,8 +496,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _propertyClassDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetPropertyClassModel>(
-      label: stateData.labelModel.registration?.propertyClass,
-      hint: stateData.labelModel.registration!.propertyClass,
+      label: stateData.labelModel.registration == null ? AppStrings.propertyClass :stateData.labelModel.registration!.propertyClass,
+      hint: stateData.labelModel.registration == null ? AppStrings.propertyClass :stateData.labelModel.registration!.propertyClass,
       dropdownValue: stateData.propertyClassValue!.name != null ? stateData.propertyClassValue:null,
       items: stateData.getPropertyClassModel,
       onChanged: (val) {
@@ -528,8 +528,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _houseNumberWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.registration?.house,
-      hintText: stateData.labelModel.registration?.house,
+      labelText: stateData.labelModel.registration == null ? AppStrings.houseNumber :stateData.labelModel.registration!.house,
+      hintText: stateData.labelModel.registration == null ? AppStrings.houseNumber :stateData.labelModel.registration!.house,
       controller: stateData.houseNumberController,
       keyboardType: TextInputType.text,
       validator: (value) {
@@ -588,8 +588,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _townWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.registration?.town,
-      hintText: stateData.labelModel.registration?.town,
+      labelText: stateData.labelModel.registration == null ? AppStrings.town : stateData.labelModel.registration!.town,
+      hintText: stateData.labelModel.registration == null ? AppStrings.town : stateData.labelModel.registration!.town,
       controller: stateData.townController,
       keyboardType: TextInputType.name,
       validator: (value) {
@@ -608,8 +608,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _districtDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetAllDistrictModel>(
-      label: stateData.labelModel.registration?.district,
-      hint: stateData.labelModel.registration!.district,
+      label: stateData.labelModel.registration == null ? AppStrings.district :stateData.labelModel.registration!.district,
+      hint: stateData.labelModel.registration == null ? AppStrings.district :stateData.labelModel.registration!.district,
       dropdownValue: stateData.allDistrictValue!.districtName != null ? stateData.allDistrictValue :null,
       items: stateData.getAllDistrictModel,
       onChanged: (val) {
@@ -620,8 +620,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _pinCodeWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-        labelText: stateData.labelModel.registration?.pincode,
-        hintText: stateData.labelModel.registration?.pincode,
+        labelText: stateData.labelModel.registration == null ? AppStrings.pinCode : stateData.labelModel.registration!.pincode,
+        hintText: stateData.labelModel.registration == null ? AppStrings.pinCode : stateData.labelModel.registration!.pincode,
         controller: stateData.pinCodeController,
         keyboardType: TextInputType.number,
         maxLength: 6,
@@ -642,8 +642,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _residentStatusDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.registration?.resident,
-      hint: stateData.labelModel.registration!.resident,
+      label: stateData.labelModel.registration == null ? AppStrings.residentStatus :stateData.labelModel.registration!.resident,
+      hint: stateData.labelModel.registration == null ? AppStrings.residentStatus :stateData.labelModel.registration!.resident,
       dropdownValue: stateData.residentStatusValue,
       items: stateData.getResidentStatusList,
       onChanged: (val) {
@@ -654,8 +654,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _numberKitchenWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText:stateData.labelModel.registration?.kitchen,
-      hintText: stateData.labelModel.registration?.kitchen,
+      labelText: stateData.labelModel.registration == null ? AppStrings.noOfKitchen :stateData.labelModel.registration!.kitchen,
+      hintText: stateData.labelModel.registration == null ? AppStrings.noOfKitchen :stateData.labelModel.registration!.kitchen,
       controller: stateData.numberKitchenController,
       keyboardType: TextInputType.number,
       maxLength: 2,
@@ -664,8 +664,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _numberBathroomWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.registration?.bathroom,
-      hintText: stateData.labelModel.registration?.bathroom,
+      labelText: stateData.labelModel.registration == null ? AppStrings.noOfBathroom :stateData.labelModel.registration!.bathroom,
+      hintText: stateData.labelModel.registration == null ? AppStrings.noOfBathroom :stateData.labelModel.registration!.bathroom,
       controller: stateData.numberBathroomController,
       keyboardType: TextInputType.number,
       maxLength: 2,
@@ -674,8 +674,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _existCookingFuelDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.registration?.fuel,
-      hint: stateData.labelModel.registration!.fuel,
+      label: stateData.labelModel.registration == null ? AppStrings.fuel :stateData.labelModel.registration!.fuel,
+      hint: stateData.labelModel.registration == null ? AppStrings.fuel :stateData.labelModel.registration!.fuel,
       dropdownValue: stateData.existingCookingFuelValue,
       items: stateData.existingCookingFuelList,
       onChanged: (val) {
@@ -686,8 +686,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _familyMemberWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.registration?.family,
-      hintText: stateData.labelModel.registration?.family,
+      labelText: stateData.labelModel.registration == null ? AppStrings.noOfFamilyMembers :stateData.labelModel.registration!.family,
+      hintText: stateData.labelModel.registration == null ? AppStrings.noOfFamilyMembers :stateData.labelModel.registration!.family,
       controller: stateData.familyMemberController,
       keyboardType: TextInputType.number,
       maxLength: 2,
@@ -696,16 +696,16 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _latWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.registration?.lat,
-      hintText: stateData.labelModel.registration?.lat,
+      labelText: stateData.labelModel.registration == null ? AppStrings.locationLat :stateData.labelModel.registration!.lat,
+      hintText: stateData.labelModel.registration == null ? AppStrings.locationLat :stateData.labelModel.registration!.lat,
       controller: stateData.latitudeController,
     );
   }
 
   Widget _longWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.registration?.long,
-      hintText: stateData.labelModel.registration?.long,
+      labelText: stateData.labelModel.registration == null ? AppStrings.locationLong :stateData.labelModel.registration!.long,
+      hintText: stateData.labelModel.registration == null ? AppStrings.locationLong :stateData.labelModel.registration!.long,
       controller: stateData.longitudeController,
     );
   }
@@ -727,8 +727,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _kycDoc1Dropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.kyc?.uploadDoc1,
-      hint: stateData.labelModel.kyc!.uploadDoc1,
+      label: stateData.labelModel.kyc == null ? AppStrings.idProof :stateData.labelModel.kyc!.uploadDoc1,
+      hint: stateData.labelModel.kyc == null ? AppStrings.idProof :stateData.labelModel.kyc!.uploadDoc1,
       dropdownValue: stateData.identityProofValue,
       items: stateData.identityProofList,
       onChanged: (val) {
@@ -739,8 +739,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _kycDoc1Widget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText:  stateData.labelModel.kyc?.uploadDoc1No,
-      hintText: stateData.labelModel.kyc?.uploadDoc1No,
+      labelText: stateData.labelModel.kyc == null ? AppStrings.addProofNo : stateData.labelModel.kyc!.uploadDoc1No,
+      hintText: stateData.labelModel.kyc == null ? AppStrings.addProofNo : stateData.labelModel.kyc!.uploadDoc1No,
       controller: stateData.kyc1NumberController,
       keyboardType: TextInputType.text,
       maxLength: 20,
@@ -755,9 +755,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     );
   }
 
-  Widget _fileImage({
-    required File fileImage,
-  }) {
+  Widget _fileImage({required File fileImage,}) {
     if (fileImage.path.isNotEmpty) {
       return CircleAvatar(
         radius: 41,
@@ -778,19 +776,6 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     }
   }
 
-  Widget _localBorderImg() {
-    return CircleAvatar(
-      radius: 41,
-      backgroundColor: AppColor.appBlueColor,
-      child: CircleAvatar(
-        radius: 40,
-        backgroundColor: Colors.white,
-        backgroundImage: AssetImage(
-          AppIcon.imageCaptureIcon,
-        ),
-      ),
-    );
-  }
 
   Widget _idFrontFileImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
@@ -798,7 +783,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
           BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetIdFrontFilePath(idFrontFilePath: stateData.idFrontFilePath, context: context));
         },
         child: stateData.idFrontFilePath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.idFrontFilePath.toString())),
-        imageTitle: stateData.labelModel.kyc!.uploadDoc1Front,);
+        imageTitle: stateData.labelModel.kyc == null ? AppStrings.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,);
   }
 
   Widget _idBackFileImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
@@ -807,7 +792,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
           BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetIdBackFilePath(idBackFilePath: stateData.idFrontFilePath, context: context));
         },
         child: stateData.idBackFilePath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.idBackFilePath.toString())),
-        imageTitle: stateData.labelModel.kyc!.uploadDoc1Front,);
+        imageTitle:  stateData.labelModel.kyc == null ? AppStrings.idProofBack : stateData.labelModel.kyc!.uploadDoc1Back,);
+
   }
 
   Widget _eleBillFrontImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
@@ -816,7 +802,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
           BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetEleBillFrontPath(eleBillFrontPath: stateData.eleBillFrontPath, context: context));
         },
         child: stateData.eleBillFrontPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.eleBillFrontPath.toString())),
-        imageTitle: stateData.labelModel.kyc!.uploadDoc2Front,);
+      imageTitle:  stateData.labelModel.kyc == null ? AppStrings.addProofFront : stateData.labelModel.kyc!.uploadDoc2Front,);
+
   }
 
   Widget _eleBillBackImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
@@ -825,7 +812,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
           BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetEleBillBackPath(eleBillBackPath: stateData.eleBillBackPath, context: context));
         },
         child: stateData.eleBillBackPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.eleBillBackPath.toString())),
-        imageTitle: stateData.labelModel.kyc!.uploadDoc2Back);
+      imageTitle:  stateData.labelModel.kyc == null ? AppStrings.addProofBack : stateData.labelModel.kyc!.uploadDoc2Back,);
   }
 
   Widget _nocDocImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
@@ -834,7 +821,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetNocFrontPath(nocFrontPath: stateData.nocFrontPath, context: context));
       },
       child: stateData.nocFrontPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.nocFrontPath.toString())),
-      imageTitle:  stateData.labelModel.kyc!.uploadDoc3);
+      imageTitle:  stateData.labelModel.kyc == null ? AppStrings.nocDoc : stateData.labelModel.kyc!.uploadDoc3,);
   }
 
  /* Widget _nocBackImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
@@ -853,7 +840,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetUploadCustomerPath(uploadCustomerPath: stateData.uploadCustomerPath, context: context));
       },
       child: stateData.uploadCustomerPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.uploadCustomerPath.toString())),
-      imageTitle: stateData.labelModel.photo!.customerPhoto,);
+      imageTitle:  stateData.labelModel.photo == null ? AppStrings.customerImg : stateData.labelModel.photo!.customerPhoto,);
+
   }
 
   Widget _uploadHouseImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
@@ -862,8 +850,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetUploadHousePath(uploadHousePath: stateData.uploadHousePath, context: context));
       },
       child: stateData.uploadHousePath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.uploadHousePath.toString())),
-      imageTitle: stateData.labelModel.photo!.homePhoto,
-    );
+      imageTitle:  stateData.labelModel.photo == null ? AppStrings.houseImg : stateData.labelModel.photo!.homePhoto,);
   }
 
   Widget _customerConsentImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
@@ -873,8 +860,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
             .add(CustomRegistrationFormSetCustomerConsentPath(customerConsentPath: stateData.customerConsentPath, context: context));
       },
       child: stateData.customerConsentPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.customerConsentPath.toString())),
-      imageTitle: stateData.labelModel.photo!.customerPhoto,
-    );
+      imageTitle:  stateData.labelModel.photo == null ? AppStrings.customerConsentImg : stateData.labelModel.photo!.customerPhoto,);
   }
 
   /*Widget _ownerConsentImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
@@ -893,7 +879,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetCancelChequePath(cancelChequePath: stateData.cancelChequePath, context: context));
       },
       child: stateData.cancelChequePath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.cancelChequePath.toString())),
-      imageTitle: stateData.labelModel.consent!.cancelledPhoto,
+      imageTitle: stateData.labelModel.consent == null ? "" : stateData.labelModel.consent!.cancelledPhoto,
     );
   }
 
@@ -903,14 +889,13 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetIdBackFilePath(idBackFilePath: stateData.chequePath, context: context));
       },
       child: stateData.chequePath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.chequePath.toString())),
-      imageTitle: stateData.labelModel.deposit!.chqPhoto,
-    );
+      imageTitle: stateData.labelModel.deposit == null ? AppStrings.chqPhoto : stateData.labelModel.deposit!.chqPhoto,);
   }
 
   Widget _kycDoc2Dropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.kyc!.uploadDoc2,
-      hint:  stateData.labelModel.kyc!.uploadDoc2,
+      label: stateData.labelModel.kyc == null ? AppStrings.addProof :stateData.labelModel.kyc!.uploadDoc2,
+      hint:  stateData.labelModel.kyc == null ? AppStrings.addProof :stateData.labelModel.kyc!.uploadDoc2,
       dropdownValue: stateData.ownershipProofValue,
       items: stateData.ownershipProofList,
       onChanged: (val) {
@@ -921,8 +906,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _kycDoc2Widget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText:  stateData.labelModel.kyc!.uploadDoc2No,
-      hintText:  stateData.labelModel.kyc!.uploadDoc2No,
+      labelText:  stateData.labelModel.kyc == null ? AppStrings.addProof : stateData.labelModel.kyc!.uploadDoc2No,
+      hintText:  stateData.labelModel.kyc == null ? AppStrings.addProof : stateData.labelModel.kyc!.uploadDoc2No,
       controller: stateData.kyc2NumberController,
       keyboardType: TextInputType.text,
       maxLength: 20,
@@ -949,8 +934,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _kycDoc3Widget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.kyc!.uploadDoc3No,
-      hintText: stateData.labelModel.kyc!.uploadDoc3No,
+      labelText: stateData.labelModel.kyc == null ? AppStrings.ownershipProperty : stateData.labelModel.kyc!.uploadDoc3No,
+      hintText: stateData.labelModel.kyc == null ? AppStrings.ownershipProperty : stateData.labelModel.kyc!.uploadDoc3No,
       controller: stateData.kyc3NumberController,
       keyboardType: TextInputType.text,
       maxLength: 20,
@@ -965,8 +950,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _preferredBillDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label:stateData.labelModel.consent!.preferredBilling,
-      hint:stateData.labelModel.consent!.preferredBilling,
+      label:stateData.labelModel.consent == null ? AppStrings.billingMode : stateData.labelModel.consent!.preferredBilling,
+      hint:stateData.labelModel.consent == null ? AppStrings.billingMode : stateData.labelModel.consent!.preferredBilling,
       dropdownValue: stateData.eBillingValue,
       items: stateData.eBillingList,
       onChanged: (val) {
@@ -977,8 +962,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _custBankNameDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.consent!.custBank,
-      hint:  stateData.labelModel.consent!.custBank,
+      label: stateData.labelModel.consent == null ? AppStrings.customerBankName : stateData.labelModel.consent!.custBank,
+      hint:  stateData.labelModel.consent == null ? AppStrings.customerBankName : stateData.labelModel.consent!.custBank,
       dropdownValue: stateData.custBankNameValue,
       items: stateData.custBankNameList,
       onChanged: (val) {
@@ -989,8 +974,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _custBankAccNumberWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.consent!.custAcc,
-      hintText: stateData.labelModel.consent!.custAcc,
+      labelText: stateData.labelModel.consent == null ? AppStrings.customerAccountNo : stateData.labelModel.consent!.custAcc,
+      hintText: stateData.labelModel.consent == null ? AppStrings.customerAccountNo : stateData.labelModel.consent!.custAcc,
       controller: stateData.custBankAccNumberController,
       keyboardType: TextInputType.text,
       maxLength: 20,
@@ -1012,8 +997,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _custIfscCodeWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.consent!.custIfsc,
-      hintText: stateData.labelModel.consent!.custIfsc,
+      labelText: stateData.labelModel.consent == null ? AppStrings.customerIfscCode : stateData.labelModel.consent!.custIfsc,
+      hintText: stateData.labelModel.consent == null ? AppStrings.customerIfscCode : stateData.labelModel.consent!.custIfsc,
       controller: stateData.custIfscCodeController,
       keyboardType: TextInputType.text,
       maxLength: 11,
@@ -1035,8 +1020,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _custBankAddWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.consent!.custBankAdd,
-      hintText: stateData.labelModel.consent!.custBankAdd,
+      labelText: stateData.labelModel.consent == null ? AppStrings.customerBankAdd : stateData.labelModel.consent!.custBankAdd,
+      hintText: stateData.labelModel.consent == null ? AppStrings.customerBankAdd : stateData.labelModel.consent!.custBankAdd,
       controller: stateData.custBankAddController,
       keyboardType: TextInputType.text,
       /*  validator: (value) {
@@ -1055,8 +1040,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _initialDepositStatusDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.deposit!.depositSta,
-      hint: stateData.labelModel.deposit!.depositSta,
+      label: stateData.labelModel.deposit == null ? AppStrings.depositStatus : stateData.labelModel.deposit!.depositSta,
+      hint: stateData.labelModel.deposit == null ? AppStrings.depositStatus : stateData.labelModel.deposit!.depositSta,
       dropdownValue: stateData.initialDepositStatusValue,
       items: stateData.initialDepositStatusList,
       onChanged: (val) {
@@ -1067,8 +1052,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _depositTypeDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetAllDepositOfflineModel>(
-      label: stateData.labelModel.deposit!.depositType,
-      hint: stateData.labelModel.deposit!.depositType,
+      label:  stateData.labelModel.deposit == null ? AppStrings.depositType : stateData.labelModel.deposit!.depositType,
+      hint: stateData.labelModel.deposit == null ? AppStrings.depositType : stateData.labelModel.deposit!.depositType,
       dropdownValue: stateData.depositOfflineValue!.depositName != null ? stateData.depositOfflineValue :null,
       items: stateData.getAllDepositOfflineModel,
       onChanged: (val) {
@@ -1094,8 +1079,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
   Widget _depositAmountWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
       enabled: false,
-      labelText:stateData.labelModel.deposit!.depositAmt,
-      hintText: stateData.labelModel.deposit!.depositAmt,
+      labelText: stateData.labelModel.deposit == null ? AppStrings.depositAmt : stateData.labelModel.deposit!.depositAmt,
+      hintText: stateData.labelModel.deposit == null ? AppStrings.depositAmt : stateData.labelModel.deposit!.depositAmt,
       controller: stateData.depositAmountController,
       keyboardType: TextInputType.number,
       validator: (value) {
@@ -1109,8 +1094,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _modeDepositDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.deposit!.modeOfDep,
-      hint: stateData.labelModel.deposit!.modeOfDep,
+      label: stateData.labelModel.deposit == null ? AppStrings.modeDeposit : stateData.labelModel.deposit!.modeOfDep,
+      hint: stateData.labelModel.deposit == null ? AppStrings.modeDeposit : stateData.labelModel.deposit!.modeOfDep,
       dropdownValue: stateData.modeDepositValue,
       items: stateData.modeDepositList,
       onChanged: (val) {
@@ -1121,8 +1106,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _chequeNoWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-        labelText: stateData.labelModel.deposit!.chqNum,
-        hintText: stateData.labelModel.deposit!.chqNum,
+        labelText: stateData.labelModel.deposit == null ? AppStrings.chqNo : stateData.labelModel.deposit!.chqNum,
+        hintText: stateData.labelModel.deposit == null ? AppStrings.chqNo : stateData.labelModel.deposit!.chqNum,
         controller: stateData.chequeNoController,
         maxLength: 6,
         keyboardType: TextInputType.number,
@@ -1143,8 +1128,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _chequeDateWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      labelText: stateData.labelModel.deposit!.chqDate,
-      hintText: stateData.labelModel.deposit!.chqDate,
+      labelText: stateData.labelModel.deposit == null ? AppStrings.chqDate : stateData.labelModel.deposit!.chqDate,
+      hintText: stateData.labelModel.deposit == null ? AppStrings.chqDate : stateData.labelModel.deposit!.chqDate,
       prefixIcon: Icon(
         Icons.calendar_today,
         color: AppColor.appBlueColor,
@@ -1162,8 +1147,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _chequePaymentBankDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.deposit!.chqBank,
-      hint: stateData.labelModel.deposit!.chqBank,
+      label:stateData.labelModel.deposit == null ? AppStrings.chqBank :  stateData.labelModel.deposit!.chqBank,
+      hint: stateData.labelModel.deposit == null ? AppStrings.chqBank :  stateData.labelModel.deposit!.chqBank,
       dropdownValue: stateData.paymentBankNameValue,
       items: stateData.paymentBankNameList,
       onChanged: (val) {
@@ -1175,8 +1160,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
   Widget _chequeAccountNoWidget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
         maxLength: 20,
-        labelText: stateData.labelModel.deposit!.bankAcc,
-        hintText: stateData.labelModel.deposit!.bankAcc,
+        labelText: stateData.labelModel.deposit == null ? AppStrings.chequeAccountNo :  stateData.labelModel.deposit!.chqNum,
+        hintText: stateData.labelModel.deposit == null ? AppStrings.chequeAccountNo :  stateData.labelModel.deposit!.chqNum,
         controller: stateData.chequeAccountNoController,
         keyboardType: TextInputType.text,
         validator: (value) {
@@ -1239,6 +1224,20 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
   Widget _widthSpace() {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.02,
+    );
+  }
+
+  Widget _localBorderImg() {
+    return CircleAvatar(
+      radius: 41,
+      backgroundColor: AppColor.appBlueColor,
+      child: CircleAvatar(
+        radius: 40,
+        backgroundColor: Colors.white,
+        backgroundImage: AssetImage(
+          AppIcon.imageCaptureIcon,
+        ),
+      ),
     );
   }
 

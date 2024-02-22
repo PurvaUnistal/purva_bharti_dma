@@ -3,6 +3,7 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DashboardHelper {
+
   static Future<GetLabelModel?> getLabelApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
@@ -12,7 +13,7 @@ class DashboardHelper {
           return GetLabelModel.fromJson(jsonDecode(res));
         }
       } else {
-        final res = PreferenceUtils.getString(value: PrefsValue.label);
+        final res = await PreferenceUtils.getString(value: PrefsValue.label);
         print("labelRes-->$res");
         return GetLabelModel.fromJson(jsonDecode(res));
       }

@@ -48,7 +48,7 @@ class DropdownWidget<T> extends StatelessWidget {
           label: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
-              label!,
+              label  ?? "",
               style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: Colors.black),
             ),
           ),

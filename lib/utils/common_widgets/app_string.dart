@@ -33,8 +33,8 @@ class AppStrings {
   static String nearestLandmark = 'Nearest Landmark';
   static String idProof = 'KYC(Identification Proof)';
   static String idProofNo = 'KYC(Identification Proof)Number';
-  static String idProofFront = 'Identification Proof Front';
-  static String idProofBack = 'Identification Proof Back';
+  static String idProofFront = 'Id Proof Front';
+  static String idProofBack = 'Id Proof Back';
   static String addProof = 'KYC (Address Proof)';
   static String addProofNo = 'KYC (Address Proof) Number';
   static String addProofFront = 'Address Proof Front';

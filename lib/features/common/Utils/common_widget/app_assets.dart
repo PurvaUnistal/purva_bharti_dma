@@ -5,5 +5,5 @@ class AppImage {
 class AppIcon {
   static get checkInIcon => "assets/ic_check_in.png";
   static get checkOutIcon => "assets/check_out.png";
-  static get imageCaptureIcon => "assets/images/ic_imag.png";
+  static get imageCaptureIcon => "assets/images/ic_image.png";
 }

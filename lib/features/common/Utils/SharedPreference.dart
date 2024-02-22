@@ -2,6 +2,7 @@ import 'dart:async' show Future;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceUtils {
+
   static Future<SharedPreferences> get _instance async =>
       _prefsInstance ??= await SharedPreferences.getInstance();
   static SharedPreferences? _prefsInstance;

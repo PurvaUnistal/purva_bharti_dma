@@ -14,9 +14,9 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
     PreferenceUtils.init();
-   /* BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
+    BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
       context: context,
-    ));*/
+    ));
     super.initState();
   }
 
