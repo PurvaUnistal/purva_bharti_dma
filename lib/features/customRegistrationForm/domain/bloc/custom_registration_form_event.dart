@@ -196,113 +196,101 @@ class CustomRegistrationFormSetChequeDateEvent extends CustomRegistrationFormEve
   List<Object?> get props => [context];
 }
 
-class CustomRegistrationFormSetIdFrontFilePath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String idFrontFilePath;
-  CustomRegistrationFormSetIdFrontFilePath({required this.idFrontFilePath, required this.context});
+class SelectIdFrontGalleryCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [idFrontFilePath, context];
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetIdBackFilePath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String idBackFilePath;
-  CustomRegistrationFormSetIdBackFilePath({required this.idBackFilePath, required this.context});
+class SelectIdFrontCameraCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [idBackFilePath, context];
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetEleBillFrontPath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String eleBillFrontPath;
-  CustomRegistrationFormSetEleBillFrontPath({required this.eleBillFrontPath, required this.context});
+class SelectIdBackGalleryCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [eleBillFrontPath, context];
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetEleBillBackPath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String eleBillBackPath;
-  CustomRegistrationFormSetEleBillBackPath({required this.eleBillBackPath, required this.context});
+class SelectIdBackCameraCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [eleBillBackPath, context];
+  List<Object?> get props => [];
+}
+class SelectAddFrontGalleryCapture extends CustomRegistrationFormEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetNocFrontPath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String nocFrontPath;
-  CustomRegistrationFormSetNocFrontPath({required this.nocFrontPath, required this.context});
+class SelectAddFrontCameraCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [nocFrontPath, context];
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetNocBackPath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String nocBackPath;
-  CustomRegistrationFormSetNocBackPath({required this.nocBackPath, required this.context});
+
+class SelectAddBackGalleryCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [nocBackPath, context];
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetUploadCustomerPath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String uploadCustomerPath;
-  CustomRegistrationFormSetUploadCustomerPath({required this.uploadCustomerPath, required this.context});
+class SelectAddBackCameraCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [uploadCustomerPath, context];
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetUploadHousePath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String uploadHousePath;
-  CustomRegistrationFormSetUploadHousePath({required this.uploadHousePath, required this.context});
+class SelectNocDocBackGalleryCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [uploadHousePath, context];
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetCustomerConsentPath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String customerConsentPath;
-  CustomRegistrationFormSetCustomerConsentPath({required this.customerConsentPath, required this.context});
+class SelectNocDocCameraCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [customerConsentPath, context];
+  List<Object?> get props => [];
+}
+class SelectCustomerGalleryCapture extends CustomRegistrationFormEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetOwnerConsentPath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String ownerConsentPath;
-  CustomRegistrationFormSetOwnerConsentPath({required this.ownerConsentPath, required this.context});
+class SelectCustomerCameraCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [ownerConsentPath, context];
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetCancelChequePath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String cancelChequePath;
-  CustomRegistrationFormSetCancelChequePath({required this.cancelChequePath, required this.context});
+class SelectHouseGalleryCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [cancelChequePath, context];
+  List<Object?> get props => [];
 }
 
-class CustomRegistrationFormSetChequePath extends CustomRegistrationFormEvent {
-  final BuildContext context;
-  final String chequePath;
-  CustomRegistrationFormSetChequePath({required this.chequePath, required this.context});
+class SelectHouseCameraCapture extends CustomRegistrationFormEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => [chequePath, context];
+  List<Object?> get props => [];
 }
+
+class SelectChqGalleryCapture extends CustomRegistrationFormEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class SelectChqCameraCapture extends CustomRegistrationFormEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
 
 class CustomRegistrationFormPreviewPageEvent extends CustomRegistrationFormEvent {
   final BuildContext context;

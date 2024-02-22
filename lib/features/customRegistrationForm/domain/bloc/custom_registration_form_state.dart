@@ -54,14 +54,15 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
   final List<dynamic> modeDepositList;
   final GetModeOfDepositModel getModeOfDepositModel;
   dynamic depositOfflineValue;
-  final List<GetAllDepositOfflineModel> getAllDepositOfflineModel;
+  final List<GetAllDepositOfflineModel> getAllDepositOfflineList;
+  final GetAllDepositOfflineModel getAllDepositOfflineModel;
   dynamic identityProofValue;
   final List<dynamic> identityProofList;
   final GetIdentityProofModel getIdentityProofModel;
   dynamic ownershipProofValue;
   final List<dynamic> ownershipProofList;
   final GetOwnershipProofModel getOwnershipProofModel;
-  dynamic kycDocValue;
+  dynamic kycDoc3Value;
   final List<dynamic> kycDocList;
   final GetKycDocModel getKycDocModel;
   final GetGuardianTypeModel getGuardianTypeModel;
@@ -110,18 +111,18 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
   dynamic paymentBankNameValue;
   final List<String> custBankNameList;
   final List<String> paymentBankNameList;
-  String idFrontFilePath;
-  String idBackFilePath;
-  String eleBillFrontPath;
-  String eleBillBackPath;
-  String nocFrontPath;
-  String nocBackPath;
-  String uploadCustomerPath;
-  String uploadHousePath;
-  String customerConsentPath;
-  String ownerConsentPath;
-  String cancelChequePath;
-  String chequePath;
+  File idFrontFilePath;
+  File idBackFilePath;
+  File eleBillFrontPath;
+  File eleBillBackPath;
+  File nocFrontPath;
+  File nocBackPath;
+  File uploadCustomerPath;
+  File uploadHousePath;
+  File customerConsentPath;
+  File ownerConsentPath;
+  File cancelChequePath;
+  File chequePath;
   final bool isPreviewLoader;
   final bool isSaveLoader;
 
@@ -154,7 +155,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     required this.ownershipProofValue,
     required this.ownershipProofList,
     required this.getOwnershipProofModel,
-    required this.kycDocValue,
+    required this.kycDoc3Value,
     required this.kycDocList,
     required this.getKycDocModel,
     required this.getGuardianTypeModel,
@@ -175,6 +176,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     required this.modeDepositValue,
     required this.modeDepositList,
     required this.depositOfflineValue,
+    required this.getAllDepositOfflineList,
     required this.getAllDepositOfflineModel,
     required this.getModeOfDepositModel,
     required this.mobileController,
@@ -273,6 +275,9 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     getInitialDepositStatusModel,
     modeDepositValue,
     modeDepositList,
+   depositOfflineValue,
+  getAllDepositOfflineList,
+   getAllDepositOfflineModel,
     getModeOfDepositModel,
     mobileController,
     firstController,
@@ -293,6 +298,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     kyc1NumberController,
     kyc2NumberController,
     kyc3NumberController,
+    kycDoc3Value,
     custBankAccNumberController,
     custIfscCodeController,
     custBankAddController,
@@ -322,6 +328,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     cancelChequePath,
     chequePath,
     isPreviewLoader,
-    isSaveLoader
+    isSaveLoader,
+
   ];
 }

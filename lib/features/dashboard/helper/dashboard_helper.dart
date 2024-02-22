@@ -7,15 +7,18 @@ class DashboardHelper {
   static Future<GetLabelModel?> getLabelApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        final res = await ApiServer.getData(urlEndPoint: AppUrl.getLabel, context: context, setPrefs: PrefsValue.label);
+        final res = await ApiServer.getData(urlEndPoint: AppUrl.getLabel, context: context);
 
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.label, jsonEncode(GetLabelModel.fromJson(jsonDecode(res))));
           return GetLabelModel.fromJson(jsonDecode(res));
         }
       } else {
-        final res = await PreferenceUtils.getString(value: PrefsValue.label);
-        print("labelRes-->$res");
-        return GetLabelModel.fromJson(jsonDecode(res));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.label)) {
+          return GetLabelModel.fromJson(jsonDecode((prefs.getString(PrefsValue.label) ?? "")));
+        }
       }
     } catch (e) {
       print("GetLabelModel-->${e.toString()}");
@@ -26,14 +29,17 @@ class DashboardHelper {
   static Future<GetNotInterestedModel?> getNotInterestedApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.notInterested, context: context, setPrefs: PrefsValue.notInterested);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.notInterested, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.notInterested, jsonEncode(GetNotInterestedModel.fromJson(jsonDecode(res))));
           return GetNotInterestedModel.fromJson(jsonDecode(res));
         }
       } else {
-        var notInterestedRes = PreferenceUtils.getString(value: PrefsValue.notInterested);
-        print("notInterestedRes-->$notInterestedRes");
-        return GetNotInterestedModel.fromJson(jsonDecode(notInterestedRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.notInterested)) {
+          return GetNotInterestedModel.fromJson(jsonDecode((prefs.getString(PrefsValue.notInterested) ?? "")));
+        }
       }
     } catch (e) {
       print("GetNotInterestedModel-->${e.toString()}");
@@ -44,14 +50,17 @@ class DashboardHelper {
   static Future<GetInitialDepositStatusModel?> getInitialDepositStatusApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.initialDepositStatus, context: context, setPrefs: PrefsValue.initialDepositStatus);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.initialDepositStatus, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.initialDepositStatus, jsonEncode(GetInitialDepositStatusModel.fromJson(jsonDecode(res))));
           return GetInitialDepositStatusModel.fromJson(jsonDecode(res));
         }
       } else {
-        var initialDepositStatusRes = PreferenceUtils.getString(value: PrefsValue.initialDepositStatus);
-        print("initialDepositStatusRes-->$initialDepositStatusRes");
-        return GetInitialDepositStatusModel.fromJson(jsonDecode(initialDepositStatusRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.initialDepositStatus)) {
+          return GetInitialDepositStatusModel.fromJson(jsonDecode((prefs.getString(PrefsValue.initialDepositStatus) ?? "")));
+        }
       }
     } catch (e) {
       print("GetInitialDepositStatusModel-->${e.toString()}");
@@ -62,14 +71,17 @@ class DashboardHelper {
   static Future<GetAcceptExtraFittingCostModel?> getAcceptExtraFittingCostApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.acceptExtraFittingCost, context: context, setPrefs: PrefsValue.acceptExtraFittingCost);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.acceptExtraFittingCost, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.acceptExtraFittingCost, jsonEncode(GetAcceptExtraFittingCostModel.fromJson(jsonDecode(res))));
           return GetAcceptExtraFittingCostModel.fromJson(jsonDecode(res));
         }
       } else {
-        var acceptExtraFittingCostRes = PreferenceUtils.getString(value: PrefsValue.acceptExtraFittingCost);
-        print("acceptExtraFittingCostRes-->$acceptExtraFittingCostRes");
-        return GetAcceptExtraFittingCostModel.fromJson(jsonDecode(acceptExtraFittingCostRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.acceptExtraFittingCost)) {
+          return GetAcceptExtraFittingCostModel.fromJson(jsonDecode((prefs.getString(PrefsValue.acceptExtraFittingCost) ?? "")));
+        }
       }
     } catch (e) {
       print("GetAcceptExtraFittingCostModel-->${e.toString()}");
@@ -80,14 +92,17 @@ class DashboardHelper {
   static Future<GetAcceptConversionPolicyModel?> getAcceptConversionPolicyApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.acceptConversionPolicy, context: context, setPrefs: PrefsValue.acceptConversionPolicy);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.acceptConversionPolicy, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.acceptConversionPolicy, jsonEncode(GetAcceptConversionPolicyModel.fromJson(jsonDecode(res))));
           return GetAcceptConversionPolicyModel.fromJson(jsonDecode(res));
         }
       } else {
-        var acceptConversionPolicyRes = PreferenceUtils.getString(value: PrefsValue.acceptConversionPolicy);
-        print("acceptConversionPolicyRes-->$acceptConversionPolicyRes");
-        return GetAcceptConversionPolicyModel.fromJson(jsonDecode(acceptConversionPolicyRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.acceptConversionPolicy)) {
+          return GetAcceptConversionPolicyModel.fromJson(jsonDecode((prefs.getString(PrefsValue.acceptConversionPolicy) ?? "")));
+        }
       }
     } catch (e) {
       print("GetAcceptConversionPolicyModel-->${e.toString()}");
@@ -100,14 +115,17 @@ class DashboardHelper {
     String? schema = prefs.getString(GlobalConstants.schema);
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDistrict + schema!, context: context, setPrefs: PrefsValue.getAllDistrictModel);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDistrict + schema!, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.getAllDistrictModel, jsonEncode(getAllDistrictModelFromJson(res)));
           return getAllDistrictModelFromJson(res);
         }
       } else {
-        var res = PreferenceUtils.getString(value: PrefsValue.getAllDistrictModel);
-        print("GetAllDistrictModel-->$res");
-        return getAllDistrictModelFromJson(res);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.getAllDistrictModel)) {
+          return getAllDistrictModelFromJson(prefs.getString(PrefsValue.getAllDistrictModel) ?? "");
+        }
       }
     } catch (e) {
       print("GetAllDistrictModel-->${e.toString()}");
@@ -118,14 +136,17 @@ class DashboardHelper {
   static Future<GetResidentStatusModel?> getResidentStatusApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.residentStatus, context: context, setPrefs: PrefsValue.residentStatus);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.residentStatus, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.residentStatus, jsonEncode(res));
           return GetResidentStatusModel.fromJson(jsonDecode(res));
         }
       } else {
-        var residentStatusRes = PreferenceUtils.getString(value: PrefsValue.residentStatus);
-        print("residentStatusRes-->$residentStatusRes");
-        return GetResidentStatusModel.fromJson(jsonDecode(residentStatusRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.residentStatus)) {
+          return GetResidentStatusModel.fromJson(jsonDecode((prefs.getString(PrefsValue.residentStatus) ?? "")));
+        }
       }
     } catch (e) {
       print("GetResidentStatusModel-->${e.toString()}");
@@ -136,14 +157,17 @@ class DashboardHelper {
   static Future<GetModeOfDepositModel?> getModeOfDepositApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.modeOfDeposit, context: context, setPrefs: PrefsValue.modeOfDeposit);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.modeOfDeposit, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.modeOfDeposit, jsonEncode(GetModeOfDepositModel.fromJson(jsonDecode(res))));
           return GetModeOfDepositModel.fromJson(jsonDecode(res));
         }
       } else {
-        var modeOfDepositRes = PreferenceUtils.getString(value: PrefsValue.modeOfDeposit);
-        print("modeOfDepositRes-->$modeOfDepositRes");
-        return GetModeOfDepositModel.fromJson(jsonDecode(modeOfDepositRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.modeOfDeposit)) {
+          return GetModeOfDepositModel.fromJson(jsonDecode((prefs.getString(PrefsValue.modeOfDeposit) ?? "")));
+        }
       }
     } catch (e) {
       print("GetModeOfDepositModel-->${e.toString()}");
@@ -154,14 +178,17 @@ class DashboardHelper {
   static Future<GetEBillingModel?> getEBillingApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.eBilling, context: context, setPrefs: PrefsValue.eBilling);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.eBilling, context: context,);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.eBilling, jsonEncode(GetEBillingModel.fromJson(jsonDecode(res))));
           return GetEBillingModel.fromJson(jsonDecode(res));
         }
       } else {
-        var eBillingRes = PreferenceUtils.getString(value: PrefsValue.eBilling);
-        print("eBillingRes-->$eBillingRes");
-        return GetEBillingModel.fromJson(jsonDecode(eBillingRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.eBilling)) {
+          return GetEBillingModel.fromJson(jsonDecode((prefs.getString(PrefsValue.eBilling) ?? "")));
+        }
       }
     } catch (e) {
       print("GetEBillingModel-->${e.toString()}");
@@ -172,14 +199,17 @@ class DashboardHelper {
   static Future<GetKycDocModel?> getKycDocApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.kycDoc, context: context, setPrefs: PrefsValue.kycDoc);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.kycDoc, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.kycDoc, jsonEncode(GetKycDocModel.fromJson(jsonDecode(res))));
           return GetKycDocModel.fromJson(jsonDecode(res));
         }
       } else {
-        var kycDocRes = PreferenceUtils.getString(value: PrefsValue.kycDoc);
-        print("kycDocRes-->$kycDocRes");
-        return GetKycDocModel.fromJson(jsonDecode(kycDocRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.kycDoc)) {
+          return GetKycDocModel.fromJson(jsonDecode((prefs.getString(PrefsValue.kycDoc) ?? "")));
+        }
       }
     } catch (e) {
       print("GetKycDocModel-->${e.toString()}");
@@ -190,14 +220,17 @@ class DashboardHelper {
   static Future<GetOwnershipProofModel?> getOwnershipProofApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        final res = await ApiServer.getData(urlEndPoint: AppUrl.ownershipProof, context: context, setPrefs: PrefsValue.ownershipProof);
+        final res = await ApiServer.getData(urlEndPoint: AppUrl.ownershipProof, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.ownershipProof, jsonEncode(GetOwnershipProofModel.fromJson(jsonDecode(res))));
           return GetOwnershipProofModel.fromJson(jsonDecode(res));
         }
       } else {
-        final res = PreferenceUtils.getString(value: PrefsValue.ownershipProof);
-        print("ownershipProofRes-->$res");
-        return GetOwnershipProofModel.fromJson(jsonDecode(res));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.ownershipProof)) {
+          return GetOwnershipProofModel.fromJson(jsonDecode((prefs.getString(PrefsValue.ownershipProof) ?? "")));
+        }
       }
     } catch (e) {
       print("ownershipProofRes-->${e.toString()}");
@@ -208,14 +241,17 @@ class DashboardHelper {
   static Future<GetIdentityProofModel?> getIdentityProofApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.identityProof, context: context, setPrefs: PrefsValue.identityProof);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.identityProof, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.identityProof, jsonEncode(GetIdentityProofModel.fromJson(jsonDecode(res))));
           return GetIdentityProofModel.fromJson(jsonDecode(res));
         }
       } else {
-        var identityProofRes = PreferenceUtils.getString(value: PrefsValue.identityProof);
-        print("identityProofRes-->$identityProofRes");
-        return GetIdentityProofModel.fromJson(jsonDecode(identityProofRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.identityProof)) {
+          return GetIdentityProofModel.fromJson(jsonDecode((prefs.getString(PrefsValue.identityProof) ?? "")));
+        }
       }
     } catch (e) {
       print("GetIdentityProofModel-->${e.toString()}");
@@ -226,14 +262,17 @@ class DashboardHelper {
   static Future<GetGuardianTypeModel?> getGuardianTypeApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.guardianType, context: context, setPrefs: PrefsValue.guardianType);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.guardianType, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.guardianType, jsonEncode(GetGuardianTypeModel.fromJson(jsonDecode(res))));
           return GetGuardianTypeModel.fromJson(jsonDecode(res));
         }
       } else {
-        var guardianTypeRes = PreferenceUtils.getString(value: PrefsValue.guardianType);
-        print("guardianTypeRes-->$guardianTypeRes");
-        return GetGuardianTypeModel.fromJson(jsonDecode(guardianTypeRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.guardianType)) {
+          return GetGuardianTypeModel.fromJson(jsonDecode((prefs.getString(PrefsValue.guardianType) ?? "")));
+        }
       }
     } catch (e) {
       print("GetGuardianTypeModel-->${e.toString()}");
@@ -244,14 +283,17 @@ class DashboardHelper {
   static Future<GetExistingCookingFuelModel?> getExistingCookingFuelApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.existingCookingFuel, context: context, setPrefs: PrefsValue.existingCookingFuel);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.existingCookingFuel, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.existingCookingFuel, jsonEncode(GetExistingCookingFuelModel.fromJson(jsonDecode(res))));
           return GetExistingCookingFuelModel.fromJson(jsonDecode(res));
         }
       } else {
-        var res = PreferenceUtils.getString(value: PrefsValue.existingCookingFuel);
-        print("existingCookingFuelRes-->$res");
-        return GetExistingCookingFuelModel.fromJson(jsonDecode(res));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.existingCookingFuel)) {
+          return GetExistingCookingFuelModel.fromJson(jsonDecode((prefs.getString(PrefsValue.existingCookingFuel) ?? "")));
+        }
       }
     } catch (e) {
       print("GetExistingCookingFuelModel-->${e.toString()}");
@@ -262,14 +304,17 @@ class DashboardHelper {
   static Future<GetSocietyAllowModel?> getSocietyAllowApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.societyAllow, context: context, setPrefs: PrefsValue.societyAllow);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.societyAllow, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.societyAllow, jsonEncode(GetSocietyAllowModel.fromJson(jsonDecode(res))));
           return GetSocietyAllowModel.fromJson(jsonDecode(res));
         }
       } else {
-        var societyAllowRes = PreferenceUtils.getString(value: PrefsValue.societyAllow);
-        print("societyAllowRes-->$societyAllowRes");
-        return GetSocietyAllowModel.fromJson(jsonDecode(societyAllowRes));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.societyAllow)) {
+          return GetSocietyAllowModel.fromJson(jsonDecode((prefs.getString(PrefsValue.societyAllow) ?? "")));
+        }
       }
     } catch (e) {
       print("GetSocietyAllowModel-->${e.toString()}");
@@ -282,14 +327,17 @@ class DashboardHelper {
     String? schema = prefs.getString(GlobalConstants.schema);
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyClass + schema!, context: context, setPrefs: PrefsValue.propertyClass);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyClass + schema!, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.propertyClass, jsonEncode(getPropertyClassModelFromJson(res)));
           return getPropertyClassModelFromJson(res);
         }
       } else {
-        var res = PreferenceUtils.getString(value: PrefsValue.propertyClass);
-        print("propertyClassRes-->$res");
-        return getPropertyClassModelFromJson(res);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.propertyClass)) {
+          return getPropertyClassModelFromJson(prefs.getString(PrefsValue.propertyClass) ?? "");
+        }
       }
     } catch (e) {
       print("GetPropertyClassModel-->${e.toString()}");
@@ -302,14 +350,17 @@ class DashboardHelper {
     String? schema = prefs.getString(GlobalConstants.schema);
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyCategory + schema!, context: context, setPrefs: PrefsValue.propertyCategory);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyCategory + schema!, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.propertyCategory, jsonEncode(getPropertyCategoryModelFromJson(res)));
           return getPropertyCategoryModelFromJson(res);
         }
       } else {
-        var res = PreferenceUtils.getString(value: PrefsValue.propertyCategory);
-        print("propertyCategoryRes-->$res");
-        return getPropertyCategoryModelFromJson(res);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.propertyCategory)) {
+          return getPropertyCategoryModelFromJson(prefs.getString(PrefsValue.propertyCategory) ?? "");
+        }
       }
     } catch (e) {
       print("GetPropertyCategoryModel-->${e.toString()}");
@@ -322,14 +373,17 @@ class DashboardHelper {
     String? schema = prefs.getString(GlobalConstants.schema);
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllArea + schema!, context: context, setPrefs: PrefsValue.allArea);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllArea + schema!, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.allArea, jsonEncode(getAllAreaModelFromJson(res)));
           return getAllAreaModelFromJson(res);
         }
       } else {
-        var res = PreferenceUtils.getString(value: PrefsValue.allArea);
-        print("allAreaRes-->$res");
-        return getAllAreaModelFromJson(res);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.allArea)) {
+          return getAllAreaModelFromJson(prefs.getString(PrefsValue.allArea) ?? "");
+        }
       }
     } catch (e) {
       print("GetAllAreaModel-->${e.toString()}");
@@ -342,14 +396,17 @@ class DashboardHelper {
     String? schema = prefs.getString(GlobalConstants.schema);
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getChargeAreaList + schema!, context: context, setPrefs: PrefsValue.chargeAreaList);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getChargeAreaList + schema!, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.chargeAreaList, jsonEncode(getChargeAreaListModelFromJson(res)));
           return getChargeAreaListModelFromJson(res);
         }
       } else {
-        var res = PreferenceUtils.getString(value: PrefsValue.chargeAreaList);
-        print("chargeAreaListRes-->$res");
-        return getChargeAreaListModelFromJson(res);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.chargeAreaList)) {
+          return getChargeAreaListModelFromJson(prefs.getString(PrefsValue.chargeAreaList) ?? "");
+        }
       }
     } catch (e) {
       print("GetChargeAreaListModel-->${e.toString()}");
@@ -362,14 +419,17 @@ class DashboardHelper {
     String? schema = prefs.getString(GlobalConstants.schema);
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDepositOffline + schema!, context: context, setPrefs: PrefsValue.getAllDepositOffline);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDepositOffline + schema!, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.getAllDepositOffline, jsonEncode(getAllDepositOfflineModelFromJson(res)));
           return getAllDepositOfflineModelFromJson(res);
         }
       } else {
-        var res = PreferenceUtils.getString(value: PrefsValue.getAllDepositOffline);
-        print("GetAllDepositOfflineModel-->$res");
-        return getAllDepositOfflineModelFromJson(res);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.getAllDepositOffline)) {
+          return getAllDepositOfflineModelFromJson(prefs.getString(PrefsValue.getAllDepositOffline) ?? "");
+        }
       }
     } catch (e) {
       print("GetAllDepositOfflineModel-->${e.toString()}");
@@ -380,14 +440,17 @@ class DashboardHelper {
   static Future<List<String>?> getBankNameListApi({required BuildContext context}) async {
     try {
       if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllBanks, context: context, setPrefs: PrefsValue.getAllBanks);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllBanks, context: context);
         if (res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefsValue.getAllBanks, jsonEncode(bankNameListModelFromJson(res)));
           return bankNameListModelFromJson(res);
         }
       } else {
-        var res = PreferenceUtils.getString(value: PrefsValue.getAllBanks);
-        print("bankNameListModelFromJson-->$res");
-        return bankNameListModelFromJson(res);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.containsKey(PrefsValue.getAllBanks)) {
+          return bankNameListModelFromJson(prefs.getString(PrefsValue.getAllBanks) ?? "");
+        }
       }
     } catch (e) {
       print("bankNameListModelFromJson-->${e.toString()}");
@@ -395,65 +458,25 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<dynamic> cameraPiker({required BuildContext context, required String cameraImage}) async {
+
+  static  Future<File?> cameraCapture() async {
     await Permission.camera.request();
-    /*  await Permission.photos.request();
-    var permissionStatus = await Permission.photos.status;
-    final androidInfo = await DeviceInfoPlugin().androidInfo;
-    if (Platform.isAndroid) {
-      */ /*if (androidInfo.version.sdkInt <= 32) {
-        /// use [Permissions.storage.status]
-      }  else {
-        /// use [Permissions.photos.status]
-      }*/ /*
-    }*/
-    if (await Permission.camera.request().isGranted) {
-      try {
-        final XFile? camera = await ImagePicker().pickImage(
-          source: ImageSource.camera,
-          imageQuality: 60,
-          maxHeight: 900,
-          maxWidth: 1000,
-        );
-        if (camera!.path.isNotEmpty) {
-          cameraImage = camera.path;
-          log("cameraImage-->${camera.path.toString()}");
-        } else {
-          print('no image selected');
-        }
-      } on PlatformException catch (e) {
-        print('Platform exception $e');
-      } catch (e) {
-        print('Unknown error: $e');
-      }
-      return cameraImage;
-    }
+    final XFile? file = await ImagePicker().pickImage(source: ImageSource.camera,imageQuality: 50,
+      maxHeight: 900,
+      maxWidth: 1000,);
+    File files = File(file!.path);
+    return files;
   }
 
-  static Future<dynamic> galleryPiker({required BuildContext context, required String galleryImage}) async {
+  static Future<File?> galleryCapture() async {
     await Permission.storage.request();
-    await Permission.photos.request();
-    // if (await Permission.photos.request().isGranted) {
-    try {
-      final XFile? gallery = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 60,
-        maxHeight: 900,
-        maxWidth: 1000,
-      );
-      if (gallery!.path.isNotEmpty) {
-        galleryImage = gallery.path.toString();
-        log("galleryImage-->${gallery.path.toString()}");
-      } else {
-        log('no image selected');
-      }
-    } catch (e) {
-      log('Unknown error: $e');
-    }
-    return galleryImage;
-
-    //  }
+    final XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery,imageQuality: 50,
+      maxHeight: 900,
+      maxWidth: 1000,);
+    File files = File(file!.path);
+    return files;
   }
+
 
   static Future<Position?> getCurrentLocation() async {
     await Permission.locationAlways.request();

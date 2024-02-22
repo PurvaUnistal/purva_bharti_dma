@@ -3,7 +3,7 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 
 
 class ApiServer {
-  static Future<dynamic> getData({var urlEndPoint, required BuildContext context, var setPrefs}) async {
+  static Future<dynamic> getData({var urlEndPoint, required BuildContext context, }) async {
     try {
       final response = await get(
         Uri.parse(urlEndPoint),
@@ -11,7 +11,6 @@ class ApiServer {
       log("URL-->${urlEndPoint.toString()}");
       log(urlEndPoint + "==>" + response.body);
       if (response.statusCode == 200) {
-        await PreferenceUtils.setString(key: setPrefs, value: response.body.toString());
         return response.body.toString();
       } else {
         log("Api.error-->${Api.error}");

@@ -48,6 +48,7 @@ class AppStrings {
   static String cancelChqPhoto = 'Cancelled Cheque';
   static String chqPhoto = 'Cheque Photo';
   static String customerConsentImg = 'Customer Consent';
+  static String ownerConsentImg = 'Owner Consent';
   static String residentStatus = 'Resident Status';
   static String billingMode = 'Preferred Billing Mode';
   static String customerBankName = 'Customer Bank Name';

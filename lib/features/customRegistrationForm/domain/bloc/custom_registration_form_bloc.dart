@@ -29,21 +29,22 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     on<CustomRegistrationFormSetInitialDepositStatusValue>(_setInitialDepositStatusValue);
     on<CustomRegistrationFormSetDepositTypeValue>(_setDepositTypeValue);
     on<CustomRegistrationFormSetModeDepositValue>(_setModeDepositValue);
-    on<CustomRegistrationFormSetIdFrontFilePath>(_setIdFrontFilePath);
-    on<CustomRegistrationFormSetIdBackFilePath>(_setIdBackFilePath);
-    on<CustomRegistrationFormSetEleBillFrontPath>(_setEleBillFrontPath);
-    on<CustomRegistrationFormSetEleBillBackPath>(_setEleBillBackPath);
-    on<CustomRegistrationFormSetNocFrontPath>(_setNocFrontPath);
-    on<CustomRegistrationFormSetNocBackPath>(_setNocBackPath);
-    on<CustomRegistrationFormSetUploadCustomerPath>(_setUploadCustomerPath);
-    on<CustomRegistrationFormSetUploadHousePath>(_setUploadHousePath);
-    on<CustomRegistrationFormSetCustomerConsentPath>(_setCustomerConsentPath);
-    on<CustomRegistrationFormSetOwnerConsentPath>(_setOwnerConsentPath);
-    on<CustomRegistrationFormSetCancelChequePath>(_setCancelChequePath);
-    on<CustomRegistrationFormSetChequePath>(_setChequePath);
     on<CustomRegistrationFormSetChequeDateEvent>(_setChequeDate);
     on<CustomRegistrationFormPreviewPageEvent>(_previewPage);
-    on<CustomRegistrationFormSaveLocalDataEvent>(_saveLocalData);
+    on<SelectIdFrontCameraCapture>(_selectIdFrontCameraCapture);
+    on<SelectIdFrontGalleryCapture>(_selectIdFrontGalleryCapture);
+    on<SelectAddFrontCameraCapture>(_selectAddFrontCameraCapture);
+    on<SelectAddFrontGalleryCapture>(_selectAddFrontGalleryCapture);
+    on<SelectIdBackCameraCapture>(_selectIdBackCameraCapture);
+    on<SelectIdBackGalleryCapture>(_selectIdBackGalleryCapture);
+    on<SelectNocDocCameraCapture>(_selectNocDocCameraCapture);
+    on<SelectNocDocBackGalleryCapture>(_selectNocDocBackGalleryCapture);
+    on<SelectCustomerCameraCapture>(_selectCustomerCameraCapture);
+    on<SelectCustomerGalleryCapture>(_selectCustomerGalleryCapture);
+    on<SelectHouseCameraCapture>(_selectHouseCameraCapture);
+    on<SelectHouseGalleryCapture>(_selectHouseGalleryCapture);
+    on<SelectChqCameraCapture>(_selectChqCameraCapture);
+    on<SelectChqGalleryCapture>(_selectChqGalleryCapture);
   }
   bool _isPageLoader = false;
   bool get isPageLoader => _isPageLoader;
@@ -111,41 +112,45 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   dynamic _modeDepositValue;
   dynamic get modeDepositValue => _modeDepositValue;
 
-  String _idFrontPhotoImage = "";
-  String get idFrontPhotoImage => _idFrontPhotoImage;
+  File _idFrontPath = File("");
+  File get idFrontPath => _idFrontPath;
 
-  String _idBackPhotoImage ="";
-  String get idBackPhotoImage => _idBackPhotoImage;
+  File _idBackPath = File("");
+  File get idBackPath => _idBackPath;
 
-  String _eleBillFrontPath = "";
-  String get eleBillFrontPath => _eleBillFrontPath;
 
-  String _eleBillBackPath = "";
-  String get eleBillBackPath => _eleBillBackPath;
+  File _addFrontPath =File("");
+  File get addFrontPath => _addFrontPath;
 
-  String _nocFrontPath = "";
-  String get nocFrontPath => _nocFrontPath;
+  File _addBackPath =File("");
+  File get addBackPath => _addBackPath;
 
-  String _nocBackPath = "";
-  String get nocBackPath => _nocBackPath;
+  File _nocDocPath =File("");
+  File get nocDocPath => _nocDocPath;
 
-  String _uploadCustomerPath = "";
-  String get uploadCustomerPath => _uploadCustomerPath;
+  File _nocFrontPath =File("");
+  File get nocFrontPath => _nocFrontPath;
 
-  String _uploadHousePath = "";
-  String get uploadHousePath => _uploadHousePath;
+  File _nocBackPath =File("");
+  File get nocBackPath => _nocBackPath;
 
-  String _ownerConsentPath = "";
-  String get ownerConsentPath => _ownerConsentPath;
+  File _uploadCustomerPath =File("");
+  File get uploadCustomerPath => _uploadCustomerPath;
 
-  String _customerConsentPath = "";
-  String get customerConsentPath => _customerConsentPath;
+  File _uploadHousePath =File("");
+  File get uploadHousePath => _uploadHousePath;
 
-  String _cancelChequePath = "";
-  String get cancelChequePath => _cancelChequePath;
+  File _ownerConsentPath =File("");
+  File get ownerConsentPath => _ownerConsentPath;
 
-  String _chequePath = "";
-  String get chequePath => _chequePath;
+  File _customerConsentPath =File("");
+  File get customerConsentPath => _customerConsentPath;
+
+  File _cancelChequePath =File("");
+  File get cancelChequePath => _cancelChequePath;
+
+  File _chequePath =File("");
+  File get chequePath => _chequePath;
 
   SaveCusRegData _saveCusRegData = SaveCusRegData();
   SaveCusRegData get saveCusRegData => _saveCusRegData;
@@ -261,8 +266,11 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   GetInitialDepositStatusModel _getInitialDepositStatusModel = GetInitialDepositStatusModel();
   GetInitialDepositStatusModel get getInitialDepositStatusModel => _getInitialDepositStatusModel;
 
-  List<GetAllDepositOfflineModel> _getAllDepositOfflineModel = [];
-  List<GetAllDepositOfflineModel> get getAllDepositOfflineModel => _getAllDepositOfflineModel;
+  List<GetAllDepositOfflineModel> _getAllDepositOfflineList = [];
+  List<GetAllDepositOfflineModel> get getAllDepositOfflineList => _getAllDepositOfflineList;
+
+  GetAllDepositOfflineModel _getAllDepositOfflineModel = GetAllDepositOfflineModel();
+  GetAllDepositOfflineModel get getAllDepositOfflineModel => _getAllDepositOfflineModel;
 
   List<dynamic> _modeDepositList = [];
   List<dynamic> get modeDepositList => _modeDepositList;
@@ -280,6 +288,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
 
   _pageLoad(CustomRegistrationFormPageLoadEvent event, emit) async {
     emit(CustomRegistrationFormPageLoadState());
+     await SharedPreferences.getInstance();
     _isPageLoader = false;
     _labelModel = GetLabelModel();
     chargeAreaValue = GetChargeAreaListModel();
@@ -288,6 +297,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     propertyClassValue = GetPropertyClassModel();
     allDistrictValue = GetAllDistrictModel();
     depositTypeValue = GetAllDepositOfflineModel();
+    _modeDepositValue = null;
     _paymentBankNameValue = null;
     _custBankNameValue = null;
     _getNotInterestedList = [];
@@ -307,43 +317,45 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     _getKycDocList = [];
     _eBillingList = [];
     _initialDepositStatusList = [];
-    _getAllDepositOfflineModel = [];
+    _getAllDepositOfflineList = [];
+    _getAllDepositOfflineModel = GetAllDepositOfflineModel();
     _modeDepositList = [];
     _custBankNameList = [];
     _paymentBankNameList = [];
-    _idBackPhotoImage = "";
-    _idFrontPhotoImage = "";
-    _eleBillFrontPath = "";
-    _eleBillBackPath = "";
-    _nocFrontPath = "";
-    _nocBackPath = "";
-    _uploadCustomerPath = "";
-    _uploadHousePath = "";
-    _ownerConsentPath = "";
-    _customerConsentPath = "";
-    _cancelChequePath = "";
-    _chequePath = "";
-     fetchLabelApi(context: event.context);
-     fetchNotInterestedApi(context: event.context);
-     fetchInitialDepositStatusApi(context: event.context);
-     fetchModeOfDepositApi(context: event.context);
-     fetchAcceptExtraFittingCostApi(context: event.context);
-     fetchAcceptConversionPolicyApi(context: event.context);
-     fetchAllDistrictApi(context: event.context);
-     fetchEBillingApi(context: event.context);
-     fetchKycDocApi(context: event.context);
-     fetchOwnershipProofApi(context: event.context);
-     fetchIdentityProofApi(context: event.context);
-     fetchGuardianTypeApi(context: event.context);
-     fetchExistingCookingFuelApi(context: event.context);
-     fetchResidentStatusApi(context: event.context);
-     fetchSocietyAllowApi(context: event.context);
-     fetchPropertyClassApi(context: event.context);
-     fetchPropertyCategoryApi(context: event.context);
-     fetchAllAreaApi(context: event.context);
-     fetchChargeAreaListApi(context: event.context);
-     fetchAllDepositOfflineApi(context: event.context);
-     fetchBackNameListApi(context: event.context);
+    _idBackPath = File("");
+    _idFrontPath =  File("");
+    _addBackPath =  File("");
+    _addFrontPath =  File("");
+    _nocDocPath =  File("");
+    _nocFrontPath =  File("");
+    _nocBackPath =  File("");
+    _uploadCustomerPath =  File("");
+    _uploadHousePath =  File("");
+    _ownerConsentPath =  File("");
+    _customerConsentPath =  File("");
+    _cancelChequePath =  File("");
+    _chequePath = File("");
+    await fetchLabelApi(context: event.context);
+    await fetchNotInterestedApi(context: event.context);
+    await fetchInitialDepositStatusApi(context: event.context);
+    await fetchModeOfDepositApi(context: event.context);
+    await fetchAcceptExtraFittingCostApi(context: event.context);
+    await fetchAcceptConversionPolicyApi(context: event.context);
+    await fetchAllDistrictApi(context: event.context);
+    await fetchEBillingApi(context: event.context);
+    await fetchKycDocApi(context: event.context);
+    await fetchOwnershipProofApi(context: event.context);
+    await fetchIdentityProofApi(context: event.context);
+    await fetchGuardianTypeApi(context: event.context);
+    await fetchExistingCookingFuelApi(context: event.context);
+    await fetchResidentStatusApi(context: event.context);
+    await fetchSocietyAllowApi(context: event.context);
+    await fetchPropertyClassApi(context: event.context);
+    await fetchPropertyCategoryApi(context: event.context);
+    await fetchAllAreaApi(context: event.context);
+    await fetchChargeAreaListApi(context: event.context);
+    await fetchAllDepositOfflineApi(context: event.context);
+    await fetchBackNameListApi(context: event.context);
     _setLocation();
     _eventCompleted(emit);
   }
@@ -428,6 +440,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
 
   _setKycDoc3Value(CustomRegistrationFormSetKycDoc3Value event, emit) {
     _kycDoc3Value = event.kycDoc3Value;
+    log("_kycDoc3Value-->${_kycDoc3Value}");
     _eventCompleted(emit);
   }
 
@@ -461,296 +474,136 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
 
   _setModeDepositValue(CustomRegistrationFormSetModeDepositValue event, emit) {
     _modeDepositValue = event.modeDepositValue;
+    log("_modeDepositValueBloc-->${_modeDepositValue}");
     _eventCompleted(emit);
   }
 
-  _setIdFrontFilePath(CustomRegistrationFormSetIdFrontFilePath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.idFrontFilePath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _idFrontPhotoImage = tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.idFrontFilePath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _idFrontPhotoImage = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectIdFrontCameraCapture(SelectIdFrontCameraCapture event, emit) async {
+    var photoPath = await DashboardHelper.cameraCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _idFrontPath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setIdBackFilePath(CustomRegistrationFormSetIdBackFilePath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.idBackFilePath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _idBackPhotoImage = tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.idBackFilePath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _idBackPhotoImage = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectIdFrontGalleryCapture(SelectIdFrontGalleryCapture event, emit) async {
+    var photoPath = await DashboardHelper.galleryCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _idFrontPath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setEleBillFrontPath(CustomRegistrationFormSetEleBillFrontPath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.eleBillFrontPath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _eleBillFrontPath = tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.eleBillFrontPath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _eleBillFrontPath = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectIdBackCameraCapture(SelectIdBackCameraCapture event, emit) async {
+    var photoPath = await DashboardHelper.cameraCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _idBackPath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setEleBillBackPath(CustomRegistrationFormSetEleBillBackPath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.eleBillBackPath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _eleBillBackPath = tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.eleBillBackPath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _eleBillBackPath = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectIdBackGalleryCapture(SelectIdBackGalleryCapture event, emit) async {
+    var photoPath = await DashboardHelper.galleryCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _idBackPath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setNocFrontPath(CustomRegistrationFormSetNocFrontPath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.nocFrontPath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _nocFrontPath =tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.nocFrontPath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _nocFrontPath = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectAddFrontCameraCapture(SelectAddFrontCameraCapture event, emit) async {
+    var photoPath = await DashboardHelper.cameraCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _addFrontPath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setNocBackPath(CustomRegistrationFormSetNocBackPath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.nocBackPath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _nocBackPath = tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.nocBackPath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _nocBackPath = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectAddFrontGalleryCapture(SelectAddFrontGalleryCapture event, emit) async {
+    var photoPath = await DashboardHelper.galleryCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _addFrontPath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setUploadCustomerPath(CustomRegistrationFormSetUploadCustomerPath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.uploadCustomerPath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _uploadCustomerPath = tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.uploadCustomerPath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _uploadCustomerPath = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectNocDocCameraCapture(SelectNocDocCameraCapture event, emit) async {
+    var photoPath = await DashboardHelper.cameraCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _nocDocPath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setUploadHousePath(CustomRegistrationFormSetUploadHousePath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.uploadHousePath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _uploadHousePath = tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.uploadHousePath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _uploadHousePath = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectNocDocBackGalleryCapture(SelectNocDocBackGalleryCapture event, emit) async {
+    var photoPath = await DashboardHelper.galleryCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _nocDocPath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setCustomerConsentPath(CustomRegistrationFormSetCustomerConsentPath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.customerConsentPath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _customerConsentPath = tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.customerConsentPath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _customerConsentPath = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectCustomerCameraCapture(SelectCustomerCameraCapture event, emit) async {
+    var photoPath = await DashboardHelper.cameraCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _uploadCustomerPath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setOwnerConsentPath(CustomRegistrationFormSetOwnerConsentPath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.ownerConsentPath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _ownerConsentPath = tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.ownerConsentPath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _ownerConsentPath = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectCustomerGalleryCapture(SelectCustomerGalleryCapture event, emit) async {
+    var photoPath = await DashboardHelper.galleryCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _uploadCustomerPath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setCancelChequePath(CustomRegistrationFormSetCancelChequePath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.cancelChequePath);
-              if (tempCameraImage != null && tempCameraImage.isNotEmpty) {
-                _cancelChequePath = tempCameraImage;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.cancelChequePath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _cancelChequePath = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectHouseCameraCapture(SelectHouseCameraCapture event, emit) async {
+    var photoPath = await DashboardHelper.cameraCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _uploadHousePath  = photoPath;
+    }
     _eventCompleted(emit);
   }
 
-  _setChequePath(CustomRegistrationFormSetChequePath event, emit) {
-    showModalBottomSheet(
-        context: event.context,
-        builder: (BuildContext context) {
-          return OpenImageSource(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              var tempCameraImage = await DashboardHelper.cameraPiker(context: event.context, cameraImage: event.chequePath);
-              if (tempCameraImage != null && tempCameraImage.path.isNotEmpty) {
-                _chequePath = tempCameraImage.path;
-              }
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              var tempGalleryImage = await DashboardHelper.galleryPiker(context: event.context, galleryImage: event.chequePath);
-              if (tempGalleryImage != null && tempGalleryImage.isNotEmpty) {
-                _chequePath = tempGalleryImage;
-              }
-            },
-          );
-        });
+  _selectHouseGalleryCapture(SelectHouseGalleryCapture event, emit) async {
+    var photoPath = await DashboardHelper.galleryCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _uploadHousePath  = photoPath;
+    }
     _eventCompleted(emit);
   }
+
+  _selectChqCameraCapture(SelectChqCameraCapture event, emit) async {
+    var photoPath = await DashboardHelper.cameraCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _chequePath  = photoPath;
+    }
+    _eventCompleted(emit);
+  }
+
+  _selectChqGalleryCapture(SelectChqGalleryCapture event, emit) async {
+    var photoPath = await DashboardHelper.galleryCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _chequePath  = photoPath;
+    }
+    _eventCompleted(emit);
+  }
+
 
   fetchLabelApi({required BuildContext context}) async {
     var res = await DashboardHelper.getLabelApi(context: context);
@@ -880,7 +733,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     if (res != null) {
       _getKycDocModel = res;
       _getKycDocList = res.toJson().values.toList();
-      _kycDoc3Value = _getKycDocList.first.toString();
+     // _kycDoc3Value = _getKycDocList.first.toString();
     }
   }
 
@@ -916,7 +769,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   fetchAllDepositOfflineApi({required BuildContext context}) async {
     var res = await DashboardHelper.getAllDepositOfflineApi(context: context);
     if (res != null) {
-      _getAllDepositOfflineModel = res;
+      _getAllDepositOfflineList = res;
     }
   }
 
@@ -984,8 +837,8 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       nearestLandmark: nearestLandmarkController.text.trim().toString(),
       kycDocument1: kycDoc1Value.toString(),
       kycDocument1Number: kyc1NumberController.text.trim().toString(),
-      documentUploads1: idFrontPhotoImage.toString(),
-      backside1: idBackPhotoImage.toString(),
+      documentUploads1: idFrontPath.path.toString(),
+      backside1: idBackPath.path.toString(),
       ownerConsent: ownerConsentPath.toString(),
       modeOfDeposite: modeDepositValue.toString(),
       depositType: depositTypeValue.toString(),
@@ -1060,7 +913,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       ownershipProofValue: kycDoc2Value,
       ownershipProofList: getOwnershipProofList,
       getOwnershipProofModel: getOwnershipProofModel,
-      kycDocValue: kycDoc3Value,
+      kycDoc3Value: kycDoc3Value,
       kycDocList: getKycDocList,
       getKycDocModel: getKycDocModel,
       getGuardianTypeModel: getGuardianTypeModel,
@@ -1079,6 +932,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       initialDepositStatusList: initialDepositStatusList,
       depositOfflineValue: depositTypeValue,
       getAllDepositOfflineModel: getAllDepositOfflineModel,
+      getAllDepositOfflineList: getAllDepositOfflineList,
       modeDepositValue: modeDepositValue,
       modeDepositList: modeDepositList,
       getInitialDepositStatusModel: getInitialDepositStatusModel,
@@ -1118,10 +972,10 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       paymentBankNameValue: paymentBankNameValue,
       custBankNameList: custBankNameList,
       paymentBankNameList: paymentBankNameList,
-      idBackFilePath: idBackPhotoImage,
-      idFrontFilePath: idFrontPhotoImage,
-      eleBillFrontPath: eleBillFrontPath,
-      eleBillBackPath: eleBillBackPath,
+      idBackFilePath: idBackPath,
+      idFrontFilePath: idFrontPath,
+      eleBillFrontPath: addFrontPath,
+      eleBillBackPath: addBackPath,
       nocFrontPath: nocFrontPath,
       nocBackPath: nocBackPath,
       uploadCustomerPath: uploadCustomerPath,

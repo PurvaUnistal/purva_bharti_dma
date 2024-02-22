@@ -1,5 +1,7 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
+import 'package:pbg_app/features/customRegistrationForm/presentation/widgets/border_widget.dart';
+import 'package:pbg_app/features/customRegistrationForm/presentation/widgets/image_pop_widget.dart';
 
 
 class CustomerRegistrationFormPage extends StatefulWidget {
@@ -23,7 +25,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     /* BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
       context: context,
     ));*/
-     super.initState();
+    super.initState();
   }
 
   @override
@@ -83,17 +85,6 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
           children: [
             _interestDropdown(stateData: stateData),
             _verticalSpace(),
-            _verticalSpace(),
-            Row(
-              children: [
-                Flexible(flex: 3, child: _acceptConversionPolicyDropdown(stateData: stateData)),
-                _widthSpace(),
-                Flexible(flex: 3, child: _acceptExtraFittingCostDropdown(stateData: stateData)),
-                _widthSpace(),
-                Flexible(flex: 3, child: _societyAllowDropdown(stateData: stateData)),
-              ],
-            ),
-            _verticalSpace(),
             _chargeAreaDropdown(stateData: stateData),
             _verticalSpace(),
             _areaDropdown(stateData: stateData),
@@ -132,13 +123,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
             _districtDropdown(stateData: stateData),
             _verticalSpace(),
             _pinCodeWidget(stateData: stateData),
-            Row(
-              children: [
-                Flexible(flex: 3, child: _residentStatusDropdown(stateData: stateData)),
-                _widthSpace(),
-                Flexible(flex: 3, child: _existCookingFuelDropdown(stateData: stateData)),
-              ],
-            ),
+            _existCookingFuelDropdown(stateData: stateData),
             _verticalSpace(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -148,13 +133,9 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
                 Flexible(flex: 2, child: _numberBathroomWidget(stateData: stateData)),
                 _widthSpace(),
                 Flexible(flex: 2, child: _familyMemberWidget(stateData: stateData)),
-              /*  SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
-                Flexible(flex: 3, child:  _existCookingFuelDropdown(stateData: stateData),),*/
-
               ],
             ),
             _verticalSpace(),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -183,7 +164,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _idFrontFileImg(context: context, stateData: stateData),
+                _idFrontFileImg( stateData: stateData),
                 _idBackFileImg(context: context, stateData: stateData),
               ],
             ),
@@ -201,63 +182,71 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
             _verticalSpace(),
             _kycDoc3Dropdown(stateData: stateData),
             _verticalSpace(),
-          //  _kycDoc3Widget(stateData: stateData),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _nocDocImg(context: context, stateData: stateData),
-             //   _nocBackImg(context: context, stateData: stateData),
-              ],
-            ),
-            _verticalSpace(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _uploadCustomerImg(context: context, stateData: stateData),
-                _uploadHouseImg(context: context, stateData: stateData),
+                stateData.kycDoc3Value == "Rented" ? _nocDocImg(context: context, stateData: stateData) : _uploadHouseImg(context: context, stateData: stateData),
+
               ],
             ),
-            _customerConsentImg(context: context, stateData: stateData),
-           /* Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _ownerConsentImg(context: context, stateData: stateData),
-                _cancelChequeImg(context: context, stateData: stateData),
-              ],
-            ),*/
             _verticalSpace(),
-            _preferredBillDropdown(stateData: stateData),
-            _verticalSpace(),
-            _custBankNameDropdown(stateData: stateData),
-            _verticalSpace(),
-            _custBankAccNumberWidget(stateData: stateData),
-            _custIfscCodeWidget(stateData: stateData),
-            _custBankAddWidget(stateData: stateData),
-            _verticalSpace(),
-            _initialDepositStatusDropdown(stateData: stateData),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(flex: 6, child: _depositTypeDropdown(stateData: stateData)),
-                _widthSpace(),
-                Flexible(flex: 3, child: _depositTypeDetailsButton(stateData: stateData)),
+                stateData.kycDoc3Value == "Rented" ?  _uploadHouseImg(context: context, stateData: stateData) : Container(),
               ],
             ),
-            _depositAmountWidget(stateData: stateData),
             _verticalSpace(),
-            _modeDepositDropdown(stateData: stateData),
             _verticalSpace(),
-            if (stateData.modeDepositValue == null || stateData.modeDepositValue == "Cheque") ...[
-              _chequeNoWidget(stateData: stateData),
-              _chequeDateWidget(stateData: stateData),
-              _verticalSpace(),
-              _chequePaymentBankDropdown(stateData: stateData),
-              _verticalSpace(),
-              _chequeAccountNoWidget(stateData: stateData),
-              _chequeMICRNoWidget(stateData: stateData),
-              _chequeImg(context: context, stateData: stateData),
-              _verticalSpace(),
+            Row(
+              children: [
+                Flexible(flex: 3, child: _acceptConversionPolicyDropdown(stateData: stateData)),
+                _widthSpace(),
+                Flexible(flex: 3, child: _acceptExtraFittingCostDropdown(stateData: stateData)),
+                _widthSpace(),
+                Flexible(flex: 3, child: _societyAllowDropdown(stateData: stateData)),
+              ],
+            ),
+            _verticalSpace(),
+            BorderWidget(
+              children: [
+                Text("Security Deposit",style: Styles.title,),
+                _verticalSpace(),
+                _initialDepositStatusDropdown(stateData: stateData),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Flexible(flex: 6, child: _depositTypeDropdown(stateData: stateData)),
+                    _widthSpace(),
+                    Flexible(flex: 3, child: _depositTypeDetailsButton(stateData: stateData)),
+                  ],
+                ),
+                _depositAmountWidget(stateData: stateData),
+                _verticalSpace(),
+                _modeDepositDropdown(stateData: stateData),
+                _verticalSpace(),
+              ],
+            ),
+            _verticalSpace(),
+            if ( stateData.modeDepositValue != null && stateData.modeDepositValue == "Cheque") ...[
+              BorderWidget(
+                children: [
+                  Text("Cheque",style: Styles.title,),
+                  _verticalSpace(),
+                  _chequeNoWidget(stateData: stateData),
+                  _chequeDateWidget(stateData: stateData),
+                  _verticalSpace(),
+                  _chequePaymentBankDropdown(stateData: stateData),
+                  _verticalSpace(),
+                  _chequeAccountNoWidget(stateData: stateData),
+                  _chequeMICRNoWidget(stateData: stateData),
+                  _chequeImg(context: context, stateData: stateData),
+                  _verticalSpace(),
+                ],
+              ),
             ],
+
             _previewButton(),
             _verticalSpace(),
           ],
@@ -776,55 +765,152 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     }
   }
 
-
-  Widget _idFrontFileImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+  Widget _idFrontFileImg({required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
-        onTap: () {
-          BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetIdFrontFilePath(idFrontFilePath: stateData.idFrontFilePath, context: context));
-        },
-        child: stateData.idFrontFilePath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.idFrontFilePath.toString())),
-        imageTitle: stateData.labelModel.kyc == null ? AppStrings.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,);
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
+            },
+          );
+        });
+      },
+       child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
+      imageTitle: stateData.labelModel.kyc == null ? AppStrings.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,);
   }
+
 
   Widget _idBackFileImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
-        onTap: () {
-          BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetIdBackFilePath(idBackFilePath: stateData.idFrontFilePath, context: context));
-        },
-        child: stateData.idBackFilePath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.idBackFilePath.toString())),
-        imageTitle:  stateData.labelModel.kyc == null ? AppStrings.idProofBack : stateData.labelModel.kyc!.uploadDoc1Back,);
-
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdBackCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdBackGalleryCapture());
+            },
+          );
+        });
+      },
+      child: stateData.idBackFilePath.path.isEmpty || stateData.idBackFilePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.idBackFilePath),
+      imageTitle: stateData.labelModel.kyc == null ? AppStrings.idProofBack : stateData.labelModel.kyc!.uploadDoc1Back,);
   }
 
   Widget _eleBillFrontImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
-        onTap: () {
-          BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetEleBillFrontPath(eleBillFrontPath: stateData.eleBillFrontPath, context: context));
-        },
-        child: stateData.eleBillFrontPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.eleBillFrontPath.toString())),
-      imageTitle:  stateData.labelModel.kyc == null ? AppStrings.addProofFront : stateData.labelModel.kyc!.uploadDoc2Front,);
-
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddFrontCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddFrontGalleryCapture());
+            },
+          );
+        });
+      },
+      child: stateData.eleBillFrontPath.path.isEmpty || stateData.eleBillFrontPath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.eleBillFrontPath),
+      imageTitle: stateData.labelModel.kyc == null ? AppStrings.idProofFront : stateData.labelModel.kyc!.uploadDoc2Front,);
   }
 
   Widget _eleBillBackImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
-        onTap: () {
-          BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetEleBillBackPath(eleBillBackPath: stateData.eleBillBackPath, context: context));
-        },
-        child: stateData.eleBillBackPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.eleBillBackPath.toString())),
-      imageTitle:  stateData.labelModel.kyc == null ? AppStrings.addProofBack : stateData.labelModel.kyc!.uploadDoc2Back,);
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddBackCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddBackGalleryCapture());
+            },
+          );
+        });
+      },
+      child: stateData.eleBillBackPath.path.isEmpty || stateData.eleBillBackPath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.eleBillBackPath),
+      imageTitle: stateData.labelModel.kyc == null ? AppStrings.idProofBack : stateData.labelModel.kyc!.uploadDoc1Back,);
+  }
+
+  Widget _customerConsentImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return _imageWidget(
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
+            },
+          );
+        });
+      },
+      child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
+      imageTitle: stateData.labelModel.kyc == null ? AppStrings.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,);
   }
 
   Widget _nocDocImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
       onTap: () {
-        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetNocFrontPath(nocFrontPath: stateData.nocFrontPath, context: context));
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectNocDocCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectNocDocBackGalleryCapture());
+            },
+          );
+        });
       },
-      child: stateData.nocFrontPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.nocFrontPath.toString())),
-      imageTitle:  stateData.labelModel.kyc == null ? AppStrings.nocDoc : stateData.labelModel.kyc!.uploadDoc3,);
+      child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
+      imageTitle: stateData.labelModel.kyc == null ? AppStrings.nocDoc : stateData.labelModel.kyc!.uploadDoc3,);
   }
 
- /* Widget _nocBackImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+  /* Widget _nocBackImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
       onTap: () {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetNocBackPath(nocBackPath: stateData.nocBackPath, context: context));
@@ -837,58 +923,121 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
   Widget _uploadCustomerImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
       onTap: () {
-        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetUploadCustomerPath(uploadCustomerPath: stateData.uploadCustomerPath, context: context));
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectCustomerCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectCustomerGalleryCapture());
+            },
+          );
+        });
       },
-      child: stateData.uploadCustomerPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.uploadCustomerPath.toString())),
-      imageTitle:  stateData.labelModel.photo == null ? AppStrings.customerImg : stateData.labelModel.photo!.customerPhoto,);
-
+      child: stateData.uploadCustomerPath.path.isEmpty || stateData.uploadCustomerPath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.uploadCustomerPath),
+      imageTitle: stateData.labelModel.photo == null ? AppStrings.idProofFront : stateData.labelModel.photo!.customerPhoto,);
   }
 
   Widget _uploadHouseImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
       onTap: () {
-        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetUploadHousePath(uploadHousePath: stateData.uploadHousePath, context: context));
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
+            },
+          );
+        });
       },
-      child: stateData.uploadHousePath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.uploadHousePath.toString())),
-      imageTitle:  stateData.labelModel.photo == null ? AppStrings.houseImg : stateData.labelModel.photo!.homePhoto,);
+      child: stateData.uploadHousePath.path.isEmpty || stateData.uploadHousePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.uploadHousePath),
+      imageTitle: stateData.labelModel.photo == null ? AppStrings.idProofFront : stateData.labelModel.photo!.homePhoto,);
   }
 
-  Widget _customerConsentImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return _imageWidget(
-      onTap: () {
-        BlocProvider.of<CustomRegistrationFormBloc>(context)
-            .add(CustomRegistrationFormSetCustomerConsentPath(customerConsentPath: stateData.customerConsentPath, context: context));
-      },
-      child: stateData.customerConsentPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.customerConsentPath.toString())),
-      imageTitle:  stateData.labelModel.photo == null ? AppStrings.customerConsentImg : stateData.labelModel.photo!.customerPhoto,);
-  }
 
-  /*Widget _ownerConsentImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+  Widget _ownerConsentImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
       onTap: () {
-        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetOwnerConsentPath(ownerConsentPath: stateData.ownerConsentPath, context: context));
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
+            },
+          );
+        });
       },
-      child: stateData.ownerConsentPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.ownerConsentPath.toString())),
-      imageTitle: AppStrings.consentPhotoLabel,
-    );
-  }*/
+      child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
+      imageTitle: stateData.labelModel.kyc == null ? AppStrings.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,);
+  }
 
   Widget _cancelChequeImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
       onTap: () {
-        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetCancelChequePath(cancelChequePath: stateData.cancelChequePath, context: context));
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
+            },
+          );
+        });
       },
-      child: stateData.cancelChequePath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.cancelChequePath.toString())),
-      imageTitle: stateData.labelModel.consent == null ? "" : stateData.labelModel.consent!.cancelledPhoto,
-    );
+      child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
+      imageTitle: stateData.labelModel.kyc == null ? AppStrings.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,);
   }
 
   Widget _chequeImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
     return _imageWidget(
       onTap: () {
-        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetIdBackFilePath(idBackFilePath: stateData.chequePath, context: context));
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectChqCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectChqGalleryCapture());
+            },
+          );
+        });
       },
-      child: stateData.chequePath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.chequePath.toString())),
+      child: stateData.chequePath.path.isEmpty || stateData.chequePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.chequePath),
       imageTitle: stateData.labelModel.deposit == null ? AppStrings.chqPhoto : stateData.labelModel.deposit!.chqPhoto,);
   }
 
@@ -924,9 +1073,10 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     return DropdownWidget(
       label: AppStrings.ownershipProperty,
       hint: AppStrings.ownershipProperty,
-      dropdownValue: stateData.kycDocValue,
+      dropdownValue: stateData.kycDoc3Value,
       items: stateData.kycDocList,
       onChanged: (val) {
+        log("efrgthujkj${stateData.kycDoc3Value.toString()}");
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetKycDoc3Value(kycDoc3Value: val));
       },
     );
@@ -1055,8 +1205,9 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       label:  stateData.labelModel.deposit == null ? AppStrings.depositType : stateData.labelModel.deposit!.depositType,
       hint: stateData.labelModel.deposit == null ? AppStrings.depositType : stateData.labelModel.deposit!.depositType,
       dropdownValue: stateData.depositOfflineValue!.depositName != null ? stateData.depositOfflineValue :null,
-      items: stateData.getAllDepositOfflineModel,
+      items: stateData.getAllDepositOfflineList,
       onChanged: (val) {
+        log("depositTypeValue-->${stateData.depositOfflineValue!.depositName}");
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetDepositTypeValue(depositTypeValue: val));
       },
     );
@@ -1096,9 +1247,11 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     return DropdownWidget(
       label: stateData.labelModel.deposit == null ? AppStrings.modeDeposit : stateData.labelModel.deposit!.modeOfDep,
       hint: stateData.labelModel.deposit == null ? AppStrings.modeDeposit : stateData.labelModel.deposit!.modeOfDep,
-      dropdownValue: stateData.modeDepositValue,
+      dropdownValue: stateData.modeDepositValue == null ? null :stateData.modeDepositValue,
       items: stateData.modeDepositList,
       onChanged: (val) {
+        log("stateData.modeDepositValue-->${val}");
+        log("stateData.modeDepositValue-->${stateData.modeDepositValue}");
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetModeDepositValue(modeDepositValue: val));
       },
     );
@@ -1252,7 +1405,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.09, child: child),
+              SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.09, child: child),
               Text(imageTitle),
             ],
           ),
@@ -1277,7 +1431,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       stateData.depositOfflineValue = widget.localData!.depositeType!;
       stateData.identityProofValue = widget.localData!.kycDocument1!;
       stateData.ownershipProofValue = widget.localData!.kycDocument2!;
-      stateData.kycDocValue = widget.localData!.kycDocument3!;
+      stateData.kycDoc3Value = widget.localData!.kycDocument3!;
       stateData.existingCookingFuelValue = widget.localData!.existingCookingFuel!;
       stateData.residentStatusValue = widget.localData!.residentStatus!;
       stateData.areaValue = widget.localData!.areaId!;
@@ -1312,7 +1466,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       stateData.chequeMicrNoController.text = widget.localData!.chequeMicrAccount!;
       stateData.custBankNameValue = widget.localData!.bankNameOfBank!;
       stateData.paymentBankNameValue = widget.localData!.payementBankName!;
-      stateData.idFrontFilePath = widget.localData!.backSidePhoto1!;
+      /*stateData.idFrontFilePath = widget.localData!.backSidePhoto1!;
       stateData.idBackFilePath = widget.localData!.documentUploadsPhoto1!;
       stateData.eleBillFrontPath = widget.localData!.backSidePhoto2!;
       stateData.eleBillBackPath = widget.localData!.mobileNumber!;
@@ -1323,7 +1477,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       stateData.customerConsentPath = widget.localData!.customerConsentPhoto!;
       stateData.ownerConsentPath = widget.localData!.ownerConsent!;
       stateData.cancelChequePath = widget.localData!.canceledChequePhoto!;
-      stateData.chequePath = widget.localData!.chequePhoto!;
+      stateData.chequePath = widget.localData!.chequePhoto!;*/
     }
   }
 }
