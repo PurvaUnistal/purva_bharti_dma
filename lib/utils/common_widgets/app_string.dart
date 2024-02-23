@@ -1,7 +1,12 @@
 
 
 class AppStrings {
+  static RegExp emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  static String invalidFormat = "Enter Invalid format";
   static String blankSpace = 'Blank space';
+
+
+
   static String locationLat = 'Latitude';
   static String locationLong = 'Longitude';
   static String star = "*";

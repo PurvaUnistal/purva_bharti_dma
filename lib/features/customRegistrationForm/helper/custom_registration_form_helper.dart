@@ -69,15 +69,15 @@ class CustomRegistrationFormHelper {
     required String chequePath,
   }) async {
     try {
-      if (registrationType.isEmpty && registrationType == "null") {
+      if (registrationType.isEmpty || registrationType == "null") {
         CustomToast.showToast("Select Registration Type");
         return null;
       }
-      if (chargeId.isEmpty && chargeId == 'null') {
+      if (chargeId.isEmpty || chargeId == 'null') {
         CustomToast.showToast('Please select charge area type');
         return null;
       }
-      if (areaId.isEmpty && areaId == 'null') {
+      if (areaId.isEmpty || areaId == 'null') {
         CustomToast.showToast('Please select area type');
         return null;
       }
@@ -85,15 +85,15 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please enter mobile number");
         return null;
       }
-      if (firstName.isEmpty && firstName == "") {
+      if (firstName.isEmpty || firstName == "") {
         CustomToast.showToast("Please enter first name");
         return null;
       }
-      if (lastName.isEmpty && lastName == "") {
+      if (lastName.isEmpty || lastName == "") {
         CustomToast.showToast("Please enter last name");
         return null;
       }
-      if (guardianType.isEmpty && guardianType == "null") {
+      if (guardianType.isEmpty || guardianType == "null") {
         CustomToast.showToast("Please enter guardian type");
         return null;
       }
@@ -145,7 +145,7 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please enter no of bathroom");
         return null;
       }
-      if (existingCookingFuel.isEmpty && existingCookingFuel == "null") {
+      if (existingCookingFuel.isEmpty || existingCookingFuel == "null") {
         CustomToast.showToast("Please select the cooking fuel");
         return null;
       }
@@ -153,7 +153,7 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please enter no of family members");
         return null;
       }
-      if (idProof.isEmpty && idProof == "null") {
+      if (idProof.isEmpty || idProof == "null") {
         CustomToast.showToast("Please select the address proof no.");
         return null;
       }
@@ -177,7 +177,7 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please select Address Proof Front");
         return null;
       }
-      if (ownershipProperty.isEmpty && ownershipProperty == "null") {
+      if (ownershipProperty.isEmpty || ownershipProperty == "null") {
         CustomToast.showToast("Please select Ownership type property");
         return null;
       }
@@ -188,15 +188,15 @@ class CustomRegistrationFormHelper {
         }
         return true;
       }
-      if (acceptConversionPolicy.isEmpty && acceptConversionPolicy == "null") {
+      if (acceptConversionPolicy.isEmpty || acceptConversionPolicy == "null") {
         CustomToast.showToast("Please select Accept Conversion Policy");
         return null;
       }
-      if (acceptExtraFittingCost.isEmpty && acceptExtraFittingCost == "null") {
+      if (acceptExtraFittingCost.isEmpty || acceptExtraFittingCost == "null") {
         CustomToast.showToast("Please select Accept Extra Fitting CostValue");
         return null;
       }
-      if (societyAllowedMdpe.isEmpty && societyAllowedMdpe == "null") {
+      if (societyAllowedMdpe.isEmpty || societyAllowedMdpe == "null") {
         CustomToast.showToast("Please select society allows MDPE");
         return null;
       }

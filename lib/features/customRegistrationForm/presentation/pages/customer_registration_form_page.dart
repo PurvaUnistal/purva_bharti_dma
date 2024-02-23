@@ -501,16 +501,19 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       controller: stateData.emailIdController,
       textCapitalization: TextCapitalization.none,
       keyboardType: TextInputType.emailAddress,
-      /* inputFormatters: [
+       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
-      ],*/
+      ],
       validator: (value) {
-        if (value != stateData.emailIdController.text.trim()) {
-          return "Blank space";
+        if(stateData.emailIdController.text.trim().isNotEmpty){
+          if (value != stateData.emailIdController.text.trim()) {
+            return AppStrings.blankSpace;
+          }
+          else if(!AppStrings.emailValid.hasMatch(value!)){
+            return AppStrings.invalidFormat;
+          }
+          return null;
         }
-        /* else if(!emailValid.hasMatch(value)){
-          return "enter invalid format";
-        }*/
         return null;
       },
     );

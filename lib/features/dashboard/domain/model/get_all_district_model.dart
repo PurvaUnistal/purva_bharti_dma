@@ -58,6 +58,6 @@ class GetAllDistrictModel {
   @override
   String toString() {
     // TODO: implement toString
-    return districtName!;
+    return districtName.toString();
   }
 }

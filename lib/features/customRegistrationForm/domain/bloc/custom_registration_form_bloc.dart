@@ -889,7 +889,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     );
     _isPreviewLoader = false;
     _eventCompleted(emit);
-    if (textFiledValidationCheck != null) {
+    if (textFiledValidationCheck == true) {
       _saveCusRegData = textFiledValidationCheck;
       log("_saveCusRegData==>${_saveCusRegData.toJson()}");
       return showDialog<void>(
