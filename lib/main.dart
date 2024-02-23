@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.green.shade800,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           colorScheme: ColorScheme.fromSwatch().copyWith(
+              primary : Colors.green.shade800,
               secondary: Colors.green.shade800),
         ),
         home: SplashScreen(),

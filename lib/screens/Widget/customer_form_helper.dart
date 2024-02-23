@@ -186,12 +186,6 @@ class CustomerFormHelper {
           CustomToast.showToast("Select the Ownership Type");
           return false;
         }
-        if (customerConsentImage == null ||
-            customerConsentImage.isEmpty ||
-            customerConsentImage == "") {
-          CustomToast.showToast("Upload Customer Consent Image");
-          return false;
-        }
         if(selectOwnershipType == "2"){
           if (nocImage == null ||
               nocImage.isEmpty ||
@@ -200,24 +194,6 @@ class CustomerFormHelper {
             return false;
           }
         }
-
-
-        /* if (customerBankName == null) {
-        CustomToast.showToast("Please select customer bank account name");
-        return false;
-      }
-      if (customerAccNo == "") {
-        CustomToast.showToast("Please enter customer account number");
-        return false;
-      }
-      if (customerIfscCode == "") {
-        CustomToast.showToast("Please enter the customer IFSC code");
-        return false;
-      }
-      if (customerBankAdd == "") {
-        CustomToast.showToast("Please enter the customer back address");
-        return false;
-      }*/
         if (depositType == "") {
           CustomToast.showToast("Please select deposit Type");
           return null;

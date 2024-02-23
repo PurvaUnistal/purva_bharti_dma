@@ -111,6 +111,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     getLocalData();
+    _getCurrentLocation();
     updateValue();
     super.initState();
   }
@@ -235,8 +236,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position position =  await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    latitudeController.text = position.latitude.toString();
+    longitudeController.text = position.longitude.toString();
+    return position;
   }
 
   TextEditingController searchController = TextEditingController();
@@ -479,8 +482,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                 ),
                 // AppStyle.vertical(context),
                 _fuelDropdownWidget(),
-                /*interestedId == '1' ? _landmarkWidget() : Container(),
-                AppStyle.vertical(context),*/
+                AppStyle.vertical(context),
                 _kYCDoc1DropDown(),
                 AppStyle.vertical(context),
                 _kYCDoc1NoWidget(),
@@ -501,23 +503,14 @@ class _CustomInputFormState extends State<CustomInputForm> {
                 AppStyle.vertical(context),
                 BorderWidget(
                   children: [
-                    Text("Consent Form",style: AppStyle.styleB(),),
-                    /*  AppStyle.vertical(context),
-                      _billModeDropDown(),
-                      AppStyle.vertical(context),
-                    _customerBankDropDown(),
-                    AppStyle.vertical(context),
-                    _customerBackNoWidget(),
-                    _customerIFSCCodeWidget(),
-                    _customerBankAddWidget(),*/
                     _rowWidget(
-                      widget1: _ownerConsentImageWidget(),
+                      widget1: _customerImageWidget(),
                       widget2: _kYCDocument3Value.id == '2'? _nocFrontImageWidget() : _houseNumImageWidget(),
                     ),
                     AppStyle.vertical(context),
                     _rowWidget(
-                      widget1: _customerImageWidget(),
-                      widget2:_kYCDocument3Value.id == '1'? Container() :_houseNumImageWidget(),
+                      widget1:_kYCDocument3Value.id == '1'? Container() :_houseNumImageWidget(),
+                      widget2: Container(),
                     ),
                     AppStyle.vertical(context),
                     Row(
@@ -545,7 +538,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     AppStyle.vertical(context),
                     _depositStatusId != "1" ? _reasonDepositStatusWidget() : Container(),
                     AppStyle.vertical(context),
-                    _depositTypeDropDown("Mode Of Deposit", AppStrings.star,),
+                    _depositTypeDropDown(AppStrings.depositType, AppStrings.star,),
                     AppStyle.vertical(context),
                     _depositAmountWidget(),
                     AppStyle.vertical(context),
@@ -900,12 +893,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           familyMemController.text.trim().toString() ??
                               "-",
                         ),
-                        /* _buildRow(
-                          leading: AppStrings.landmarkLabel,
-                          trailing:
-                          landmarkController.text.trim().toString() ??
-                              "-",
-                        ),*/
                         _buildCardWidget(
                             text: AppStrings.identificationProofLabel),
                         _buildRow(
@@ -985,27 +972,23 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           leading: AppStrings.kYCDoc3,
                           trailing: _kYCDocument3Value.title.toString() ?? "-",
                         ),
-                        /* _buildRow(
-                          leading: AppStrings.nocDocNumber,
-                          trailing: kYCDoc3NoController.text.toString() ?? "-",
-                        ),*/
 
                         _imageColumn(
                             leadingImg: CardImageWidget(
-                              imgString: AppStrings.customerConsentImgLabel,
-                              children:  customerConsentImageFile != null &&
-                                  customerConsentImageFile.isNotEmpty
-                                  ? customerConsentImageFile.split('.').last ==
-                                  "pdf"
-                                  ? _pdfImageWidget(customerConsentImageFile)
+                              imgString: AppStrings.customerImgLabel,
+                              children: uploadCustomerImgFile != null &&
+                                  uploadCustomerImgFile.isNotEmpty
+                                  ? uploadCustomerImgFile.split('.').last == "pdf"
+                                  ? _pdfImageWidget(uploadCustomerImgFile)
                                   : ImageCircle(
-                                  fileImage1: File(
-                                      customerConsentImageFile.toString()),
-                                  pathImage:
-                                  customerConsentImageFile.toString())
+                                fileImage1: File(
+                                    uploadCustomerImgFile.toString()),
+                                pathImage:
+                                uploadCustomerImgFile.toString(),
+                              )
                                   : _localBorderImg(),
                             ),
-                            trailingImg:  CardImageWidget(
+                            trailingImg: _kYCDocument3Value.id == '2'? CardImageWidget(
                               imgString: AppStrings.nocDoc,
                               children:nocFrontImgFile != null &&
                                   nocFrontImgFile.isNotEmpty
@@ -1017,24 +1000,22 @@ class _CustomInputFormState extends State<CustomInputForm> {
                                 pathImage: nocFrontImgFile.toString(),
                               )
                                   : _localBorderImg(),
-                            )
+                            ):CardImageWidget(
+                              imgString: AppStrings.houseImgLabel,
+                              children: uploadHouseImgFile != null &&
+                                  uploadHouseImgFile.isNotEmpty
+                                  ? uploadHouseImgFile.split('.').last == "pdf"
+                                  ? _pdfImageWidget(uploadHouseImgFile)
+                                  : ImageCircle(
+                                  fileImage1:
+                                  File(uploadHouseImgFile.toString()),
+                                  pathImage:
+                                  uploadHouseImgFile.toString())
+                                  : _localBorderImg(),
+                            ),
                         ),
                         _imageColumn(
-                          leadingImg: CardImageWidget(
-                            imgString: AppStrings.customerImgLabel,
-                            children: uploadCustomerImgFile != null &&
-                                uploadCustomerImgFile.isNotEmpty
-                                ? uploadCustomerImgFile.split('.').last == "pdf"
-                                ? _pdfImageWidget(uploadCustomerImgFile)
-                                : ImageCircle(
-                              fileImage1: File(
-                                  uploadCustomerImgFile.toString()),
-                              pathImage:
-                              uploadCustomerImgFile.toString(),
-                            )
-                                : _localBorderImg(),
-                          ),
-                          trailingImg: CardImageWidget(
+                          leadingImg:_kYCDocument3Value.id == '1'? Container() :CardImageWidget(
                             imgString: AppStrings.houseImgLabel,
                             children: uploadHouseImgFile != null &&
                                 uploadHouseImgFile.isNotEmpty
@@ -1047,53 +1028,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
                                 uploadHouseImgFile.toString())
                                 : _localBorderImg(),
                           ),
+                          trailingImg: Container()
                         ),
-                        _imageColumn(
-                          leadingImg: CardImageWidget(
-                            imgString: AppStrings.chqCancelledPhotoLabel,
-                            children:  chqCancelledPhotoFile != null &&
-                                chqCancelledPhotoFile.isNotEmpty
-                                ? chqCancelledPhotoFile.split('.').last == "pdf"
-                                ? _pdfImageWidget(chqCancelledPhotoFile)
-                                : ImageCircle(
-                                fileImage1: File(
-                                    chqCancelledPhotoFile.toString()),
-                                pathImage:
-                                chqCancelledPhotoFile.toString())
-                                : _localBorderImg(),
-                          ),
-                          trailingImg: Container(),
-                        ),
-                        Divider(),
-                        /* _buildCardWidget(text: AppStrings.customerConsentLabel,),
 
-                        _buildRow(
-                          leading: AppStrings.billingModeLabel,
-                          trailing: billingModeValue.title.toString() ?? "-",
-                        ),
-                        _buildRow(
-                          leading: AppStrings.customerBankNameLabel,
-                          trailing: _customerBankValue != null
-                              ? _customerBankValue.toString()
-                              : "_",
-                        ),
-                        _buildRow(
-                          leading: AppStrings.customerAccountNoLabel,
-                          trailing:
-                          customerAccountNum.text.trim().toString() ?? "-",
-                        ),
-                        _buildRow(
-                          leading: AppStrings.customerIfscCodeLabel,
-                          trailing:
-                          customerIFSCController.text.trim().toString() ??
-                              "-",
-                        ),
-                        _buildRow(
-                          leading: AppStrings.customerBankAddLabel,
-                          trailing:
-                          customerBankAddController.text.trim().toString() ??
-                              "-",
-                        ),*/
+                        Divider(),
                         _buildCardWidget(text: AppStrings.securityDepositLabel),
                         _buildRow(
                           leading: AppStrings.depositStatusLabel,
@@ -1589,25 +1527,31 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   Widget _emailWidget() {
-    /* final RegExp emailValid = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");*/
+     final RegExp emailValid = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     return TextFieldWidget(
       headingLabel: AppStrings.emailAddressLabel,
       hintText: "demo@gmail.com",
       controller: emailIdController,
       textCapitalization: TextCapitalization.none,
       textInputType: TextInputType.emailAddress,
-      /* inputFormatters: [
+       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
-      ],*/
+      ],
       validator: (value) {
-        if (value != emailIdController.text.trim()) {
-          return AppStrings.blankSpace;
+        if(emailIdController.text.isNotEmpty){
+          if (value != emailIdController.text.trim() ) {
+            return AppStrings.blankSpace;
+          } else if(!emailValid.hasMatch(value)){
+            return "Enter Invalid format";
+          }
+          return null;
         }
-        /* else if(!emailValid.hasMatch(value)){
-          return "enter invalid format";
-        }*/
-        return null;
+        },
+      onChanged: (v) {
+        if(emailIdController.text.isNotEmpty){
+          formGlobalKey.currentState.validate();
+        }
       },
     );
   }

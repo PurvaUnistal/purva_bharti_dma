@@ -152,7 +152,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 13-02-2024",
+                      "Date : 23-02-2024",
                       style: TextStyle(
                           color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
@@ -405,6 +405,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.AllLEBELS,
+        context: context
     );
     return res;
   }
@@ -414,6 +415,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.area,
+      context: context
     );
     return res;
   }
@@ -423,6 +425,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.chargeAreaName,
+        context: context
     );
     return res;
   }
@@ -432,6 +435,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.Interested,
+        context: context
     );
     return res;
   }
@@ -441,6 +445,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.PropertyCategory,
+        context: context
     );
     return res;
   }
@@ -450,6 +455,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.propertyclass,
+        context: context
     );
     return res;
   }
@@ -459,6 +465,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.sociaty_allow,
+        context: context
     );
     return res;
   }
@@ -468,6 +475,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.ResidentStatus,
+        context: context
     );
     print("residentStatus-->${res}");
     return res;
@@ -478,6 +486,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.CookingFuel,
+        context: context
     );
     return res;
   }
@@ -487,6 +496,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.GuardianType,
+        context: context
     );
     return res;
   }
@@ -496,6 +506,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.IdentityProof,
+        context: context
     );
     return res;
   }
@@ -505,6 +516,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.OwnershipProof,
+        context: context
     );
     return res;
   }
@@ -514,6 +526,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.KycDoc,
+        context: context
     );
     return res;
   }
@@ -523,6 +536,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.AllBanks,
+        context: context
     );
     return res;
   }
@@ -532,6 +546,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.Ebilling,
+        context: context
     );
     return res;
   }
@@ -541,6 +556,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.ConversionPolicy,
+        context: context
     );
     return res;
   }
@@ -550,6 +566,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.ExtraFittingCost,
+        context: context
     );
     return res;
   }
@@ -559,6 +576,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.MdeOfDeposite,
+        context: context
     );
     return res;
   }
@@ -568,6 +586,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.DepositeStatus,
+        context: context
     );
     return res;
   }
@@ -576,7 +595,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     String url = GlobalConstants.getAllDistrict + "?schema=" + schema;
     try {
       final res = await ApiIntegration.getTestData(
-        endPoint: url,
+        endPoint: url, context: context
       );
       if (res != null) {
         prefs.setString(SPrefsKey.getAllDistrict, res);
@@ -594,6 +613,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.AllDistrict,
+        context: context
     );
     return res;
   }
@@ -603,6 +623,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.SchemeType,
+        context: context
     );
     return res;
   }

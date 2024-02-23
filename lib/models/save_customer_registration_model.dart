@@ -8,7 +8,7 @@ import 'dart:io';
 class SaveCustomerRegistrationModel {
   final int success;
   final List<Message> message;
-  final List<Error> errors;
+  final List<SaveCusRegData> errors;
 
   SaveCustomerRegistrationModel({
     this.success,
@@ -25,7 +25,7 @@ class SaveCustomerRegistrationModel {
       SaveCustomerRegistrationModel(
         success: json["success"],
         message:json['message'] != null ? List<Message>.from(json["message"].map((x) => Message.fromJson(x))) : null,
-        errors:json['errors'] != null ? List<Error>.from(json["errors"].map((x) => Error.fromJson(x))) : null,
+        errors: json["errors"] == null ? null : List<SaveCusRegData>.from(json["errors"].map((x) => SaveCusRegData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -36,21 +36,6 @@ class SaveCustomerRegistrationModel {
 }
 
 
-class Error {
-  final String locality;
-
-  Error({
-    this.locality,
-  });
-
-  factory Error.fromJson(Map<String, dynamic> json) => Error(
-    locality: json["locality"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "locality": locality,
-  };
-}
 
 class Message {
   final SaveCusRegData data;
@@ -361,6 +346,10 @@ class SaveCusRegData {
     "id": id,
   };
 }
+
+
+
+
 
 class SaveCustRegReqModel {
   String areaId;

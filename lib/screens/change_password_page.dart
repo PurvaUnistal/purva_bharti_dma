@@ -85,7 +85,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     );
     log("changePasswordResponse==>" +
         changePasswordResponse.toJson().toString());
-    var res = await apiIntegration.changePasswordApi(changePasswordResponse);
+    var res = await apiIntegration.changePasswordApi(changePasswordResponse,context);
     if (res != null) {
       log("Not Null");
       /*CommonDialogBox.showCommonDialog(

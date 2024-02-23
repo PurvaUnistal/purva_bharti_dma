@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 class CustomToast {
 
   static showToast(String message) {
+
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
@@ -13,6 +14,30 @@ class CustomToast {
         textColor: Colors.white,
         fontSize: 16.0
     );
+  }
+
+  static showSuccessSnackBar(String msg, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(msg),
+      backgroundColor: Colors.green,
+      duration: const Duration(seconds: 2),
+      /* action: SnackBarAction(
+        label: 'ACTION',
+        onPressed: () { },
+      ),*/
+    ));
+  }
+
+  static showErrorSnackBar(String msg, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(msg),
+      backgroundColor: Colors.red,
+      duration: const Duration(seconds: 4),
+     /* action: SnackBarAction(
+        label: 'ACTION',
+        onPressed: () { },
+      ),*/
+    ));
   }
 
 

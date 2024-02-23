@@ -4,7 +4,6 @@ import 'package:pbg_app/screens/custom_input_form/presentation/page/custom_input
 import 'package:pbg_app/utils/common_widgets/spin_loader.dart';
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class SaveCustomerRegistrationPage extends StatefulWidget {
   const SaveCustomerRegistrationPage({Key key}) : super(key: key);
@@ -16,9 +15,13 @@ class SaveCustomerRegistrationPage extends StatefulWidget {
 
 class _SaveCustomerRegistrationPageState
     extends State<SaveCustomerRegistrationPage> {
+
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
   @override
   void initState() {
     initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     apiIntegration = ApiIntegration();
     customerRegistrationBox = Hive.box<SaveCustomerRegistrationOfflineModel>(
         SaveCusRegHiveDataStore.saveCustRegDataBoxName);
@@ -26,7 +29,11 @@ class _SaveCustomerRegistrationPageState
     // TODO: implement initState
     super.initState();
   }
-
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
   bool _mobileData = false;
   bool _wifiData = false;
   bool _bothTypeData = false;
@@ -129,8 +136,7 @@ class _SaveCustomerRegistrationPageState
           buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
         );
         try {
-          var response =
-          await apiIntegration.saveCustRegApi(saveCustRegReqModel);
+          var response = await apiIntegration.saveCustRegApi(context,saveCustRegReqModel);
           log("response-->"+response.toString());
           if (response != null) {
             setState(() {
@@ -151,6 +157,7 @@ class _SaveCustomerRegistrationPageState
           setState(() {
             isLoading = false;
           });
+          log("fghjkl-->${e.toString()}");
         //  CustomToast.showToast(e.toString());
         }
       }
@@ -269,7 +276,7 @@ class _SaveCustomerRegistrationPageState
         log("saveCustRegReqModellengthlengthlength--->" + saveCustRegReqModel.toJson().length.toString());
         try {
           var response =
-          await apiIntegration.saveCustRegApi(saveCustRegReqModel);
+          await apiIntegration.saveCustRegApi(context,saveCustRegReqModel);
           log("response-->${response.toString()}");
           if (response != null) {
             setState(() {
@@ -375,7 +382,7 @@ class _SaveCustomerRegistrationPageState
         buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
       );
       log("saveCustRegReqModellengthlengthlength--->" + saveCustRegReqModel.toJson().length.toString());
-      var response = await apiIntegration.saveCustRegApi(saveCustRegReqModel);
+      var response = await apiIntegration.saveCustRegApi(context,saveCustRegReqModel);
       try {
         if (response != null) {
           setState(() {
@@ -440,8 +447,6 @@ class _SaveCustomerRegistrationPageState
                     textTitle: isLoading ? "Loading" : "Submit",
                     onTap: () async {
                       fetchCustomerDataList();
-
-                      //  fetchCustomerDataGrpList();
                     },
                   ),
                 ],

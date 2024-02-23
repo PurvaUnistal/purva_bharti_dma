@@ -53,7 +53,7 @@ class AppStrings {
   static String noOfKitchenLabel = 'No of Kitchen';
   static String noOfBathroomLabel = 'No of Bathroom';
   static String existingCookingFuelLabel = 'Existing Cooking Fuel';
-  static String noOfFamilyMembersLabel = 'No of Family Members';
+  static String noOfFamilyMembersLabel = 'No Family Members';
   static String locationCoordinatesLabel = 'Location coordinates';
   static String longitudeLabel = 'Longitude';
   static String latitudeLabel = 'Latitude';
@@ -85,8 +85,8 @@ class AppStrings {
   static String electricBillBackImgLabel = 'Address Proof Back';
   static String nocProofNoLabel = 'NOC Proof No';
   static String nocBackImgLabel = 'NOC Back Photo';
-  static String customerImgLabel = 'Upload Customer';
-  static String houseImgLabel = 'Upload House';
+  static String customerImgLabel = 'Customer Photo';
+  static String houseImgLabel = 'House Photo';
   static String customerConsentLabel = "Customer Consent";
   static String securityDepositLabel = "Security Deposit";
   static String initialDepositStatusLabel = "Initial Deposit Status";
@@ -95,6 +95,7 @@ class AppStrings {
   static String chqPhotoLabel = 'Cheque Photo';
   static String formStatusLabel = '';
   static String depositStatusLabel = 'Deposit Status';
+  static String depositType = 'Select the Scheme Type';
   static String modeOfDepositLabel = 'Select the Mode of Deposit';
   static String depositDateLabel = 'Enter the Cheque Date';
   static String depositTypeLabel = 'Deposit Type';
