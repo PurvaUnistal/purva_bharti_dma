@@ -33,10 +33,12 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     on<CustomRegistrationFormPreviewPageEvent>(_previewPage);
     on<SelectIdFrontCameraCapture>(_selectIdFrontCameraCapture);
     on<SelectIdFrontGalleryCapture>(_selectIdFrontGalleryCapture);
-    on<SelectAddFrontCameraCapture>(_selectAddFrontCameraCapture);
-    on<SelectAddFrontGalleryCapture>(_selectAddFrontGalleryCapture);
     on<SelectIdBackCameraCapture>(_selectIdBackCameraCapture);
     on<SelectIdBackGalleryCapture>(_selectIdBackGalleryCapture);
+    on<SelectAddFrontCameraCapture>(_selectAddFrontCameraCapture);
+    on<SelectAddFrontGalleryCapture>(_selectAddFrontGalleryCapture);
+    on<SelectAddBackCameraCapture>(_selectAddBackCameraCapture);
+    on<SelectAddBackGalleryCapture>(_selectAddBackGalleryCapture);
     on<SelectNocDocCameraCapture>(_selectNocDocCameraCapture);
     on<SelectNocDocBackGalleryCapture>(_selectNocDocBackGalleryCapture);
     on<SelectCustomerCameraCapture>(_selectCustomerCameraCapture);
@@ -155,7 +157,9 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   SaveCusRegData _saveCusRegData = SaveCusRegData();
   SaveCusRegData get saveCusRegData => _saveCusRegData;
 
+  final TextEditingController reasonRegistrationController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
+  final TextEditingController altMobileController = TextEditingController();
   final TextEditingController firstController = TextEditingController();
   final TextEditingController middleController = TextEditingController();
   final TextEditingController lastController = TextEditingController();
@@ -177,6 +181,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   final TextEditingController custBankAccNumberController = TextEditingController();
   final TextEditingController custIfscCodeController = TextEditingController();
   final TextEditingController custBankAddController = TextEditingController();
+  final TextEditingController reasonDepositStsController = TextEditingController();
   TextEditingController depositAmountController = TextEditingController();
   final TextEditingController chequeNoController = TextEditingController();
   final TextEditingController chequeDateController = TextEditingController();
@@ -461,6 +466,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
 
   _setInitialDepositStatusValue(CustomRegistrationFormSetInitialDepositStatusValue event, emit) {
     _initialDepositStatusValue = event.initialDepositStatusValue;
+    log("initialDepositStatusValue-->$initialDepositStatusValue");
     _eventCompleted(emit);
   }
 
@@ -528,6 +534,24 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     log("photo-->${photoPath}");
     if(photoPath != null){
       _addFrontPath  = photoPath;
+    }
+    _eventCompleted(emit);
+  }
+
+  _selectAddBackCameraCapture(SelectAddBackCameraCapture event, emit) async {
+    var photoPath = await DashboardHelper.cameraCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _addBackPath  = photoPath;
+    }
+    _eventCompleted(emit);
+  }
+
+  _selectAddBackGalleryCapture(SelectAddBackGalleryCapture event, emit) async {
+    var photoPath = await DashboardHelper.galleryCapture();
+    log("photo-->${photoPath}");
+    if(photoPath != null){
+      _addBackPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -807,18 +831,18 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     _eventCompleted(emit);
     var textFiledValidationCheck = await CustomRegistrationFormHelper.textFieldValidationCheck(
       context: event.context,
-      interested: _interestValue.toString(),
-      acceptConversionPolicy: conversionPolicyValue.toString(),
-      acceptExtraFittingCost: extraFittingValue.toString(),
-      societyAllowedMdpe: societyAllowValue.toString(),
+      registrationType: interestValue.toString(),
+      reasonRegistration: reasonRegistrationController.text.toString(),
       chargeId: chargeAreaValue!.gid.toString(),
       areaId: areaValue!.gid.toString(),
       mobileNumber: mobileController.text.trim().toString(),
+      altMobileNo: altMobileController.text.trim().toString(),
       firstName: firstController.text.trim().toString(),
       middleName: middleController.text.trim().toString(),
       lastName: lastController.text.trim().toString(),
       guardianType: guardianTypeValue.toString(),
       guardianName: guardianNameController.text.trim().toString(),
+      emailId: emailIdController.text.trim().toString(),
       propertyCategoryId: propertyCategoryValue!.id.toString(),
       propertyClassId: propertyClassValue!.id.toString(),
       buildingNumber: buildingNumberController.text.trim().toString(),
@@ -835,22 +859,33 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       latitude: latController.text.trim().toString(),
       longitude: longController.text.trim().toString(),
       nearestLandmark: nearestLandmarkController.text.trim().toString(),
-      kycDocument1: kycDoc1Value.toString(),
-      kycDocument1Number: kyc1NumberController.text.trim().toString(),
-      documentUploads1: idFrontPath.path.toString(),
-      backside1: idBackPath.path.toString(),
-      ownerConsent: ownerConsentPath.toString(),
-      modeOfDeposite: modeDepositValue.toString(),
+      idProof: kycDoc1Value.toString(),
+      idProofNo: kyc1NumberController.text.trim().toString(),
+      idFrontPath: idFrontPath.path.toString(),
+      idBackPath: idBackPath.path.toString(),
+      addProof: kycDoc2Value.toString(),
+      addProofNo: kyc2NumberController.text.trim().toString(),
+      addFrontPath: addFrontPath.path.toString(),
+      addBackPath: addBackPath.path.toString(),
+      ownershipProperty: kycDoc3Value.toString(),
+      ownerConsent: ownerConsentPath.path.toString(),
+      housePath: uploadHousePath.path.toString(),
+      customerPath: uploadCustomerPath.path.toString(),
+      nocDocPath: nocDocPath.path.toString(),
+      acceptConversionPolicy: conversionPolicyValue.toString(),
+      acceptExtraFittingCost: extraFittingValue.toString(),
+      societyAllowedMdpe: societyAllowValue.toString(),
+      depositStatus: initialDepositStatusValue.toString(),
+      reasonDeposit: reasonDepositStsController.text.trim().toString(),
       depositType: depositTypeValue.toString(),
-      chequeNumber: chequeNoController.text.trim().toString(),
-      chequeDepositDate: chequeDateController.text.trim().toString(),
-      payementBankName: paymentBankNameValue.toString(),
-      chequeBankAccount: chequeAccountNoController.text.trim().toString(),
-      chequeMicrNo: chequeMicrNoController.text.trim().toString(),
-      chequePhoto: chequePath.toString(),
-      residentStatus: residentStatusValue.toString(),
-      depositTypeAmount: depositAmountController.text.trim().toString(),
-      initialDepositeStatus: initialDepositStatusValue.toString(),
+      depositAmt: depositAmountController.text.trim().toString(),
+      modeDeposit: modeDepositValue.toString(),
+      chqNo: chequeNoController.text.trim().toString(),
+      chqDate: chequeDateController.text.trim().toString(),
+      chqBank: paymentBankNameValue.toString(),
+      chequeAccountNo: chequeAccountNoController.text.trim().toString(),
+      chequeMICRNo: chequeMicrNoController.text.trim().toString(),
+      chequePath: chequePath.toString(),
     );
     _isPreviewLoader = false;
     _eventCompleted(emit);
@@ -937,7 +972,9 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       modeDepositList: modeDepositList,
       getInitialDepositStatusModel: getInitialDepositStatusModel,
       getModeOfDepositModel: getModeOfDepositModel,
+      reasonRegistrationController: reasonRegistrationController,
       mobileController: mobileController,
+      altMobileController: altMobileController,
       firstController: firstController,
       middleController: middleController,
       lastController: lastController,
@@ -959,6 +996,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       custBankAccNumberController: custBankAccNumberController,
       custIfscCodeController: custIfscCodeController,
       custBankAddController: custBankAddController,
+      reasonDepositStsController: reasonDepositStsController,
       depositAmountController: depositAmountController,
       allDistrictValue: allDistrictValue,
       getAllDistrictModel: getAllDistrictModel,
@@ -976,6 +1014,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       idFrontFilePath: idFrontPath,
       eleBillFrontPath: addFrontPath,
       eleBillBackPath: addBackPath,
+      nocDocPath: nocDocPath,
       nocFrontPath: nocFrontPath,
       nocBackPath: nocBackPath,
       uploadCustomerPath: uploadCustomerPath,

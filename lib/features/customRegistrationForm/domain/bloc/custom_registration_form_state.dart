@@ -26,7 +26,7 @@ class CustomRegistrationFormGetLabelState extends CustomRegistrationFormState {
 class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState {
   final bool isPageLoader;
   final GetLabelModel labelModel;
-   dynamic interestValue;
+  dynamic interestValue;
   final List<dynamic> getNotInterestedList;
   dynamic conversionPolicyValue;
   final List<dynamic> conversionPolicyList;
@@ -78,7 +78,9 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
   final List<GetAllAreaModel> getAllAreaModel;
   dynamic chargeAreaValue;
   final List<GetChargeAreaListModel> getChargeAreaListModel;
+  final TextEditingController reasonRegistrationController;
   final TextEditingController mobileController;
+  final TextEditingController altMobileController;
   final TextEditingController firstController;
   final TextEditingController middleController;
   final TextEditingController lastController;
@@ -100,6 +102,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
   final TextEditingController custBankAccNumberController;
   final TextEditingController custIfscCodeController;
   final TextEditingController custBankAddController;
+  final TextEditingController reasonDepositStsController;
   final TextEditingController depositAmountController;
   final TextEditingController latitudeController;
   final TextEditingController longitudeController;
@@ -115,6 +118,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
   File idBackFilePath;
   File eleBillFrontPath;
   File eleBillBackPath;
+  File nocDocPath;
   File nocFrontPath;
   File nocBackPath;
   File uploadCustomerPath;
@@ -179,7 +183,9 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     required this.getAllDepositOfflineList,
     required this.getAllDepositOfflineModel,
     required this.getModeOfDepositModel,
+    required this.reasonRegistrationController,
     required this.mobileController,
+    required this.altMobileController,
     required this.firstController,
     required this.middleController,
     required this.lastController,
@@ -201,6 +207,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     required this.custBankAccNumberController,
     required this.custIfscCodeController,
     required this.custBankAddController,
+    required this.reasonDepositStsController,
     required this.depositAmountController,
     required this.allDistrictValue,
     required this.latitudeController,
@@ -218,6 +225,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     required this.idBackFilePath,
     required this.eleBillFrontPath,
     required this.eleBillBackPath,
+    required this.nocDocPath,
     required this.nocFrontPath,
     required this.nocBackPath,
     required this.uploadCustomerPath,
@@ -275,11 +283,13 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     getInitialDepositStatusModel,
     modeDepositValue,
     modeDepositList,
-   depositOfflineValue,
-  getAllDepositOfflineList,
-   getAllDepositOfflineModel,
+    depositOfflineValue,
+    getAllDepositOfflineList,
+    getAllDepositOfflineModel,
     getModeOfDepositModel,
+    reasonRegistrationController,
     mobileController,
+    altMobileController,
     firstController,
     middleController,
     lastController,
@@ -302,6 +312,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     custBankAccNumberController,
     custIfscCodeController,
     custBankAddController,
+    reasonDepositStsController,
     depositAmountController,
     allDistrictValue,
     getAllDistrictModel,
@@ -319,6 +330,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
     idBackFilePath,
     eleBillFrontPath,
     eleBillBackPath,
+    nocDocPath,
     nocFrontPath,
     nocBackPath,
     uploadCustomerPath,

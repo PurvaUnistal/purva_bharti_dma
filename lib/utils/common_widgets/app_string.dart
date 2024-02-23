@@ -7,6 +7,7 @@ class AppStrings {
   static String star = "*";
 
   static String registrationType =  'Registration Type';
+  static String reasonRegistration =  'Reason Registration';
   static String chargeArea =  'Charge Area';
   static String area =  'Area';
   static String mobileNo =  "Mobile No";

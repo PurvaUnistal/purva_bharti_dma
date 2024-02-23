@@ -79,6 +79,7 @@ class SaveCusRegData {
   String? areaId;
   String? chargeId;
   String? mobileNumber;
+  String? alternateMobile;
   String? middleName;
   String? guardianName;
   String? emailId;
@@ -158,6 +159,7 @@ class SaveCusRegData {
     this.areaId,
     this.chargeId,
     this.mobileNumber,
+    this.alternateMobile,
     this.middleName,
     this.guardianName,
     this.emailId,
@@ -238,6 +240,7 @@ class SaveCusRegData {
         areaId: json["area_id"] == null ? "" : json["area_id"],
         chargeId: json["gid"] == null ? "" : json["gid"],
         mobileNumber: json["mobile_number"] == null ? "" : json["mobile_number"],
+    alternateMobile: json["alternateMobile"] == null ? "" : json["alternateMobile"],
         middleName: json["middle_name"] == null ? "" : json["middle_name"],
         guardianName: json["guardian_name"] == null ? "" : json["guardian_name"],
         emailId: json["email_id"] == null ? "" : json["email_id"],
@@ -317,6 +320,7 @@ class SaveCusRegData {
         "area_id": areaId,
         "gid": chargeId,
         "mobile_number": mobileNumber,
+        "alternateMobile": alternateMobile,
         "middle_name": middleName,
         "guardian_name": guardianName,
         "email_id": emailId,

@@ -6,19 +6,18 @@ class CustomRegistrationFormHelper {
 
   static Future<dynamic> textFieldValidationCheck({
     required BuildContext context,
-    required String interested,
-    required String acceptConversionPolicy,
-    required String acceptExtraFittingCost,
-    required String societyAllowedMdpe,
+    required String registrationType,
+    required String reasonRegistration,
     required String chargeId,
     required String areaId,
     required String mobileNumber,
+    required String altMobileNo,
     required String firstName,
-    String? middleName,
+    required String middleName,
     required String lastName,
     required String guardianType,
     required String guardianName,
-    String? emailId,
+    required String emailId,
     required String propertyCategoryId,
     required String propertyClassId,
     required String buildingNumber,
@@ -27,71 +26,58 @@ class CustomRegistrationFormHelper {
     required String streetName,
     required String town,
     required String districtId,
+    required String nearestLandmark,
     required String pinCode,
-    required String residentStatus,
+    required String latitude,
+    required String longitude,
+   // required String residentStatus,
     required String noOfKitchen,
     required String noOfBathroom,
     required String existingCookingFuel,
     required String noOfFamilyMembers,
-    String? latitude,
-    String? longitude,
-    String? nearestLandmark,
-    required String kycDocument1,
-    required String kycDocument1Number,
-    String? kycDocument2,
-    String? kycDocument2Number,
-    String? kycDocument3,
-    String? kycDocument3Number,
+    required String idProof,
+    required String idProofNo,
+    required String idFrontPath,
+    required String idBackPath,
+    required String addProof,
+    required String addProofNo,
+    required String addFrontPath,
+    required String addBackPath,
+    required String ownershipProperty,
+    String? ownerConsent,
     String? eBillingModel,
     String? bankNameOfBank,
     String? bankAccountNumber,
     String? bankIfscCode,
     String? bankAddress,
-    required String initialDepositeStatus,
-    String? noInitialDepositStatusReason,
+    required String nocDocPath,
+    required String customerPath,
+    required String housePath,
+    required String acceptConversionPolicy,
+    required String acceptExtraFittingCost,
+    required String societyAllowedMdpe,
+    required String depositStatus,
+    required String reasonDeposit,
     required String depositType,
-    required String depositTypeAmount,
-    required String modeOfDeposite,
-    String? chequeNumber,
-    String? chequeDepositDate,
-    String? payementBankName,
-    String? chequeBankAccount,
-    String? chequeMicrNo,
-    required String backside1,
-    String? backside2,
-    String? backside3,
-    required String documentUploads1,
-    String? documentUploads2,
-    String? documentUploads3,
-    String? uploadHousePhoto,
-    String? uploadCustomerPhoto,
-    String? customerConsent,
-    required String ownerConsent,
-    String? canceledCheque,
-    String? chequePhoto,
+    required String depositAmt,
+    required String modeDeposit,
+    required String chqNo,
+    required String chqDate,
+    required String chqBank,
+    required String chequeAccountNo,
+    required String chequeMICRNo,
+    required String chequePath,
   }) async {
     try {
-      if (interested.isEmpty || interested == "null") {
-        CustomToast.showToast("Select interested");
+      if (registrationType.isEmpty && registrationType == "null") {
+        CustomToast.showToast("Select Registration Type");
         return null;
       }
-      if (acceptConversionPolicy.isEmpty) {
-        CustomToast.showToast("Please select Accept Conversion Policy");
-        return null;
-      }
-      if (acceptExtraFittingCost.isEmpty) {
-        CustomToast.showToast("Please select Accept Extra Fitting CostValue");
-        return null;
-      }
-      if (societyAllowedMdpe.isEmpty) {
-        CustomToast.showToast("Please select society allows MDPE");
-        return null;
-      }
-      if (chargeId.isEmpty || chargeId == 'null') {
+      if (chargeId.isEmpty && chargeId == 'null') {
         CustomToast.showToast('Please select charge area type');
         return null;
       }
-      if (areaId.isEmpty || areaId == 'null') {
+      if (areaId.isEmpty && areaId == 'null') {
         CustomToast.showToast('Please select area type');
         return null;
       }
@@ -99,19 +85,19 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please enter mobile number");
         return null;
       }
-      if (firstName.isEmpty || firstName == "") {
+      if (firstName.isEmpty && firstName == "") {
         CustomToast.showToast("Please enter first name");
         return null;
       }
-      if (lastName == "") {
+      if (lastName.isEmpty && lastName == "") {
         CustomToast.showToast("Please enter last name");
         return null;
       }
-      if (guardianType == "") {
+      if (guardianType.isEmpty && guardianType == "null") {
         CustomToast.showToast("Please enter guardian type");
         return null;
       }
-      if (guardianName.isEmpty || guardianName == "") {
+      if (guardianName.isEmpty) {
         CustomToast.showToast("Please enter guardian name");
         return null;
       }
@@ -123,23 +109,23 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please select property class id");
         return null;
       }
-      if (buildingNumber.isEmpty || buildingNumber == "") {
+      if (buildingNumber.isEmpty) {
         CustomToast.showToast("Please enter the building number");
         return null;
       }
-      if (houseNumber.isEmpty || houseNumber == "") {
+      if (houseNumber.isEmpty) {
         CustomToast.showToast("Please enter the house number");
         return null;
       }
-      if (colonySocietyApartment.isEmpty || colonySocietyApartment == "") {
+      if (colonySocietyApartment.isEmpty) {
         CustomToast.showToast("Please enter the colony/society/apartment");
         return null;
       }
-      if (streetName.isEmpty || streetName == "") {
+      if (streetName.isEmpty) {
         CustomToast.showToast("Please enter the street name");
         return null;
       }
-      if (town.isEmpty || town == "") {
+      if (town.isEmpty) {
         CustomToast.showToast("Please enter the town");
         return null;
       }
@@ -147,7 +133,7 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please select the district");
         return null;
       }
-      if (pinCode.isEmpty || pinCode == "") {
+      if (pinCode.isEmpty) {
         CustomToast.showToast("Please enter the pin code");
         return null;
       }
@@ -159,7 +145,7 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please enter no of bathroom");
         return null;
       }
-      if (existingCookingFuel.isEmpty) {
+      if (existingCookingFuel.isEmpty && existingCookingFuel == "null") {
         CustomToast.showToast("Please select the cooking fuel");
         return null;
       }
@@ -167,91 +153,108 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please enter no of family members");
         return null;
       }
-      if (kycDocument1 == "0") {
+      if (idProof.isEmpty && idProof == "null") {
         CustomToast.showToast("Please select the address proof no.");
         return null;
       }
-      if (kycDocument1Number == "") {
+      if (idProofNo.isEmpty) {
         CustomToast.showToast("Please enter the id proof no.");
         return null;
       }
-      if (documentUploads1.isEmpty || documentUploads1 == "") {
+      if (idFrontPath.isEmpty) {
         CustomToast.showToast("Please select front image");
         return null;
       }
-      if (backside1.isEmpty || backside1 == "") {
-        CustomToast.showToast("Please select back image");
+      if (addProof.isEmpty || addProof == "null") {
+        CustomToast.showToast("Please select KYC (Address Proof)");
         return null;
       }
-      if (ownerConsent.isEmpty || ownerConsent == "") {
-        CustomToast.showToast("Please select consent photo");
+      if (addProofNo.isEmpty) {
+        CustomToast.showToast("Please select KYC (Address Proof) Number");
         return null;
       }
-      /* if (customerBankName == null) {
-        CustomToast.showToast("Please select customer bank account name");
-        return false;
-      }
-      if (customerAccNo == "") {
-        CustomToast.showToast("Please enter customer account number");
-        return false;
-      }
-      if (customerIfscCode == "") {
-        CustomToast.showToast("Please enter the customer IFSC code");
-        return false;
-      }
-      if (customerBankAdd == "") {
-        CustomToast.showToast("Please enter the customer back address");
-        return false;
-      }*/
-      if (depositType.isEmpty || depositType == "null") {
-        CustomToast.showToast("Please select deposit Type");
+      if (addFrontPath.isEmpty) {
+        CustomToast.showToast("Please select Address Proof Front");
         return null;
       }
-      if (modeOfDeposite.isEmpty || modeOfDeposite == "null") {
-        CustomToast.showToast("Please select mode of deposit");
+      if (ownershipProperty.isEmpty && ownershipProperty == "null") {
+        CustomToast.showToast("Please select Ownership type property");
         return null;
-      } else if (modeOfDeposite == "Cheque") {
-        if (chequeNumber!.isEmpty || chequeNumber == "") {
-          CustomToast.showToast("Please enter cheque number");
+      }
+      if (ownershipProperty== "Rented") {
+        if(nocDocPath.isEmpty){
+          CustomToast.showToast("Please select NOC Document");
           return null;
         }
-        if (chequeDepositDate!.isEmpty || chequeDepositDate == "") {
+        return true;
+      }
+      if (acceptConversionPolicy.isEmpty && acceptConversionPolicy == "null") {
+        CustomToast.showToast("Please select Accept Conversion Policy");
+        return null;
+      }
+      if (acceptExtraFittingCost.isEmpty && acceptExtraFittingCost == "null") {
+        CustomToast.showToast("Please select Accept Extra Fitting CostValue");
+        return null;
+      }
+      if (societyAllowedMdpe.isEmpty && societyAllowedMdpe == "null") {
+        CustomToast.showToast("Please select society allows MDPE");
+        return null;
+      }
+      if (depositStatus.isEmpty || depositStatus == "null") {
+        CustomToast.showToast("Please select Deposit Status");
+        return null;
+      }
+      if (depositType.isEmpty || depositType == "null") {
+        CustomToast.showToast("Please select Scheme Type");
+        return null;
+      }
+      if (modeDeposit.isEmpty || modeDeposit == "null") {
+        CustomToast.showToast("Please select Scheme Type");
+        return null;
+      }
+      if (modeDeposit == "Cheque") {
+        if (chqNo.isEmpty) {
+          CustomToast.showToast("Please enter Cheque Number");
+          return null;
+        }
+        if (chqDate.isEmpty) {
           CustomToast.showToast("Please enter cheque date");
           return null;
         }
-        if (payementBankName!.isEmpty || payementBankName == "") {
+        if (chqBank.isEmpty || chqBank == "null") {
           CustomToast.showToast("Please select payment bank name");
           return null;
         }
-        if (chequeBankAccount!.isEmpty || chequeBankAccount == "") {
+        if (chequeAccountNo.isEmpty) {
           CustomToast.showToast("Please enter bank account number");
           return null;
         }
-        if (chequeMicrNo!.isEmpty || chequeMicrNo == "") {
+        if (chequeMICRNo.isEmpty) {
           CustomToast.showToast("Please enter cheque micr code");
           return null;
         }
-        if (chequePhoto!.isEmpty || chequePhoto == "") {
-          CustomToast.showToast("Please select cheque image");
+        if (chequePath.isEmpty) {
+          CustomToast.showToast("Please select Cheque Image");
           return null;
         }
       }
-
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? schema = prefs.getString(GlobalConstants.schema);
       String? dmaUserId = prefs.getString(GlobalConstants.id);
       String? dmaUserName = prefs.getString(GlobalConstants.name);
+
       SaveCusRegData saveCusRegData = SaveCusRegData(
         schema: schema,
         dmaUserId: dmaUserId,
         dmaUserName: dmaUserName,
-        interested: interested,
+        interested: reasonRegistration,
         acceptConversionPolicy: acceptConversionPolicy,
         acceptExtraFittingCost: acceptExtraFittingCost,
         societyAllowedMdpe: societyAllowedMdpe,
         areaId: areaId,
         chargeId: chargeId,
         mobileNumber: mobileNumber,
+        alternateMobile: altMobileNo,
         firstName: firstName,
         middleName: middleName,
         lastName: lastName,
@@ -267,7 +270,7 @@ class CustomRegistrationFormHelper {
         town: town,
         districtId: districtId,
         pinCode: pinCode,
-        residentStatus: residentStatus,
+        residentStatus: registrationType,
         noOfKitchen: noOfKitchen,
         noOfBathroom: noOfBathroom,
         existingCookingFuel: existingCookingFuel,
@@ -275,45 +278,44 @@ class CustomRegistrationFormHelper {
         latitude: latitude,
         longitude: longitude,
         nearestLandmark: nearestLandmark,
-        kycDocument1: kycDocument1,
-        kycDocument1Number: kycDocument1Number,
-        kycDocument2: kycDocument2,
-        kycDocument2Number: kycDocument2Number,
-        kycDocument3: kycDocument3,
-        kycDocument3Number: kycDocument3Number,
+        kycDocument1: idProof,
+        kycDocument1Number: idProofNo,
+        kycDocument2: addProof,
+        kycDocument2Number: addProofNo,
+        kycDocument3: ownershipProperty,
         eBillingModel: eBillingModel,
         bankNameOfBank: bankNameOfBank,
         bankAccountNumber: bankAccountNumber,
         bankIfscCode: bankIfscCode,
         bankAddress: bankAddress,
-        initialDepositeStatus: initialDepositeStatus,
-        noInitialDepositStatusReason: noInitialDepositStatusReason,
+        initialDepositeStatus: depositStatus,
+        noInitialDepositStatusReason: reasonDeposit,
         depositType: depositType,
-        depositTypeAmount: depositTypeAmount,
-        modeOfDeposite: modeOfDeposite,
-        chequeNumber: chequeNumber,
-        chequeDepositDate: chequeDepositDate,
-        payementBankName: payementBankName,
-        chequeBankAccount: chequeBankAccount,
-        chequeMicrNo: chequeMicrNo,
-        backside1: backside1,
-        backside2: backside2,
-        backside3: backside3,
-        documentUploads1: documentUploads1,
-        documentUploads2: documentUploads2,
-        documentUploads3: documentUploads3,
-        uploadHousePhoto: uploadHousePhoto,
-        uploadCustomerPhoto: uploadCustomerPhoto,
-        customerConsent: customerConsent,
-        ownerConsent: ownerConsent,
-        canceledCheque: canceledCheque,
-        chequePhoto: chequePhoto,
+        depositTypeAmount: depositAmt,
+        modeOfDeposite: modeDeposit,
+        chequeNumber: chqNo,
+        chequeDepositDate: chqDate,
+        payementBankName: chqBank,
+        chequeBankAccount: chequeAccountNo,
+        chequeMicrNo: chequeMICRNo,
+        backside1: idBackPath,
+        backside2: addBackPath,
+        backside3: "",
+        documentUploads1: "",
+        documentUploads2: "",
+        documentUploads3: "",
+        uploadHousePhoto: housePath,
+        uploadCustomerPhoto: customerPath,
+        customerConsent: "",
+        ownerConsent: "",
+        canceledCheque: "",
+        chequePhoto: chequePath,
       );
       return saveCusRegData;
     } catch (e) {
       print(e.toString());
       CustomToast.showToast(e.toString());
-      return null;
+      return true;
     }
   }
 
