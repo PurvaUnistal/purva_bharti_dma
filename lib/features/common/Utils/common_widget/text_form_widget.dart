@@ -4,7 +4,8 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final TextEditingController? controller;
-  final String? labelText;
+  final String? star;
+  final String? label;
   final FocusNode? focusNode;
   final Iterable<String>? autofillHints;
   final String? hintText;
@@ -24,10 +25,11 @@ class TextFieldWidget extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
 
-  const TextFieldWidget({
+   TextFieldWidget({
     Key? key,
     this.focusNode,
-    this.labelText,
+    this.star,
+    this.label,
     this.hintText,
     this.autofillHints,
     this.controller,
@@ -67,44 +69,37 @@ class TextFieldWidget extends StatelessWidget {
       textCapitalization: textCapitalization ?? TextCapitalization.words,
       textInputAction: textInputAction ?? TextInputAction.done,
       inputFormatters: inputFormatters,
-      style: TextStyle(
-          fontWeight: FontWeight.normal, fontSize: 12, color:AppColor.black),
+      style: Styles.texts,
       decoration: InputDecoration(
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
         hintText: hintText,
-        hintStyle: TextStyle(
-            fontWeight: FontWeight.normal, fontSize: 12, color:AppColor.black),
-        labelText: labelText,
-        labelStyle: TextStyle(
-            fontWeight: FontWeight.normal, fontSize: 12, color: AppColor.black,),
+        label: Padding(
+          padding: const EdgeInsets.only(left: 2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(child: Text(star??"",  style:Styles.stars)),
+              Flexible(child: Text(label  ?? "", style:Styles.labels),
+              ),
+            ],
+          ),
+        ),
+        hintStyle: Styles.labels,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.0),
-          borderSide: BorderSide(
-              color: AppColor.green,
-              style: BorderStyle.solid,
-              width: 0.80),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.0),
-          borderSide: BorderSide(
-              color: AppColor.green,
-              style: BorderStyle.solid,
-              width: 0.80),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.0),
-          borderSide: BorderSide(
-              color: AppColor.green,
-              style: BorderStyle.solid,
-              width: 0.80),
-        ),
+        border: border,
+        focusedBorder: border,
+        disabledBorder: border,
+        enabledBorder: border,
       ),
     );
   }
+
+  OutlineInputBorder border = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(5.0),
+    borderSide: BorderSide(color: AppColor.green, style: BorderStyle.solid, width: 0.80),
+  );
 }

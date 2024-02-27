@@ -31,6 +31,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     on<CustomRegistrationFormSetModeDepositValue>(_setModeDepositValue);
     on<CustomRegistrationFormSetChequeDateEvent>(_setChequeDate);
     on<CustomRegistrationFormPreviewPageEvent>(_previewPage);
+    on<CustomRegistrationFormSaveLocalDataEvent>(_saveLocalData);
     on<SelectIdFrontCameraCapture>(_selectIdFrontCameraCapture);
     on<SelectIdFrontGalleryCapture>(_selectIdFrontGalleryCapture);
     on<SelectIdBackCameraCapture>(_selectIdBackCameraCapture);
@@ -833,8 +834,8 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       context: event.context,
       registrationType: interestValue.toString(),
       reasonRegistration: reasonRegistrationController.text.toString(),
-      chargeId: chargeAreaValue!.gid.toString(),
-      areaId: areaValue!.gid.toString(),
+      chargeId: chargeAreaValue!.chargeAreaName.toString(),
+      areaId: areaValue!.areaName.toString(),
       mobileNumber: mobileController.text.trim().toString(),
       altMobileNo: altMobileController.text.trim().toString(),
       firstName: firstController.text.trim().toString(),
@@ -843,8 +844,8 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       guardianType: guardianTypeValue.toString(),
       guardianName: guardianNameController.text.trim().toString(),
       emailId: emailIdController.text.trim().toString(),
-      propertyCategoryId: propertyCategoryValue!.id.toString(),
-      propertyClassId: propertyClassValue!.id.toString(),
+      propertyCategoryId: propertyCategoryValue!.name.toString(),
+      propertyClassId: propertyClassValue!.name.toString(),
       buildingNumber: buildingNumberController.text.trim().toString(),
       houseNumber: houseNumberController.text.trim().toString(),
       colonySocietyApartment: colonyController.text.trim().toString(),
@@ -889,7 +890,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     );
     _isPreviewLoader = false;
     _eventCompleted(emit);
-    if (textFiledValidationCheck == true) {
+    if (textFiledValidationCheck != null) {
       _saveCusRegData = textFiledValidationCheck;
       log("_saveCusRegData==>${_saveCusRegData.toJson()}");
       return showDialog<void>(

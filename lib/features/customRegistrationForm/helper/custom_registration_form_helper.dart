@@ -30,7 +30,7 @@ class CustomRegistrationFormHelper {
     required String pinCode,
     required String latitude,
     required String longitude,
-   // required String residentStatus,
+    String? residentStatus,
     required String noOfKitchen,
     required String noOfBathroom,
     required String existingCookingFuel,
@@ -93,13 +93,15 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please enter last name");
         return null;
       }
-      if (guardianType.isEmpty || guardianType == "null") {
-        CustomToast.showToast("Please enter guardian type");
-        return null;
-      }
-      if (guardianName.isEmpty) {
-        CustomToast.showToast("Please enter guardian name");
-        return null;
+      if(registrationType != "Future Registration"){
+        if (guardianType.isEmpty || guardianType == "null") {
+          CustomToast.showToast("Please enter guardian type");
+          return null;
+        }
+        if (guardianName.isEmpty) {
+          CustomToast.showToast("Please enter guardian name");
+          return null;
+        }
       }
       if (propertyCategoryId.isEmpty || propertyCategoryId == "null") {
         CustomToast.showToast("Please select Property Category");
@@ -109,10 +111,10 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please select property class id");
         return null;
       }
-      if (buildingNumber.isEmpty) {
+    /*  if (buildingNumber.isEmpty) {
         CustomToast.showToast("Please enter the building number");
         return null;
-      }
+      }*/
       if (houseNumber.isEmpty) {
         CustomToast.showToast("Please enter the house number");
         return null;
@@ -125,10 +127,10 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please enter the street name");
         return null;
       }
-      if (town.isEmpty) {
+      /*if (town.isEmpty) {
         CustomToast.showToast("Please enter the town");
         return null;
-      }
+      }*/
       if (districtId.isEmpty || districtId == "null") {
         CustomToast.showToast("Please select the district");
         return null;
@@ -165,6 +167,7 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please select front image");
         return null;
       }
+      if(registrationType == "Registration For LMC"){
       if (addProof.isEmpty || addProof == "null") {
         CustomToast.showToast("Please select KYC (Address Proof)");
         return null;
@@ -238,6 +241,8 @@ class CustomRegistrationFormHelper {
           return null;
         }
       }
+      return null;
+      }
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? schema = prefs.getString(GlobalConstants.schema);
       String? dmaUserId = prefs.getString(GlobalConstants.id);
@@ -247,7 +252,7 @@ class CustomRegistrationFormHelper {
         schema: schema,
         dmaUserId: dmaUserId,
         dmaUserName: dmaUserName,
-        interested: reasonRegistration,
+        interested: registrationType,
         acceptConversionPolicy: acceptConversionPolicy,
         acceptExtraFittingCost: acceptExtraFittingCost,
         societyAllowedMdpe: societyAllowedMdpe,
@@ -270,7 +275,7 @@ class CustomRegistrationFormHelper {
         town: town,
         districtId: districtId,
         pinCode: pinCode,
-        residentStatus: registrationType,
+        residentStatus: residentStatus,
         noOfKitchen: noOfKitchen,
         noOfBathroom: noOfBathroom,
         existingCookingFuel: existingCookingFuel,
