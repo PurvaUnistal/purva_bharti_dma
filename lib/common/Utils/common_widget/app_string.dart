@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppString{
-  static String appName = "Purba Bharti DMA";
+  static String appName = "Purba Bharati  DMA";
   static String companyNameDesc = "Unistal Private Ltd.";
   static String appLogo = "assets/images/pbg_logo.png";
   static String dashboardView = "Dashboard View";
