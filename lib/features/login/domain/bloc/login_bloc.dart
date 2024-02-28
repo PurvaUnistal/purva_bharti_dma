@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 
+
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitState()) {
     on<LoginLoadingPageEvent>(_pageLoad);
@@ -60,14 +61,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           _eventCompleted(emit);
           if (res.status == 200 && (res.user!.role == 'dma')) {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setBool(GlobalConstants.isUserLogIn, true);
-            prefs.setString(GlobalConstants.username, emailId);
-            prefs.setString(GlobalConstants.password, password);
-            prefs.setString(GlobalConstants.id, res.user!.id);
-            prefs.setString(GlobalConstants.token, res.token!);
-            prefs.setString(GlobalConstants.schema, res.user!.schema);
-            prefs.setString(GlobalConstants.name, res.user!.name);
-            prefs.setString(GlobalConstants.changePassword, res.user!.pwdChanged);
+            prefs.setString(PrefsValue.userEmail, emailId);
+            prefs.setString(PrefsValue.userPwd, password);
+            prefs.setString(PrefsValue.userId, res.user!.id);
+            prefs.setString(PrefsValue.token, res.token!);
+            prefs.setString(PrefsValue.schema, res.user!.schema);
+            prefs.setString(PrefsValue.userName, res.user!.name);
+            prefs.setString(PrefsValue.pwdChanged, res.user!.pwdChanged);
             Utils.successToast(res.messages!.toString(), event.context);
             _loginModel = res;
             /*Navigator.pushAndRemoveUntil(

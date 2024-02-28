@@ -70,7 +70,7 @@ class ViewSyncRecordHelper {
           try {
             //   await HiveDataBase.leadBoxCustomerRegistration!.clear();
             log("updateCustomerRequestModel--->" + saveCusRegDataRequestModel.toJson().toString());
-            String url = GlobalConstants.saveCustomerRegistrationOffline;
+            String url = AppUrl.saveCustomerRegistrationOffline;
             var res = await ApiServer.postDataWithFile(
               body: saveCusRegDataRequestModel.toJson(),
               context: context,

@@ -17,9 +17,6 @@ export 'package:path_provider/path_provider.dart';
 export 'package:shared_preferences/shared_preferences.dart';
 export 'package:hive_flutter/adapters.dart';
 export 'package:image_picker/image_picker.dart';
-
-
-export 'package:pbg_app/features/common/Utils/routes/routes_name.dart';
 export 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_event.dart';
 export 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_state.dart';
 export 'package:pbg_app/features/customRegistrationForm/helper/custom_registration_form_helper.dart';
@@ -47,58 +44,54 @@ export 'package:pbg_app/features/dashboard/domain/model/get_society_allow_model.
 export 'package:pbg_app/features/dashboard/helper/dashboard_helper.dart';
 export 'package:pbg_app/features/dashboard/presentation/widgets/image_pop.dart';
 export 'package:pbg_app/features/customRegistrationForm/domain/model/save_customer_registration_offline_model.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/Hive/hive_database.dart';
-
-
-
-export 'package:pbg_app/features/common/Utils/SharedPreference.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/app_string.dart';
-export 'package:pbg_app/features/common/Utils/routes/routes.dart';
 export 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_bloc.dart';
 export 'package:pbg_app/features/internet/bloc/internet_bloc.dart';
 export 'package:pbg_app/features/login/domain/bloc/login_bloc.dart';
-export 'package:pbg_app/features/common/server/app_url.dart';
 export 'package:pbg_app/features/dashboard/domain/model/get_bank_name_list_model.dart';
 export 'package:pbg_app/features/viewAndSyncRecords/domain/bloc/view_sync_record_bloc.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/app_color.dart';
-export 'package:pbg_app/utils/commonClass/gps_setting_permission_pop_widget.dart';
 export 'package:pbg_app/features/viewAndSyncRecords/domain/bloc/view_sync_record_event.dart';
 export 'package:pbg_app/features/viewAndSyncRecords/domain/bloc/view_sync_record_state.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/Utils.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/message_box_two_button_pop.dart';
 export 'package:pbg_app/features/viewAndSyncRecords/helper/view_sync_record_helper.dart';
 export 'package:equatable/equatable.dart';
-export 'package:pbg_app/features/common/server/api_server.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/SpinLoader.dart';
 export 'package:pbg_app/features/customRegistrationForm/presentation/pages/customer_registration_form_page.dart';
 export 'package:pbg_app/features/internet/bloc/internet_event.dart';
 export 'package:pbg_app/features/internet/bloc/internet_state.dart';
-export 'package:pbg_app/utils/common_widgets/custom_app_bar.dart';
 export 'package:pbg_app/features/login/domain/bloc/login_event.dart';
 export 'package:pbg_app/features/login/domain/bloc/login_state.dart';
 export 'package:pbg_app/features/login/domain/model/login_model.dart';
 export 'package:pbg_app/features/login/helper/login_helper.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/app_assets.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/button_widget.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/dropdown_widget.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/text_form_widget.dart';
-export 'package:pbg_app/utils/common_widgets/app_string.dart';
 export 'package:flutter_spinkit/flutter_spinkit.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/styles_widget.dart';
-export 'package:pbg_app/features/common/Utils/preference_utils.dart';
 export 'package:pbg_app/features/dashboard/presentation/dashboard_page.dart';
 export 'package:pbg_app/features/login/presentation/login_page.dart';
 export 'package:pbg_app/features/splash/presentation/splash_view.dart';
 export 'package:pbg_app/features/viewAndSyncRecords/presentation/view_sync_record_page.dart';
-export 'package:pbg_app/features/common/Utils/common_widget/dotted_loader_widget.dart';
-export 'package:pbg_app/features/common/server/api_error.dart';
-
-
-export 'package:pbg_app/utils/common_widgets/custom_toast.dart';
-export 'package:pbg_app/utils/common_widgets/global_constant.dart';
-export 'package:pbg_app/utils/commonClass/connectivity_helper.dart';
-export 'package:pbg_app/models/ServerError.dart';
-export 'package:pbg_app/models/change_password_model.dart';
-export 'package:pbg_app/models/charge_area_model.dart';
+export 'package:pbg_app/features/customRegistrationForm/presentation/widgets/border_widget.dart';
+export 'package:pbg_app/features/customRegistrationForm/presentation/widgets/column_widget.dart';
+export 'package:pbg_app/features/customRegistrationForm/presentation/widgets/image_pop_widget.dart';
+export 'package:pbg_app/features/customRegistrationForm/presentation/widgets/image_widget.dart';
+export 'package:pbg_app/features/customRegistrationForm/domain/model/save_customer_registration_model.dart';
 export 'package:http/http.dart';
+export 'package:pbg_app/common/Utils/common_widget/Utils.dart';
+export 'package:pbg_app/common/server/api_error.dart';
+export 'package:pbg_app/common/Utils/Hive/hive_database.dart';
+export 'package:pbg_app/common/Utils/SharedPrefs/PrefsValue.dart';
+export 'package:pbg_app/common/Utils/common_widget/custom_toast.dart';
+export 'package:pbg_app/common/Utils/SharedPrefs/SharedPreference.dart';
+export 'package:pbg_app/common/Utils/common_widget/app_string.dart';
+export 'package:pbg_app/common/Utils/common_widget/button_widget.dart';
+export 'package:pbg_app/common/Utils/routes/routes_name.dart';
+export 'package:pbg_app/common/Utils/common_widget/app_color.dart';
+export 'package:pbg_app/common/Utils/Loader/SpinLoader.dart';
+export 'package:pbg_app/common/Utils/commonClass/connectivity_helper.dart';
+export 'package:pbg_app/common/Utils/common_widget/app_bar_widget.dart';
+export 'package:pbg_app/common/Utils/common_widget/styles_widget.dart';
+export 'package:pbg_app/common/Utils/commonClass/gps_setting_permission_pop_widget.dart';
+export 'package:pbg_app/common/Utils/common_widget/dropdown_widget.dart';
+export 'package:pbg_app/common/Utils/common_widget/message_box_two_button_pop.dart';
+export 'package:pbg_app/common/Utils/common_widget/text_form_widget.dart';
+export 'package:pbg_app/common/Utils/common_widget/app_assets.dart';
+export 'package:pbg_app/common/Utils/Loader/dotted_loader_widget.dart';
+export 'package:pbg_app/common/server/api_server.dart';
+export 'package:pbg_app/common/server/app_url.dart';
+export 'package:pbg_app/common/Utils/routes/routes.dart';
 

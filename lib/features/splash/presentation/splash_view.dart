@@ -34,12 +34,12 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
 
   Future<void> toLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isLoggedIn = prefs.getBool(GlobalConstants.isUserLogIn) ?? false;
-    String? changePassword = prefs.getString(GlobalConstants.changePassword);
+    String? userEmail = prefs.getString(PrefsValue.userEmail);
+    String? userPwd = prefs.getString(PrefsValue.userPwd);
     Timer(
       const Duration(seconds: 2),
       () async {
-        if (isLoggedIn) {
+        if (userEmail!.isNotEmpty && userPwd!.isNotEmpty) {
           Navigator.pushReplacementNamed(
             context,
             RoutesName.dashboardView,

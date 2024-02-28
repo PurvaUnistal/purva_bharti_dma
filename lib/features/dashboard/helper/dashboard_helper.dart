@@ -112,7 +112,7 @@ class DashboardHelper {
 
   static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi({required BuildContext context}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(GlobalConstants.schema);
+    String? schema = prefs.getString(PrefsValue.schema);
     try {
       if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDistrict + schema!, context: context);
@@ -324,7 +324,7 @@ class DashboardHelper {
 
   static Future<List<GetPropertyClassModel>?> getPropertyClassApi({required BuildContext context}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(GlobalConstants.schema);
+    String? schema = prefs.getString(PrefsValue.schema);
     try {
       if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyClass + schema!, context: context);
@@ -347,7 +347,7 @@ class DashboardHelper {
 
   static Future<List<GetPropertyCategoryModel>?> getPropertyCategoryApi({required BuildContext context}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(GlobalConstants.schema);
+    String? schema = prefs.getString(PrefsValue.schema);
     try {
       if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyCategory + schema!, context: context);
@@ -370,7 +370,7 @@ class DashboardHelper {
 
   static Future<List<GetAllAreaModel>?> getAllAreaApi({required BuildContext context}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(GlobalConstants.schema);
+    String? schema = prefs.getString(PrefsValue.schema);
     try {
       if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllArea + schema!, context: context);
@@ -393,7 +393,7 @@ class DashboardHelper {
 
   static Future<List<GetChargeAreaListModel>?> getChargeAreaListApi({required BuildContext context}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(GlobalConstants.schema);
+    String? schema = prefs.getString(PrefsValue.schema);
     try {
       if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getChargeAreaList + schema!, context: context);
@@ -416,7 +416,7 @@ class DashboardHelper {
 
   static Future<List<GetAllDepositOfflineModel>?> getAllDepositOfflineApi({required BuildContext context}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(GlobalConstants.schema);
+    String? schema = prefs.getString(PrefsValue.schema);
     try {
       if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDepositOffline + schema!, context: context);

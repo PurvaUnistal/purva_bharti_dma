@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
-
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
 
@@ -25,7 +24,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
-          child: CustomAppBar(
+          child: AppBarWidget(
             titleAppBar: AppString.appName,
           ),
         ),

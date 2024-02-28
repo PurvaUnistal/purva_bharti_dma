@@ -1,6 +1,6 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
-import 'package:pbg_app/features/customRegistrationForm/domain/model/save_customer_registration_model.dart';
+
 
 class CustomRegistrationFormHelper {
 
@@ -244,9 +244,9 @@ class CustomRegistrationFormHelper {
       return null;
       }
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? schema = prefs.getString(GlobalConstants.schema);
-      String? dmaUserId = prefs.getString(GlobalConstants.id);
-      String? dmaUserName = prefs.getString(GlobalConstants.name);
+      String? schema = prefs.getString(PrefsValue.schema);
+      String? dmaUserId = prefs.getString(PrefsValue.userId);
+      String? dmaUserName = prefs.getString(PrefsValue.userName);
 
       SaveCusRegData saveCusRegData = SaveCusRegData(
         schema: schema,

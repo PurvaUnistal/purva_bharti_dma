@@ -28,7 +28,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
-          child: CustomAppBar(
+          child: AppBarWidget(
             titleAppBar: AppString.viewSyncRecord,
             leading: IconButton(
               icon: Icon(

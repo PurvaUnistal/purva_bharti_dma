@@ -22,7 +22,7 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
-        child: CustomAppBar(
+        child: AppBarWidget(
           titleAppBar: "Login",
         ),
       ),
