@@ -34,25 +34,20 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
 
   Future<void> toLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userEmail = prefs.getString(PrefsValue.userEmail);
-    String? userPwd = prefs.getString(PrefsValue.userPwd);
+    String? userEmail = prefs.getString(PrefsValue.userEmail) ?? "";
+    String? userPwd = prefs.getString(PrefsValue.userPwd) ?? "";
     Timer(
       const Duration(seconds: 2),
       () async {
-        if (userEmail!.isNotEmpty && userPwd!.isNotEmpty) {
-          Navigator.pushReplacementNamed(
-            context,
-            RoutesName.dashboardView,
-          );
-          /* if(changePassword == "0"){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChangePasswordPage()));
-        } else{
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegistrationForm()));
-        }*/
-        } else {
+        if (userEmail.isEmpty && userPwd.isEmpty) {
           Navigator.pushReplacementNamed(
             context,
             RoutesName.loginView,
+          );
+        } else {
+          Navigator.pushReplacementNamed(
+            context,
+            RoutesName.dashboardView,
           );
         }
       },

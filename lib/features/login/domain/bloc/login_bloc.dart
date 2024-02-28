@@ -70,11 +70,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             prefs.setString(PrefsValue.pwdChanged, res.user!.pwdChanged);
             Utils.successToast(res.messages!.toString(), event.context);
             _loginModel = res;
-            /*Navigator.pushAndRemoveUntil(
-              event.context,
-              MaterialPageRoute(builder: (context) => RegistrationForm()),
-              (Route<dynamic> route) => false,
-            );*/
             Navigator.pushReplacementNamed(event.context, RoutesName.dashboardView);
           } else if (res.error == true) {
             return Utils.failureMeg(res.messages.toString(), event.context);
