@@ -84,8 +84,9 @@ class CustomerRegistrationFormPreviewPopWidget extends StatelessWidget {
                             children: [
                               _itemImgBuilder(textName: AppString.customerImg, imagePath: cusRegData.customerPhoto == null ? "" : cusRegData.customerPhoto.toString()),
                               cusRegData.kycDocument3 == "Rented"
-                                  ? _itemImgBuilder(textName: AppString.houseImg, imagePath: cusRegData.housePhoto == null ? "-" : cusRegData.housePhoto.toString())
-                                  : _itemImgBuilder(star: AppString.star,textName: AppString.nocDoc, imagePath: cusRegData.documentUploads3 == null ? "" : cusRegData.documentUploads3.toString()),
+
+                              ?_itemImgBuilder(star: AppString.star,textName: AppString.nocDoc, imagePath: cusRegData.documentUploads3 == null ? "" : cusRegData.documentUploads3.toString())
+                              :Center(child: _itemImgBuilder(textName: AppString.houseImg, imagePath: cusRegData.housePhoto == null ? "" : cusRegData.housePhoto.toString())),
                             ],
                           ),
                           _divider(),
@@ -93,7 +94,7 @@ class CustomerRegistrationFormPreviewPopWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               cusRegData.kycDocument3 == "Rented"
-                                  ? _itemImgBuilder(textName: AppString.houseImg, imagePath: cusRegData.housePhoto == null ? "-" : cusRegData.housePhoto.toString())
+                                  ? Center(child: _itemImgBuilder(textName: AppString.houseImg, imagePath: cusRegData.housePhoto == null ? "" : cusRegData.housePhoto.toString()))
                                   : Container(),
                             ],
                           ),
@@ -107,7 +108,8 @@ class CustomerRegistrationFormPreviewPopWidget extends StatelessWidget {
                             _itemBuilder(textName: AppString.chqBank, textValue: cusRegData.payementBankName.toString()),
                             _itemBuilder(textName: AppString.chequeAccountNo, textValue: cusRegData.chequeBankAccount.toString()),
                             _itemBuilder(textName: AppString.chequeMICRNo, textValue: cusRegData.chequeMicrNo.toString()),
-                            _itemImgBuilder(star: AppString.star,textName: AppString.chqPhoto, imagePath: cusRegData.chequePhoto.toString()),
+                            _divider(),
+                            Center(child: _itemImgBuilder(star: AppString.star,textName: AppString.chqPhoto, imagePath: cusRegData.chequePhoto.toString())),
                           ]
                         ],
                         _divider(),

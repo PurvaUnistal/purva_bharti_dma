@@ -45,21 +45,21 @@ class _LoginViewState extends State<LoginView> {
   _buildLayout({required LoginGetSubmitState dataState}) {
     return SingleChildScrollView(
         child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _appLogoWidget(),
-          _emailWidget(dataState: dataState),
-          _horizontal(),
-          _passwordWidget(dataState: dataState),
-          _horizontal(),
-          _loginWidget(dataState: dataState),
-          _horizontal(),
-        ],
-      ),
-    ));
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _appLogoWidget(),
+              _emailWidget(dataState: dataState),
+              _horizontal(),
+              _passwordWidget(dataState: dataState),
+              _horizontal(),
+              _loginWidget(dataState: dataState),
+              _horizontal(),
+            ],
+          ),
+        ));
   }
 
   onWillPop() async {
@@ -110,9 +110,8 @@ class _LoginViewState extends State<LoginView> {
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.emailAddress,
       autofillHints: [AutofillHints.email],
-      // controller: _usernameController,
-      hintText: "Enter Your Username",
-      labelText: "Enter Your Username",
+      hintText: AppString.emailLabel,
+      labelText: AppString.emailLabel,
       onChanged: (val) {
         BlocProvider.of<LoginBloc>(context)
             .add(LoginSetEmailEvent(email: val.toString().replaceAll(" ", "")));
@@ -126,8 +125,8 @@ class _LoginViewState extends State<LoginView> {
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.visiblePassword,
       autofillHints: [AutofillHints.password],
-      hintText: "Enter Your Password",
-      labelText: "Enter Your Password",
+      hintText: AppString.passwordLabel,
+      labelText: AppString.passwordLabel,
       obscureText: dataState.isPassword,
       onChanged: (val) {
         BlocProvider.of<LoginBloc>(context).add(LoginSetPasswordEvent(
@@ -139,19 +138,20 @@ class _LoginViewState extends State<LoginView> {
       ),
       suffixIcon: IconButton(
         icon: Icon(
-            dataState.isPassword ? Icons.visibility_off : Icons.visibility,
+            dataState.isPassword ?  Icons.visibility_off: Icons.visibility,
             color: AppColor.appBlueColor),
         onPressed: () {
           BlocProvider.of<LoginBloc>(context).add(LoginSetHideShowPwdEvent(
-              isHideShowPwd: dataState.isPassword == true ? false : true));
+              isHideShowPwd: dataState.isPassword == false ? true : false));
         },
       ),
     );
   }
 
   Widget _loginWidget({required LoginGetSubmitState dataState}) {
-    return ButtonWidget(
-      text: "LOG IN",
+    return dataState.isPageLoader == false
+        ? ButtonWidget(
+      text: AppString.login,
       onPressed: () {
         FocusScope.of(context).unfocus();
         TextInput.finishAutofillContext();
@@ -160,7 +160,7 @@ class _LoginViewState extends State<LoginView> {
           isLoginLoader: true,
         ));
       },
-    );
+    ) : DottedLoaderWidget();
   }
 
   Widget _horizontal() {

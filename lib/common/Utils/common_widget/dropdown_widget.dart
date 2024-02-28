@@ -39,8 +39,8 @@ class DropdownWidget<T> extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(star??"", style:Styles.stars),
-                Text(label  ?? "", style:Styles.labels),
+                Flexible(child: Text(star??"", style:Styles.stars)),
+                Flexible(flex : 6,child: Text(label  ?? "", style:Styles.labels)),
               ],
             ),
           ),

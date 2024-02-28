@@ -992,7 +992,6 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     return ImageWidget(
       child: stateData.uploadCustomerPath.path.isEmpty || stateData.uploadCustomerPath == "" ?
       _localBorderImg() : _fileImage(fileImage: stateData.uploadCustomerPath),
-      star: AppString.star,
       label: stateData.labelModel.photo == null ? AppString.idProofFront : stateData.labelModel.photo!.customerPhoto,
       onTap: () {
         showModalBottomSheet(

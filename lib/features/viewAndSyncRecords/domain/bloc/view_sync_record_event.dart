@@ -17,6 +17,15 @@ class ViewSyncRecordLoadSaveServerDataEvent extends ViewSyncRecordEvent {
   List<Object?> get props => [context];
 }
 
+class ViewSyncRecordUpdateLocalDataEvent extends ViewSyncRecordEvent {
+  final BuildContext context;
+  final int index;
+  final SaveCustomerRegistrationOfflineModel localData;
+  ViewSyncRecordUpdateLocalDataEvent({required this.context, required this.index, required this.localData});
+  @override
+  List<Object?> get props => [context, index,localData];
+}
+
 class ViewSyncRecordDeleteLocalEvent extends ViewSyncRecordEvent {
   final int index;
   final BuildContext context;

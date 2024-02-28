@@ -42,7 +42,6 @@ export 'package:pbg_app/features/dashboard/domain/model/get_property_class_model
 export 'package:pbg_app/features/dashboard/domain/model/get_resident_status_model.dart';
 export 'package:pbg_app/features/dashboard/domain/model/get_society_allow_model.dart';
 export 'package:pbg_app/features/dashboard/helper/dashboard_helper.dart';
-export 'package:pbg_app/features/dashboard/presentation/widgets/image_pop.dart';
 export 'package:pbg_app/features/customRegistrationForm/domain/model/save_customer_registration_offline_model.dart';
 export 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_bloc.dart';
 export 'package:pbg_app/features/internet/bloc/internet_bloc.dart';

@@ -74,32 +74,32 @@ class CustomRegistrationFormHelper {
         return null;
       }
       if (chargeId.isEmpty || chargeId == 'null') {
-        CustomToast.showToast('Please select charge area type');
+        CustomToast.showToast('Please select Charge Area Type');
         return null;
       }
       if (areaId.isEmpty || areaId == 'null') {
-        CustomToast.showToast('Please select area type');
+        CustomToast.showToast('Please select Area Type');
         return null;
       }
       if (mobileNumber.isEmpty) {
-        CustomToast.showToast("Please enter mobile number");
+        CustomToast.showToast("Please enter Mobile Number");
         return null;
       }
       if (firstName.isEmpty || firstName == "") {
-        CustomToast.showToast("Please enter first name");
+        CustomToast.showToast("Please enter First Name");
         return null;
       }
       if (lastName.isEmpty || lastName == "") {
-        CustomToast.showToast("Please enter last name");
+        CustomToast.showToast("Please enter Last Name");
         return null;
       }
-      if(registrationType != "Future Registration"){
+      if(registrationType == "Registration For LMC"){
         if (guardianType.isEmpty || guardianType == "null") {
-          CustomToast.showToast("Please enter guardian type");
+          CustomToast.showToast("Please enter Guardian Type");
           return null;
         }
         if (guardianName.isEmpty) {
-          CustomToast.showToast("Please enter guardian name");
+          CustomToast.showToast("Please enter Guardian Name");
           return null;
         }
       }
@@ -108,7 +108,7 @@ class CustomRegistrationFormHelper {
         return null;
       }
       if (propertyClassId.isEmpty || propertyClassId == "null") {
-        CustomToast.showToast("Please select property class id");
+        CustomToast.showToast("Please select Property Class Id");
         return null;
       }
     /*  if (buildingNumber.isEmpty) {
@@ -116,15 +116,15 @@ class CustomRegistrationFormHelper {
         return null;
       }*/
       if (houseNumber.isEmpty) {
-        CustomToast.showToast("Please enter the house number");
+        CustomToast.showToast("Please enter the House Number");
         return null;
       }
       if (colonySocietyApartment.isEmpty) {
-        CustomToast.showToast("Please enter the colony/society/apartment");
+        CustomToast.showToast("Please enter the Colony/Society/Apartment");
         return null;
       }
       if (streetName.isEmpty) {
-        CustomToast.showToast("Please enter the street name");
+        CustomToast.showToast("Please enter the Lane/Street Name");
         return null;
       }
       /*if (town.isEmpty) {
@@ -132,7 +132,7 @@ class CustomRegistrationFormHelper {
         return null;
       }*/
       if (districtId.isEmpty || districtId == "null") {
-        CustomToast.showToast("Please select the district");
+        CustomToast.showToast("Please select the District");
         return null;
       }
       if (pinCode.isEmpty) {
@@ -140,31 +140,31 @@ class CustomRegistrationFormHelper {
         return null;
       }
       if (noOfKitchen.isEmpty) {
-        CustomToast.showToast("Please enter no of kitchen");
+        CustomToast.showToast("Please enter No. of Kitchen");
         return null;
       }
       if (noOfBathroom.isEmpty) {
-        CustomToast.showToast("Please enter no of bathroom");
+        CustomToast.showToast("Please enter No. of Bathroom");
         return null;
       }
       if (existingCookingFuel.isEmpty || existingCookingFuel == "null") {
-        CustomToast.showToast("Please select the cooking fuel");
+        CustomToast.showToast("Please select the Cooking Fuel");
         return null;
       }
       if (noOfFamilyMembers.isEmpty) {
-        CustomToast.showToast("Please enter no of family members");
+        CustomToast.showToast("Please enter No. of Family Members");
         return null;
       }
       if (idProof.isEmpty || idProof == "null") {
-        CustomToast.showToast("Please select the address proof no.");
+        CustomToast.showToast("Please select the Id Proof");
         return null;
       }
       if (idProofNo.isEmpty) {
-        CustomToast.showToast("Please enter the id proof no.");
+        CustomToast.showToast("Please enter the Id Proof Number");
         return null;
       }
       if (idFrontPath.isEmpty) {
-        CustomToast.showToast("Please select front image");
+        CustomToast.showToast("Please select Id Proof Front Image");
         return null;
       }
       if(registrationType == "Registration For LMC"){
@@ -177,11 +177,11 @@ class CustomRegistrationFormHelper {
         return null;
       }
       if (addFrontPath.isEmpty) {
-        CustomToast.showToast("Please select Address Proof Front");
+        CustomToast.showToast("Please select Address Proof Front Image");
         return null;
       }
       if (ownershipProperty.isEmpty || ownershipProperty == "null") {
-        CustomToast.showToast("Please select Ownership type property");
+        CustomToast.showToast("Please select Ownership Type Property");
         return null;
       }
       if (ownershipProperty== "Rented") {
@@ -189,7 +189,6 @@ class CustomRegistrationFormHelper {
           CustomToast.showToast("Please select NOC Document");
           return null;
         }
-        return true;
       }
       if (acceptConversionPolicy.isEmpty || acceptConversionPolicy == "null") {
         CustomToast.showToast("Please select Accept Conversion Policy");
@@ -200,7 +199,7 @@ class CustomRegistrationFormHelper {
         return null;
       }
       if (societyAllowedMdpe.isEmpty || societyAllowedMdpe == "null") {
-        CustomToast.showToast("Please select society allows MDPE");
+        CustomToast.showToast("Please select Society Allows MDPE");
         return null;
       }
       if (depositStatus.isEmpty || depositStatus == "null") {
@@ -212,7 +211,7 @@ class CustomRegistrationFormHelper {
         return null;
       }
       if (modeDeposit.isEmpty || modeDeposit == "null") {
-        CustomToast.showToast("Please select Scheme Type");
+        CustomToast.showToast("Please select Mode Of Deposit");
         return null;
       }
       if (modeDeposit == "Cheque") {
@@ -221,19 +220,19 @@ class CustomRegistrationFormHelper {
           return null;
         }
         if (chqDate.isEmpty) {
-          CustomToast.showToast("Please enter cheque date");
+          CustomToast.showToast("Please select Cheque date");
           return null;
         }
         if (chqBank.isEmpty || chqBank == "null") {
-          CustomToast.showToast("Please select payment bank name");
+          CustomToast.showToast("Please select Cheque Bank Name");
           return null;
         }
         if (chequeAccountNo.isEmpty) {
-          CustomToast.showToast("Please enter bank account number");
+          CustomToast.showToast("Please enter Cheque Bank Account Number");
           return null;
         }
         if (chequeMICRNo.isEmpty) {
-          CustomToast.showToast("Please enter cheque micr code");
+          CustomToast.showToast("Please enter Cheque MICR Code");
           return null;
         }
         if (chequePath.isEmpty) {
@@ -241,7 +240,6 @@ class CustomRegistrationFormHelper {
           return null;
         }
       }
-      return null;
       }
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? schema = prefs.getString(PrefsValue.schema);
@@ -305,10 +303,10 @@ class CustomRegistrationFormHelper {
         chequeMicrNo: chequeMICRNo,
         backside1: idBackPath,
         backside2: addBackPath,
-        backside3: "",
-        documentUploads1: "",
-        documentUploads2: "",
-        documentUploads3: "",
+        backside3: nocDocPath,
+        documentUploads1: idFrontPath,
+        documentUploads2: addFrontPath,
+        documentUploads3: nocDocPath,
         uploadHousePhoto: housePath,
         uploadCustomerPhoto: customerPath,
         customerConsent: "",
@@ -400,12 +398,13 @@ class CustomRegistrationFormHelper {
       );
       print("HEllo");
       var mmm = await HiveDataBase.leadBoxCustomerRegistration!.values.toList().length;
-      if (mmm <= 10) {
-        print("mmm-->${mmm.toString().length}");
+      print("mmm-->${mmm}");
+      if (mmm <= 5) {
+        print("mmmLength-->${mmm.toString().length}");
         return await HiveDataBase.leadBoxCustomerRegistration!.add(_custRegiDataModel);
         //  return await leadSaveInServer(context: context);
       } else {
-        CustomToast.showToast('Error !!!! \n Please Uploade Previous record');
+        Utils.errorSnackBar('Error !!! \nPlease Upload Previous record', context);
         return null;
       }
     } catch (e) {

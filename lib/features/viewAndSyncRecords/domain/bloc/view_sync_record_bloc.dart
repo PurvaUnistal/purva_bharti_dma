@@ -6,6 +6,7 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
   ViewSyncRecordBloc() : super(ViewSyncRecordInitialState()) {
     on<ViewSyncRecordLoadPageEvent>(_pageLoad);
     on<ViewSyncRecordDeleteLocalEvent>(_deleteLocalData);
+    on<ViewSyncRecordUpdateLocalDataEvent>(_updateLocalData);
     on<ViewSyncRecordLoadSaveServerDataEvent>(_saveServerData);
   }
 
@@ -26,6 +27,13 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
     _offlineDataList = SaveCustomerRegistrationOfflineModel();
   //  offlineDataList = [];
     _eventCompleted(emit);
+  }
+
+  _updateLocalData(ViewSyncRecordUpdateLocalDataEvent event, emit){
+    Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
+        CustomerRegistrationFormPage(isUpdate: true, position: event.index, localData: event.localData)));
+    _eventCompleted(emit);
+
   }
 
   _deleteLocalData(ViewSyncRecordDeleteLocalEvent event, emit) async {
@@ -51,14 +59,13 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
   _saveServerData(ViewSyncRecordLoadSaveServerDataEvent event, emit) async {
     _isSaveServerLoader = true;
     _eventCompleted(emit);
-    var res = await ViewSyncRecordHelper.leadSaveInServer(context: event.context,
-    );
+    var res = await ViewSyncRecordHelper.leadSaveInServer(context: event.context);
     log("resLeadSaveInServer==>${res.toString()}");
     if (res != null) {
       _isSaveServerLoader = false;
       _eventCompleted(emit);
       log('Great Success! \n Record Save');
-      Utils.failureMeg(res.messages.toString(), event.context);
+      Utils.errorSnackBar(res.messages.toString(), event.context);
       Navigator.pushReplacementNamed(event.context, RoutesName.dashboardView);
     }
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/features/customRegistrationForm/domain/model/save_customer_registration_model.dart';
 
 
 class ViewSyncRecordHelper {
@@ -72,20 +71,17 @@ class ViewSyncRecordHelper {
             log("updateCustomerRequestModel--->" + saveCusRegDataRequestModel.toJson().toString());
             String url = AppUrl.saveCustomerRegistrationOffline;
             var res = await ApiServer.postDataWithFile(
-              body: saveCusRegDataRequestModel.toJson(),
-              context: context,
-              urlEndPoint: url,
-            );
+              body: saveCusRegDataRequestModel.toJson(), context: context, urlEndPoint: url,);
             if (res != null) {
               count++;
-              CustomToast.showToast(res.toString());
+              Utils.successSnackBar(res, context);
               return saveCustomerRegistrationModelFromJson(res);
             } else {
-              CustomToast.showToast(res.toString());
+              Utils.errorSnackBar(res, context);
               return null;
             }
           } catch (e) {
-            CustomToast.showToast(e.toString());
+            Utils.errorSnackBar(e.toString(), context);
             return null;
           }
         }
@@ -101,7 +97,7 @@ class ViewSyncRecordHelper {
         //   CustomToast.showToast("Data saved successfully");
       }
     } else {
-      CustomToast.showToast("No Internet Connection");
+      Utils.errorSnackBar("No Internet Connection", context);
       return null;
     }
   }

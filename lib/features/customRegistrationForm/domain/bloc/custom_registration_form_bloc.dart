@@ -828,8 +828,6 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   }
 
   _previewPage(CustomRegistrationFormPreviewPageEvent event, emit) async {
-    _isPreviewLoader = true;
-    _eventCompleted(emit);
     var textFiledValidationCheck = await CustomRegistrationFormHelper.textFieldValidationCheck(
       context: event.context,
       registrationType: interestValue.toString(),
@@ -886,11 +884,13 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       chqBank: paymentBankNameValue.toString(),
       chequeAccountNo: chequeAccountNoController.text.trim().toString(),
       chequeMICRNo: chequeMicrNoController.text.trim().toString(),
-      chequePath: chequePath.toString(),
+      chequePath: chequePath.path.toString(),
     );
-    _isPreviewLoader = false;
+    _isPreviewLoader = true;
     _eventCompleted(emit);
     if (textFiledValidationCheck != null) {
+      _isPreviewLoader = false;
+      _eventCompleted(emit);
       _saveCusRegData = textFiledValidationCheck;
       log("_saveCusRegData==>${_saveCusRegData.toJson()}");
       return showDialog<void>(
@@ -908,7 +908,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var res = await CustomRegistrationFormHelper.AddCustomerFormInLocalDatabase(context: event.context, saveCusRegData: saveCusRegData);
     log("resAddCustomerFormInLocalDatabase==>${res.toString()}");
     if (res != null) {
-      log('Great Success! \n Record Save');
+      Utils.successSnackBar("Great Success! Record Save", event.context);
       Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecordPage);
       var tempDir = await getTemporaryDirectory();
       if (tempDir.existsSync()) {

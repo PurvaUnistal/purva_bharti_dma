@@ -19,13 +19,13 @@ class ApiServer {
       log("ApiServer-->${e.toString()}");
       if (e is SocketException) {
         log("SocketException : ${e.toString()}");
-        Utils.warningMeg(e.toString(), context);
+        Utils.warningSnackBar(e.toString(), context);
       } else if (e is TimeoutException) {
         log("TimeoutException : ${e.toString()}");
-        Utils.warningMeg(e.toString(), context);
+        Utils.warningSnackBar(e.toString(), context);
       } else {
         log("Unhandled exception : ${e.toString()}");
-        Utils.warningMeg(e.toString(), context);
+        Utils.warningSnackBar(e.toString(), context);
       }
       return Api.error;
     }

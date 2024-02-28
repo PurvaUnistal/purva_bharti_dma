@@ -33,8 +33,8 @@ class _DashboardPageState extends State<DashboardPage> {
             // TODO: implement listener}
             if (state is ConnectedState) {
               state.isConnected
-                  ? Utils.successToast(state.msg, context)
-                  : Utils.failureMeg(state.msg, context);
+                  ? Utils.successSnackBar(state.msg, context)
+                  : Utils.errorSnackBar(state.msg, context);
             }
           },
           child: Column(
@@ -156,7 +156,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ?  BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
                 context: context,
               ))
-                  : Utils.failureMeg("No Internet Connection", context);
+                  : Utils.errorSnackBar("No Internet Connection", context);
             },
           ),
         ],

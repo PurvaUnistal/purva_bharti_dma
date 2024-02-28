@@ -33,13 +33,13 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
   );
 
   Future<void> toLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userEmail = prefs.getString(PrefsValue.userEmail) ?? "";
-    String? userPwd = prefs.getString(PrefsValue.userPwd) ?? "";
+    await PreferenceUtils.init();
+    String email = PreferenceUtils.getString(value: PrefsValue.userEmail);
+    String password = PreferenceUtils.getString(value: PrefsValue.userPwd);
     Timer(
       const Duration(seconds: 2),
       () async {
-        if (userEmail.isEmpty && userPwd.isEmpty) {
+        if (email.isEmpty && password.isEmpty) {
           Navigator.pushReplacementNamed(
             context,
             RoutesName.loginView,

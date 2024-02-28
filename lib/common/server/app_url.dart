@@ -1,7 +1,6 @@
 class AppUrl {
-  static String baseUrl = 'http://142.79.231.30:8099/';
- // static String baseUrl = 'http://pbgpl.smartgasnet.com/';
- // static String baseUrl = "https://citygas.hpcl.co.in/";
+ // static String baseUrl = 'http://142.79.231.30:8099/';
+  static String baseUrl = 'http://pbgpl.smartgasnet.com/';
   static String auth = "${baseUrl}api/auth";
   static String getLabel = "${baseUrl}api/getLabel";
   static String notInterested = "${baseUrl}api/getConstant?key=notIntrested";

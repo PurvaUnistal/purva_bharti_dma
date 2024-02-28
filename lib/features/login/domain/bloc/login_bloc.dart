@@ -17,31 +17,31 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   String deviceId = "";
 
   bool _isPageLoader = false;
-
   bool get isPageLoader => _isPageLoader;
 
-  bool _isPassword = false;
-
+  bool _isPassword = true;
   bool get isPassword => _isPassword;
 
   LoginModel _loginModel = LoginModel();
-
   LoginModel get loginModel => _loginModel;
 
   _pageLoad(LoginLoadingPageEvent event, emit) async {
+    emit(LoginPageLoaderState());
+    _isPageLoader = false;
+    _isPassword = true;
     emailId = "";
     password = "";
-    _isPassword = true;
-    _isPageLoader = false;
     _eventCompleted(emit);
   }
 
   _setEmailId(LoginSetEmailEvent event, emit) {
     emailId = event.email.toString().replaceAll(" ", "");
+    _eventCompleted(emit);
   }
 
   _setPassword(LoginSetPasswordEvent event, emit) {
     password = event.password.toString().replaceAll(" ", "");
+    _eventCompleted(emit);
   }
 
   _setHideShowPassword(LoginSetHideShowPwdEvent event, emit) {
@@ -61,18 +61,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           _eventCompleted(emit);
           if (res.status == 200 && (res.user!.role == 'dma')) {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setString(PrefsValue.userEmail, emailId);
-            prefs.setString(PrefsValue.userPwd, password);
-            prefs.setString(PrefsValue.userId, res.user!.id);
-            prefs.setString(PrefsValue.token, res.token!);
-            prefs.setString(PrefsValue.schema, res.user!.schema);
-            prefs.setString(PrefsValue.userName, res.user!.name);
+            await PreferenceUtils.setString(key: PrefsValue.userEmail, value: emailId);
+            await PreferenceUtils.setString(key: PrefsValue.userPwd, value: password);
+            await PreferenceUtils.setString(key: PrefsValue.userId, value: res.user!.id);
+            await PreferenceUtils.setString(key: PrefsValue.token, value: res.token!);
+            await PreferenceUtils.setString(key: PrefsValue.schema, value: res.user!.schema);
+            await PreferenceUtils.setString(key: PrefsValue.userName, value: res.user!.name);
             prefs.setString(PrefsValue.pwdChanged, res.user!.pwdChanged);
-            Utils.successToast(res.messages!.toString(), event.context);
+            Utils.successSnackBar(res.messages!.toString(), event.context);
             _loginModel = res;
             Navigator.pushReplacementNamed(event.context, RoutesName.dashboardView);
-          } else if (res.error == true) {
-            return Utils.failureMeg(res.messages.toString(), event.context);
+          }
+          else if (res.error == true) {
+            _isPageLoader = false;
+            _eventCompleted(emit);
+            return Utils.errorSnackBar(res.messages.toString(), event.context);
           }
         } else {
           _isPageLoader = false;

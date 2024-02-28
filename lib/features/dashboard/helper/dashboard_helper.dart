@@ -479,8 +479,8 @@ class DashboardHelper {
 
 
   static Future<Position?> getCurrentLocation() async {
+    await Geolocator.requestPermission();
     await Permission.locationAlways.request();
-    var permissionStatus = await Permission.locationAlways.status;
     final androidInfo = await DeviceInfoPlugin().androidInfo;
     if (Platform.isAndroid) {
        if (androidInfo.version.sdkInt <= 32) {

@@ -25,3 +25,5 @@ class HiveBoxName {
   static get boxNameCustRegi => "CustomerRegistrationData";
   static get leadBoxNameCustRegi => "AddCustomerRegistrationData";
 }
+
+

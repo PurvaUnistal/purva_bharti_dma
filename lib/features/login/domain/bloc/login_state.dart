@@ -8,6 +8,12 @@ class LoginInitState extends LoginState {
   List<Object> get props => [];
 }
 
+class LoginPageLoaderState extends LoginState {
+  @override
+  // TODO: implement props
+  List<Object> get props => [];
+}
+
 class LoginGetSubmitState extends LoginState {
   final bool isPageLoader;
   final bool isPassword;

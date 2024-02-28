@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 class LoginHelper {
+
   static Future<dynamic> textFieldValidation(
       {required String email,
       required password,
       required BuildContext context}) async {
     try {
       if (email.isEmpty) {
-        Utils.failureMeg(AppString.emailValidation, context);
+        Utils.errorSnackBar(AppString.emailValidation, context);
         return false;
       } else if (password.isEmpty) {
-        Utils.failureMeg(AppString.passwordValidation, context);
+        Utils.errorSnackBar(AppString.passwordValidation, context);
         return false;
       }
       return true;
     } catch (e) {
       log(e.toString());
-      Utils.failureMeg(e.toString(), context);
+      Utils.errorSnackBar(e.toString(), context);
       return false;
     }
   }
@@ -37,7 +38,7 @@ class LoginHelper {
       return LoginModel.fromJson(res);
     } catch (e) {
       log("catchLogin-->${e.toString()}");
-      Utils.failureMeg(e.toString(), context);
+      Utils.errorSnackBar(e.toString(), context);
       return null;
       // return Utils.showToast(e.toString());
     }

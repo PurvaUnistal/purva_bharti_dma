@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 class Utils {
-  static successToast(String msg, BuildContext context) {
+  static successSnackBar(String msg, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              Icons.check_circle,
-              color: AppColor.white,
-            ),
             Flexible(child: Text(msg)),
+            Icon(Icons.check_circle, color: AppColor.white,size: 36),
           ],
         ),
         backgroundColor: Colors.green,
@@ -21,38 +19,37 @@ class Utils {
     );
   }
 
-  static warningMeg(String msg, BuildContext context) {
+  static errorSnackBar(String msg, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              Icons.warning_amber_rounded,
-              color: AppColor.white,
-            ),
             Flexible(child: Text(msg)),
+            IconButton(
+              icon: Icon(Icons.clear, color: AppColor.white,size: 36,),
+              onPressed: ()=>  ScaffoldMessenger.of(context).hideCurrentSnackBar()
+            )
           ],
         ),
-        backgroundColor: Colors.orangeAccent.shade200,
+        backgroundColor: Colors.red,
         padding: EdgeInsets.all(8),
-        duration: Duration(seconds: 3),
+        duration: Duration(seconds: 4),
       ),
     );
   }
 
-  static failureMeg(String msg, BuildContext context) {
+  static warningSnackBar(String msg, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              Icons.close,
-              color: AppColor.white,
-            ),
             Flexible(child: Text(msg)),
+            Icon(Icons.warning_amber_rounded, color: AppColor.white,size: 36),
           ],
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.orangeAccent.shade200,
         padding: EdgeInsets.all(8),
         duration: Duration(seconds: 3),
       ),

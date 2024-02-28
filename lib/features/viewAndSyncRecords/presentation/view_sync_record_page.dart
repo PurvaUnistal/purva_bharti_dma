@@ -46,8 +46,8 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
           listener: (context, state) {
             // TODO: implement listener}
             if (state is ConnectedState) {
-              state.isConnected ? Utils.successToast(state.msg, context) : Utils
-                  .failureMeg(state.msg, context);
+              state.isConnected ? Utils.successSnackBar(state.msg, context) : Utils
+                  .errorSnackBar(state.msg, context);
             }
           },
           child: Column(children: [
@@ -184,8 +184,11 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                 )),
                             IconButton(
                                 onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                      CustomerRegistrationFormPage(isUpdate: true, position: index, localData: data)));
+                                  BlocProvider.of<ViewSyncRecordBloc>(context).add(ViewSyncRecordUpdateLocalDataEvent(
+                                    context: context,index: index,localData: data
+                                  ));
+                                  /*Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                      CustomerRegistrationFormPage(isUpdate: true, position: index, localData: data)));*/
                                 },
                                 icon: Icon(
                                   Icons.edit,
