@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/common/Utils/Hive/hive_functions.dart';
 
 
 class ViewSyncRecordHelper {
+
+
   static Future<dynamic> leadSaveInServer({required BuildContext context}) async {
-    if (HiveDataBase.leadBoxCustomerRegistration!.values.isNotEmpty) {
+    if (HiveFunctions.userBox!.values.isNotEmpty) {
       if (await isInternetConnected() == true) {
         int count = 0;
-        log("Data Length Check ============== ${HiveDataBase.leadBoxCustomerRegistration!.values.length}");
-        List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveDataBase.leadBoxCustomerRegistration!.values.toList();
+        log("Data Length Check ============== ${HiveFunctions.userBox!.values.length}");
+        List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveFunctions.userBox!.values.toList();
         for (int i = 0; i < saveCustRegOfflineModelHiveList.length; i++) {
           SaveCustomerRegistrationOfflineModel saveCustRegOfflineModel = saveCustRegOfflineModelHiveList[i];
           SaveCusRegData saveCusRegDataRequestModel = SaveCusRegData(
@@ -67,7 +70,6 @@ class ViewSyncRecordHelper {
             chequeMicrNo: saveCustRegOfflineModel.chequeMicrAccount,
           );
           try {
-            //   await HiveDataBase.leadBoxCustomerRegistration!.clear();
             log("updateCustomerRequestModel--->" + saveCusRegDataRequestModel.toJson().toString());
             String url = AppUrl.saveCustomerRegistrationOffline;
             var res = await ApiServer.postDataWithFile(
@@ -76,21 +78,19 @@ class ViewSyncRecordHelper {
               count++;
               Utils.successSnackBar(res, context);
               return saveCustomerRegistrationModelFromJson(res);
-            } else {
-              Utils.errorSnackBar(res, context);
-              return null;
             }
           } catch (e) {
+            log("catch-->${e.toString()}");
             Utils.errorSnackBar(e.toString(), context);
             return null;
           }
         }
         for (int i = count - 1; i >= 0; i--) {
           saveCustRegOfflineModelHiveList.removeAt(i);
-          await HiveDataBase.leadBoxCustomerRegistration!.deleteAt(i);
+          await HiveFunctions.deleteUser(index : i);
         }
         if (count == saveCustRegOfflineModelHiveList.length) {
-          await HiveDataBase.leadBoxCustomerRegistration!.clear();
+          await HiveFunctions.userBox!.clear();
         }
         print("ASDFGHNJGFDS-->${saveCustRegOfflineModelHiveList.length}");
         saveCustRegOfflineModelHiveList.removeRange(0, count);
@@ -102,14 +102,110 @@ class ViewSyncRecordHelper {
     }
   }
 
+  static Future<dynamic> updateCustomerFormInLocalDatabase({required BuildContext context, required SaveCusRegData saveCusRegData}) async {
+    try {
+      SaveCustomerRegistrationOfflineModel _custRegiDataModel = SaveCustomerRegistrationOfflineModel(
+        dmaUserName: saveCusRegData.dmaUserName.toString(),
+        dmaUserId: saveCusRegData.dmaUserId.toString(),
+        schema: saveCusRegData.schema.toString(),
+        interested: saveCusRegData.interested.toString(),
+        acceptConversionPolicy: saveCusRegData.acceptConversionPolicy.toString(),
+        acceptExtraFittingCost: saveCusRegData.acceptExtraFittingCost.toString(),
+        societyAllowedMdpe: saveCusRegData.societyAllowedMdpe.toString(),
+        chargeArea: saveCusRegData.chargeId.toString(),
+        areaId: saveCusRegData.areaId.toString(),
+        mobileNumber: saveCusRegData.mobileNumber.toString(),
+        firstName: saveCusRegData.firstName.toString(),
+        middleName: saveCusRegData.middleName.toString(),
+        lastName: saveCusRegData.lastName.toString(),
+        guardianType: saveCusRegData.guardianType.toString(),
+        guardianName: saveCusRegData.guardianName.toString(),
+        emailId: saveCusRegData.emailId.toString(),
+        propertyCategoryId: saveCusRegData.propertyCategoryId.toString(),
+        propertyClassId: saveCusRegData.propertyClassId.toString(),
+        buildingNumber: saveCusRegData.buildingNumber.toString(),
+        houseNumber: saveCusRegData.houseNumber.toString(),
+        colonySocietyApartment: saveCusRegData.colonySocietyApartment.toString(),
+        streetName: saveCusRegData.streetName.toString(),
+        town: saveCusRegData.town.toString(),
+        districtId: saveCusRegData.districtId.toString(),
+        pinCode: saveCusRegData.pinCode.toString(),
+        residentStatus: saveCusRegData.residentStatus.toString(),
+        noOfKitchen: saveCusRegData.noOfKitchen.toString(),
+        noOfBathroom: saveCusRegData.noOfBathroom.toString(),
+        noOfFamilyMembers: saveCusRegData.noOfFamilyMembers.toString(),
+        existingCookingFuel: saveCusRegData.existingCookingFuel.toString(),
+        latitude: saveCusRegData.latitude.toString(),
+        longitude: saveCusRegData.longitude.toString(),
+        nearestLandmark: saveCusRegData.nearestLandmark.toString(),
+        kycDocument1: saveCusRegData.kycDocument1.toString(),
+        kycDocument1Number: saveCusRegData.kycDocument1Number.toString(),
+        kycDocument2: saveCusRegData.kycDocument2.toString(),
+        kycDocument2Number: saveCusRegData.kycDocument2Number.toString(),
+        kycDocument3: saveCusRegData.kycDocument3.toString(),
+        kycDocument3Number: saveCusRegData.kycDocument3Number.toString(),
+        eBillingModel: saveCusRegData.eBillingModel.toString(),
+        bankNameOfBank: saveCusRegData.bankNameOfBank.toString(),
+        bankAccountNumber: saveCusRegData.bankAccountNumber.toString(),
+        bankIfscCode: saveCusRegData.bankIfscCode.toString(),
+        bankAddress: saveCusRegData.bankAddress.toString(),
+        initialDepositeStatus: saveCusRegData.initialDepositeStatus.toString(),
+        depositeType: saveCusRegData.depositType.toString(),
+        depositTypeAmount: saveCusRegData.depositTypeAmount.toString(),
+        modeOfDeposite: saveCusRegData.modeOfDeposite.toString(),
+        chequeNumber: saveCusRegData.chequeNumber.toString(),
+        chequeDepositDate: saveCusRegData.chequeDepositDate.toString(),
+        payementBankName: saveCusRegData.payementBankName.toString(),
+        chequeBankAccount: saveCusRegData.chequeBankAccount.toString(),
+        chequeMicrAccount: saveCusRegData.chequeMicrNo.toString(),
+        documentUploadsPhoto1: saveCusRegData.documentUploads1.toString(),
+        documentUploadsPhoto2: saveCusRegData.documentUploads2.toString(),
+        documentUploadsPhoto3: saveCusRegData.documentUploads3.toString(),
+        backSidePhoto1: saveCusRegData.backside1.toString(),
+        backSidePhoto2: saveCusRegData.backside2.toString(),
+        backSidePhoto3: saveCusRegData.backside3.toString(),
+        uploadCustomerPhoto: saveCusRegData.uploadCustomerPhoto.toString(),
+        uploadHousePhoto: saveCusRegData.uploadHousePhoto.toString(),
+        customerConsentPhoto: saveCusRegData.customerConsent.toString(),
+        ownerConsent: saveCusRegData.ownerConsent.toString(),
+        canceledChequePhoto: saveCusRegData.canceledCheque.toString(),
+        chequePhoto: saveCusRegData.chequePhoto.toString(),
+        reasonForHold: saveCusRegData.nearestLandmark.toString(),
+        noInitialDepositStatusReason: saveCusRegData.noInitialDepositStatusReason.toString(),
+        modeDepositValue: saveCusRegData.modeOfDeposite,
+        ownerConsentText: "",
+        isDepositCheq: false,
+      );
+      print("HEllo");
+      var mmm = await HiveFunctions.userBox!.values.toList().length;
+      print("mmm-->${mmm}");
+      if (HiveFunctions.userBox!.values.isNotEmpty) {
+        print("mmmLength-->${mmm.toString().length}");
+        return await HiveFunctions.updateUser(index:mmm,userModel: _custRegiDataModel);
+      } else {
+        Utils.errorSnackBar('Error !!! \nPlease Upload Previous record', context);
+        return null;
+      }
+    } catch (e) {
+      CustomToast.showToast(e.toString());
+      return null;
+    }
+  }
+
+
   static Future<dynamic> deleteData({required BuildContext context, required int index, required String mobileNo}) async {
-    if (HiveDataBase.leadBoxCustomerRegistration!.values.isNotEmpty) {
-      log("Data Length ============== ${HiveDataBase.leadBoxCustomerRegistration!.values.length}");
-      List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveDataBase.leadBoxCustomerRegistration!.values.toList();
+    if (HiveFunctions.userBox!.values.isNotEmpty) {
+      log("Data Length ============== ${HiveFunctions.userBox!.values.length}");
+      List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveFunctions.userBox!.values.toList();
       mobileNo = saveCustRegOfflineModelHiveList.removeAt(index).mobileNumber!;
       saveCustRegOfflineModelHiveList.removeAt(index);
-     await HiveDataBase.leadBoxCustomerRegistration!.deleteAt(index);
+     await HiveFunctions.deleteUser(index: index);
     }
+    return null;
+  }
+
+  static Future<dynamic> updateData({required BuildContext context, required int index, required String mobileNo}) async {
+
     return null;
   }
 

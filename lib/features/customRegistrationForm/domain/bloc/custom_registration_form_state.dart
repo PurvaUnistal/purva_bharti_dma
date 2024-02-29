@@ -25,6 +25,7 @@ class CustomRegistrationFormGetLabelState extends CustomRegistrationFormState {
 
 class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState {
   final bool isPageLoader;
+  final bool isUpdate;
   final GetLabelModel labelModel;
   dynamic interestValue;
   final List<dynamic> getNotInterestedList;
@@ -132,6 +133,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
 
   CustomRegistrationFormGetAllDataState({
     required this.isPageLoader,
+    required this.isUpdate,
     required this.labelModel,
     required this.interestValue,
     required this.getNotInterestedList,
@@ -242,6 +244,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
   // TODO: implement props
   List<Object?> get props => [
     isPageLoader,
+    isUpdate,
     labelModel,
     interestValue,
     getNotInterestedList,

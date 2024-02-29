@@ -2,10 +2,8 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 
 part 'save_customer_registration_offline_model.g.dart';
 
-@HiveType(
-  typeId: HiveTypeId.customerRegistrationTypeId,
-)
-class SaveCustomerRegistrationOfflineModel {
+@HiveType(typeId: 0)
+class SaveCustomerRegistrationOfflineModel{
   @HiveField(0)
  String? areaId;
   @HiveField(1)

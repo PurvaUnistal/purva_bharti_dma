@@ -1,48 +1,45 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 
 class HiveFunctions {
-  static String custHiveBox = "CustomerRegistrationData";
-  // Box which will use to store the things
-  static final userBox = Hive.box(custHiveBox);
+  static get custHiveBox => "CustomerRegistrationData";
+  static Box<SaveCustomerRegistrationOfflineModel>? userBox;
 
-  // Create or add single data in hive
-  static createUser(Map data) {
-    userBox.add(data);
+  static Future<void> init() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    Directory tempDir = await getApplicationDocumentsDirectory();
+    Directory filesDir = Directory(tempDir.path)..createSync(recursive: true);
+    Hive.init(filesDir.path);
+
+    // Get reference to an already opened box
+    Hive.registerAdapter<SaveCustomerRegistrationOfflineModel>(SaveCustomerRegistrationOfflineModelAdapter());
+    userBox = await Hive.openBox<SaveCustomerRegistrationOfflineModel>(custHiveBox);
   }
 
-  // Create or add multiple data in hive
-  static addAllUser(List data) {
-    userBox.addAll(data);
+
+  /// Add new user
+  static Future<void> addUser({required SaveCustomerRegistrationOfflineModel userModel}) async {
+    await userBox!.add(userModel);
   }
 
-  // Get All data  stored in hive
-  static List getAllUsers() {
-    final data = userBox.keys.map((key) {
-      final value = userBox.get(key);
-      return {"key": key, "name": value["name"], "email": value['email']};
-    }).toList();
-
-    return data.reversed.toList();
+  /// show user list
+  static Future<void> getUser({required String id}) async {
+    await userBox!.get(id);
   }
 
-  // Get data for particular user in hive
-  static Map getUser(int key) {
-    return userBox.get(key);
+  /// update user data
+  static Future<void> updateUser({required int index, required SaveCustomerRegistrationOfflineModel userModel}) async {
+    await userBox!.putAt(index, userModel);
   }
 
-  // update data for particular user in hive
-  static updateUser(int key, Map data) {
-    userBox.put(key, data);
-  }
-
-  // delete data for particular user in hive
-  static deleteUser(int key) {
-    return userBox.delete(key);
+  /// delete user
+  static Future<void> deleteUser({required int index}) async {
+    await userBox!.deleteAt(index);
   }
 
   // delete data for particular user in hive
   static deleteAllUser(int key) {
-    return userBox.deleteAll(userBox.keys);
+    return userBox!.deleteAll(userBox!.keys);
   }
 
 }

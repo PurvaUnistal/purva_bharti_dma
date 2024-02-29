@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/common/Utils/Hive/hive_ex.dart';
-
-
-
-
-String dataBoxName = "dataBoxName";
+import 'package:pbg_app/common/Utils/Hive/hive_functions.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PreferenceUtils.init();
-  // await Hive.initFlutter();
-  // Hive.registerAdapter<SaveCustomerRegistrationOfflineModel>(SaveCustomerRegistrationOfflineModelAdapter());
-  // await Hive.openBox<SaveCustomerRegistrationOfflineModel>("saveCustRegDataBoxName");
-  await HiveDataBase.init();
-
+  await HiveFunctions.init();
   runApp(MyApp());
 }
 
@@ -37,9 +29,9 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor:  Colors.green.shade800),
         ),
-       /* initialRoute: RoutesName.splashView,
-        onGenerateRoute: Routes.generateRoute,*/
-        home: MainScreen(),
+        initialRoute: RoutesName.splashView,
+        onGenerateRoute: Routes.generateRoute,
+       /* home: MainScreen(),*/
         debugShowCheckedModeBanner: false,
       ),
     );

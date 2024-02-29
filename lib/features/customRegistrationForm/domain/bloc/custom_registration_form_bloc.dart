@@ -32,6 +32,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     on<CustomRegistrationFormSetChequeDateEvent>(_setChequeDate);
     on<CustomRegistrationFormPreviewPageEvent>(_previewPage);
     on<CustomRegistrationFormSaveLocalDataEvent>(_saveLocalData);
+    on<CustomRegistrationFormLoadUpdateLocalDataEvent>(_updateLocalData);
     on<SelectIdFrontCameraCapture>(_selectIdFrontCameraCapture);
     on<SelectIdFrontGalleryCapture>(_selectIdFrontGalleryCapture);
     on<SelectIdBackCameraCapture>(_selectIdBackCameraCapture);
@@ -49,6 +50,9 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     on<SelectChqCameraCapture>(_selectChqCameraCapture);
     on<SelectChqGalleryCapture>(_selectChqGalleryCapture);
   }
+  bool _isUpdate = false;
+  bool get isUpdate => _isUpdate;
+
   bool _isPageLoader = false;
   bool get isPageLoader => _isPageLoader;
 
@@ -296,6 +300,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     emit(CustomRegistrationFormPageLoadState());
      await SharedPreferences.getInstance();
     _isPageLoader = false;
+    _isUpdate = false;
     _labelModel = GetLabelModel();
     chargeAreaValue = GetChargeAreaListModel();
     areaValue = GetAllAreaModel();
@@ -905,23 +910,27 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   _saveLocalData(CustomRegistrationFormSaveLocalDataEvent event, emit) async {
     _isSaveLoader = true;
     _eventCompleted(emit);
-    var res = await CustomRegistrationFormHelper.AddCustomerFormInLocalDatabase(context: event.context, saveCusRegData: saveCusRegData);
-    log("resAddCustomerFormInLocalDatabase==>${res.toString()}");
-    if (res != null) {
-      Utils.successSnackBar("Great Success! Record Save", event.context);
-      Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecordPage);
-      var tempDir = await getTemporaryDirectory();
-      if (tempDir.existsSync()) {
-        tempDir.deleteSync(recursive: true);
-      }
-    }
+     await CustomRegistrationFormHelper.addUpdateCustomerFormInLocalDatabase(
+         context: event.context, saveCusRegData: saveCusRegData, isUpdate:_isUpdate,
+     );
     _isSaveLoader = false;
     _eventCompleted(emit);
+  }
+
+  _updateLocalData(CustomRegistrationFormLoadUpdateLocalDataEvent event, emit) async {
+   /* _isSaveLoader = true;
+    _eventCompleted(emit);
+    Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
+        CustomerRegistrationFormPage(isUpdate: true, position: event.index, localData: saveCusRegData)));
+    await CustomRegistrationFormHelper.updateCustomerFormInLocalDatabase(context: event.context, saveCusRegData: saveCusRegData);
+    _isSaveLoader = false;
+    _eventCompleted(emit);*/
   }
 
   _eventCompleted(Emitter<CustomRegistrationFormState> emit) {
     emit(CustomRegistrationFormGetAllDataState(
       isPageLoader : isPageLoader,
+      isUpdate : isUpdate,
       labelModel: labelModel,
       interestValue: interestValue,
       getNotInterestedList: getNotInterestedList,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/common/Utils/Hive/hive_functions.dart';
 
 class ViewSyncRecordPage extends StatefulWidget {
   const ViewSyncRecordPage({Key? key}) : super(key: key);
@@ -17,8 +18,8 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
     BlocProvider.of<ViewSyncRecordBloc>(context).add(
         ViewSyncRecordLoadPageEvent(context: context));
-    HiveDataBase.customerRegistrationBox!;
-    offlineBox =  HiveDataBase.leadBoxCustomerRegistration!;
+    HiveFunctions.userBox!;
+    offlineBox =  HiveFunctions.userBox!;
     offlineDataList = offlineBox.values.toList();
     super.initState();
   }
@@ -166,26 +167,18 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                   Icons.sync,
                                   color: AppColor.appBlueColor,
                                 )),
-
                             IconButton(
+                                icon: Icon(Icons.delete_forever, color: AppColor.appBlueColor,),
                                 onPressed: () {
-                                  BlocProvider.of<ViewSyncRecordBloc>(context)
-                                      .add(ViewSyncRecordDeleteLocalEvent(
-                                      index: index,
-                                      context: context,
-                                      mobileNo: data.mobileNumber!,
-                                    offlineDataList: offlineDataList,
-                                    offlineBox: offlineBox,
+                                  BlocProvider.of<ViewSyncRecordBloc>(context).add(ViewSyncRecordDeleteLocalDataEvent(
+                                      index: index, context: context, mobileNo: data.mobileNumber!,
                                   ));
                                 },
-                                icon: Icon(
-                                  Icons.delete_forever,
-                                  color: AppColor.appBlueColor,
-                                )),
+                            ),
                             IconButton(
                                 onPressed: () {
-                                  BlocProvider.of<ViewSyncRecordBloc>(context).add(ViewSyncRecordUpdateLocalDataEvent(
-                                    context: context,index: index,localData: data
+                                  BlocProvider.of<CustomRegistrationFormBloc>(context).
+                                  add(CustomRegistrationFormLoadUpdateLocalDataEvent(context: context,index: index
                                   ));
                                   /*Navigator.push(context, MaterialPageRoute(builder: (context) =>
                                       CustomerRegistrationFormPage(isUpdate: true, position: index, localData: data)));*/

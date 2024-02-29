@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:pbg_app/common/Utils/Hive/hive_functions.dart';
 
 class ApiServer {
   static Future<dynamic> getData({var urlEndPoint, required BuildContext context, }) async {
@@ -65,33 +67,45 @@ class ApiServer {
     Map<String, String> headers = {"Authorization": token!, "Content-Type": "multipart/form-data"};
     try {
       var request = new MultipartRequest("POST", Uri.parse(urlEndPoint));
-      if (HiveDataBase.leadBoxCustomerRegistration!.values.isNotEmpty) {
-        List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveDataBase.leadBoxCustomerRegistration!.values.toList();
+      if (HiveFunctions.userBox!.values.isNotEmpty) {
+        List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveFunctions.userBox!.values.toList();
         for (int i = 0; i < saveCustRegOfflineModelHiveList.length; i++) {
           SaveCustomerRegistrationOfflineModel saveCustRegOfflineModel = saveCustRegOfflineModelHiveList[i];
-          var backSide1Image = await MultipartFile.fromPath("backside1", saveCustRegOfflineModel.backSidePhoto1!);
+          var backSide1Image = await MultipartFile.fromPath("backside1", saveCustRegOfflineModel.backSidePhoto1!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.backSidePhoto1!.split('.').last));
           request.files.add(backSide1Image);
-          var backSide2Image = await MultipartFile.fromPath("backside2", saveCustRegOfflineModel.backSidePhoto2!);
+          var backSide2Image = await MultipartFile.fromPath("backside2", saveCustRegOfflineModel.backSidePhoto2!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.backSidePhoto2!.split('.').last));
           request.files.add(backSide2Image);
-          var backSide3Image = await MultipartFile.fromPath("backside3", saveCustRegOfflineModel.backSidePhoto3!);
+          var backSide3Image = await MultipartFile.fromPath("backside3", saveCustRegOfflineModel.backSidePhoto3!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.backSidePhoto3!.split('.').last));
           request.files.add(backSide3Image);
-          var documentUploads1 = await MultipartFile.fromPath("document_uploads_1", saveCustRegOfflineModel.documentUploadsPhoto1!);
+          var documentUploads1 = await MultipartFile.fromPath("document_uploads_1", saveCustRegOfflineModel.documentUploadsPhoto1!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.documentUploadsPhoto1!.split('.').last));
           request.files.add(documentUploads1);
-          var documentUploads2 = await MultipartFile.fromPath("document_uploads_2", saveCustRegOfflineModel.documentUploadsPhoto2!);
+          var documentUploads2 = await MultipartFile.fromPath("document_uploads_2", saveCustRegOfflineModel.documentUploadsPhoto2!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.documentUploadsPhoto2!.split('.').last));
           request.files.add(documentUploads2);
-          var documentUploads3 = await MultipartFile.fromPath("document_uploads_3", saveCustRegOfflineModel.documentUploadsPhoto3!);
+          var documentUploads3 = await MultipartFile.fromPath("document_uploads_3", saveCustRegOfflineModel.documentUploadsPhoto3!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.documentUploadsPhoto3!.split('.').last));
           request.files.add(documentUploads3);
-          var uploadCustomerPhoto = await MultipartFile.fromPath("upload_customer_photo", saveCustRegOfflineModel.uploadCustomerPhoto!);
+          var uploadCustomerPhoto = await MultipartFile.fromPath("upload_customer_photo", saveCustRegOfflineModel.uploadCustomerPhoto!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.uploadCustomerPhoto!.split('.').last));
           request.files.add(uploadCustomerPhoto);
-          var uploadHousePhoto = await MultipartFile.fromPath("upload_house_photo", saveCustRegOfflineModel.uploadHousePhoto!);
+          var uploadHousePhoto = await MultipartFile.fromPath("upload_house_photo", saveCustRegOfflineModel.uploadHousePhoto!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.uploadHousePhoto!.split('.').last));
           request.files.add(uploadHousePhoto);
-          var customerConsentPhoto = await MultipartFile.fromPath("customer_consent", saveCustRegOfflineModel.customerConsentPhoto!);
+          var customerConsentPhoto = await MultipartFile.fromPath("customer_consent", saveCustRegOfflineModel.customerConsentPhoto!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.customerConsentPhoto!.split('.').last));
           request.files.add(customerConsentPhoto);
-          var ownerConsent = await MultipartFile.fromPath("owner_consent", saveCustRegOfflineModel.ownerConsent!);
+          var ownerConsent = await MultipartFile.fromPath("owner_consent", saveCustRegOfflineModel.ownerConsent!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.ownerConsent!.split('.').last));
           request.files.add(ownerConsent);
-          var canceledChequePhoto = await MultipartFile.fromPath("canceled_cheque", saveCustRegOfflineModel.canceledChequePhoto!);
+          var canceledChequePhoto = await MultipartFile.fromPath("canceled_cheque", saveCustRegOfflineModel.canceledChequePhoto!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.canceledChequePhoto!.split('.').last));
           request.files.add(canceledChequePhoto);
-          var chequePhoto = await MultipartFile.fromPath("cheque_photo", saveCustRegOfflineModel.chequePhoto!);
+          var chequePhoto = await MultipartFile.fromPath("cheque_photo", saveCustRegOfflineModel.chequePhoto!,
+              contentType: MediaType("image",  saveCustRegOfflineModel.chequePhoto!.split('.').last));
           request.files.add(chequePhoto);
         }
       }
@@ -103,14 +117,11 @@ class ApiServer {
         var result = json.decode(String.fromCharCodes(responseData));
         log("result==>${result.toString()}");
         return result;
-      } else {
-        return Api.error;
       }
     } catch (e) {
-      CustomToast.showToast(
-        e.toString(),
-      );
-      return Api.error;
+      log("ApiSerCatch-->${e.toString()}");
+      Utils.errorSnackBar(e.toString(), context);
+      return null;
     }
   }
 }

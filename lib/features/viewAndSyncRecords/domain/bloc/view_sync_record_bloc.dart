@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/common/Utils/Hive/hive_functions.dart';
 
 
 class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> {
   ViewSyncRecordBloc() : super(ViewSyncRecordInitialState()) {
     on<ViewSyncRecordLoadPageEvent>(_pageLoad);
-    on<ViewSyncRecordDeleteLocalEvent>(_deleteLocalData);
-    on<ViewSyncRecordUpdateLocalDataEvent>(_updateLocalData);
+    on<ViewSyncRecordLoadUpdateLocalDataEvent>(_updateLocalData);
+    on<ViewSyncRecordDeleteLocalDataEvent>(_deleteLocalData);
     on<ViewSyncRecordLoadSaveServerDataEvent>(_saveServerData);
   }
 
@@ -24,35 +25,31 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
     emit(ViewSyncRecordPageLoadState());
     _isSaveServerLoader = false;
     _isDeleteLoader = false;
-    _offlineDataList = SaveCustomerRegistrationOfflineModel();
-  //  offlineDataList = [];
     _eventCompleted(emit);
   }
 
-  _updateLocalData(ViewSyncRecordUpdateLocalDataEvent event, emit){
-    Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
-        CustomerRegistrationFormPage(isUpdate: true, position: event.index, localData: event.localData)));
-    _eventCompleted(emit);
 
+  _updateLocalData(ViewSyncRecordLoadUpdateLocalDataEvent event, emit) async {
+   /* await CustomRegistrationFormHelper.addCustomerFormInLocalDatabase(context: event.context, saveCusRegData: saveCusRegData);
+    _eventCompleted(emit);*/
   }
 
-  _deleteLocalData(ViewSyncRecordDeleteLocalEvent event, emit) async {
-    await showDialog(
+  _deleteLocalData(ViewSyncRecordDeleteLocalDataEvent event, emit) async {
+     return showDialog(
         context: event.context,
-        builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
+        builder: (BuildContext context) => MessageBoxTwoButtonPopWidget(
             message: "Do you really want to delete?",
             subMessage: "Mobile No : ${event.mobileNo}",
             okButtonText: "Yes",
            onPressed: () async {
-            if (HiveDataBase.leadBoxCustomerRegistration!.values.isNotEmpty) {
-              log("Data Length P ============== ${HiveDataBase.leadBoxCustomerRegistration!.values.length}");
-              _offlineDataList = event.offlineDataList.removeAt(event.index);
-              await HiveDataBase.leadBoxCustomerRegistration!.deleteAt(event.index);
-              log("Data Length D ============== ${HiveDataBase.leadBoxCustomerRegistration!.values.length}");
+            if (HiveFunctions.userBox!.values.isNotEmpty) {
+              Navigator.pop(event.context);
+              Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
+              log("Data Length P ============== ${HiveFunctions.userBox!.values.length}");
+              return await HiveFunctions.deleteUser(index: event.index);
             }
             _eventCompleted(emit);
-            Navigator.pop(event.context);
-          },
+            },
         ));
   }
 
@@ -78,4 +75,5 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
     //  saveCustomerRegistrationOfflineData: offlineBox!,
     ));
   }
+
 }

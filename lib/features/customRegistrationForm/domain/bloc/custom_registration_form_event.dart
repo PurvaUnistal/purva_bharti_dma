@@ -305,3 +305,13 @@ class CustomRegistrationFormSaveLocalDataEvent extends CustomRegistrationFormEve
   @override
   List<Object?> get props => [context];
 }
+
+
+class CustomRegistrationFormLoadUpdateLocalDataEvent extends CustomRegistrationFormEvent {
+  final BuildContext context;
+  final int index;
+  CustomRegistrationFormLoadUpdateLocalDataEvent({required this.context, required this.index,});
+  @override
+  List<Object?> get props => [context, index];
+}
+

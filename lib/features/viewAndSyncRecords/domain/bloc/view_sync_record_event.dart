@@ -10,35 +10,29 @@ class ViewSyncRecordLoadPageEvent extends ViewSyncRecordEvent {
   List<Object?> get props => [context];
 }
 
-class ViewSyncRecordLoadSaveServerDataEvent extends ViewSyncRecordEvent {
-  final BuildContext context;
-  ViewSyncRecordLoadSaveServerDataEvent({required this.context});
-  @override
-  List<Object?> get props => [context];
-}
 
-class ViewSyncRecordUpdateLocalDataEvent extends ViewSyncRecordEvent {
+class ViewSyncRecordLoadUpdateLocalDataEvent extends ViewSyncRecordEvent {
   final BuildContext context;
   final int index;
-  final SaveCustomerRegistrationOfflineModel localData;
-  ViewSyncRecordUpdateLocalDataEvent({required this.context, required this.index, required this.localData});
+  ViewSyncRecordLoadUpdateLocalDataEvent({required this.context, required this.index,});
   @override
-  List<Object?> get props => [context, index,localData];
+  List<Object?> get props => [context, index];
 }
 
-class ViewSyncRecordDeleteLocalEvent extends ViewSyncRecordEvent {
+class ViewSyncRecordDeleteLocalDataEvent extends ViewSyncRecordEvent {
   final int index;
   final BuildContext context;
    String mobileNo;
-   List<SaveCustomerRegistrationOfflineModel> offlineDataList;
-   Box<SaveCustomerRegistrationOfflineModel> offlineBox;
-  ViewSyncRecordDeleteLocalEvent({
-    required this.index,
+  ViewSyncRecordDeleteLocalDataEvent({required this.index, required this.context, required this.mobileNo,});
+  @override
+  List<Object?> get props => [index, context,mobileNo];
+}
+
+class ViewSyncRecordLoadSaveServerDataEvent extends ViewSyncRecordEvent {
+  final BuildContext context;
+  ViewSyncRecordLoadSaveServerDataEvent({
     required this.context,
-    required this.mobileNo,
-    required this.offlineDataList,
-    required this.offlineBox,
   });
   @override
-  List<Object?> get props => [index, context, mobileNo,offlineDataList,offlineBox ];
+  List<Object?> get props => [context,];
 }
