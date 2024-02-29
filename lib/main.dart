@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/common/Utils/Hive/hive_ex.dart';
 
 
 
@@ -36,8 +37,9 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor:  Colors.green.shade800),
         ),
-        initialRoute: RoutesName.splashView,
-        onGenerateRoute: Routes.generateRoute,
+       /* initialRoute: RoutesName.splashView,
+        onGenerateRoute: Routes.generateRoute,*/
+        home: MainScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );
