@@ -95,7 +95,7 @@ class AppStrings {
   static String chqPhotoLabel = 'Cheque Photo';
   static String formStatusLabel = '';
   static String depositStatusLabel = 'Deposit Status';
-  static String depositType = 'Select the Scheme Type';
+  static String depositType = 'Scheme Type';
   static String modeOfDepositLabel = 'Select the Mode of Deposit';
   static String depositDateLabel = 'Enter the Cheque Date';
   static String depositTypeLabel = 'Deposit Type';
@@ -123,6 +123,7 @@ class AppStrings {
   static String formattedDate = '';
   static String dateAndTime = '';
   static String bannerImagePath = '';
+
   static bool isMobile = false;
   static bool isFirst = false;
   static bool isLast = false;
