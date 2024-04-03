@@ -157,6 +157,7 @@ class ApiIntegration {
           "cheque_bank_account": saveCustRegReqModel.chequeBankAccount ?? "",
           "micr": saveCustRegReqModel.micr ?? "",
         };
+        log("requestBody-->${requestBody}");
         if (requestBody['interested'] == "0") {
           requestBody.remove("initial_deposite_status");
           requestBody.remove("deposite_type");
