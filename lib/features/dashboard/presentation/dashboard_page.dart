@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/features/dashboard/presentation/widget/logout_widget.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -26,6 +27,16 @@ class _DashboardPageState extends State<DashboardPage> {
           preferredSize: const Size.fromHeight(50),
           child: AppBarWidget(
             titleAppBar: AppString.appName,
+            actions: [
+              IconButton(
+                  onPressed: () async {
+                    showModalBottomSheet(context: context, builder: (context) => const LogoutWidget());
+                  },
+                  icon: Icon(
+                    Icons.logout,
+                    color: AppColor.white,
+                  ))
+            ],
           ),
         ),
         body:  BlocListener<InternetBloc, InternetState>(
@@ -66,9 +77,9 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildCardButton() {
     return Card(
-      shape: Border(left: BorderSide(color: AppColor.appBlueColor, width: 15)),
+      shape: Border(left: BorderSide(color: AppColor.prime, width: 15)),
       elevation: 5,
-      shadowColor: Colors.lightBlueAccent,
+      shadowColor: AppColor.prime,
       color: Colors.white,
       child: Column(
         children: [
@@ -110,7 +121,7 @@ class _DashboardPageState extends State<DashboardPage> {
           children: <Widget>[
             CircleAvatar(
               radius: 22,
-              backgroundColor: AppColor.appRedColor,
+              backgroundColor: AppColor.prime,
               child: CircleAvatar(
                 radius: 21,
                 backgroundColor: Colors.white,

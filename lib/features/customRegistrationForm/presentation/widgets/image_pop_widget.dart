@@ -29,7 +29,7 @@ class ImagePopWidget extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: Text('Choose One',textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColor.appRedColor,fontSize: 18, fontWeight: FontWeight.bold),),
+                  style: TextStyle(color: AppColor.prime,fontSize: 18, fontWeight: FontWeight.bold),),
               ),
               TextButton(child: Text('Gallery'), onPressed: onTapGallery),
               TextButton(child: Text('Camera',), onPressed: onTapCamera,),

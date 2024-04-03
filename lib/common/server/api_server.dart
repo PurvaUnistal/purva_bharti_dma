@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:pbg_app/common/Utils/Hive/hive_functions.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
 
 class ApiServer {
   static Future<dynamic> getData({var urlEndPoint, required BuildContext context, }) async {
@@ -67,8 +67,8 @@ class ApiServer {
     Map<String, String> headers = {"Authorization": token!, "Content-Type": "multipart/form-data"};
     try {
       var request = new MultipartRequest("POST", Uri.parse(urlEndPoint));
-      if (HiveFunctions.userBox!.values.isNotEmpty) {
-        List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveFunctions.userBox!.values.toList();
+      if (HiveDataBase.customerRegBox!.values.isNotEmpty) {
+        List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveDataBase.customerRegBox!.values.toList();
         for (int i = 0; i < saveCustRegOfflineModelHiveList.length; i++) {
           SaveCustomerRegistrationOfflineModel saveCustRegOfflineModel = saveCustRegOfflineModelHiveList[i];
           var backSide1Image = await MultipartFile.fromPath("backside1", saveCustRegOfflineModel.backSidePhoto1!,

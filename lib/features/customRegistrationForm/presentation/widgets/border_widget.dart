@@ -16,7 +16,7 @@ class BorderWidget extends StatelessWidget {
       decoration: BoxDecoration(
         //  color: Colors.grey[200],
           border: Border.all(
-            color: AppColor.appRedColor,
+            color: AppColor.black,
             width: 0.9,
           )),
     );

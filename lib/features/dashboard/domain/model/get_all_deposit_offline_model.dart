@@ -4,52 +4,101 @@
 
 import 'dart:convert';
 
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+part 'get_all_deposit_offline_model.g.dart';
+
 List<GetAllDepositOfflineModel> getAllDepositOfflineModelFromJson(String str) => List<GetAllDepositOfflineModel>.from(json.decode(str).map((x) => GetAllDepositOfflineModel.fromJson(x)));
 
 String getAllDepositOfflineModelToJson(List<GetAllDepositOfflineModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+
+@HiveType(typeId: HiveTypeId.GetAllDepositOfflineId)
+
 class GetAllDepositOfflineModel {
+  @HiveField(0)
   final String? depositTypesId;
+  @HiveField(1)
   final String? depositName;
+  @HiveField(2)
   final int? depositFree;
+  @HiveField(3)
   final String? rentAmount;
+  @HiveField(4)
   final String? depositAmount;
+  @HiveField(5)
   final String? status;
+  @HiveField(6)
   final int? schemeMonth;
+  @HiveField(7)
   final String? schemeType;
+  @HiveField(8)
   final DateTime? dateFrom;
+  @HiveField(9)
   final dynamic dateTo;
+  @HiveField(10)
   final int? depositAmountBeforeNgc;
+  @HiveField(11)
   final String? schemeCode;
+  @HiveField(12)
   final int? gasDepositAmount;
+  @HiveField(13)
   final int? equipmentDepositAmount;
+  @HiveField(14)
   final String? interestAmount;
+  @HiveField(15)
   final dynamic createdAt;
+  @HiveField(16)
   final dynamic updatedAt;
+  @HiveField(17)
   final dynamic rejectComments;
+  @HiveField(18)
   final String? customerCount;
+  @HiveField(19)
   final String? registrationGst;
+  @HiveField(20)
   final dynamic interestTax;
+  @HiveField(21)
   final String? rebateId;
+  @HiveField(22)
   final String? totalAmount;
+  @HiveField(23)
   final String? firstDepositAmount;
+  @HiveField(24)
   final String? nextCycleAmount;
+  @HiveField(25)
   final String? totalAmountWith;
+  @HiveField(26)
   final int? firstDepositAmountWith;
+  @HiveField(27)
   final String? depositAmountExcludingTaxWith;
+  @HiveField(28)
   final String? registrationGstWith;
+  @HiveField(29)
   final String? depositAmountWith;
+  @HiveField(30)
   final String? benifitApplicable;
+  @HiveField(31)
   final String? equipmentIncludeInBill;
+  @HiveField(32)
   final String? registrationRefunded;
+  @HiveField(33)
   final String? equipmentRefunded;
+  @HiveField(34)
   final String? gasRefunded;
+  @HiveField(35)
   final String? approvalStatus;
+  @HiveField(36)
   final DateTime? approvalDate;
+  @HiveField(37)
   final String? depositTaxPer;
+  @HiveField(38)
   final dynamic interestTaxPer;
+  @HiveField(39)
   final String? registrationTaxName;
+  @HiveField(40)
   final dynamic interestTaxName;
+  @HiveField(41)
   final int? remainingCount;
 
   GetAllDepositOfflineModel({

@@ -1,6 +1,15 @@
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+part 'get_accept_extra_fitting_cost_model.g.dart';
+
+@HiveType(typeId: HiveTypeId.GetAcceptExtraFittingCostId)
+
 class GetAcceptExtraFittingCostModel {
+  @HiveField(0)
   String? s1;
+  @HiveField(1)
   String? s2;
+  @HiveField(2)
   String? s3;
 
   GetAcceptExtraFittingCostModel({this.s1, this.s2, this.s3});

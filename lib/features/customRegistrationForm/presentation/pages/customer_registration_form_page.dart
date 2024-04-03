@@ -811,7 +811,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     if (fileImage.path.isNotEmpty) {
       return CircleAvatar(
         radius: 41,
-        backgroundColor: AppColor.appBlueColor,
+        backgroundColor: AppColor.prime,
         child: CircleAvatar(
           radius: 40,
           backgroundImage: FileImage(fileImage),
@@ -1382,7 +1382,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       hintText: stateData.labelModel.deposit == null ? AppString.chqDate : stateData.labelModel.deposit!.chqDate,
       prefixIcon: Icon(
         Icons.calendar_today,
-        color: AppColor.appBlueColor,
+        color: AppColor.prime,
       ),
       controller: stateData.chequeDateController,
       enabled: true,
@@ -1485,7 +1485,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
   Widget _localBorderImg() {
     return CircleAvatar(
       radius: 41,
-      backgroundColor: AppColor.appBlueColor,
+      backgroundColor: AppColor.prime,
       child: CircleAvatar(
         radius: 40,
         backgroundColor: Colors.white,

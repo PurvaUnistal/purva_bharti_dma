@@ -4,9 +4,14 @@
 
 import 'dart:convert';
 
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+part 'get_label_model.g.dart';
 GetLabelModel getLabelModelFromJson(String str) => GetLabelModel.fromJson(json.decode(str));
 
 String getLabelModelToJson(GetLabelModel data) => json.encode(data.toJson());
+
+@HiveType(typeId: HiveTypeId.GetLabelId)
 
 class GetLabelModel {
   final Steps? steps;
@@ -52,15 +57,26 @@ class GetLabelModel {
       };
 }
 
+@HiveType(typeId: HiveTypeId.ConsentId)
+
 class Consent {
+  @HiveField(0)
   final String takePhoto;
+  @HiveField(1)
   final String custBank;
+  @HiveField(2)
   final String custAcc;
+  @HiveField(3)
   final String custIfsc;
+  @HiveField(4)
   final String custBankAdd;
+  @HiveField(5)
   final String cancelledPhoto;
+  @HiveField(6)
   final String preferredBilling;
+  @HiveField(7)
   final String acceptConversionPolicy;
+  @HiveField(8)
   final String acceptExtraCost;
 
   Consent({
@@ -100,18 +116,32 @@ class Consent {
       };
 }
 
+@HiveType(typeId: HiveTypeId.DepositId)
+
 class Deposit {
+  @HiveField(0)
   final String depositSta;
+  @HiveField(1)
   final String modeOfDep;
+  @HiveField(2)
   final String depositDate;
+  @HiveField(3)
   final String depositType;
+  @HiveField(4)
   final String depositAmt;
+  @HiveField(5)
   final String chqNum;
+  @HiveField(6)
   final String chqBank;
+  @HiveField(7)
   final String bankAcc;
+  @HiveField(8)
   final String chqDate;
+  @HiveField(9)
   final String chqPhoto;
+  @HiveField(10)
   final String payStatus;
+  @HiveField(11)
   final String reason;
 
   Deposit({
@@ -160,18 +190,32 @@ class Deposit {
       };
 }
 
+@HiveType(typeId: HiveTypeId.InspectionId)
+
 class Inspection {
+  @HiveField(0)
   final String inspectMeter;
-  final String inspectRegulator;
-  final String inspectOtherFittings;
-  final String asPerLmcQty;
-  final String customerSatisfication;
-  final String conversionAgreement;
-  final String photo;
-  final String conversionDate;
-  final String remarks;
-  final String extraPipe;
+  @HiveField(1)
   final String extraPrice;
+  @HiveField(2)
+  final String inspectRegulator;
+  @HiveField(3)
+  final String inspectOtherFittings;
+  @HiveField(4)
+  final String asPerLmcQty;
+  @HiveField(5)
+  final String customerSatisfication;
+  @HiveField(6)
+  final String conversionAgreement;
+  @HiveField(7)
+  final String photo;
+  @HiveField(8)
+  final String conversionDate;
+  @HiveField(9)
+  final String remarks;
+  @HiveField(10)
+  final String extraPipe;
+
 
   Inspection({
     required this.inspectMeter,
@@ -216,19 +260,34 @@ class Inspection {
       };
 }
 
+@HiveType(typeId: HiveTypeId.KycId)
+
 class Kyc {
+  @HiveField(0)
   final String uploadDoc1;
+  @HiveField(1)
   final String uploadDoc1No;
+  @HiveField(2)
   final String uploadDoc1Front;
+  @HiveField(3)
   final String uploadDoc1Back;
+  @HiveField(4)
   final String selectDoc;
+  @HiveField(5)
   final String uploadDoc2;
+  @HiveField(6)
   final String uploadDoc2No;
+  @HiveField(7)
   final String uploadDoc2Front;
+  @HiveField(8)
   final String uploadDoc2Back;
+  @HiveField(9)
   final String uploadDoc3;
+  @HiveField(10)
   final String uploadDoc3No;
+  @HiveField(11)
   final String uploadDoc3Front;
+  @HiveField(12)
   final String uploadDoc3Back;
 
   Kyc({
@@ -280,37 +339,70 @@ class Kyc {
       };
 }
 
+@HiveType(typeId: HiveTypeId.LmcId)
+
 class Lmc {
+  @HiveField(0)
   final String feasibilityDate;
+  @HiveField(1)
   final String proposedDate;
+  @HiveField(2)
   final String additional;
+  @HiveField(3)
   final String material;
+  @HiveField(4)
   final String qty;
+  @HiveField(5)
   final String regulators;
+  @HiveField(6)
   final String installation;
+  @HiveField(7)
   final String feasibility;
+  @HiveField(8)
   final String workStart;
+  @HiveField(9)
   final String reasonIfDelay;
+  @HiveField(10)
   final String reason;
+  @HiveField(11)
   final String isFeasible;
+  @HiveField(12)
   final String followUpDate;
+  @HiveField(13)
   final String meterNumber;
+  @HiveField(14)
   final String pipe;
+  @HiveField(15)
   final String fitting;
+  @HiveField(16)
   final String meterInitialReading;
+  @HiveField(17)
   final String readingDate;
+  @HiveField(18)
   final String meterPhoto;
+  @HiveField(19)
   final String tfNumber;
+  @HiveField(20)
   final String latitudeTf;
+  @HiveField(21)
   final String longitudeTf;
+  @HiveField(22)
   final String latitudeHg;
+  @HiveField(23)
   final String longitudeHg;
+  @HiveField(24)
   final String workCompletedDate;
+  @HiveField(25)
   final String workCompletedImage;
+  @HiveField(26)
   final String ackDate;
+  @HiveField(27)
   final String ackImage;
+  @HiveField(28)
   final String conversionDate;
+  @HiveField(29)
   final String typeNr;
+  @HiveField(30)
   final String isCustomerReady;
 
   Lmc({
@@ -416,8 +508,13 @@ class Lmc {
       };
 }
 
+
+@HiveType(typeId: HiveTypeId.PhotoId)
+
 class Photo {
+  @HiveField(0)
   final String customerPhoto;
+  @HiveField(1)
   final String homePhoto;
 
   Photo({
@@ -436,32 +533,60 @@ class Photo {
       };
 }
 
+@HiveType(typeId: HiveTypeId.RegistrationId)
+
 class Registration {
+  @HiveField(0)
   final String registrationType;
+  @HiveField(1)
   final String chargeArea;
+  @HiveField(2)
   final String area;
+  @HiveField(3)
   final String lastname;
+  @HiveField(4)
   final String guardian;
+  @HiveField(5)
   final String email;
+  @HiveField(6)
   final String propertyCategory;
+  @HiveField(7)
   final String propertyClass;
+  @HiveField(8)
   final String house;
+  @HiveField(9)
   final String locality;
+  @HiveField(10)
   final String town;
+  @HiveField(11)
   final String pincode;
+  @HiveField(12)
   final String district;
+  @HiveField(13)
   final String mdpe;
+  @HiveField(14)
   final String resident;
+  @HiveField(15)
   final String kitchen;
+  @HiveField(16)
   final String bathroom;
+  @HiveField(17)
   final String fuel;
+  @HiveField(18)
   final String family;
+  @HiveField(19)
   final String location;
+  @HiveField(20)
   final String long;
+  @HiveField(21)
   final String lat;
+  @HiveField(22)
   final String getLoc;
+  @HiveField(23)
   final String remarks;
+  @HiveField(24)
   final String submit;
+  @HiveField(25)
   final String guardianType;
 
   Registration({
@@ -552,32 +677,60 @@ class Registration {
       };
 }
 
+@HiveType(typeId: HiveTypeId.StepsId)
+
 class Steps {
+  @HiveField(0)
   final String reg;
+  @HiveField(1)
   final String kyc;
+  @HiveField(2)
   final String photo;
+  @HiveField(3)
   final String consent;
+  @HiveField(4)
   final String deposit;
+  @HiveField(5)
   final String step1;
+  @HiveField(6)
   final String step2;
+  @HiveField(7)
   final String step3;
+  @HiveField(8)
   final String step4;
+  @HiveField(9)
   final String step5;
+  @HiveField(10)
   final String mobile;
+  @HiveField(11)
   final String firstname;
+  @HiveField(12)
   final String middlename;
+  @HiveField(13)
   final String lastname;
+  @HiveField(14)
   final String button;
+  @HiveField(15)
   final String fromDate;
+  @HiveField(16)
   final String toDate;
+  @HiveField(17)
   final String minAmt;
+  @HiveField(18)
   final String maxAmt;
+  @HiveField(19)
   final String stepsIf;
+  @HiveField(20)
   final String stepsIs;
+  @HiveField(21)
   final String then;
+  @HiveField(22)
   final String amount;
+  @HiveField(23)
   final String back;
+  @HiveField(24)
   final String condition;
+  @HiveField(25)
   final String type;
 
   Steps({

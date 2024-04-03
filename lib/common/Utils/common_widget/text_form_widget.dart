@@ -52,7 +52,7 @@ class TextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      cursorColor: AppColor.appBlueColor,
+      cursorColor: AppColor.prime,
       focusNode: focusNode,
       autofillHints: autofillHints,
       onTap: onTap,
@@ -99,6 +99,6 @@ class TextFieldWidget extends StatelessWidget {
 
   OutlineInputBorder border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(5.0),
-    borderSide: BorderSide(color: AppColor.green, style: BorderStyle.solid, width: 0.80),
+    borderSide: BorderSide(color: AppColor.black, style: BorderStyle.solid, width: 0.80),
   );
 }

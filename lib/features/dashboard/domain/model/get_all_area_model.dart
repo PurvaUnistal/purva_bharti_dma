@@ -3,6 +3,9 @@
 //     final getAllAreaModel = getAllAreaModelFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+part 'get_all_area_model.g.dart';
 
 List<GetAllAreaModel> getAllAreaModelFromJson(String str) =>
     List<GetAllAreaModel>.from(
@@ -11,17 +14,30 @@ List<GetAllAreaModel> getAllAreaModelFromJson(String str) =>
 String getAllAreaModelToJson(List<GetAllAreaModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+@HiveType(typeId: HiveTypeId.GetAllAreaId)
+
 class GetAllAreaModel {
+  @HiveField(0)
   final String? gid;
+  @HiveField(1)
   final dynamic objectid;
+  @HiveField(2)
   final String? areaName;
+  @HiveField(3)
   final dynamic shapeLeng;
+  @HiveField(4)
   final String? areacode;
+  @HiveField(5)
   final dynamic cityId;
+  @HiveField(6)
   final String? chargeAreaId;
+  @HiveField(7)
   final dynamic subareacod;
+  @HiveField(8)
   final dynamic shapeLe1;
+  @HiveField(9)
   final dynamic shapeArea;
+  @HiveField(10)
   final String? readyForConnection;
 
   GetAllAreaModel({

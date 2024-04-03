@@ -26,7 +26,7 @@ class ButtonWidget extends StatelessWidget {
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: <Color>[AppColor.appRedColor, AppColor.appBlueColor]
+                colors: <Color>[AppColor.prime, AppColor.prime1]
             ),
             borderRadius: BorderRadius.all(Radius.circular(12.0))
         ),

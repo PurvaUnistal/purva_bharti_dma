@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/common/Utils/Hive/hive_functions.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
 
 
 class ViewSyncRecordHelper {
 
 
   static Future<dynamic> leadSaveInServer({required BuildContext context}) async {
-    if (HiveFunctions.userBox!.values.isNotEmpty) {
+    if (HiveDataBase.customerRegBox!.values.isNotEmpty) {
       if (await isInternetConnected() == true) {
         int count = 0;
-        log("Data Length Check ============== ${HiveFunctions.userBox!.values.length}");
-        List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveFunctions.userBox!.values.toList();
+        log("Data Length Check ============== ${HiveDataBase.customerRegBox!.values.length}");
+        List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveDataBase.customerRegBox!.values.toList();
         for (int i = 0; i < saveCustRegOfflineModelHiveList.length; i++) {
           SaveCustomerRegistrationOfflineModel saveCustRegOfflineModel = saveCustRegOfflineModelHiveList[i];
           SaveCusRegData saveCusRegDataRequestModel = SaveCusRegData(
@@ -87,10 +87,10 @@ class ViewSyncRecordHelper {
         }
         for (int i = count - 1; i >= 0; i--) {
           saveCustRegOfflineModelHiveList.removeAt(i);
-          await HiveFunctions.deleteUser(index : i);
+          await HiveDataBase.customerRegBox!.delete(i);
         }
         if (count == saveCustRegOfflineModelHiveList.length) {
-          await HiveFunctions.userBox!.clear();
+          await HiveDataBase.customerRegBox!.clear();
         }
         print("ASDFGHNJGFDS-->${saveCustRegOfflineModelHiveList.length}");
         saveCustRegOfflineModelHiveList.removeRange(0, count);
@@ -177,11 +177,11 @@ class ViewSyncRecordHelper {
         isDepositCheq: false,
       );
       print("HEllo");
-      var mmm = await HiveFunctions.userBox!.values.toList().length;
+      var mmm = await HiveDataBase.customerRegBox!.values.toList().length;
       print("mmm-->${mmm}");
-      if (HiveFunctions.userBox!.values.isNotEmpty) {
+      if (HiveDataBase.customerRegBox!.values.isNotEmpty) {
         print("mmmLength-->${mmm.toString().length}");
-        return await HiveFunctions.updateUser(index:mmm,userModel: _custRegiDataModel);
+        return await HiveDataBase.customerRegBox!.put(mmm, _custRegiDataModel);
       } else {
         Utils.errorSnackBar('Error !!! \nPlease Upload Previous record', context);
         return null;
@@ -194,12 +194,12 @@ class ViewSyncRecordHelper {
 
 
   static Future<dynamic> deleteData({required BuildContext context, required int index, required String mobileNo}) async {
-    if (HiveFunctions.userBox!.values.isNotEmpty) {
-      log("Data Length ============== ${HiveFunctions.userBox!.values.length}");
-      List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveFunctions.userBox!.values.toList();
+    if (HiveDataBase.customerRegBox!.values.isNotEmpty) {
+      log("Data Length ============== ${HiveDataBase.customerRegBox!.values.length}");
+      List<SaveCustomerRegistrationOfflineModel> saveCustRegOfflineModelHiveList = HiveDataBase.customerRegBox!.values.toList();
       mobileNo = saveCustRegOfflineModelHiveList.removeAt(index).mobileNumber!;
       saveCustRegOfflineModelHiveList.removeAt(index);
-     await HiveFunctions.deleteUser(index: index);
+     await HiveDataBase.customerRegBox!.delete(index);
     }
     return null;
   }

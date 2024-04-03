@@ -19,7 +19,7 @@ class ImageWidget extends StatelessWidget {
       child: Card(
         elevation: 0.9,
         color: Colors.white,
-        shadowColor: AppColor.appBlueColor,
+        shadowColor: AppColor.prime,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

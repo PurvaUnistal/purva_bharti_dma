@@ -4,6 +4,10 @@
 
 import 'dart:convert';
 
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+part 'get_charge_area_list_model.g.dart';
+
 List<GetChargeAreaListModel> getChargeAreaListModelFromJson(String str) =>
     List<GetChargeAreaListModel>.from(
         json.decode(str).map((x) => GetChargeAreaListModel.fromJson(x)));
@@ -11,14 +15,24 @@ List<GetChargeAreaListModel> getChargeAreaListModelFromJson(String str) =>
 String getChargeAreaListModelToJson(List<GetChargeAreaListModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+@HiveType(typeId: HiveTypeId.GetChargeAreaListId)
+
 class GetChargeAreaListModel {
+  @HiveField(0)
   final String? gid;
+  @HiveField(1)
   final String? chargeAreaCode;
+  @HiveField(2)
   final String? projectId;
+  @HiveField(3)
   final dynamic objectid;
+  @HiveField(4)
   final dynamic shapeLeng;
+  @HiveField(5)
   final dynamic shapeArea;
+  @HiveField(6)
   final String? chargeAreaName;
+  @HiveField(7)
   final dynamic billingType;
 
   GetChargeAreaListModel({

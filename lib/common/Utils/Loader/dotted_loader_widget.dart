@@ -9,7 +9,7 @@ class DottedLoaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     double size  =  MediaQuery.of(context).size.width * 0.12;
     return SpinKitThreeInOut(
-      color: AppColor.appBlueColor,
+      color: AppColor.prime,
       size: size,);
   }
 }

@@ -1,5 +1,14 @@
+
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+part 'get_kyc_doc_model.g.dart';
+
+
+@HiveType(typeId: HiveTypeId.GetKycDocId)
 class GetKycDocModel {
+  @HiveField(0)
   String? s1;
+  @HiveField(1)
   String? s2;
  // String? s3;
 

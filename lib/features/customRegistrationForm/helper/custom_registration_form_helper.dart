@@ -1,6 +1,6 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
-import 'package:pbg_app/common/Utils/Hive/hive_functions.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
 
 
 class CustomRegistrationFormHelper {
@@ -112,7 +112,7 @@ class CustomRegistrationFormHelper {
         CustomToast.showToast("Please select Property Class Id");
         return null;
       }
-    /*  if (buildingNumber.isEmpty) {
+      /*  if (buildingNumber.isEmpty) {
         CustomToast.showToast("Please enter the building number");
         return null;
       }*/
@@ -169,78 +169,78 @@ class CustomRegistrationFormHelper {
         return null;
       }
       if(registrationType == "Registration For LMC"){
-      if (addProof.isEmpty || addProof == "null") {
-        CustomToast.showToast("Please select KYC (Address Proof)");
-        return null;
-      }
-      if (addProofNo.isEmpty) {
-        CustomToast.showToast("Please select KYC (Address Proof) Number");
-        return null;
-      }
-      if (addFrontPath.isEmpty) {
-        CustomToast.showToast("Please select Address Proof Front Image");
-        return null;
-      }
-      if (ownershipProperty.isEmpty || ownershipProperty == "null") {
-        CustomToast.showToast("Please select Ownership Type Property");
-        return null;
-      }
-      if (ownershipProperty== "Rented") {
-        if(nocDocPath.isEmpty){
-          CustomToast.showToast("Please select NOC Document");
+        if (addProof.isEmpty || addProof == "null") {
+          CustomToast.showToast("Please select KYC (Address Proof)");
           return null;
         }
-      }
-      if (acceptConversionPolicy.isEmpty || acceptConversionPolicy == "null") {
-        CustomToast.showToast("Please select Accept Conversion Policy");
-        return null;
-      }
-      if (acceptExtraFittingCost.isEmpty || acceptExtraFittingCost == "null") {
-        CustomToast.showToast("Please select Accept Extra Fitting CostValue");
-        return null;
-      }
-      if (societyAllowedMdpe.isEmpty || societyAllowedMdpe == "null") {
-        CustomToast.showToast("Please select Society Allows MDPE");
-        return null;
-      }
-      if (depositStatus.isEmpty || depositStatus == "null") {
-        CustomToast.showToast("Please select Deposit Status");
-        return null;
-      }
-      if (depositType.isEmpty || depositType == "null") {
-        CustomToast.showToast("Please select Scheme Type");
-        return null;
-      }
-      if (modeDeposit.isEmpty || modeDeposit == "null") {
-        CustomToast.showToast("Please select Mode Of Deposit");
-        return null;
-      }
-      if (modeDeposit == "Cheque") {
-        if (chqNo.isEmpty) {
-          CustomToast.showToast("Please enter Cheque Number");
+        if (addProofNo.isEmpty) {
+          CustomToast.showToast("Please select KYC (Address Proof) Number");
           return null;
         }
-        if (chqDate.isEmpty) {
-          CustomToast.showToast("Please select Cheque date");
+        if (addFrontPath.isEmpty) {
+          CustomToast.showToast("Please select Address Proof Front Image");
           return null;
         }
-        if (chqBank.isEmpty || chqBank == "null") {
-          CustomToast.showToast("Please select Cheque Bank Name");
+        if (ownershipProperty.isEmpty || ownershipProperty == "null") {
+          CustomToast.showToast("Please select Ownership Type Property");
           return null;
         }
-        if (chequeAccountNo.isEmpty) {
-          CustomToast.showToast("Please enter Cheque Bank Account Number");
+        if (ownershipProperty== "Rented") {
+          if(nocDocPath.isEmpty){
+            CustomToast.showToast("Please select NOC Document");
+            return null;
+          }
+        }
+        if (acceptConversionPolicy.isEmpty || acceptConversionPolicy == "null") {
+          CustomToast.showToast("Please select Accept Conversion Policy");
           return null;
         }
-        if (chequeMICRNo.isEmpty) {
-          CustomToast.showToast("Please enter Cheque MICR Code");
+        if (acceptExtraFittingCost.isEmpty || acceptExtraFittingCost == "null") {
+          CustomToast.showToast("Please select Accept Extra Fitting CostValue");
           return null;
         }
-        if (chequePath.isEmpty) {
-          CustomToast.showToast("Please select Cheque Image");
+        if (societyAllowedMdpe.isEmpty || societyAllowedMdpe == "null") {
+          CustomToast.showToast("Please select Society Allows MDPE");
           return null;
         }
-      }
+        if (depositStatus.isEmpty || depositStatus == "null") {
+          CustomToast.showToast("Please select Deposit Status");
+          return null;
+        }
+        if (depositType.isEmpty || depositType == "null") {
+          CustomToast.showToast("Please select Scheme Type");
+          return null;
+        }
+        if (modeDeposit.isEmpty || modeDeposit == "null") {
+          CustomToast.showToast("Please select Mode Of Deposit");
+          return null;
+        }
+        if (modeDeposit == "Cheque") {
+          if (chqNo.isEmpty) {
+            CustomToast.showToast("Please enter Cheque Number");
+            return null;
+          }
+          if (chqDate.isEmpty) {
+            CustomToast.showToast("Please select Cheque date");
+            return null;
+          }
+          if (chqBank.isEmpty || chqBank == "null") {
+            CustomToast.showToast("Please select Cheque Bank Name");
+            return null;
+          }
+          if (chequeAccountNo.isEmpty) {
+            CustomToast.showToast("Please enter Cheque Bank Account Number");
+            return null;
+          }
+          if (chequeMICRNo.isEmpty) {
+            CustomToast.showToast("Please enter Cheque MICR Code");
+            return null;
+          }
+          if (chequePath.isEmpty) {
+            CustomToast.showToast("Please select Cheque Image");
+            return null;
+          }
+        }
       }
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? schema = prefs.getString(PrefsValue.schema);
@@ -398,20 +398,18 @@ class CustomRegistrationFormHelper {
         ownerConsentText: "",
         isDepositCheq: false,
       );
-      var mmm = await HiveFunctions.userBox!.values.toList().length;
-      print("HEllo");
+      var mmm = await HiveDataBase.customerRegBox!.values.toList().length;
       if(isUpdate == true){
-        await HiveFunctions.updateUser(index: mmm ,userModel: _custRegiDataModel);
-      }else{
+        await HiveDataBase.customerRegBox!.put(mmm , _custRegiDataModel);
+      } else{
         print("mmm-->${mmm}");
         if (mmm <= 15) {
           print("mmmLength-->${mmm.toString().length}");
           Utils.successSnackBar("Great Success! Record Save", context);
           Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
-          return await HiveFunctions.addUser(userModel: _custRegiDataModel);
-          //  return await leadSaveInServer(context: context);
+          return await HiveDataBase.customerRegBox!.add(_custRegiDataModel);
         } else {
-          Utils.errorSnackBar('Error !!! \nPlease Upload Previous record', context);
+          Utils.errorSnackBar('Error !!! \nPlease Upload Previous records', context);
           return null;
         }
       }
@@ -496,13 +494,13 @@ class CustomRegistrationFormHelper {
         isDepositCheq: false,
       );
       print("HEllo");
-      var mmm = await HiveFunctions.userBox!.values.toList().length;
+      var mmm = await HiveDataBase.customerRegBox!.values.toList().length;
       print("mmm-->${mmm}");
-      if (HiveFunctions.userBox!.values.isNotEmpty) {
+      if (HiveDataBase.customerRegBox!.values.isNotEmpty) {
         print("mmmLength-->${mmm.toString().length}");
         Utils.successSnackBar("Successfully Update Record", context);
         Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
-        return await HiveFunctions.updateUser(index:mmm,userModel: _custRegiDataModel);
+        return await HiveDataBase.customerRegBox!.put(mmm, _custRegiDataModel);
       } else {
         Utils.errorSnackBar('Error !!! \nPlease Upload Previous record', context);
         return null;

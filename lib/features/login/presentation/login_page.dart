@@ -116,7 +116,7 @@ class _LoginViewState extends State<LoginView> {
         BlocProvider.of<LoginBloc>(context)
             .add(LoginSetEmailEvent(email: val.toString().replaceAll(" ", "")));
       },
-      prefix: Icon(Icons.email, color: AppColor.appBlueColor),
+      prefix: Icon(Icons.email, color: AppColor.prime),
     );
   }
 
@@ -134,12 +134,12 @@ class _LoginViewState extends State<LoginView> {
       },
       prefix: Icon(
         Icons.lock,
-        color: AppColor.appBlueColor,
+        color: AppColor.prime,
       ),
       suffixIcon: IconButton(
         icon: Icon(
             dataState.isPassword ?  Icons.visibility_off: Icons.visibility,
-            color: AppColor.appBlueColor),
+            color: AppColor.prime),
         onPressed: () {
           BlocProvider.of<LoginBloc>(context).add(LoginSetHideShowPwdEvent(
               isHideShowPwd: dataState.isPassword == false ? true : false));
@@ -195,22 +195,20 @@ class _LoginViewState extends State<LoginView> {
         suffixIcon: suffixIcon,
         isDense: false,
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        border: OutlineInputBorder(),
+        border: border(),
         labelText: labelText,
         hintText: hintText,
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-          borderSide: BorderSide(width: 1, color: AppColor.appBlueColor),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-          borderSide: BorderSide(width: 1, color: AppColor.appBlueColor),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-          borderSide: BorderSide(width: 1, color: AppColor.appBlueColor),
-        ),
+        focusedBorder: border(),
+        disabledBorder: border(),
+        enabledBorder: border(),
       ),
+    );
+  }
+
+  OutlineInputBorder border(){
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(50)),
+      borderSide: BorderSide(width: 1, color: AppColor.black),
     );
   }
 }

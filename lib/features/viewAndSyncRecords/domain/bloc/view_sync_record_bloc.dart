@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/common/Utils/Hive/hive_functions.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
 
 
 class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> {
@@ -42,11 +42,11 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
             subMessage: "Mobile No : ${event.mobileNo}",
             okButtonText: "Yes",
            onPressed: () async {
-            if (HiveFunctions.userBox!.values.isNotEmpty) {
+            if (HiveDataBase.customerRegBox!.values.isNotEmpty) {
               Navigator.pop(event.context);
               Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
-              log("Data Length P ============== ${HiveFunctions.userBox!.values.length}");
-              return await HiveFunctions.deleteUser(index: event.index);
+              log("Data Length P ============== ${HiveDataBase.customerRegBox!.values.length}");
+              return await HiveDataBase.customerRegBox!.delete(event.index);
             }
             _eventCompleted(emit);
             },

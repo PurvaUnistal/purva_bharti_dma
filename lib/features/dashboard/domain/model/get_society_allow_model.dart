@@ -1,5 +1,15 @@
+
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+part 'get_society_allow_model.g.dart';
+
+
+@HiveType(typeId: HiveTypeId.GetSocietyAllowId)
+
 class GetSocietyAllowModel {
+  @HiveField(0)
   String? s0;
+  @HiveField(1)
   String? s1;
 
   GetSocietyAllowModel({this.s0, this.s1});

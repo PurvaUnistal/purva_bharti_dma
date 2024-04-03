@@ -1,6 +1,16 @@
+
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+part 'get_initial_deposit_status_model.g.dart';
+
+
+@HiveType(typeId: HiveTypeId.GetInitDepositStatusId)
 class GetInitialDepositStatusModel {
+  @HiveField(0)
   String? s0;
+  @HiveField(1)
   String? s1;
+  @HiveField(2)
   String? s2;
 
   GetInitialDepositStatusModel({this.s0, this.s1, this.s2});

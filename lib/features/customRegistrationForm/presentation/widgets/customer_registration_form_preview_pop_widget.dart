@@ -142,7 +142,7 @@ class CustomerRegistrationFormPreviewPopWidget extends StatelessWidget {
           Text(
             "Customer Detail",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold, color: AppColor.appBlueColor),
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold, color: AppColor.prime),
           ),
           /*InkWell(
             onTap: () {
@@ -199,13 +199,13 @@ class CustomerRegistrationFormPreviewPopWidget extends StatelessWidget {
   }
 Widget _divider(){
     return Divider(
-      color: AppColor.appBlueColor,
+      color: AppColor.prime,
     );
 }
   Widget _localBorderImg() {
     return CircleAvatar(
       radius: 41,
-      backgroundColor: AppColor.appBlueColor,
+      backgroundColor: AppColor.prime,
       child: CircleAvatar(
         radius: 40,
         backgroundColor: Colors.white,
@@ -254,7 +254,7 @@ Widget _divider(){
     if (fileImage.path.isNotEmpty) {
       return CircleAvatar(
         radius: 41,
-        backgroundColor: AppColor.appBlueColor,
+        backgroundColor: AppColor.prime,
         child: CircleAvatar(
           radius: 40,
           backgroundImage: FileImage(fileImage),
@@ -277,7 +277,7 @@ Widget _divider(){
       child: Card(
         elevation: 0.9,
         color: Colors.white,
-        shadowColor: AppColor.appBlueColor,
+        shadowColor: AppColor.prime,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

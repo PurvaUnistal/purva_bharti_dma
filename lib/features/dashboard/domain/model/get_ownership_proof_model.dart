@@ -1,10 +1,24 @@
+
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+part 'get_ownership_proof_model.g.dart';
+
+
+@HiveType(typeId: HiveTypeId.GetOwnershipProofId)
 class GetOwnershipProofModel {
+  @HiveField(0)
   String? s1;
+  @HiveField(1)
   String? s2;
+  @HiveField(2)
   String? s3;
+  @HiveField(3)
   String? s4;
+  @HiveField(4)
   String? s5;
+  @HiveField(5)
   String? s6;
+  @HiveField(6)
   String? s7;
 
   GetOwnershipProofModel(

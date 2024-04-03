@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/common/Utils/Hive/hive_functions.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
 
 class ViewSyncRecordPage extends StatefulWidget {
   const ViewSyncRecordPage({Key? key}) : super(key: key);
@@ -18,8 +18,8 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
     BlocProvider.of<ViewSyncRecordBloc>(context).add(
         ViewSyncRecordLoadPageEvent(context: context));
-    HiveFunctions.userBox!;
-    offlineBox =  HiveFunctions.userBox!;
+    HiveDataBase.customerRegBox!;
+    offlineBox = HiveDataBase.customerRegBox!;
     offlineDataList = offlineBox.values.toList();
     super.initState();
   }
@@ -150,7 +150,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
             return Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(width: 0.8, color: AppColor.appBlueColor)),
+                  side: BorderSide(width: 0.8, color: AppColor.prime)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -165,10 +165,10 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                 onPressed: () {},
                                 icon: Icon(
                                   Icons.sync,
-                                  color: AppColor.appBlueColor,
+                                  color: AppColor.prime,
                                 )),
                             IconButton(
-                                icon: Icon(Icons.delete_forever, color: AppColor.appBlueColor,),
+                                icon: Icon(Icons.delete_forever, color: AppColor.prime,),
                                 onPressed: () {
                                   BlocProvider.of<ViewSyncRecordBloc>(context).add(ViewSyncRecordDeleteLocalDataEvent(
                                       index: index, context: context, mobileNo: data.mobileNumber!,
@@ -185,7 +185,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                 },
                                 icon: Icon(
                                   Icons.edit,
-                                  color: AppColor.appBlueColor,
+                                  color: AppColor.prime,
                                 )),
                           ],
                         )

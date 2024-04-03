@@ -1,6 +1,16 @@
+
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+part 'get_accept_conversion_policy_model.g.dart';
+
+@HiveType(typeId: HiveTypeId.GetAcceptConversionPolicyId)
+
 class GetAcceptConversionPolicyModel {
+  @HiveField(0)
   String? s1;
+  @HiveField(1)
   String? s2;
+  @HiveField(2)
   String? s3;
 
   GetAcceptConversionPolicyModel({this.s1, this.s2, this.s3});
