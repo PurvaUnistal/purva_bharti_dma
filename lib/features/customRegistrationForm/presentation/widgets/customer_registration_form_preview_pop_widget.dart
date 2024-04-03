@@ -1,8 +1,21 @@
-import 'package:pbg_app/ExportFile/export_file.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pbg_app/common/Utils/Loader/dotted_loader_widget.dart';
+import 'package:pbg_app/common/Utils/common_widget/app_assets.dart';
+import 'package:pbg_app/common/Utils/common_widget/app_color.dart';
+import 'package:pbg_app/common/Utils/common_widget/app_string.dart';
+import 'package:pbg_app/common/Utils/common_widget/button_widget.dart';
+import 'package:pbg_app/common/Utils/common_widget/styles_widget.dart';
+import 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_bloc.dart';
+import 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_event.dart';
+import 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_state.dart';
+import 'package:pbg_app/features/customRegistrationForm/presentation/widgets/image_widget.dart';
+import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
 
 class CustomerRegistrationFormPreviewPopWidget extends StatelessWidget {
-  final SaveCusRegData cusRegData;
+  final CustRegSync cusRegData;
 
   const CustomerRegistrationFormPreviewPopWidget({
     required this.cusRegData,
@@ -98,16 +111,16 @@ class CustomerRegistrationFormPreviewPopWidget extends StatelessWidget {
                                   : Container(),
                             ],
                           ),
-                          _itemBuilder(textName: AppString.depositStatus, textValue: cusRegData.initialDepositeStatus == null ? "-" : cusRegData.initialDepositeStatus.toString()),
+                          _itemBuilder(textName: AppString.depositStatus, textValue: cusRegData.initialDepositStatus == null ? "-" : cusRegData.initialDepositStatus.toString()),
                           _itemBuilder(textName: AppString.depositType, textValue: cusRegData.depositType == null ? "-" : cusRegData.depositType.toString()),
-                          _itemBuilder(textName: AppString.depositAmt, textValue: cusRegData.depositTypeAmount == null ? "-" : cusRegData.depositTypeAmount.toString()),
-                          _itemBuilder(textName: AppString.modeDeposit, textValue: cusRegData.modeOfDeposite == null ? "-" : cusRegData.modeOfDeposite.toString()),
-                          if (cusRegData.modeOfDeposite == "Cheque") ...[
+                          _itemBuilder(textName: AppString.depositAmt, textValue: cusRegData.initialAmount == null ? "-" : cusRegData.initialAmount.toString()),
+                          _itemBuilder(textName: AppString.modeDeposit, textValue: cusRegData.modeOfDeposit == null ? "-" : cusRegData.modeOfDeposit.toString()),
+                          if (cusRegData.modeOfDeposit == "Cheque") ...[
                             _itemBuilder(textName: AppString.chqNo, textValue: cusRegData.chequeNumber.toString()),
                             _itemBuilder(textName: AppString.chqDate, textValue: cusRegData.chequeDepositDate.toString()),
-                            _itemBuilder(textName: AppString.chqBank, textValue: cusRegData.payementBankName.toString()),
+                            _itemBuilder(textName: AppString.chqBank, textValue: cusRegData.paymentBankName.toString()),
                             _itemBuilder(textName: AppString.chequeAccountNo, textValue: cusRegData.chequeBankAccount.toString()),
-                            _itemBuilder(textName: AppString.chequeMICRNo, textValue: cusRegData.chequeMicrNo.toString()),
+                            _itemBuilder(textName: AppString.chequeMICRNo, textValue: cusRegData.micr.toString()),
                             _divider(),
                             Center(child: _itemImgBuilder(star: AppString.star,textName: AppString.chqPhoto, imagePath: cusRegData.chequePhoto.toString())),
                           ]

@@ -1,0 +1,44 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'get_society_allow_model.dart';
+
+// **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class GetSocietyAllowModelAdapter extends TypeAdapter<GetSocietyAllowModel> {
+  @override
+  final int typeId = 26;
+
+  @override
+  GetSocietyAllowModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return GetSocietyAllowModel(
+      s0: fields[0] as String?,
+      s1: fields[1] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, GetSocietyAllowModel obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.s0)
+      ..writeByte(1)
+      ..write(obj.s1);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GetSocietyAllowModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

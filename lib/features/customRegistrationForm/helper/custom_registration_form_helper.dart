@@ -1,6 +1,7 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
+import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
 
 
 class CustomRegistrationFormHelper {
@@ -246,8 +247,7 @@ class CustomRegistrationFormHelper {
       String? schema = prefs.getString(PrefsValue.schema);
       String? dmaUserId = prefs.getString(PrefsValue.userId);
       String? dmaUserName = prefs.getString(PrefsValue.userName);
-
-      SaveCusRegData saveCusRegData = SaveCusRegData(
+      CustRegSync custRegSyncStore = CustRegSync(
         schema: schema,
         dmaUserId: dmaUserId,
         dmaUserName: dmaUserName,
@@ -288,20 +288,20 @@ class CustomRegistrationFormHelper {
         kycDocument2Number: addProofNo,
         kycDocument3: ownershipProperty,
         eBillingModel: eBillingModel,
-        bankNameOfBank: bankNameOfBank,
+        nameOfBank: bankNameOfBank,
         bankAccountNumber: bankAccountNumber,
         bankIfscCode: bankIfscCode,
         bankAddress: bankAddress,
-        initialDepositeStatus: depositStatus,
+        initialDepositStatus: depositStatus,
         noInitialDepositStatusReason: reasonDeposit,
         depositType: depositType,
-        depositTypeAmount: depositAmt,
-        modeOfDeposite: modeDeposit,
+        initialAmount: depositAmt,
+        modeOfDeposit: modeDeposit,
         chequeNumber: chqNo,
         chequeDepositDate: chqDate,
-        payementBankName: chqBank,
+        paymentBankName: chqBank,
         chequeBankAccount: chequeAccountNo,
-        chequeMicrNo: chequeMICRNo,
+        micr: chequeMICRNo,
         backside1: idBackPath,
         backside2: addBackPath,
         backside3: nocDocPath,
@@ -315,7 +315,7 @@ class CustomRegistrationFormHelper {
         canceledCheque: "",
         chequePhoto: chequePath,
       );
-      return saveCusRegData;
+      return custRegSyncStore;
     } catch (e) {
       print(e.toString());
       CustomToast.showToast(e.toString());
@@ -323,91 +323,88 @@ class CustomRegistrationFormHelper {
     }
   }
 
-  static Future<dynamic> addUpdateCustomerFormInLocalDatabase({
-    required BuildContext context, required SaveCusRegData saveCusRegData, required bool isUpdate,}) async {
+  static Future<dynamic> addCustRegSyncLocalDB({
+    required BuildContext context, required CustRegSync custRegSyncStore, required bool isUpdate,}) async {
     try {
-      SaveCustomerRegistrationOfflineModel _custRegiDataModel = SaveCustomerRegistrationOfflineModel(
-        dmaUserName: saveCusRegData.dmaUserName.toString(),
-        dmaUserId: saveCusRegData.dmaUserId.toString(),
-        schema: saveCusRegData.schema.toString(),
-        interested: saveCusRegData.interested.toString(),
-        acceptConversionPolicy: saveCusRegData.acceptConversionPolicy.toString(),
-        acceptExtraFittingCost: saveCusRegData.acceptExtraFittingCost.toString(),
-        societyAllowedMdpe: saveCusRegData.societyAllowedMdpe.toString(),
-        chargeArea: saveCusRegData.chargeId.toString(),
-        areaId: saveCusRegData.areaId.toString(),
-        mobileNumber: saveCusRegData.mobileNumber.toString(),
-        firstName: saveCusRegData.firstName.toString(),
-        middleName: saveCusRegData.middleName.toString(),
-        lastName: saveCusRegData.lastName.toString(),
-        guardianType: saveCusRegData.guardianType.toString(),
-        guardianName: saveCusRegData.guardianName.toString(),
-        emailId: saveCusRegData.emailId.toString(),
-        propertyCategoryId: saveCusRegData.propertyCategoryId.toString(),
-        propertyClassId: saveCusRegData.propertyClassId.toString(),
-        buildingNumber: saveCusRegData.buildingNumber.toString(),
-        houseNumber: saveCusRegData.houseNumber.toString(),
-        colonySocietyApartment: saveCusRegData.colonySocietyApartment.toString(),
-        streetName: saveCusRegData.streetName.toString(),
-        town: saveCusRegData.town.toString(),
-        districtId: saveCusRegData.districtId.toString(),
-        pinCode: saveCusRegData.pinCode.toString(),
-        residentStatus: saveCusRegData.residentStatus.toString(),
-        noOfKitchen: saveCusRegData.noOfKitchen.toString(),
-        noOfBathroom: saveCusRegData.noOfBathroom.toString(),
-        noOfFamilyMembers: saveCusRegData.noOfFamilyMembers.toString(),
-        existingCookingFuel: saveCusRegData.existingCookingFuel.toString(),
-        latitude: saveCusRegData.latitude.toString(),
-        longitude: saveCusRegData.longitude.toString(),
-        nearestLandmark: saveCusRegData.nearestLandmark.toString(),
-        kycDocument1: saveCusRegData.kycDocument1.toString(),
-        kycDocument1Number: saveCusRegData.kycDocument1Number.toString(),
-        kycDocument2: saveCusRegData.kycDocument2.toString(),
-        kycDocument2Number: saveCusRegData.kycDocument2Number.toString(),
-        kycDocument3: saveCusRegData.kycDocument3.toString(),
-        kycDocument3Number: saveCusRegData.kycDocument3Number.toString(),
-        eBillingModel: saveCusRegData.eBillingModel.toString(),
-        bankNameOfBank: saveCusRegData.bankNameOfBank.toString(),
-        bankAccountNumber: saveCusRegData.bankAccountNumber.toString(),
-        bankIfscCode: saveCusRegData.bankIfscCode.toString(),
-        bankAddress: saveCusRegData.bankAddress.toString(),
-        initialDepositeStatus: saveCusRegData.initialDepositeStatus.toString(),
-        depositeType: saveCusRegData.depositType.toString(),
-        depositTypeAmount: saveCusRegData.depositTypeAmount.toString(),
-        modeOfDeposite: saveCusRegData.modeOfDeposite.toString(),
-        chequeNumber: saveCusRegData.chequeNumber.toString(),
-        chequeDepositDate: saveCusRegData.chequeDepositDate.toString(),
-        payementBankName: saveCusRegData.payementBankName.toString(),
-        chequeBankAccount: saveCusRegData.chequeBankAccount.toString(),
-        chequeMicrAccount: saveCusRegData.chequeMicrNo.toString(),
-        documentUploadsPhoto1: saveCusRegData.documentUploads1.toString(),
-        documentUploadsPhoto2: saveCusRegData.documentUploads2.toString(),
-        documentUploadsPhoto3: saveCusRegData.documentUploads3.toString(),
-        backSidePhoto1: saveCusRegData.backside1.toString(),
-        backSidePhoto2: saveCusRegData.backside2.toString(),
-        backSidePhoto3: saveCusRegData.backside3.toString(),
-        uploadCustomerPhoto: saveCusRegData.uploadCustomerPhoto.toString(),
-        uploadHousePhoto: saveCusRegData.uploadHousePhoto.toString(),
-        customerConsentPhoto: saveCusRegData.customerConsent.toString(),
-        ownerConsent: saveCusRegData.ownerConsent.toString(),
-        canceledChequePhoto: saveCusRegData.canceledCheque.toString(),
-        chequePhoto: saveCusRegData.chequePhoto.toString(),
-        reasonForHold: saveCusRegData.nearestLandmark.toString(),
-        noInitialDepositStatusReason: saveCusRegData.noInitialDepositStatusReason.toString(),
-        modeDepositValue: saveCusRegData.modeOfDeposite,
-        ownerConsentText: "",
-        isDepositCheq: false,
+      CustRegSync custRegSyncAdd = CustRegSync(
+        dmaUserName: custRegSyncStore.dmaUserName.toString(),
+        dmaUserId: custRegSyncStore.dmaUserId.toString(),
+        schema: custRegSyncStore.schema.toString(),
+        interested: custRegSyncStore.interested.toString(),
+        acceptConversionPolicy: custRegSyncStore.acceptConversionPolicy.toString(),
+        acceptExtraFittingCost: custRegSyncStore.acceptExtraFittingCost.toString(),
+        societyAllowedMdpe: custRegSyncStore.societyAllowedMdpe.toString(),
+        chargeId: custRegSyncStore.chargeId.toString(),
+        areaId: custRegSyncStore.areaId.toString(),
+        mobileNumber: custRegSyncStore.mobileNumber.toString(),
+        firstName: custRegSyncStore.firstName.toString(),
+        middleName: custRegSyncStore.middleName.toString(),
+        lastName: custRegSyncStore.lastName.toString(),
+        guardianType: custRegSyncStore.guardianType.toString(),
+        guardianName: custRegSyncStore.guardianName.toString(),
+        emailId: custRegSyncStore.emailId.toString(),
+        propertyCategoryId: custRegSyncStore.propertyCategoryId.toString(),
+        propertyClassId: custRegSyncStore.propertyClassId.toString(),
+        buildingNumber: custRegSyncStore.buildingNumber.toString(),
+        houseNumber: custRegSyncStore.houseNumber.toString(),
+        colonySocietyApartment: custRegSyncStore.colonySocietyApartment.toString(),
+        streetName: custRegSyncStore.streetName.toString(),
+        town: custRegSyncStore.town.toString(),
+        districtId: custRegSyncStore.districtId.toString(),
+        pinCode: custRegSyncStore.pinCode.toString(),
+        residentStatus: custRegSyncStore.residentStatus.toString(),
+        noOfKitchen: custRegSyncStore.noOfKitchen.toString(),
+        noOfBathroom: custRegSyncStore.noOfBathroom.toString(),
+        noOfFamilyMembers: custRegSyncStore.noOfFamilyMembers.toString(),
+        existingCookingFuel: custRegSyncStore.existingCookingFuel.toString(),
+        latitude: custRegSyncStore.latitude.toString(),
+        longitude: custRegSyncStore.longitude.toString(),
+        nearestLandmark: custRegSyncStore.nearestLandmark.toString(),
+        kycDocument1: custRegSyncStore.kycDocument1.toString(),
+        kycDocument1Number: custRegSyncStore.kycDocument1Number.toString(),
+        kycDocument2: custRegSyncStore.kycDocument2.toString(),
+        kycDocument2Number: custRegSyncStore.kycDocument2Number.toString(),
+        kycDocument3: custRegSyncStore.kycDocument3.toString(),
+        kycDocument3Number: custRegSyncStore.kycDocument3Number.toString(),
+        eBillingModel: custRegSyncStore.eBillingModel.toString(),
+        nameOfBank: custRegSyncStore.nameOfBank.toString(),
+        bankAccountNumber: custRegSyncStore.bankAccountNumber.toString(),
+        bankIfscCode: custRegSyncStore.bankIfscCode.toString(),
+        bankAddress: custRegSyncStore.bankAddress.toString(),
+        initialDepositStatus: custRegSyncStore.initialDepositStatus.toString(),
+        depositType: custRegSyncStore.depositType.toString(),
+        initialAmount: custRegSyncStore.initialAmount.toString(),
+        modeOfDeposit: custRegSyncStore.modeOfDeposit.toString(),
+        chequeNumber: custRegSyncStore.chequeNumber.toString(),
+        chequeDepositDate: custRegSyncStore.chequeDepositDate.toString(),
+        paymentBankName: custRegSyncStore.paymentBankName.toString(),
+        chequeBankAccount: custRegSyncStore.chequeBankAccount.toString(),
+        micr: custRegSyncStore.micr.toString(),
+        documentUploads1: custRegSyncStore.documentUploads1.toString(),
+        documentUploads2: custRegSyncStore.documentUploads2.toString(),
+        documentUploads3: custRegSyncStore.documentUploads3.toString(),
+        backside1: custRegSyncStore.backside1.toString(),
+        backside2: custRegSyncStore.backside2.toString(),
+        backside3: custRegSyncStore.backside3.toString(),
+        uploadCustomerPhoto: custRegSyncStore.uploadCustomerPhoto.toString(),
+        uploadHousePhoto: custRegSyncStore.uploadHousePhoto.toString(),
+        customerConsent: custRegSyncStore.customerConsent.toString(),
+        ownerConsent: custRegSyncStore.ownerConsent.toString(),
+        canceledCheque: custRegSyncStore.canceledCheque.toString(),
+        chequePhoto: custRegSyncStore.chequePhoto.toString(),
+        noInitialDepositStatusReason: custRegSyncStore.noInitialDepositStatusReason.toString(),
+        isDepositChq: false,
       );
-      var mmm = await HiveDataBase.customerRegBox!.values.toList().length;
+      var mmm = await HiveDataBase.custRegSyncBox!.values.toList().length;
       if(isUpdate == true){
-        await HiveDataBase.customerRegBox!.put(mmm , _custRegiDataModel);
+        await HiveDataBase.custRegSyncBox!.put(mmm , custRegSyncAdd);
       } else{
         print("mmm-->${mmm}");
         if (mmm <= 15) {
           print("mmmLength-->${mmm.toString().length}");
           Utils.successSnackBar("Great Success! Record Save", context);
           Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
-          return await HiveDataBase.customerRegBox!.add(_custRegiDataModel);
+          return await HiveDataBase.custRegSyncBox!.add(custRegSyncAdd);
         } else {
           Utils.errorSnackBar('Error !!! \nPlease Upload Previous records', context);
           return null;
@@ -419,88 +416,86 @@ class CustomRegistrationFormHelper {
     }
   }
 
-  static Future<dynamic> updateCustomerFormInLocalDatabase({required BuildContext context, required SaveCusRegData saveCusRegData}) async {
+ /* static Future<dynamic> updateCustomerFormInLocalDatabase({
+    required BuildContext context,required CustRegSync custRegSyncStore,}) async {
     try {
-      SaveCustomerRegistrationOfflineModel _custRegiDataModel = SaveCustomerRegistrationOfflineModel(
-        dmaUserName: saveCusRegData.dmaUserName.toString(),
-        dmaUserId: saveCusRegData.dmaUserId.toString(),
-        schema: saveCusRegData.schema.toString(),
-        interested: saveCusRegData.interested.toString(),
-        acceptConversionPolicy: saveCusRegData.acceptConversionPolicy.toString(),
-        acceptExtraFittingCost: saveCusRegData.acceptExtraFittingCost.toString(),
-        societyAllowedMdpe: saveCusRegData.societyAllowedMdpe.toString(),
-        chargeArea: saveCusRegData.chargeId.toString(),
-        areaId: saveCusRegData.areaId.toString(),
-        mobileNumber: saveCusRegData.mobileNumber.toString(),
-        firstName: saveCusRegData.firstName.toString(),
-        middleName: saveCusRegData.middleName.toString(),
-        lastName: saveCusRegData.lastName.toString(),
-        guardianType: saveCusRegData.guardianType.toString(),
-        guardianName: saveCusRegData.guardianName.toString(),
-        emailId: saveCusRegData.emailId.toString(),
-        propertyCategoryId: saveCusRegData.propertyCategoryId.toString(),
-        propertyClassId: saveCusRegData.propertyClassId.toString(),
-        buildingNumber: saveCusRegData.buildingNumber.toString(),
-        houseNumber: saveCusRegData.houseNumber.toString(),
-        colonySocietyApartment: saveCusRegData.colonySocietyApartment.toString(),
-        streetName: saveCusRegData.streetName.toString(),
-        town: saveCusRegData.town.toString(),
-        districtId: saveCusRegData.districtId.toString(),
-        pinCode: saveCusRegData.pinCode.toString(),
-        residentStatus: saveCusRegData.residentStatus.toString(),
-        noOfKitchen: saveCusRegData.noOfKitchen.toString(),
-        noOfBathroom: saveCusRegData.noOfBathroom.toString(),
-        noOfFamilyMembers: saveCusRegData.noOfFamilyMembers.toString(),
-        existingCookingFuel: saveCusRegData.existingCookingFuel.toString(),
-        latitude: saveCusRegData.latitude.toString(),
-        longitude: saveCusRegData.longitude.toString(),
-        nearestLandmark: saveCusRegData.nearestLandmark.toString(),
-        kycDocument1: saveCusRegData.kycDocument1.toString(),
-        kycDocument1Number: saveCusRegData.kycDocument1Number.toString(),
-        kycDocument2: saveCusRegData.kycDocument2.toString(),
-        kycDocument2Number: saveCusRegData.kycDocument2Number.toString(),
-        kycDocument3: saveCusRegData.kycDocument3.toString(),
-        kycDocument3Number: saveCusRegData.kycDocument3Number.toString(),
-        eBillingModel: saveCusRegData.eBillingModel.toString(),
-        bankNameOfBank: saveCusRegData.bankNameOfBank.toString(),
-        bankAccountNumber: saveCusRegData.bankAccountNumber.toString(),
-        bankIfscCode: saveCusRegData.bankIfscCode.toString(),
-        bankAddress: saveCusRegData.bankAddress.toString(),
-        initialDepositeStatus: saveCusRegData.initialDepositeStatus.toString(),
-        depositeType: saveCusRegData.depositType.toString(),
-        depositTypeAmount: saveCusRegData.depositTypeAmount.toString(),
-        modeOfDeposite: saveCusRegData.modeOfDeposite.toString(),
-        chequeNumber: saveCusRegData.chequeNumber.toString(),
-        chequeDepositDate: saveCusRegData.chequeDepositDate.toString(),
-        payementBankName: saveCusRegData.payementBankName.toString(),
-        chequeBankAccount: saveCusRegData.chequeBankAccount.toString(),
-        chequeMicrAccount: saveCusRegData.chequeMicrNo.toString(),
-        documentUploadsPhoto1: saveCusRegData.documentUploads1.toString(),
-        documentUploadsPhoto2: saveCusRegData.documentUploads2.toString(),
-        documentUploadsPhoto3: saveCusRegData.documentUploads3.toString(),
-        backSidePhoto1: saveCusRegData.backside1.toString(),
-        backSidePhoto2: saveCusRegData.backside2.toString(),
-        backSidePhoto3: saveCusRegData.backside3.toString(),
-        uploadCustomerPhoto: saveCusRegData.uploadCustomerPhoto.toString(),
-        uploadHousePhoto: saveCusRegData.uploadHousePhoto.toString(),
-        customerConsentPhoto: saveCusRegData.customerConsent.toString(),
-        ownerConsent: saveCusRegData.ownerConsent.toString(),
-        canceledChequePhoto: saveCusRegData.canceledCheque.toString(),
-        chequePhoto: saveCusRegData.chequePhoto.toString(),
-        reasonForHold: saveCusRegData.nearestLandmark.toString(),
-        noInitialDepositStatusReason: saveCusRegData.noInitialDepositStatusReason.toString(),
-        modeDepositValue: saveCusRegData.modeOfDeposite,
-        ownerConsentText: "",
-        isDepositCheq: false,
+      CustRegSync custRegSyncAdd = CustRegSync(
+        dmaUserName: custRegSyncStore.dmaUserName.toString(),
+        dmaUserId: custRegSyncStore.dmaUserId.toString(),
+        schema: custRegSyncStore.schema.toString(),
+        interested: custRegSyncStore.interested.toString(),
+        acceptConversionPolicy: custRegSyncStore.acceptConversionPolicy.toString(),
+        acceptExtraFittingCost: custRegSyncStore.acceptExtraFittingCost.toString(),
+        societyAllowedMdpe: custRegSyncStore.societyAllowedMdpe.toString(),
+        chargeId: custRegSyncStore.chargeId.toString(),
+        areaId: custRegSyncStore.areaId.toString(),
+        mobileNumber: custRegSyncStore.mobileNumber.toString(),
+        firstName: custRegSyncStore.firstName.toString(),
+        middleName: custRegSyncStore.middleName.toString(),
+        lastName: custRegSyncStore.lastName.toString(),
+        guardianType: custRegSyncStore.guardianType.toString(),
+        guardianName: custRegSyncStore.guardianName.toString(),
+        emailId: custRegSyncStore.emailId.toString(),
+        propertyCategoryId: custRegSyncStore.propertyCategoryId.toString(),
+        propertyClassId: custRegSyncStore.propertyClassId.toString(),
+        buildingNumber: custRegSyncStore.buildingNumber.toString(),
+        houseNumber: custRegSyncStore.houseNumber.toString(),
+        colonySocietyApartment: custRegSyncStore.colonySocietyApartment.toString(),
+        streetName: custRegSyncStore.streetName.toString(),
+        town: custRegSyncStore.town.toString(),
+        districtId: custRegSyncStore.districtId.toString(),
+        pinCode: custRegSyncStore.pinCode.toString(),
+        residentStatus: custRegSyncStore.residentStatus.toString(),
+        noOfKitchen: custRegSyncStore.noOfKitchen.toString(),
+        noOfBathroom: custRegSyncStore.noOfBathroom.toString(),
+        noOfFamilyMembers: custRegSyncStore.noOfFamilyMembers.toString(),
+        existingCookingFuel: custRegSyncStore.existingCookingFuel.toString(),
+        latitude: custRegSyncStore.latitude.toString(),
+        longitude: custRegSyncStore.longitude.toString(),
+        nearestLandmark: custRegSyncStore.nearestLandmark.toString(),
+        kycDocument1: custRegSyncStore.kycDocument1.toString(),
+        kycDocument1Number: custRegSyncStore.kycDocument1Number.toString(),
+        kycDocument2: custRegSyncStore.kycDocument2.toString(),
+        kycDocument2Number: custRegSyncStore.kycDocument2Number.toString(),
+        kycDocument3: custRegSyncStore.kycDocument3.toString(),
+        kycDocument3Number: custRegSyncStore.kycDocument3Number.toString(),
+        eBillingModel: custRegSyncStore.eBillingModel.toString(),
+        nameOfBank: custRegSyncStore.nameOfBank.toString(),
+        bankAccountNumber: custRegSyncStore.bankAccountNumber.toString(),
+        bankIfscCode: custRegSyncStore.bankIfscCode.toString(),
+        bankAddress: custRegSyncStore.bankAddress.toString(),
+        initialDepositStatus: custRegSyncStore.initialDepositStatus.toString(),
+        depositType: custRegSyncStore.depositType.toString(),
+        initialAmount: custRegSyncStore.initialAmount.toString(),
+        modeOfDeposit: custRegSyncStore.modeOfDeposit.toString(),
+        chequeNumber: custRegSyncStore.chequeNumber.toString(),
+        chequeDepositDate: custRegSyncStore.chequeDepositDate.toString(),
+        paymentBankName: custRegSyncStore.paymentBankName.toString(),
+        chequeBankAccount: custRegSyncStore.chequeBankAccount.toString(),
+        micr: custRegSyncStore.micr.toString(),
+        documentUploads1: custRegSyncStore.documentUploads1.toString(),
+        documentUploads2: custRegSyncStore.documentUploads2.toString(),
+        documentUploads3: custRegSyncStore.documentUploads3.toString(),
+        backside1: custRegSyncStore.backside1.toString(),
+        backside2: custRegSyncStore.backside2.toString(),
+        backside3: custRegSyncStore.backside3.toString(),
+        uploadCustomerPhoto: custRegSyncStore.uploadCustomerPhoto.toString(),
+        uploadHousePhoto: custRegSyncStore.uploadHousePhoto.toString(),
+        customerConsent: custRegSyncStore.customerConsent.toString(),
+        ownerConsent: custRegSyncStore.ownerConsent.toString(),
+        canceledCheque: custRegSyncStore.canceledCheque.toString(),
+        chequePhoto: custRegSyncStore.chequePhoto.toString(),
+        noInitialDepositStatusReason: custRegSyncStore.noInitialDepositStatusReason.toString(),
+        isDepositChq: false,
       );
       print("HEllo");
-      var mmm = await HiveDataBase.customerRegBox!.values.toList().length;
+      var mmm = await HiveDataBase.custRegSyncBox!.values.toList().length;
       print("mmm-->${mmm}");
-      if (HiveDataBase.customerRegBox!.values.isNotEmpty) {
+      if (HiveDataBase.custRegSyncBox!.values.isNotEmpty) {
         print("mmmLength-->${mmm.toString().length}");
         Utils.successSnackBar("Successfully Update Record", context);
         Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
-        return await HiveDataBase.customerRegBox!.put(mmm, _custRegiDataModel);
+        return await HiveDataBase.custRegSyncBox!.put(mmm, custRegSyncAdd);
       } else {
         Utils.errorSnackBar('Error !!! \nPlease Upload Previous record', context);
         return null;
@@ -509,7 +504,7 @@ class CustomRegistrationFormHelper {
       CustomToast.showToast(e.toString());
       return null;
     }
-  }
+  }*/
 
 
   static Future<bool> isInternetConnected() async {

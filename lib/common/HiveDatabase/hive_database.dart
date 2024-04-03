@@ -22,6 +22,7 @@ import 'package:pbg_app/features/dashboard/domain/model/get_property_category_mo
 import 'package:pbg_app/features/dashboard/domain/model/get_property_class_model.dart';
 import 'package:pbg_app/features/dashboard/domain/model/get_resident_status_model.dart';
 import 'package:pbg_app/features/dashboard/domain/model/get_society_allow_model.dart';
+import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
 
 import 'hive_box_name.dart';
 
@@ -54,7 +55,8 @@ class HiveDataBase {
   static Box<GetPropertyClassModel>? proClassBox;
   static Box<GetResidentStatusModel>? resStatusBox;
   static Box<GetSocietyAllowModel>? societyAllowBox;
-  static Box<SaveCustomerRegistrationOfflineModel>? customerRegBox;
+//  static Box<SaveCustomerRegistrationOfflineModel>? customerRegBox;
+  static Box<CustRegSync>? custRegSyncBox;
 
 
   Future<void> init() async {
@@ -91,6 +93,7 @@ class HiveDataBase {
     Hive.registerAdapter(GetResidentStatusModelAdapter());
     Hive.registerAdapter(GetSocietyAllowModelAdapter());
     Hive.registerAdapter(SaveCustomerRegistrationOfflineModelAdapter());
+    Hive.registerAdapter(CustRegSyncAdapter());
 
     acceptConversionPolicyBox = await Hive.openBox<GetAcceptConversionPolicyModel>(HiveBoxName.AcceptConversionPolicyBox);
     acceptExtraFittingCostBox = await Hive.openBox<GetAcceptExtraFittingCostModel>(HiveBoxName.AcceptExtraFittingCostBox);
@@ -112,7 +115,7 @@ class HiveDataBase {
     proClassBox = await Hive.openBox<GetPropertyClassModel>(HiveBoxName.ProClassBox);
     resStatusBox = await Hive.openBox<GetResidentStatusModel>(HiveBoxName.ResStatusBox);
     societyAllowBox = await Hive.openBox<GetSocietyAllowModel>(HiveBoxName.SocietyAllowBox);
-    customerRegBox = await Hive.openBox<SaveCustomerRegistrationOfflineModel>(HiveBoxName.CustomerRegBox);
+    custRegSyncBox = await Hive.openBox<CustRegSync>(HiveBoxName.CustRegSyncBox);
 
   }
 }

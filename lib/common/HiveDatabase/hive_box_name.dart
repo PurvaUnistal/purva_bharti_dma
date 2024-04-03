@@ -28,6 +28,7 @@ class HiveBoxName {
   static String ResStatusBox = "resStatusBox";
   static String SocietyAllowBox = "societyAllowBox";
   static String CustomerRegBox = "customerRegBox";
+  static String CustRegSyncBox = "custRegSyncBox";
 }
 
 class HiveTypeId {
@@ -60,4 +61,5 @@ class HiveTypeId {
   static const GetSocietyAllowId = 26;
   static const CustomerRegId = 27;
   static const GetLabelId = 28;
+  static const CustRegSyncId = 29;
 }

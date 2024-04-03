@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/features/customRegistrationForm/domain/model/save_customer_registration_model.dart';
+import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
 
 
 class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, CustomRegistrationFormState> {
@@ -159,8 +159,8 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   File _chequePath =File("");
   File get chequePath => _chequePath;
 
-  SaveCusRegData _saveCusRegData = SaveCusRegData();
-  SaveCusRegData get saveCusRegData => _saveCusRegData;
+  CustRegSync _saveCusRegData = CustRegSync();
+  CustRegSync get saveCusRegData => _saveCusRegData;
 
   final TextEditingController reasonRegistrationController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
@@ -910,8 +910,8 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   _saveLocalData(CustomRegistrationFormSaveLocalDataEvent event, emit) async {
     _isSaveLoader = true;
     _eventCompleted(emit);
-     await CustomRegistrationFormHelper.addUpdateCustomerFormInLocalDatabase(
-         context: event.context, saveCusRegData: saveCusRegData, isUpdate:_isUpdate,
+     await CustomRegistrationFormHelper.addCustRegSyncLocalDB(
+         context: event.context, custRegSyncStore: saveCusRegData, isUpdate:_isUpdate,
      );
     _isSaveLoader = false;
     _eventCompleted(emit);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
+import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
 
 class ViewSyncRecordPage extends StatefulWidget {
   const ViewSyncRecordPage({Key? key}) : super(key: key);
@@ -10,16 +11,16 @@ class ViewSyncRecordPage extends StatefulWidget {
 }
 
 class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
-  late List<SaveCustomerRegistrationOfflineModel> offlineDataList;
-  late Box<SaveCustomerRegistrationOfflineModel> offlineBox;
+  late List<CustRegSync> offlineDataList;
+  late Box<CustRegSync> offlineBox;
 
   @override
   void initState() {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
     BlocProvider.of<ViewSyncRecordBloc>(context).add(
         ViewSyncRecordLoadPageEvent(context: context));
-    HiveDataBase.customerRegBox!;
-    offlineBox = HiveDataBase.customerRegBox!;
+    HiveDataBase.custRegSyncBox!;
+    offlineBox = HiveDataBase.custRegSyncBox!;
     offlineDataList = offlineBox.values.toList();
     super.initState();
   }

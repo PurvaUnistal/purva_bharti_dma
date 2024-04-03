@@ -42,11 +42,11 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
             subMessage: "Mobile No : ${event.mobileNo}",
             okButtonText: "Yes",
            onPressed: () async {
-            if (HiveDataBase.customerRegBox!.values.isNotEmpty) {
+            if (HiveDataBase.custRegSyncBox!.values.isNotEmpty) {
               Navigator.pop(event.context);
               Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
-              log("Data Length P ============== ${HiveDataBase.customerRegBox!.values.length}");
-              return await HiveDataBase.customerRegBox!.delete(event.index);
+              log("Data Length P ============== ${HiveDataBase.custRegSyncBox!.values.length}");
+              return await HiveDataBase.custRegSyncBox!.delete(event.index);
             }
             _eventCompleted(emit);
             },
