@@ -127,20 +127,19 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Flexible(flex: 2, child: TextButton(
-                  child: Text("Location"),
-                  onPressed: (){
-                    BlocProvider.of<CustomRegistrationFormBloc>(context)
-                        .add(CustomRegistrationFormSetLocation(context: context));
-                  },
-                  //  stateData: stateData
-                )
-                ),
                 Flexible(flex: 3, child: _latWidget(stateData: stateData)),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
                 Flexible(flex: 3, child: _longWidget(stateData: stateData)),
+                IconButton(
+                  icon: Icon(Icons.location_on_outlined, color:  AppColor.prime),
+                  onPressed: (){
+                    BlocProvider.of<CustomRegistrationFormBloc>(context)
+                        .add(CustomRegistrationFormSetLocation(context: context));
+                  },
+                  //  stateData: stateData
+                ),
               ],
             ),
             _verticalSpace(),

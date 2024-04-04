@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
+import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
 
 
 class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> {
@@ -17,9 +18,6 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
   bool _isDeleteLoader = false;
   bool get isDeleteLoader => _isDeleteLoader;
 
-   SaveCustomerRegistrationOfflineModel _offlineDataList = SaveCustomerRegistrationOfflineModel();
-   SaveCustomerRegistrationOfflineModel get offlineDataList => _offlineDataList;
-  // Box<SaveCustomerRegistrationOfflineModel>? offlineBox;
 
   _pageLoad(ViewSyncRecordLoadPageEvent event, emit) {
     emit(ViewSyncRecordPageLoadState());
@@ -34,44 +32,49 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
     _eventCompleted(emit);*/
   }
 
-  _deleteLocalData(ViewSyncRecordDeleteLocalDataEvent event, emit) async {
-     return showDialog(
+  _deleteLocalData(ViewSyncRecordDeleteLocalDataEvent event, emit) {
+    return showDialog(
         context: event.context,
         builder: (BuildContext context) => MessageBoxTwoButtonPopWidget(
-            message: "Do you really want to delete?",
-            subMessage: "Mobile No : ${event.mobileNo}",
-            okButtonText: "Yes",
-           onPressed: () async {
+          message: "Do you really want to delete?",
+          okButtonText: "Yes",
+          onPressed: () async {
             if (HiveDataBase.custRegSyncBox!.values.isNotEmpty) {
               Navigator.pop(event.context);
               Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
               log("Data Length P ============== ${HiveDataBase.custRegSyncBox!.values.length}");
-              return await HiveDataBase.custRegSyncBox!.delete(event.index);
+              return await HiveDataBase.custRegSyncBox!.deleteAt(event.index);
             }
             _eventCompleted(emit);
-            },
+          },
         ));
   }
 
   _saveServerData(ViewSyncRecordLoadSaveServerDataEvent event, emit) async {
-    _isSaveServerLoader = true;
-    _eventCompleted(emit);
-    var res = await ViewSyncRecordHelper.leadSaveInServer(context: event.context);
-    log("resLeadSaveInServer==>${res.toString()}");
-    if (res != null) {
-      _isSaveServerLoader = false;
-      _eventCompleted(emit);
-      log('Great Success! \n Record Save');
-      Utils.errorSnackBar(res.messages.toString(), event.context);
-      Navigator.pushReplacementNamed(event.context, RoutesName.dashboardView);
-    }
+   try{
+     _isSaveServerLoader = true;
+     _eventCompleted(emit);
+     List<CustRegSync> data = await HiveDataBase.custRegSyncBox!.values.toList();
+     for (int i = 0; i < data.length; i++) {
+       var res = await ViewSyncRecordHelper.sendData(context: event.context, custRegSyncData: data[i]);
+       if (res != null) {
+         _isSaveServerLoader = false;
+         _eventCompleted(emit);
+         Utils.successSnackBar(msg: res.message[i].message, context: event.context);
+         Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecordPage);
+       }
+     }
+   }catch(e){
+
+   }
+
   }
 
   _eventCompleted(Emitter<ViewSyncRecordState> emit) {
     emit(ViewSyncRecordDataState(
       isSaveServerLoader: isSaveServerLoader,
       isDeleteLoader: isDeleteLoader,
-      saveCustomerRegistrationOfflineList: offlineDataList,
+     // saveCustomerRegistrationOfflineList: offlineDataList,
     //  saveCustomerRegistrationOfflineData: offlineBox!,
     ));
   }

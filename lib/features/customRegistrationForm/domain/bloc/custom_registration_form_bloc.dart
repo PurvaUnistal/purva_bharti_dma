@@ -890,6 +890,11 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       chequeAccountNo: chequeAccountNoController.text.trim().toString(),
       chequeMICRNo: chequeMicrNoController.text.trim().toString(),
       chequePath: chequePath.path.toString(),
+      canceledCheque: "",
+      bankAccountNumber: "",
+      bankAddress: "",
+      bankIfscCode: "",
+
     );
     _isPreviewLoader = true;
     _eventCompleted(emit);

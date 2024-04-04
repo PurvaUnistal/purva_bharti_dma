@@ -99,6 +99,6 @@ class TextFieldWidget extends StatelessWidget {
 
   OutlineInputBorder border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(5.0),
-    borderSide: BorderSide(color: AppColor.black, style: BorderStyle.solid, width: 0.80),
+    borderSide: BorderSide(color: AppColor.prime, style: BorderStyle.solid, width: 0.80),
   );
 }

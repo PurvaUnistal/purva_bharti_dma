@@ -8,237 +8,239 @@ class CustomRegistrationFormHelper {
 
   static Future<dynamic> textFieldValidationCheck({
     required BuildContext context,
-    required String registrationType,
-    required String reasonRegistration,
-    required String chargeId,
-    required String areaId,
-    required String mobileNumber,
-    required String altMobileNo,
-    required String firstName,
-    required String middleName,
-    required String lastName,
-    required String guardianType,
-    required String guardianName,
-    required String emailId,
-    required String propertyCategoryId,
-    required String propertyClassId,
-    required String buildingNumber,
-    required String houseNumber,
-    required String colonySocietyApartment,
-    required String streetName,
-    required String town,
-    required String districtId,
-    required String nearestLandmark,
-    required String pinCode,
-    required String latitude,
-    required String longitude,
+     String? registrationType,
+     String? reasonRegistration,
+     String? chargeId,
+     String? areaId,
+     String? mobileNumber,
+     String? altMobileNo,
+     String? firstName,
+     String? middleName,
+     String? lastName,
+     String? guardianType,
+     String? guardianName,
+     String? emailId,
+     String? propertyCategoryId,
+     String? propertyClassId,
+     String? buildingNumber,
+     String? houseNumber,
+     String? colonySocietyApartment,
+     String? streetName,
+     String? town,
+     String? districtId,
+     String? nearestLandmark,
+     String? pinCode,
+     String? latitude,
+     String? longitude,
     String? residentStatus,
-    required String noOfKitchen,
-    required String noOfBathroom,
-    required String existingCookingFuel,
-    required String noOfFamilyMembers,
-    required String idProof,
-    required String idProofNo,
-    required String idFrontPath,
-    required String idBackPath,
-    required String addProof,
-    required String addProofNo,
-    required String addFrontPath,
-    required String addBackPath,
-    required String ownershipProperty,
+     String? noOfKitchen,
+     String? noOfBathroom,
+     String? existingCookingFuel,
+     String? noOfFamilyMembers,
+     String? idProof,
+     String? idProofNo,
+     String? idFrontPath,
+     String? idBackPath,
+     String? addProof,
+     String? addProofNo,
+     String? addFrontPath,
+     String? addBackPath,
+     String? ownershipProperty,
     String? ownerConsent,
+    String? customerConsent,
     String? eBillingModel,
     String? bankNameOfBank,
     String? bankAccountNumber,
     String? bankIfscCode,
     String? bankAddress,
-    required String nocDocPath,
-    required String customerPath,
-    required String housePath,
-    required String acceptConversionPolicy,
-    required String acceptExtraFittingCost,
-    required String societyAllowedMdpe,
-    required String depositStatus,
-    required String reasonDeposit,
-    required String depositType,
-    required String depositAmt,
-    required String modeDeposit,
-    required String chqNo,
-    required String chqDate,
-    required String chqBank,
-    required String chequeAccountNo,
-    required String chequeMICRNo,
-    required String chequePath,
+     String? nocDocPath,
+     String? customerPath,
+     String? housePath,
+     String? acceptConversionPolicy,
+     String? acceptExtraFittingCost,
+     String? societyAllowedMdpe,
+     String? depositStatus,
+     String? reasonDeposit,
+     String? depositType,
+     String? depositAmt,
+     String? modeDeposit,
+     String? chqNo,
+     String? chqDate,
+     String? chqBank,
+     String? chequeAccountNo,
+     String? chequeMICRNo,
+     String? chequePath,
+    String? canceledCheque,
   }) async {
     try {
-      if (registrationType.isEmpty || registrationType == "null") {
-        CustomToast.showToast("Select Registration Type");
+      if (registrationType == "null") {
+        Utils.errorSnackBar(msg: "Select Registration Type", context: context);
         return null;
       }
-      if (chargeId.isEmpty || chargeId == 'null') {
-        CustomToast.showToast('Please select Charge Area Type');
+      if (chargeId == 'null') {
+        Utils.errorSnackBar(msg: 'Please select Charge Area Type', context: context);
         return null;
       }
-      if (areaId.isEmpty || areaId == 'null') {
-        CustomToast.showToast('Please select Area Type');
+      if (areaId == 'null') {
+        Utils.errorSnackBar(msg: 'Please select Area Type', context: context);
         return null;
       }
-      if (mobileNumber.isEmpty) {
-        CustomToast.showToast("Please enter Mobile Number");
+      if (mobileNumber!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter Mobile Number", context: context);
         return null;
       }
-      if (firstName.isEmpty || firstName == "") {
-        CustomToast.showToast("Please enter First Name");
+      if (firstName!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter First Name", context: context);
         return null;
       }
-      if (lastName.isEmpty || lastName == "") {
-        CustomToast.showToast("Please enter Last Name");
+      if (lastName!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter Last Name", context: context);
         return null;
       }
       if(registrationType == "Registration For LMC"){
-        if (guardianType.isEmpty || guardianType == "null") {
-          CustomToast.showToast("Please enter Guardian Type");
+        if (guardianType == "null") {
+          Utils.errorSnackBar(msg: "Please enter Guardian Type", context: context);
           return null;
         }
-        if (guardianName.isEmpty) {
-          CustomToast.showToast("Please enter Guardian Name");
+        if (guardianName!.isEmpty) {
+          Utils.errorSnackBar(msg: "Please enter Guardian Name", context: context);
           return null;
         }
       }
-      if (propertyCategoryId.isEmpty || propertyCategoryId == "null") {
-        CustomToast.showToast("Please select Property Category");
+      if (propertyCategoryId == "null") {
+        Utils.errorSnackBar(msg: "Please select Property Category", context: context);
         return null;
       }
-      if (propertyClassId.isEmpty || propertyClassId == "null") {
-        CustomToast.showToast("Please select Property Class Id");
+      if (propertyClassId == "null") {
+        Utils.errorSnackBar(msg:"Please select Property Class Id", context: context);
         return null;
       }
       /*  if (buildingNumber.isEmpty) {
-        CustomToast.showToast("Please enter the building number");
+        Utils.errorSnackBar(msg: "Please enter the building number", context: context);
         return null;
       }*/
-      if (houseNumber.isEmpty) {
-        CustomToast.showToast("Please enter the House Number");
+      if (houseNumber!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter the House Number", context: context);
         return null;
       }
-      if (colonySocietyApartment.isEmpty) {
-        CustomToast.showToast("Please enter the Colony/Society/Apartment");
+      if (colonySocietyApartment!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter the Colony/Society/Apartment", context: context);
         return null;
       }
-      if (streetName.isEmpty) {
-        CustomToast.showToast("Please enter the Lane/Street Name");
+      if (streetName!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter the Lane/Street Name", context: context);
         return null;
       }
       /*if (town.isEmpty) {
-        CustomToast.showToast("Please enter the town");
+        Utils.errorSnackBar("Please enter the town", context: context);
         return null;
       }*/
-      if (districtId.isEmpty || districtId == "null") {
-        CustomToast.showToast("Please select the District");
+      if (districtId == "null") {
+        Utils.errorSnackBar(msg: "Please select the District", context: context);
         return null;
       }
-      if (pinCode.isEmpty) {
-        CustomToast.showToast("Please enter the pin code");
+      if (pinCode!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter the pin code", context: context);
         return null;
       }
-      if (noOfKitchen.isEmpty) {
-        CustomToast.showToast("Please enter No. of Kitchen");
+      if (noOfKitchen!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter No. of Kitchen", context: context);
         return null;
       }
-      if (noOfBathroom.isEmpty) {
-        CustomToast.showToast("Please enter No. of Bathroom");
+      if (noOfBathroom!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter No. of Bathroom", context: context);
         return null;
       }
-      if (existingCookingFuel.isEmpty || existingCookingFuel == "null") {
-        CustomToast.showToast("Please select the Cooking Fuel");
+      if (existingCookingFuel == "null") {
+        Utils.errorSnackBar(msg: "Please select the Cooking Fuel", context: context);
         return null;
       }
-      if (noOfFamilyMembers.isEmpty) {
-        CustomToast.showToast("Please enter No. of Family Members");
+      if (noOfFamilyMembers!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter No. of Family Members", context: context);
         return null;
       }
-      if (idProof.isEmpty || idProof == "null") {
-        CustomToast.showToast("Please select the Id Proof");
+      if (idProof == "null") {
+        Utils.errorSnackBar(msg: "Please select the Id Proof", context: context);
         return null;
       }
-      if (idProofNo.isEmpty) {
-        CustomToast.showToast("Please enter the Id Proof Number");
+      if (idProofNo!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please enter the Id Proof Number", context: context);
         return null;
       }
-      if (idFrontPath.isEmpty) {
-        CustomToast.showToast("Please select Id Proof Front Image");
+      if (idFrontPath!.isEmpty) {
+        Utils.errorSnackBar(msg: "Please select Id Proof Front Image", context: context);
         return null;
       }
       if(registrationType == "Registration For LMC"){
-        if (addProof.isEmpty || addProof == "null") {
-          CustomToast.showToast("Please select KYC (Address Proof)");
+        if (addProof == "null") {
+          Utils.errorSnackBar(msg: "Please select KYC (Address Proof)", context: context);
           return null;
         }
-        if (addProofNo.isEmpty) {
-          CustomToast.showToast("Please select KYC (Address Proof) Number");
+        if (addProofNo!.isEmpty) {
+          Utils.errorSnackBar(msg: "Please select KYC (Address Proof) Number", context: context);
           return null;
         }
-        if (addFrontPath.isEmpty) {
-          CustomToast.showToast("Please select Address Proof Front Image");
+        if (addFrontPath!.isEmpty) {
+          Utils.errorSnackBar(msg: "Please select Address Proof Front Image", context: context);
           return null;
         }
-        if (ownershipProperty.isEmpty || ownershipProperty == "null") {
-          CustomToast.showToast("Please select Ownership Type Property");
+        if (ownershipProperty == "null") {
+          Utils.errorSnackBar(msg: "Please select Ownership Type Property", context: context);
           return null;
         }
         if (ownershipProperty== "Rented") {
-          if(nocDocPath.isEmpty){
-            CustomToast.showToast("Please select NOC Document");
+          if(nocDocPath!.isEmpty){
+            Utils.errorSnackBar(msg: "Please select NOC Document", context: context);
             return null;
           }
         }
-        if (acceptConversionPolicy.isEmpty || acceptConversionPolicy == "null") {
-          CustomToast.showToast("Please select Accept Conversion Policy");
+        if (acceptConversionPolicy == "null") {
+          Utils.errorSnackBar(msg: "Please select Accept Conversion Policy", context: context);
           return null;
         }
-        if (acceptExtraFittingCost.isEmpty || acceptExtraFittingCost == "null") {
-          CustomToast.showToast("Please select Accept Extra Fitting CostValue");
+        if (acceptExtraFittingCost == "null") {
+          Utils.errorSnackBar(msg: "Please select Accept Extra Fitting CostValue", context: context);
           return null;
         }
-        if (societyAllowedMdpe.isEmpty || societyAllowedMdpe == "null") {
-          CustomToast.showToast("Please select Society Allows MDPE");
+        if (societyAllowedMdpe == "null") {
+          Utils.errorSnackBar(msg: "Please select Society Allows MDPE", context: context);
           return null;
         }
-        if (depositStatus.isEmpty || depositStatus == "null") {
-          CustomToast.showToast("Please select Deposit Status");
+        if (depositStatus == "null") {
+          Utils.errorSnackBar(msg: "Please select Deposit Status", context: context);
           return null;
         }
-        if (depositType.isEmpty || depositType == "null") {
-          CustomToast.showToast("Please select Scheme Type");
+        if (depositType == "null") {
+          Utils.errorSnackBar(msg: "Please select Scheme Type", context: context);
           return null;
         }
-        if (modeDeposit.isEmpty || modeDeposit == "null") {
-          CustomToast.showToast("Please select Mode Of Deposit");
+        if (modeDeposit == "null") {
+          Utils.errorSnackBar(msg: "Please select Mode Of Deposit", context: context);
           return null;
         }
         if (modeDeposit == "Cheque") {
-          if (chqNo.isEmpty) {
-            CustomToast.showToast("Please enter Cheque Number");
+          if (chqNo!.isEmpty) {
+            Utils.errorSnackBar(msg: "Please enter Cheque Number", context: context);
             return null;
           }
-          if (chqDate.isEmpty) {
-            CustomToast.showToast("Please select Cheque date");
+          if (chqDate!.isEmpty) {
+            Utils.errorSnackBar(msg: "Please select Cheque date", context: context);
             return null;
           }
-          if (chqBank.isEmpty || chqBank == "null") {
-            CustomToast.showToast("Please select Cheque Bank Name");
+          if (chqBank!.isEmpty || chqBank == "null") {
+            Utils.errorSnackBar(msg: "Please select Cheque Bank Name", context: context);
             return null;
           }
-          if (chequeAccountNo.isEmpty) {
-            CustomToast.showToast("Please enter Cheque Bank Account Number");
+          if (chequeAccountNo!.isEmpty) {
+            Utils.errorSnackBar(msg: "Please enter Cheque Bank Account Number", context: context);
             return null;
           }
-          if (chequeMICRNo.isEmpty) {
-            CustomToast.showToast("Please enter Cheque MICR Code");
+          if (chequeMICRNo!.isEmpty) {
+            Utils.errorSnackBar(msg: "Please enter Cheque MICR Code", context: context);
             return null;
           }
-          if (chequePath.isEmpty) {
-            CustomToast.showToast("Please select Cheque Image");
+          if (chequePath!.isEmpty) {
+            Utils.errorSnackBar(msg: "Please select Cheque Image", context: context);
             return null;
           }
         }
@@ -310,15 +312,15 @@ class CustomRegistrationFormHelper {
         documentUploads3: nocDocPath,
         uploadHousePhoto: housePath,
         uploadCustomerPhoto: customerPath,
-        customerConsent: "",
-        ownerConsent: "",
-        canceledCheque: "",
+        customerConsent: customerConsent,
+        ownerConsent: ownerConsent,
+        canceledCheque: canceledCheque,
         chequePhoto: chequePath,
       );
       return custRegSyncStore;
     } catch (e) {
       print(e.toString());
-      CustomToast.showToast(e.toString());
+      Utils.errorSnackBar(msg: e.toString(), context: context);
       return true;
     }
   }
@@ -327,30 +329,30 @@ class CustomRegistrationFormHelper {
     required BuildContext context, required CustRegSync custRegSyncStore, required bool isUpdate,}) async {
     try {
       CustRegSync custRegSyncAdd = CustRegSync(
-        dmaUserName: custRegSyncStore.dmaUserName.toString(),
-        dmaUserId: custRegSyncStore.dmaUserId.toString(),
-        schema: custRegSyncStore.schema.toString(),
-        interested: custRegSyncStore.interested.toString(),
-        acceptConversionPolicy: custRegSyncStore.acceptConversionPolicy.toString(),
-        acceptExtraFittingCost: custRegSyncStore.acceptExtraFittingCost.toString(),
-        societyAllowedMdpe: custRegSyncStore.societyAllowedMdpe.toString(),
-        chargeId: custRegSyncStore.chargeId.toString(),
-        areaId: custRegSyncStore.areaId.toString(),
+        dmaUserName: custRegSyncStore.dmaUserName.toString() ?? "",
+        dmaUserId: custRegSyncStore.dmaUserId.toString() ?? "",
+        schema: custRegSyncStore.schema.toString() ?? "",
+        interested: custRegSyncStore.interested.toString() ?? "",
+        acceptConversionPolicy: custRegSyncStore.acceptConversionPolicy == null ? "":custRegSyncStore.acceptConversionPolicy.toString(),
+        acceptExtraFittingCost: custRegSyncStore.acceptExtraFittingCost == null ? "":custRegSyncStore.acceptExtraFittingCost.toString(),
+        societyAllowedMdpe: custRegSyncStore.societyAllowedMdpe == null ? "":custRegSyncStore.societyAllowedMdpe.toString(),
+        chargeId: custRegSyncStore.chargeId == null ? "":custRegSyncStore.chargeId.toString(),
+        areaId: custRegSyncStore.areaId == null ? "":custRegSyncStore.areaId.toString(),
         mobileNumber: custRegSyncStore.mobileNumber.toString(),
         firstName: custRegSyncStore.firstName.toString(),
         middleName: custRegSyncStore.middleName.toString(),
         lastName: custRegSyncStore.lastName.toString(),
-        guardianType: custRegSyncStore.guardianType.toString(),
+        guardianType: custRegSyncStore.guardianType == null ? "":custRegSyncStore.guardianType.toString(),
         guardianName: custRegSyncStore.guardianName.toString(),
         emailId: custRegSyncStore.emailId.toString(),
-        propertyCategoryId: custRegSyncStore.propertyCategoryId.toString(),
-        propertyClassId: custRegSyncStore.propertyClassId.toString(),
+        propertyCategoryId: custRegSyncStore.propertyCategoryId == null ? "":custRegSyncStore.propertyCategoryId.toString(),
+        propertyClassId: custRegSyncStore.propertyClassId == null ? "":custRegSyncStore.propertyClassId.toString(),
         buildingNumber: custRegSyncStore.buildingNumber.toString(),
         houseNumber: custRegSyncStore.houseNumber.toString(),
         colonySocietyApartment: custRegSyncStore.colonySocietyApartment.toString(),
         streetName: custRegSyncStore.streetName.toString(),
         town: custRegSyncStore.town.toString(),
-        districtId: custRegSyncStore.districtId.toString(),
+        districtId: custRegSyncStore.districtId == null ? "":custRegSyncStore.districtId.toString(),
         pinCode: custRegSyncStore.pinCode.toString(),
         residentStatus: custRegSyncStore.residentStatus.toString(),
         noOfKitchen: custRegSyncStore.noOfKitchen.toString(),
@@ -360,24 +362,24 @@ class CustomRegistrationFormHelper {
         latitude: custRegSyncStore.latitude.toString(),
         longitude: custRegSyncStore.longitude.toString(),
         nearestLandmark: custRegSyncStore.nearestLandmark.toString(),
-        kycDocument1: custRegSyncStore.kycDocument1.toString(),
+        kycDocument1: custRegSyncStore.kycDocument1 == null ? "":custRegSyncStore.kycDocument1.toString(),
         kycDocument1Number: custRegSyncStore.kycDocument1Number.toString(),
-        kycDocument2: custRegSyncStore.kycDocument2.toString(),
+        kycDocument2: custRegSyncStore.kycDocument2 == null ? "":custRegSyncStore.kycDocument2.toString(),
         kycDocument2Number: custRegSyncStore.kycDocument2Number.toString(),
-        kycDocument3: custRegSyncStore.kycDocument3.toString(),
+        kycDocument3: custRegSyncStore.kycDocument3 == null ? "":custRegSyncStore.kycDocument3.toString(),
         kycDocument3Number: custRegSyncStore.kycDocument3Number.toString(),
         eBillingModel: custRegSyncStore.eBillingModel.toString(),
-        nameOfBank: custRegSyncStore.nameOfBank.toString(),
+        nameOfBank: custRegSyncStore.nameOfBank== null ? "":custRegSyncStore.nameOfBank.toString(),
         bankAccountNumber: custRegSyncStore.bankAccountNumber.toString(),
         bankIfscCode: custRegSyncStore.bankIfscCode.toString(),
         bankAddress: custRegSyncStore.bankAddress.toString(),
-        initialDepositStatus: custRegSyncStore.initialDepositStatus.toString(),
-        depositType: custRegSyncStore.depositType.toString(),
+        initialDepositStatus:  custRegSyncStore.initialDepositStatus == null ? "":custRegSyncStore.initialDepositStatus.toString(),
+        depositType:  custRegSyncStore.depositType == null ? "":custRegSyncStore.depositType.toString(),
         initialAmount: custRegSyncStore.initialAmount.toString(),
-        modeOfDeposit: custRegSyncStore.modeOfDeposit.toString(),
+        modeOfDeposit:  custRegSyncStore.modeOfDeposit== null ? "":custRegSyncStore.modeOfDeposit.toString(),
         chequeNumber: custRegSyncStore.chequeNumber.toString(),
         chequeDepositDate: custRegSyncStore.chequeDepositDate.toString(),
-        paymentBankName: custRegSyncStore.paymentBankName.toString(),
+        paymentBankName: custRegSyncStore.paymentBankName == null ? "":custRegSyncStore.paymentBankName.toString(),
         chequeBankAccount: custRegSyncStore.chequeBankAccount.toString(),
         micr: custRegSyncStore.micr.toString(),
         documentUploads1: custRegSyncStore.documentUploads1.toString(),
@@ -402,109 +404,19 @@ class CustomRegistrationFormHelper {
         print("mmm-->${mmm}");
         if (mmm <= 15) {
           print("mmmLength-->${mmm.toString().length}");
-          Utils.successSnackBar("Great Success! Record Save", context);
+          Utils.successSnackBar(msg:"Great Success! Record Save",  context: context);
           Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
           return await HiveDataBase.custRegSyncBox!.add(custRegSyncAdd);
         } else {
-          Utils.errorSnackBar('Error !!! \nPlease Upload Previous records', context);
+          Utils.errorSnackBar(msg:'Error !!! \nPlease Upload Previous records', context : context);
           return null;
         }
       }
     } catch (e) {
-      CustomToast.showToast(e.toString());
+      Utils.errorSnackBar(msg: e.toString(), context: context);
       return null;
     }
   }
-
- /* static Future<dynamic> updateCustomerFormInLocalDatabase({
-    required BuildContext context,required CustRegSync custRegSyncStore,}) async {
-    try {
-      CustRegSync custRegSyncAdd = CustRegSync(
-        dmaUserName: custRegSyncStore.dmaUserName.toString(),
-        dmaUserId: custRegSyncStore.dmaUserId.toString(),
-        schema: custRegSyncStore.schema.toString(),
-        interested: custRegSyncStore.interested.toString(),
-        acceptConversionPolicy: custRegSyncStore.acceptConversionPolicy.toString(),
-        acceptExtraFittingCost: custRegSyncStore.acceptExtraFittingCost.toString(),
-        societyAllowedMdpe: custRegSyncStore.societyAllowedMdpe.toString(),
-        chargeId: custRegSyncStore.chargeId.toString(),
-        areaId: custRegSyncStore.areaId.toString(),
-        mobileNumber: custRegSyncStore.mobileNumber.toString(),
-        firstName: custRegSyncStore.firstName.toString(),
-        middleName: custRegSyncStore.middleName.toString(),
-        lastName: custRegSyncStore.lastName.toString(),
-        guardianType: custRegSyncStore.guardianType.toString(),
-        guardianName: custRegSyncStore.guardianName.toString(),
-        emailId: custRegSyncStore.emailId.toString(),
-        propertyCategoryId: custRegSyncStore.propertyCategoryId.toString(),
-        propertyClassId: custRegSyncStore.propertyClassId.toString(),
-        buildingNumber: custRegSyncStore.buildingNumber.toString(),
-        houseNumber: custRegSyncStore.houseNumber.toString(),
-        colonySocietyApartment: custRegSyncStore.colonySocietyApartment.toString(),
-        streetName: custRegSyncStore.streetName.toString(),
-        town: custRegSyncStore.town.toString(),
-        districtId: custRegSyncStore.districtId.toString(),
-        pinCode: custRegSyncStore.pinCode.toString(),
-        residentStatus: custRegSyncStore.residentStatus.toString(),
-        noOfKitchen: custRegSyncStore.noOfKitchen.toString(),
-        noOfBathroom: custRegSyncStore.noOfBathroom.toString(),
-        noOfFamilyMembers: custRegSyncStore.noOfFamilyMembers.toString(),
-        existingCookingFuel: custRegSyncStore.existingCookingFuel.toString(),
-        latitude: custRegSyncStore.latitude.toString(),
-        longitude: custRegSyncStore.longitude.toString(),
-        nearestLandmark: custRegSyncStore.nearestLandmark.toString(),
-        kycDocument1: custRegSyncStore.kycDocument1.toString(),
-        kycDocument1Number: custRegSyncStore.kycDocument1Number.toString(),
-        kycDocument2: custRegSyncStore.kycDocument2.toString(),
-        kycDocument2Number: custRegSyncStore.kycDocument2Number.toString(),
-        kycDocument3: custRegSyncStore.kycDocument3.toString(),
-        kycDocument3Number: custRegSyncStore.kycDocument3Number.toString(),
-        eBillingModel: custRegSyncStore.eBillingModel.toString(),
-        nameOfBank: custRegSyncStore.nameOfBank.toString(),
-        bankAccountNumber: custRegSyncStore.bankAccountNumber.toString(),
-        bankIfscCode: custRegSyncStore.bankIfscCode.toString(),
-        bankAddress: custRegSyncStore.bankAddress.toString(),
-        initialDepositStatus: custRegSyncStore.initialDepositStatus.toString(),
-        depositType: custRegSyncStore.depositType.toString(),
-        initialAmount: custRegSyncStore.initialAmount.toString(),
-        modeOfDeposit: custRegSyncStore.modeOfDeposit.toString(),
-        chequeNumber: custRegSyncStore.chequeNumber.toString(),
-        chequeDepositDate: custRegSyncStore.chequeDepositDate.toString(),
-        paymentBankName: custRegSyncStore.paymentBankName.toString(),
-        chequeBankAccount: custRegSyncStore.chequeBankAccount.toString(),
-        micr: custRegSyncStore.micr.toString(),
-        documentUploads1: custRegSyncStore.documentUploads1.toString(),
-        documentUploads2: custRegSyncStore.documentUploads2.toString(),
-        documentUploads3: custRegSyncStore.documentUploads3.toString(),
-        backside1: custRegSyncStore.backside1.toString(),
-        backside2: custRegSyncStore.backside2.toString(),
-        backside3: custRegSyncStore.backside3.toString(),
-        uploadCustomerPhoto: custRegSyncStore.uploadCustomerPhoto.toString(),
-        uploadHousePhoto: custRegSyncStore.uploadHousePhoto.toString(),
-        customerConsent: custRegSyncStore.customerConsent.toString(),
-        ownerConsent: custRegSyncStore.ownerConsent.toString(),
-        canceledCheque: custRegSyncStore.canceledCheque.toString(),
-        chequePhoto: custRegSyncStore.chequePhoto.toString(),
-        noInitialDepositStatusReason: custRegSyncStore.noInitialDepositStatusReason.toString(),
-        isDepositChq: false,
-      );
-      print("HEllo");
-      var mmm = await HiveDataBase.custRegSyncBox!.values.toList().length;
-      print("mmm-->${mmm}");
-      if (HiveDataBase.custRegSyncBox!.values.isNotEmpty) {
-        print("mmmLength-->${mmm.toString().length}");
-        Utils.successSnackBar("Successfully Update Record", context);
-        Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
-        return await HiveDataBase.custRegSyncBox!.put(mmm, custRegSyncAdd);
-      } else {
-        Utils.errorSnackBar('Error !!! \nPlease Upload Previous record', context);
-        return null;
-      }
-    } catch (e) {
-      CustomToast.showToast(e.toString());
-      return null;
-    }
-  }*/
 
 
   static Future<bool> isInternetConnected() async {

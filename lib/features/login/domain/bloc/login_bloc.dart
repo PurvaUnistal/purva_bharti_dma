@@ -68,14 +68,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             await PreferenceUtils.setString(key: PrefsValue.schema, value: res.user!.schema);
             await PreferenceUtils.setString(key: PrefsValue.userName, value: res.user!.name);
             prefs.setString(PrefsValue.pwdChanged, res.user!.pwdChanged);
-            Utils.successSnackBar(res.messages!.toString(), event.context);
+            Utils.successSnackBar(msg:res.messages!.toString(),context: event.context);
             _loginModel = res;
             Navigator.pushReplacementNamed(event.context, RoutesName.dashboardView);
           }
           else if (res.error == true) {
             _isPageLoader = false;
             _eventCompleted(emit);
-            return Utils.errorSnackBar(res.messages.toString(), event.context);
+            return Utils.errorSnackBar(msg:res.messages.toString(), context:event.context);
           }
         } else {
           _isPageLoader = false;

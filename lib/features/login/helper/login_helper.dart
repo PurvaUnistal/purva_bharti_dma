@@ -9,16 +9,16 @@ class LoginHelper {
       required BuildContext context}) async {
     try {
       if (email.isEmpty) {
-        Utils.errorSnackBar(AppString.emailValidation, context);
+        Utils.errorSnackBar(msg:AppString.emailValidation,context: context);
         return false;
       } else if (password.isEmpty) {
-        Utils.errorSnackBar(AppString.passwordValidation, context);
+        Utils.errorSnackBar(msg:AppString.passwordValidation,context: context);
         return false;
       }
       return true;
     } catch (e) {
       log(e.toString());
-      Utils.errorSnackBar(e.toString(), context);
+      Utils.errorSnackBar(msg:e.toString(),context: context);
       return false;
     }
   }
@@ -38,7 +38,7 @@ class LoginHelper {
       return LoginModel.fromJson(res);
     } catch (e) {
       log("catchLogin-->${e.toString()}");
-      Utils.errorSnackBar(e.toString(), context);
+      Utils.errorSnackBar(msg: e.toString(),context: context);
       return null;
       // return Utils.showToast(e.toString());
     }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 class Utils {
-  static successSnackBar(String msg, BuildContext context) {
+  static successSnackBar({required String msg, required BuildContext context}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -19,7 +19,7 @@ class Utils {
     );
   }
 
-  static errorSnackBar(String msg, BuildContext context) {
+  static errorSnackBar({required String msg, required BuildContext context}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -39,7 +39,7 @@ class Utils {
     );
   }
 
-  static warningSnackBar(String msg, BuildContext context) {
+  static warningSnackBar({required String msg, required BuildContext context}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(

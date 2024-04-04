@@ -50,10 +50,10 @@ class AppString{
   static String town = 'Town';
   static String district = 'District';
   static String pinCode = 'Pin Code';
-  static String noOfKitchen = 'No of Kitchen';
-  static String noOfBathroom = 'No of Bathroom';
+  static String noOfKitchen = 'Kitchen No.';
+  static String noOfBathroom = 'Bathroom No.';
   static String fuel = 'Existing Cooking Fuel';
-  static String noOfFamilyMembers = 'No of Family Members';
+  static String noOfFamilyMembers = 'Family Members No.';
   static String nearestLandmark = 'Nearest Landmark';
   static String idProof = 'KYC(Identification Proof)';
   static String idProofNo = 'KYC(Identification Proof)Number';

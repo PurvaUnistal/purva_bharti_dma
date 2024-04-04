@@ -48,8 +48,9 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
           listener: (context, state) {
             // TODO: implement listener}
             if (state is ConnectedState) {
-              state.isConnected ? Utils.successSnackBar(state.msg, context) : Utils
-                  .errorSnackBar(state.msg, context);
+              state.isConnected
+                  ? Utils.successSnackBar(msg : state.msg,context: context)
+                  : Utils.errorSnackBar(msg :state.msg,context: context);
             }
           },
           child: Column(children: [
