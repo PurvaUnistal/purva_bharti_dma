@@ -48,14 +48,14 @@ class GetAllDistrictModel {
 
   factory GetAllDistrictModel.fromJson(Map<String, dynamic> json) =>
       GetAllDistrictModel(
-        id: json["id"],
-        districtName: json["district_name"],
-        status: json["status"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"],
-        approvalStatus: json["approval_status"],
-        approvalDate: json["approval_date"],
-        remarks: json["remarks"],
+        id: json["id"]?? "",
+        districtName: json["district_name"]?? "",
+        status: json["status"]?? "",
+        createdAt: json["created_at"] == null ?  null: DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"]?? "",
+        approvalStatus: json["approval_status"]?? "",
+        approvalDate: json["approval_date"]?? "",
+        remarks: json["remarks"]?? "",
       );
 
   Map<String, dynamic> toJson() => {

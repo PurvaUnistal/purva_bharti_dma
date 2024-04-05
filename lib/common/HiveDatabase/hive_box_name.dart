@@ -6,11 +6,12 @@ class HiveBoxName {
   static String AllDistrictBox = "allDistrictBox";
   static String ChargeAreaListBox = "chargeAreaListBox";
   static String EBillingBox = "eBillingBox";
+  static String kycDocBox = "kycDocBox";
   static String CookingFuelBox = "cookingFuelBox";
   static String GuardianTypeBox = "guardianTypeBox";
   static String IdProofBox = "idProofBox";
   static String InitDepositStatusBox = "initDepositStatusBox";
-  static String KycDocBox = "kycDocBox";
+  static String kycLabelBox = "kycLabelBox";
   static String AllLabelBox = "allLabelBox";
   static String ConsentBox = "consentBox";
   static String DepositBox = "depositBox";

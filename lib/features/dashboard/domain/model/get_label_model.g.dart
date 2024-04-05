@@ -16,12 +16,38 @@ class GetLabelModelAdapter extends TypeAdapter<GetLabelModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return GetLabelModel();
+    return GetLabelModel(
+      steps: fields[0] as Steps?,
+      registration: fields[1] as Registration?,
+      inspection: fields[2] as Inspection?,
+      photo: fields[3] as Photo?,
+      kyc: fields[4] as Kyc?,
+      deposit: fields[5] as Deposit?,
+      consent: fields[6] as Consent?,
+      lmc: fields[7] as Lmc?,
+    );
   }
 
   @override
   void write(BinaryWriter writer, GetLabelModel obj) {
-    writer.writeByte(0);
+    writer
+      ..writeByte(8)
+      ..writeByte(0)
+      ..write(obj.steps)
+      ..writeByte(1)
+      ..write(obj.registration)
+      ..writeByte(2)
+      ..write(obj.inspection)
+      ..writeByte(3)
+      ..write(obj.photo)
+      ..writeByte(4)
+      ..write(obj.kyc)
+      ..writeByte(5)
+      ..write(obj.deposit)
+      ..writeByte(6)
+      ..write(obj.consent)
+      ..writeByte(7)
+      ..write(obj.lmc);
   }
 
   @override

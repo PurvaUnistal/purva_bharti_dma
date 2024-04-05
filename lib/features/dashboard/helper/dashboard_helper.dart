@@ -1,111 +1,114 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DashboardHelper {
 
   static Future<GetLabelModel?> getLabelApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
-        final res = await ApiServer.getData(urlEndPoint: AppUrl.getLabel, context: context);
-
-        if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.label, jsonEncode(GetLabelModel.fromJson(jsonDecode(res))));
-          return GetLabelModel.fromJson(jsonDecode(res));
+      final res = await ApiServer.getData(urlEndPoint: AppUrl.getLabel, context: context);
+      if (res != null) {
+        GetLabelModel response = GetLabelModel.fromJson(jsonDecode(res));
+        if (response.toJson().isNotEmpty) {
+          if (await HiveDataBase.allLabelBox!.isOpen) {
+            await HiveDataBase.allLabelBox!.clear();
+            HiveDataBase.allLabelBox!.add(response);
+          }
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.label)) {
-          return GetLabelModel.fromJson(jsonDecode((prefs.getString(PrefsValue.label) ?? "")));
-        }
+        return response;
       }
     } catch (e) {
       print("GetLabelModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetNotInterestedModel?> getNotInterestedApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.notInterested, context: context);
-        if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.notInterested, jsonEncode(GetNotInterestedModel.fromJson(jsonDecode(res))));
-          return GetNotInterestedModel.fromJson(jsonDecode(res));
+      var res = await ApiServer.getData(urlEndPoint: AppUrl.notInterested, context: context);
+      if (res != null) {
+        GetNotInterestedModel response = GetNotInterestedModel.fromJson(jsonDecode(res));
+        if (response.toJson().isNotEmpty) {
+          if (await HiveDataBase.notInterestedBox!.isOpen) {
+            await HiveDataBase.notInterestedBox!.clear();
+            HiveDataBase.notInterestedBox!.add(response);
+          }
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.notInterested)) {
-          return GetNotInterestedModel.fromJson(jsonDecode((prefs.getString(PrefsValue.notInterested) ?? "")));
-        }
+        return response;
       }
     } catch (e) {
       print("GetNotInterestedModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
+
   static Future<GetInitialDepositStatusModel?> getInitialDepositStatusApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.initialDepositStatus, context: context);
-        if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.initialDepositStatus, jsonEncode(GetInitialDepositStatusModel.fromJson(jsonDecode(res))));
-          return GetInitialDepositStatusModel.fromJson(jsonDecode(res));
+      var res = await ApiServer.getData(urlEndPoint: AppUrl.initialDepositStatus, context: context);
+      if (res != null) {
+        GetInitialDepositStatusModel response = GetInitialDepositStatusModel.fromJson(jsonDecode(res));
+        if (response.toJson().isNotEmpty) {
+          if (await HiveDataBase.initDepositStatusBox!.isOpen) {
+            await HiveDataBase.initDepositStatusBox!.clear();
+            HiveDataBase.initDepositStatusBox!.add(response);
+          }
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.initialDepositStatus)) {
-          return GetInitialDepositStatusModel.fromJson(jsonDecode((prefs.getString(PrefsValue.initialDepositStatus) ?? "")));
-        }
+        return response;
       }
     } catch (e) {
       print("GetInitialDepositStatusModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetAcceptExtraFittingCostModel?> getAcceptExtraFittingCostApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.acceptExtraFittingCost, context: context);
+      var res = await ApiServer.getData(urlEndPoint: AppUrl.acceptExtraFittingCost, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.acceptExtraFittingCost, jsonEncode(GetAcceptExtraFittingCostModel.fromJson(jsonDecode(res))));
-          return GetAcceptExtraFittingCostModel.fromJson(jsonDecode(res));
+          GetAcceptExtraFittingCostModel response = GetAcceptExtraFittingCostModel.fromJson(jsonDecode(res));
+          if (response.toJson().isNotEmpty) {
+            if (await HiveDataBase.acceptExtraFittingCostBox!.isOpen) {
+              await HiveDataBase.acceptExtraFittingCostBox!.clear();
+              HiveDataBase.acceptExtraFittingCostBox!.add(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.acceptExtraFittingCost)) {
-          return GetAcceptExtraFittingCostModel.fromJson(jsonDecode((prefs.getString(PrefsValue.acceptExtraFittingCost) ?? "")));
-        }
-      }
     } catch (e) {
       print("GetAcceptExtraFittingCostModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetAcceptConversionPolicyModel?> getAcceptConversionPolicyApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.acceptConversionPolicy, context: context);
-        if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.acceptConversionPolicy, jsonEncode(GetAcceptConversionPolicyModel.fromJson(jsonDecode(res))));
-          return GetAcceptConversionPolicyModel.fromJson(jsonDecode(res));
+      if (res != null) {
+        GetAcceptConversionPolicyModel response = GetAcceptConversionPolicyModel.fromJson(jsonDecode(res));
+        if (response.toJson().isNotEmpty) {
+          if (await HiveDataBase.acceptConversionPolicyBox!.isOpen) {
+            await HiveDataBase.acceptConversionPolicyBox!.clear();
+            HiveDataBase.acceptConversionPolicyBox!.add(response);
+          }
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.acceptConversionPolicy)) {
-          return GetAcceptConversionPolicyModel.fromJson(jsonDecode((prefs.getString(PrefsValue.acceptConversionPolicy) ?? "")));
-        }
+        return response;
       }
     } catch (e) {
       print("GetAcceptConversionPolicyModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
@@ -114,210 +117,210 @@ class DashboardHelper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? schema = prefs.getString(PrefsValue.schema);
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDistrict + schema!, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.getAllDistrictModel, jsonEncode(getAllDistrictModelFromJson(res)));
-          return getAllDistrictModelFromJson(res);
+          List<GetAllDistrictModel> response = getAllDistrictModelFromJson(res);
+          if (response.isNotEmpty) {
+            if (await HiveDataBase.allDistrictBox!.isOpen) {
+              await HiveDataBase.allDistrictBox!.clear();
+              HiveDataBase.allDistrictBox!.addAll(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.getAllDistrictModel)) {
-          return getAllDistrictModelFromJson(prefs.getString(PrefsValue.getAllDistrictModel) ?? "");
-        }
-      }
     } catch (e) {
       print("GetAllDistrictModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetResidentStatusModel?> getResidentStatusApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.residentStatus, context: context);
-        if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.residentStatus, jsonEncode(res));
-          return GetResidentStatusModel.fromJson(jsonDecode(res));
+      if (res != null) {
+        GetResidentStatusModel response = GetResidentStatusModel.fromJson(jsonDecode(res));
+        if (response.toJson().isNotEmpty) {
+          if (await HiveDataBase.resStatusBox!.isOpen) {
+            await HiveDataBase.resStatusBox!.clear();
+            HiveDataBase.resStatusBox!.add(response);
+          }
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.residentStatus)) {
-          return GetResidentStatusModel.fromJson(jsonDecode((prefs.getString(PrefsValue.residentStatus) ?? "")));
-        }
+        return response;
       }
     } catch (e) {
       print("GetResidentStatusModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetModeOfDepositModel?> getModeOfDepositApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.modeOfDeposit, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.modeOfDeposit, jsonEncode(GetModeOfDepositModel.fromJson(jsonDecode(res))));
-          return GetModeOfDepositModel.fromJson(jsonDecode(res));
+        GetModeOfDepositModel response = GetModeOfDepositModel.fromJson(jsonDecode(res));
+        if (response.toJson().isNotEmpty) {
+          if (await HiveDataBase.modeOfDepositBox!.isOpen) {
+            await HiveDataBase.modeOfDepositBox!.clear();
+            HiveDataBase.modeOfDepositBox!.add(response);
+          }
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.modeOfDeposit)) {
-          return GetModeOfDepositModel.fromJson(jsonDecode((prefs.getString(PrefsValue.modeOfDeposit) ?? "")));
-        }
+        return response;
       }
     } catch (e) {
       print("GetModeOfDepositModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetEBillingModel?> getEBillingApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.eBilling, context: context,);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.eBilling, jsonEncode(GetEBillingModel.fromJson(jsonDecode(res))));
-          return GetEBillingModel.fromJson(jsonDecode(res));
+        GetEBillingModel response = GetEBillingModel.fromJson(jsonDecode(res));
+        if (response.toJson().isNotEmpty) {
+          if (await HiveDataBase.eBillingBox!.isOpen) {
+            await HiveDataBase.eBillingBox!.clear();
+            HiveDataBase.eBillingBox!.add(response);
+          }
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.eBilling)) {
-          return GetEBillingModel.fromJson(jsonDecode((prefs.getString(PrefsValue.eBilling) ?? "")));
-        }
+        return response;
       }
     } catch (e) {
       print("GetEBillingModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetKycDocModel?> getKycDocApi({required BuildContext context}) async {
-    try {
-      if (await isInternetConnected() == true) {
+  //  try {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.kycDoc, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.kycDoc, jsonEncode(GetKycDocModel.fromJson(jsonDecode(res))));
-          return GetKycDocModel.fromJson(jsonDecode(res));
+          GetKycDocModel response = GetKycDocModel.fromJson(jsonDecode(res));
+          if (response.toJson().isNotEmpty) {
+            if (await HiveDataBase.kycDocBox!.isOpen) {
+              await HiveDataBase.kycDocBox!.clear();
+              HiveDataBase.kycDocBox!.add(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.kycDoc)) {
-          return GetKycDocModel.fromJson(jsonDecode((prefs.getString(PrefsValue.kycDoc) ?? "")));
-        }
-      }
-    } catch (e) {
+   /* } catch (e) {
       print("GetKycDocModel-->${e.toString()}");
-    }
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
+    }*/
     return null;
   }
 
   static Future<GetOwnershipProofModel?> getOwnershipProofApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
         final res = await ApiServer.getData(urlEndPoint: AppUrl.ownershipProof, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.ownershipProof, jsonEncode(GetOwnershipProofModel.fromJson(jsonDecode(res))));
-          return GetOwnershipProofModel.fromJson(jsonDecode(res));
+          GetOwnershipProofModel response = GetOwnershipProofModel.fromJson(jsonDecode(res));
+          if (response.toJson().isNotEmpty) {
+            if (await HiveDataBase.ownershipProofBox!.isOpen) {
+              await HiveDataBase.ownershipProofBox!.clear();
+              HiveDataBase.ownershipProofBox!.add(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.ownershipProof)) {
-          return GetOwnershipProofModel.fromJson(jsonDecode((prefs.getString(PrefsValue.ownershipProof) ?? "")));
-        }
-      }
     } catch (e) {
       print("ownershipProofRes-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetIdentityProofModel?> getIdentityProofApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.identityProof, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.identityProof, jsonEncode(GetIdentityProofModel.fromJson(jsonDecode(res))));
-          return GetIdentityProofModel.fromJson(jsonDecode(res));
+          GetIdentityProofModel response = GetIdentityProofModel.fromJson(jsonDecode(res));
+          if (response.toJson().isNotEmpty) {
+            if (await HiveDataBase.idProofBox!.isOpen) {
+              await HiveDataBase.idProofBox!.clear();
+              HiveDataBase.idProofBox!.add(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.identityProof)) {
-          return GetIdentityProofModel.fromJson(jsonDecode((prefs.getString(PrefsValue.identityProof) ?? "")));
-        }
-      }
     } catch (e) {
       print("GetIdentityProofModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetGuardianTypeModel?> getGuardianTypeApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.guardianType, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.guardianType, jsonEncode(GetGuardianTypeModel.fromJson(jsonDecode(res))));
-          return GetGuardianTypeModel.fromJson(jsonDecode(res));
+          GetGuardianTypeModel response = GetGuardianTypeModel.fromJson(jsonDecode(res));
+          if (response.toJson().isNotEmpty) {
+            if (await HiveDataBase.guardianTypeBox!.isOpen) {
+              await HiveDataBase.guardianTypeBox!.clear();
+              HiveDataBase.guardianTypeBox!.add(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.guardianType)) {
-          return GetGuardianTypeModel.fromJson(jsonDecode((prefs.getString(PrefsValue.guardianType) ?? "")));
-        }
-      }
     } catch (e) {
       print("GetGuardianTypeModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetExistingCookingFuelModel?> getExistingCookingFuelApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.existingCookingFuel, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.existingCookingFuel, jsonEncode(GetExistingCookingFuelModel.fromJson(jsonDecode(res))));
-          return GetExistingCookingFuelModel.fromJson(jsonDecode(res));
+          GetExistingCookingFuelModel response = GetExistingCookingFuelModel.fromJson(jsonDecode(res));
+          if (response.toJson().isNotEmpty) {
+            if (await HiveDataBase.cookingFuelBox!.isOpen) {
+              await HiveDataBase.cookingFuelBox!.clear();
+              HiveDataBase.cookingFuelBox!.add(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.existingCookingFuel)) {
-          return GetExistingCookingFuelModel.fromJson(jsonDecode((prefs.getString(PrefsValue.existingCookingFuel) ?? "")));
-        }
-      }
     } catch (e) {
       print("GetExistingCookingFuelModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
 
   static Future<GetSocietyAllowModel?> getSocietyAllowApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.societyAllow, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.societyAllow, jsonEncode(GetSocietyAllowModel.fromJson(jsonDecode(res))));
-          return GetSocietyAllowModel.fromJson(jsonDecode(res));
+          GetSocietyAllowModel response = GetSocietyAllowModel.fromJson(jsonDecode(res));
+          if (response.toJson().isNotEmpty) {
+            if (await HiveDataBase.societyAllowBox!.isOpen) {
+              await HiveDataBase.societyAllowBox!.clear();
+              HiveDataBase.societyAllowBox!.add(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.societyAllow)) {
-          return GetSocietyAllowModel.fromJson(jsonDecode((prefs.getString(PrefsValue.societyAllow) ?? "")));
-        }
-      }
     } catch (e) {
       print("GetSocietyAllowModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
@@ -326,21 +329,21 @@ class DashboardHelper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? schema = prefs.getString(PrefsValue.schema);
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyClass + schema!, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.propertyClass, jsonEncode(getPropertyClassModelFromJson(res)));
-          return getPropertyClassModelFromJson(res);
+          List<GetPropertyClassModel> response = getPropertyClassModelFromJson(res);
+          if (response.isNotEmpty) {
+            if (await HiveDataBase.proClassBox!.isOpen) {
+              await HiveDataBase.proClassBox!.clear();
+              HiveDataBase.proClassBox!.addAll(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.propertyClass)) {
-          return getPropertyClassModelFromJson(prefs.getString(PrefsValue.propertyClass) ?? "");
-        }
-      }
     } catch (e) {
       print("GetPropertyClassModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
@@ -349,21 +352,21 @@ class DashboardHelper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? schema = prefs.getString(PrefsValue.schema);
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyCategory + schema!, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.propertyCategory, jsonEncode(getPropertyCategoryModelFromJson(res)));
-          return getPropertyCategoryModelFromJson(res);
+          List<GetPropertyCategoryModel> response = getPropertyCategoryModelFromJson(res);
+          if (response.isNotEmpty) {
+            if (await HiveDataBase.proCateBox!.isOpen) {
+              await HiveDataBase.proCateBox!.clear();
+              HiveDataBase.proCateBox!.addAll(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.propertyCategory)) {
-          return getPropertyCategoryModelFromJson(prefs.getString(PrefsValue.propertyCategory) ?? "");
-        }
-      }
     } catch (e) {
       print("GetPropertyCategoryModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
@@ -372,21 +375,21 @@ class DashboardHelper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? schema = prefs.getString(PrefsValue.schema);
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllArea + schema!, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.allArea, jsonEncode(getAllAreaModelFromJson(res)));
-          return getAllAreaModelFromJson(res);
+          List<GetAllAreaModel> response = getAllAreaModelFromJson(res);
+          if (response.isNotEmpty) {
+            if (await HiveDataBase.allAreaBox!.isOpen) {
+              await HiveDataBase.allAreaBox!.clear();
+              HiveDataBase.allAreaBox!.addAll(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.allArea)) {
-          return getAllAreaModelFromJson(prefs.getString(PrefsValue.allArea) ?? "");
-        }
-      }
     } catch (e) {
       print("GetAllAreaModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
@@ -395,21 +398,21 @@ class DashboardHelper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? schema = prefs.getString(PrefsValue.schema);
     try {
-      if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getChargeAreaList + schema!, context: context);
+      var res = await ApiServer.getData(urlEndPoint: AppUrl.getChargeAreaList + schema!, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.chargeAreaList, jsonEncode(getChargeAreaListModelFromJson(res)));
-          return getChargeAreaListModelFromJson(res);
+          List<GetChargeAreaListModel> response = getChargeAreaListModelFromJson(res);
+          if (response.isNotEmpty) {
+            if (await HiveDataBase.chargeAreaListBox!.isOpen) {
+              await HiveDataBase.chargeAreaListBox!.clear();
+              HiveDataBase.chargeAreaListBox!.addAll(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.chargeAreaList)) {
-          return getChargeAreaListModelFromJson(prefs.getString(PrefsValue.chargeAreaList) ?? "");
-        }
-      }
     } catch (e) {
       print("GetChargeAreaListModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
@@ -418,21 +421,21 @@ class DashboardHelper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? schema = prefs.getString(PrefsValue.schema);
     try {
-      if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDepositOffline + schema!, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.getAllDepositOffline, jsonEncode(getAllDepositOfflineModelFromJson(res)));
-          return getAllDepositOfflineModelFromJson(res);
+          List<GetAllDepositOfflineModel> response = getAllDepositOfflineModelFromJson(res);
+          if (response.isNotEmpty) {
+            if (await HiveDataBase.allDepositOfflineBox!.isOpen) {
+              await HiveDataBase.allDepositOfflineBox!.clear();
+              HiveDataBase.allDepositOfflineBox!.addAll(response);
+            }
+          }
+          return response;
         }
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.getAllDepositOffline)) {
-          return getAllDepositOfflineModelFromJson(prefs.getString(PrefsValue.getAllDepositOffline) ?? "");
-        }
-      }
     } catch (e) {
       print("GetAllDepositOfflineModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
@@ -483,10 +486,10 @@ class DashboardHelper {
     await Permission.locationAlways.request();
     final androidInfo = await DeviceInfoPlugin().androidInfo;
     if (Platform.isAndroid) {
-       if (androidInfo.version.sdkInt <= 32) {
-         Position   position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-         log('latitude : ${position.latitude} longitude : ${position.longitude}');
-         return position;
+      if (androidInfo.version.sdkInt <= 32) {
+        Position   position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        log('latitude : ${position.latitude} longitude : ${position.longitude}');
+        return position;
       }  else {
 
       }

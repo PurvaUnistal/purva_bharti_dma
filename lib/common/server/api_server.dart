@@ -14,13 +14,12 @@ import 'api_error.dart';
 class ApiServer {
   static Future<dynamic> getData({var urlEndPoint, required BuildContext context, }) async {
     try {
-      final response = await get(
-        Uri.parse(urlEndPoint),
-      ).timeout(Duration(minutes: 4));
+      final response = await get(Uri.parse(urlEndPoint),).timeout(Duration(minutes: 4));
       log("URL-->${urlEndPoint.toString()}");
       log(urlEndPoint + "==>" + response.body);
       if (response.statusCode == 200) {
-        return response.body.toString();
+        return response.body;
+    //    return jsonDecode(response.body.toString());
       } else {
         log("Api.error-->${Api.error}");
         return Api.error;

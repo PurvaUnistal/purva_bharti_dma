@@ -10,23 +10,24 @@ class GetKycDocModel {
   String? s1;
   @HiveField(1)
   String? s2;
- // String? s3;
+  @HiveField(2)
+  String? s3;
 
   GetKycDocModel({this.s1, this.s2,
-   // this.s3
+    this.s3
   });
 
   GetKycDocModel.fromJson(Map<String, dynamic> json) {
-    s1 = json['1'];
-    s2 = json['2'];
-  //  s3 = json['3'];
+    s1 = json['1'] == null ? "" : json['1'];
+    s2 = json['2'] == null ? "" : json['2'];
+    s3 = json['3']== null ? "" : json['3'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['1'] = this.s1;
     data['2'] = this.s2;
-   // data['3'] = this.s3;
+    data['3'] = this.s3;
     return data;
   }
 }

@@ -640,7 +640,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   fetchChargeAreaListApi({required BuildContext context}) async {
     var chargeAreaListRes = await DashboardHelper.getChargeAreaListApi(context: context);
     if (chargeAreaListRes != null) {
-      _getChargeAreaListModel = chargeAreaListRes;
+     // _getChargeAreaListModel = chargeAreaListRes;
     }
   }
 
@@ -655,7 +655,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   fetchAllAreaApi({required BuildContext context}) async {
     var allAreaRes = await DashboardHelper.getAllAreaApi(context: context);
     if (allAreaRes != null) {
-      _getAllAreaModel = allAreaRes;
+   //   _getAllAreaModel = allAreaRes;
     }
   }
 
@@ -671,14 +671,14 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   fetchPropertyCategoryApi({required BuildContext context}) async {
     var res = await DashboardHelper.getPropertyCategoryApi(context: context);
     if (res != null) {
-      _getPropertyCategoryModel = res;
+    //  _getPropertyCategoryModel = res;
     }
   }
 
   Future<List<GetPropertyClassModel>?> fetchPropertyClassApi({required BuildContext context}) async {
     var res = await DashboardHelper.getPropertyClassApi(context: context);
     if (res != null) {
-      _getPropertyClassModel = res;
+    //  _getPropertyClassModel = res;
       //  _propertyClassValue = _getPropertyClassModel.first.toString();
     }
     return null;
@@ -687,7 +687,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   fetchAllDistrictApi({required BuildContext context}) async {
     var res = await DashboardHelper.getAllDistrictModelApi(context: context);
     if (res != null) {
-      _getAllDistrictModel = res;
+    //  _getAllDistrictModel = res!;
     }
   }
 
@@ -759,7 +759,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   fetchAllDepositOfflineApi({required BuildContext context}) async {
     var res = await DashboardHelper.getAllDepositOfflineApi(context: context);
     if (res != null) {
-      _getAllDepositOfflineList = res;
+     // _getAllDepositOfflineList = res;
     }
   }
 

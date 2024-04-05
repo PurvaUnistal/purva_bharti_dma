@@ -19,17 +19,20 @@ class GetKycDocModelAdapter extends TypeAdapter<GetKycDocModel> {
     return GetKycDocModel(
       s1: fields[0] as String?,
       s2: fields[1] as String?,
+      s3: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, GetKycDocModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.s1)
       ..writeByte(1)
-      ..write(obj.s2);
+      ..write(obj.s2)
+      ..writeByte(2)
+      ..write(obj.s3);
   }
 
   @override

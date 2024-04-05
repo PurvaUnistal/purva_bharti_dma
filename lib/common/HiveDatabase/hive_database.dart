@@ -43,7 +43,7 @@ class HiveDataBase {
   static Box<Consent>? consentBox;
   static Box<Deposit>? depositBox;
   static Box<Inspection>? inspectionBox;
-  static Box<Kyc>? kycBox;
+  static Box<Kyc>? kycLabelBox;
   static Box<Lmc>? lmcBox;
   static Box<Photo>? photoBox;
   static Box<Registration>? registrationBox;
@@ -102,11 +102,12 @@ class HiveDataBase {
     allDistrictBox = await Hive.openBox<GetAllDistrictModel>(HiveBoxName.AllDistrictBox);
     chargeAreaListBox = await Hive.openBox<GetChargeAreaListModel>(HiveBoxName.ChargeAreaListBox);
     eBillingBox = await Hive.openBox<GetEBillingModel>(HiveBoxName.EBillingBox);
+    kycDocBox = await Hive.openBox<GetKycDocModel>(HiveBoxName.kycDocBox);
     cookingFuelBox = await Hive.openBox<GetExistingCookingFuelModel>(HiveBoxName.CookingFuelBox);
     guardianTypeBox = await Hive.openBox<GetGuardianTypeModel>(HiveBoxName.GuardianTypeBox);
     idProofBox = await Hive.openBox<GetIdentityProofModel>(HiveBoxName.IdProofBox);
     initDepositStatusBox = await Hive.openBox<GetInitialDepositStatusModel>(HiveBoxName.InitDepositStatusBox);
-    kycBox = await Hive.openBox<Kyc>(HiveBoxName.KycDocBox);
+    kycLabelBox = await Hive.openBox<Kyc>(HiveBoxName.kycLabelBox);
     allLabelBox = await Hive.openBox<GetLabelModel>(HiveBoxName.AllLabelBox);
     modeOfDepositBox = await Hive.openBox<GetModeOfDepositModel>(HiveBoxName.ModeOfDepositBox);
     notInterestedBox = await Hive.openBox<GetNotInterestedModel>(HiveBoxName.NotInterestedBox);

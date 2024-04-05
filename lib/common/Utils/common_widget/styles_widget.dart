@@ -3,6 +3,7 @@ import 'package:pbg_app/common/Utils/common_widget/app_color.dart';
 
 class Styles {
   static TextStyle rel = TextStyle(color: Colors.white, fontWeight: FontWeight.w800,fontSize: 8);
+
   static TextStyle login = TextStyle(color: Colors.white, fontWeight: FontWeight.bold,);
 
   static TextStyle title = TextStyle(fontSize: 12, color: AppColor.prime, fontWeight: FontWeight.bold);
@@ -14,4 +15,6 @@ class Styles {
   static TextStyle labels =  TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: AppColor.prime);
 
   static TextStyle texts = const TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: Colors.black);
+
+  static TextStyle textW = const TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: Colors.white);
 }

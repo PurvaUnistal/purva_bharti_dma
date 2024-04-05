@@ -15,13 +15,21 @@ String getLabelModelToJson(GetLabelModel data) => json.encode(data.toJson());
 @HiveType(typeId: HiveTypeId.GetLabelId)
 
 class GetLabelModel {
+  @HiveField(0)
   final Steps? steps;
+  @HiveField(1)
   final Registration? registration;
+  @HiveField(2)
   final Inspection? inspection;
+  @HiveField(3)
   final Photo? photo;
+  @HiveField(4)
   final Kyc? kyc;
+  @HiveField(5)
   final Deposit? deposit;
+  @HiveField(6)
   final Consent? consent;
+  @HiveField(7)
   final Lmc? lmc;
 
   GetLabelModel({
@@ -36,14 +44,14 @@ class GetLabelModel {
   });
 
   factory GetLabelModel.fromJson(Map<String, dynamic> json) => GetLabelModel(
-        steps: Steps.fromJson(json["steps"]),
-        registration: Registration.fromJson(json["registration"]),
-        inspection: Inspection.fromJson(json["inspection"]),
-        photo: Photo.fromJson(json["photo"]),
-        kyc: Kyc.fromJson(json["kyc"]),
-        deposit: Deposit.fromJson(json["deposit"]),
-        consent: Consent.fromJson(json["consent"]),
-        lmc: Lmc.fromJson(json["lmc"]),
+        steps: json["steps"] == null ? null : Steps.fromJson(json["steps"]),
+        registration: json["registration"] == null ? null : Registration.fromJson(json["registration"]),
+        inspection: json["inspection"] == null ? null : Inspection.fromJson(json["inspection"]),
+        photo: json["photo"] == null ? null : Photo.fromJson(json["photo"]),
+        kyc: json["kyc"] == null ? null : Kyc.fromJson(json["kyc"]),
+        deposit: json["deposit"] == null ? null : Deposit.fromJson(json["deposit"]),
+        consent: json["consent"] == null ? null : Consent.fromJson(json["consent"]),
+        lmc: json["lmc"] == null ? null : Lmc.fromJson(json["lmc"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -93,15 +101,15 @@ class Consent {
   });
 
   factory Consent.fromJson(Map<String, dynamic> json) => Consent(
-        takePhoto: json["take_photo"],
-        custBank: json["cust_bank"],
-        custAcc: json["cust_acc"],
-        custIfsc: json["cust_ifsc"],
-        custBankAdd: json["cust_bank_add"],
-        cancelledPhoto: json["cancelled_photo"],
-        preferredBilling: json["preferred_billing"],
-        acceptConversionPolicy: json["accept_conversion_policy"],
-        acceptExtraCost: json["accept_extra_cost"],
+        takePhoto: json["take_photo"]?? "",
+        custBank: json["cust_bank"]?? "",
+        custAcc: json["cust_acc"]?? "",
+        custIfsc: json["cust_ifsc"]?? "",
+        custBankAdd: json["cust_bank_add"]?? "",
+        cancelledPhoto: json["cancelled_photo"]?? "",
+        preferredBilling: json["preferred_billing"]?? "",
+        acceptConversionPolicy: json["accept_conversion_policy"]?? "",
+        acceptExtraCost: json["accept_extra_cost"]?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -161,18 +169,18 @@ class Deposit {
   });
 
   factory Deposit.fromJson(Map<String, dynamic> json) => Deposit(
-        depositSta: json["deposit_sta"],
-        modeOfDep: json["mode_of_dep"],
-        depositDate: json["deposit_date"],
-        depositType: json["deposit_type"],
-        depositAmt: json["deposit_amt"],
-        chqNum: json["chq_num"],
-        chqBank: json["chq_bank"],
-        bankAcc: json["bank_acc"],
-        chqDate: json["chq_date"],
-        chqPhoto: json["chq_photo"],
-        payStatus: json["pay_status"],
-        reason: json["reason"],
+        depositSta: json["deposit_sta"]?? "",
+        modeOfDep: json["mode_of_dep"]?? "",
+        depositDate: json["deposit_date"]?? "",
+        depositType: json["deposit_type"]?? "",
+        depositAmt: json["deposit_amt"]?? "",
+        chqNum: json["chq_num"]?? "",
+        chqBank: json["chq_bank"]?? "",
+        bankAcc: json["bank_acc"]?? "",
+        chqDate: json["chq_date"]?? "",
+        chqPhoto: json["chq_photo"]?? "",
+        payStatus: json["pay_status"]?? "",
+        reason: json["reason"]?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -233,17 +241,17 @@ class Inspection {
   });
 
   factory Inspection.fromJson(Map<String, dynamic> json) => Inspection(
-        inspectMeter: json["inspect_meter"],
-        inspectRegulator: json["inspect_regulator"],
-        inspectOtherFittings: json["inspect_other_fittings"],
-        asPerLmcQty: json["as_per_lmc_qty"],
-        customerSatisfication: json["customer_satisfication"],
-        conversionAgreement: json["conversion_agreement"],
-        photo: json["photo"],
-        conversionDate: json["conversion_date"],
-        remarks: json["remarks"],
-        extraPipe: json["extra_pipe"],
-        extraPrice: json["extra_price"],
+        inspectMeter: json["inspect_meter"]?? "",
+        inspectRegulator: json["inspect_regulator"]?? "",
+        inspectOtherFittings: json["inspect_other_fittings"]?? "",
+        asPerLmcQty: json["as_per_lmc_qty"]?? "",
+        customerSatisfication: json["customer_satisfication"]?? "",
+        conversionAgreement: json["conversion_agreement"]?? "",
+        photo: json["photo"]?? "",
+        conversionDate: json["conversion_date"]?? "",
+        remarks: json["remarks"]?? "",
+        extraPipe: json["extra_pipe"]?? "",
+        extraPrice: json["extra_price"]?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -308,19 +316,19 @@ class Kyc {
   });
 
   factory Kyc.fromJson(Map<String, dynamic> json) => Kyc(
-        uploadDoc1: json["uploadDoc1"],
-        uploadDoc1No: json["uploadDoc1No"],
-        uploadDoc1Front: json["uploadDoc1Front"],
-        uploadDoc1Back: json["uploadDoc1Back"],
-        selectDoc: json["selectDoc"],
-        uploadDoc2: json["uploadDoc2"],
-        uploadDoc2No: json["uploadDoc2No"],
-        uploadDoc2Front: json["uploadDoc2Front"],
-        uploadDoc2Back: json["uploadDoc2Back"],
-        uploadDoc3: json["uploadDoc3"],
-        uploadDoc3No: json["uploadDoc3No"],
-        uploadDoc3Front: json["uploadDoc3Front"],
-        uploadDoc3Back: json["uploadDoc3Back"],
+        uploadDoc1: json["uploadDoc1"]?? "",
+        uploadDoc1No: json["uploadDoc1No"]?? "",
+        uploadDoc1Front: json["uploadDoc1Front"]?? "",
+        uploadDoc1Back: json["uploadDoc1Back"]?? "",
+        selectDoc: json["selectDoc"]?? "",
+        uploadDoc2: json["uploadDoc2"]?? "",
+        uploadDoc2No: json["uploadDoc2No"]?? "",
+        uploadDoc2Front: json["uploadDoc2Front"]?? "",
+        uploadDoc2Back: json["uploadDoc2Back"]?? "",
+        uploadDoc3: json["uploadDoc3"]?? "",
+        uploadDoc3No: json["uploadDoc3No"]?? "",
+        uploadDoc3Front: json["uploadDoc3Front"]?? "",
+        uploadDoc3Back: json["uploadDoc3Back"]?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -441,37 +449,37 @@ class Lmc {
   });
 
   factory Lmc.fromJson(Map<String, dynamic> json) => Lmc(
-        feasibilityDate: json["feasibility_date"],
-        proposedDate: json["proposed_date"],
-        additional: json["additional"],
-        material: json["material"],
-        qty: json["qty"],
-        regulators: json["regulators"],
-        installation: json["installation"],
-        feasibility: json["feasibility"],
-        workStart: json["work_start"],
-        reasonIfDelay: json["reason_if_delay"],
-        reason: json["reason"],
-        isFeasible: json["is_feasible"],
-        followUpDate: json["follow_up_date"],
-        meterNumber: json["meter_number"],
-        pipe: json["pipe"],
-        fitting: json["fitting"],
-        meterInitialReading: json["meter_initial_reading"],
-        readingDate: json["reading_date"],
-        meterPhoto: json["meter_photo"],
-        tfNumber: json["tf_number"],
-        latitudeTf: json["latitude_tf"],
-        longitudeTf: json["longitude_tf"],
-        latitudeHg: json["latitude_hg"],
-        longitudeHg: json["longitude_hg"],
-        workCompletedDate: json["work_completed_date"],
-        workCompletedImage: json["work_completed_image"],
-        ackDate: json["ack_date"],
-        ackImage: json["ack_image"],
-        conversionDate: json["conversion_date"],
-        typeNr: json["typeNr"],
-        isCustomerReady: json["is_customer_ready"],
+        feasibilityDate: json["feasibility_date"]?? "",
+        proposedDate: json["proposed_date"]?? "",
+        additional: json["additional"]?? "",
+        material: json["material"]?? "",
+        qty: json["qty"]?? "",
+        regulators: json["regulators"]?? "",
+        installation: json["installation"]?? "",
+        feasibility: json["feasibility"]?? "",
+        workStart: json["work_start"]?? "",
+        reasonIfDelay: json["reason_if_delay"]?? "",
+        reason: json["reason"]?? "",
+        isFeasible: json["is_feasible"]?? "",
+        followUpDate: json["follow_up_date"]?? "",
+        meterNumber: json["meter_number"]?? "",
+        pipe: json["pipe"]?? "",
+        fitting: json["fitting"]?? "",
+        meterInitialReading: json["meter_initial_reading"]?? "",
+        readingDate: json["reading_date"]?? "",
+        meterPhoto: json["meter_photo"]?? "",
+        tfNumber: json["tf_number"]?? "",
+        latitudeTf: json["latitude_tf"]?? "",
+        longitudeTf: json["longitude_tf"]?? "",
+        latitudeHg: json["latitude_hg"]?? "",
+        longitudeHg: json["longitude_hg"]?? "",
+        workCompletedDate: json["work_completed_date"]?? "",
+        workCompletedImage: json["work_completed_image"]?? "",
+        ackDate: json["ack_date"]?? "",
+        ackImage: json["ack_image"]?? "",
+        conversionDate: json["conversion_date"]?? "",
+        typeNr: json["typeNr"]?? "",
+        isCustomerReady: json["is_customer_ready"]?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -524,8 +532,8 @@ class Photo {
   });
 
   factory Photo.fromJson(Map<String, dynamic> json) => Photo(
-        customerPhoto: json["customer_photo"],
-        homePhoto: json["home_photo"],
+        customerPhoto: json["customer_photo"]?? "",
+        homePhoto: json["home_photo"]?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -620,32 +628,32 @@ class Registration {
   });
 
   factory Registration.fromJson(Map<String, dynamic> json) => Registration(
-    registrationType: json["registrationtype"],
-    chargeArea: json["chargearea"],
-        area: json["area"],
-        lastname: json["lastname"],
-        guardian: json["guardian"],
-        email: json["email"],
-        propertyCategory: json["property_category"],
-        propertyClass: json["property_class"],
-        house: json["house"],
-        locality: json["locality"],
-        town: json["town"],
-        pincode: json["pincode"],
-        district: json["district"],
-        mdpe: json["mdpe"],
-        resident: json["resident"],
-        kitchen: json["kitchen"],
-        bathroom: json["bathroom"],
-        fuel: json["fuel"],
-        family: json["family"],
-        location: json["location"],
-        long: json["long"],
-        lat: json["lat"],
-        getLoc: json["getLoc"],
-        remarks: json["remarks"],
-        submit: json["submit"],
-        guardianType: json["guardian_type"],
+    registrationType: json["registrationtype"]?? "",
+    chargeArea: json["chargearea"]?? "",
+        area: json["area"]?? "",
+        lastname: json["lastname"]?? "",
+        guardian: json["guardian"]?? "",
+        email: json["email"]?? "",
+        propertyCategory: json["property_category"]?? "",
+        propertyClass: json["property_class"]?? "",
+        house: json["house"]?? "",
+        locality: json["locality"]?? "",
+        town: json["town"]?? "",
+        pincode: json["pincode"]?? "",
+        district: json["district"]?? "",
+        mdpe: json["mdpe"]?? "",
+        resident: json["resident"]?? "",
+        kitchen: json["kitchen"]?? "",
+        bathroom: json["bathroom"]?? "",
+        fuel: json["fuel"]?? "",
+        family: json["family"]?? "",
+        location: json["location"]?? "",
+        long: json["long"]?? "",
+        lat: json["lat"]?? "",
+        getLoc: json["getLoc"]?? "",
+        remarks: json["remarks"]?? "",
+        submit: json["submit"]?? "",
+        guardianType: json["guardian_type"]?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -764,32 +772,32 @@ class Steps {
   });
 
   factory Steps.fromJson(Map<String, dynamic> json) => Steps(
-        reg: json["reg"],
-        kyc: json["kyc"],
-        photo: json["photo"],
-        consent: json["consent"],
-        deposit: json["deposit"],
-        step1: json["step1"],
-        step2: json["step2"],
-        step3: json["step3"],
-        step4: json["step4"],
-        step5: json["step5"],
-        mobile: json["mobile"],
-        firstname: json["firstname"],
-        middlename: json["middlename"],
-        lastname: json["lastname"],
-        button: json["button"],
-        fromDate: json["from_date"],
-        toDate: json["to_date"],
-        minAmt: json["min_amt"],
-        maxAmt: json["max_amt"],
-        stepsIf: json["if"],
-        stepsIs: json["is"],
-        then: json["then"],
-        amount: json["amount"],
-        back: json["back"],
-        condition: json["condition"],
-        type: json["type"],
+        reg: json["reg"]?? "",
+        kyc: json["kyc"]?? "",
+        photo: json["photo"]?? "",
+        consent: json["consent"]?? "",
+        deposit: json["deposit"]?? "",
+        step1: json["step1"]?? "",
+        step2: json["step2"]?? "",
+        step3: json["step3"]?? "",
+        step4: json["step4"]?? "",
+        step5: json["step5"]?? "",
+        mobile: json["mobile"]?? "",
+        firstname: json["firstname"]?? "",
+        middlename: json["middlename"]?? "",
+        lastname: json["lastname"]?? "",
+        button: json["button"]?? "",
+        fromDate: json["from_date"]?? "",
+        toDate: json["to_date"]?? "",
+        minAmt: json["min_amt"]?? "",
+        maxAmt: json["max_amt"]?? "",
+        stepsIf: json["if"]?? "",
+        stepsIs: json["is"]?? "",
+        then: json["then"]?? "",
+        amount: json["amount"]?? "",
+        back: json["back"]?? "",
+        condition: json["condition"]?? "",
+        type: json["type"]?? "",
       );
 
   Map<String, dynamic> toJson() => {

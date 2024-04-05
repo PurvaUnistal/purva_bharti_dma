@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/features/dashboard/domain/bloc/dashboard_bloc.dart';
+import 'package:pbg_app/features/dashboard/domain/bloc/dashboard_event.dart';
 import 'package:pbg_app/features/dashboard/presentation/widget/logout_widget.dart';
+import 'package:pbg_app/features/dashboard/presentation/widget/row_btn_widget.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -13,10 +16,10 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
-    PreferenceUtils.init();
-    BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
+    //  PreferenceUtils.init();
+    /*   BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
       context: context,
-    ));
+    ));*/
     super.initState();
   }
 
@@ -59,90 +62,47 @@ class _DashboardPageState extends State<DashboardPage> {
                   }
                 },
               ),
-              _buildLayoutWidget()
+              _buildCardButton()
             ],
           ),
         )
     );
-
-
   }
 
-  Widget _buildLayoutWidget() {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: _buildCardButton(),
-    );
-  }
 
   Widget _buildCardButton() {
-    return Card(
-      shape: Border(left: BorderSide(color: AppColor.prime, width: 15)),
-      elevation: 5,
-      shadowColor: AppColor.prime,
-      color: Colors.white,
-      child: Column(
-        children: [
-          _cardWidget(
-              onTap: () async {
-                if(await ConnectivityHelper.checkGPSPermission(context: context) == true){
-                  /*Navigator.pushReplacementNamed(
-                      context, RoutesName.customerRegistrationFormPage);*/
-                  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                      CustomerRegistrationFormPage(isUpdate: false, position: 0, localData: null)));
-                }
-              },
-              title: AppString.titleList[0],
-              icon: AppString.iconList[0]),
-          _cardWidget(
-              onTap: () {
-                Navigator.pushReplacementNamed(
-                    context, RoutesName.viewSyncRecordPage);
-
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Card(
+        shape: Border(left: BorderSide(color: AppColor.prime, width: 15)),
+        elevation: 5,
+        shadowColor: AppColor.prime,
+        color: Colors.white,
+        child: Column(
+          children: [
+            CardBtnWidget(
+                onTap: () async {
+                  if(await ConnectivityHelper.checkGPSPermission(context: context) == true){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                        CustomerRegistrationFormPage(isUpdate: false, position: 0, localData: null)));
+                  }
                 },
-              title: AppString.titleList[1],
-              icon: AppString.iconList[1]),
-        ],
-      ),
-    );
-  }
-
-  Widget _cardWidget(
-      {required Function()? onTap,
-        required IconData icon,
-        required String title}) {
-    return Container(
-      color: Colors.white,
-      margin: EdgeInsets.all(18),
-      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
-      child: InkWell(
-        onTap: onTap,
-        child: Row(
-          children: <Widget>[
-            CircleAvatar(
-              radius: 22,
-              backgroundColor: AppColor.prime,
-              child: CircleAvatar(
-                radius: 21,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  icon,
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              title,
-              style: TextStyle(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
+                text: AppString.titleList[0],
+                icon: AppString.iconList[0]),
+            CardBtnWidget(
+                onTap: () {
+                  Navigator.pushReplacementNamed(
+                      context, RoutesName.viewSyncRecordPage);
+                },
+                text: AppString.titleList[1],
+                icon: AppString.iconList[1]),
           ],
         ),
       ),
     );
   }
+
+
 
   _checkNetBtnWidget({required ConnectedState stateData}) {
     return Padding(
@@ -150,24 +110,22 @@ class _DashboardPageState extends State<DashboardPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildBox(
+          RowBtnWidget(
               color: stateData.isMobile ? Colors.green : Colors.red,
               icon: Icons.signal_cellular_connected_no_internet_0_bar,
-              textTitle: AppString.mobile),
-          _buildBox(
+              text: AppString.mobile),
+          RowBtnWidget(
               color: stateData.isWifi ? Colors.green : Colors.red,
               icon: Icons.wifi,
-              textTitle: AppString.wifi),
-          _buildBox(
+              text: AppString.wifi),
+          RowBtnWidget(
             color: stateData.isConnected ? Colors.green : Colors.red,
             icon: Icons.sync,
-            textTitle: AppString.update,
+            text: AppString.update,
             onTap: () {
-              stateData.isConnected
-                  ?  BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
+              BlocProvider.of<DashboardBloc>(context).add(SelectSyncFetchAllDataEvent(
                 context: context,
-              ))
-                  : Utils.errorSnackBar(msg: "No Internet Connection", context: context);
+              ));
             },
           ),
         ],
@@ -175,35 +133,4 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildBox(
-      {Color? color, IconData? icon, String? textTitle, Function()? onTap}) {
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        elevation: 10,
-        color: color,
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                color: Colors.white,
-              ),
-              SizedBox(
-                width: 2,
-              ),
-              Text(textTitle!,
-                  textAlign: TextAlign.center,
-                  style: new TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.0,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.bold)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
