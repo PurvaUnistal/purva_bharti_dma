@@ -95,7 +95,7 @@ class AppStrings {
   static String chqPhotoLabel = 'Cheque Photo';
   static String formStatusLabel = '';
   static String depositStatusLabel = 'Deposit Status';
-  static String depositType = 'Scheme Type';
+  static String schemeType = 'Scheme Type';
   static String modeOfDepositLabel = 'Select the Mode of Deposit';
   static String depositDateLabel = 'Enter the Cheque Date';
   static String depositTypeLabel = 'Deposit Type';
@@ -104,7 +104,6 @@ class AppStrings {
   static String chqBankLabel = '';
   static String btnLabel = '';
   static String feeChargeLabel = '';
-  static String schemeType = '';
   static String schemeCode = '';
   static String depositName = 'Deposit Name';
   static String equipmentDepositAmount = 'Equipment Deposit Amount';

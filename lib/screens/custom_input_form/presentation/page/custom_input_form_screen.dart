@@ -538,7 +538,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     AppStyle.vertical(context),
                     _depositStatusId != "1" ? _reasonDepositStatusWidget() : Container(),
                     AppStyle.vertical(context),
-                    _depositTypeDropDown(AppStrings.depositType, AppStrings.star,),
+                    _depositTypeDropDown(AppStrings.schemeType, AppStrings.star,),
                     AppStyle.vertical(context),
                     _depositAmountWidget(),
                     AppStyle.vertical(context),
@@ -1633,13 +1633,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   border: AppStyle.border(color: AppColor.black),
                   errorBorder:AppStyle.border(color: AppColor.red),
                   //label: Text(AppStrings.depositType),
-                  hintText: AppStrings.depositType,
+                  hintText: AppStrings.schemeType,
                   contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                 ),
                 items: _depositTypeList,
                 value: _depositTypeValue,
                 hint: Text(
-                    AppStrings.depositTypeLabel,
+                    AppStrings.schemeType,
                     style:  AppStyle.styleN()),
                 onChanged: (DepositItem value) {
                   setState(() {
