@@ -121,8 +121,7 @@ class ApiIntegration {
           /*"locality": saveCustRegReqModel.colonySocietyApartment ?? "", // streetName
       "address2": saveCustRegReqModel.streetName.toString() ?? "",  // colony Name*/
           "locality": saveCustRegReqModel.streetName ?? "", // streetName
-          "address2": saveCustRegReqModel.colonySocietyApartment.toString() ??
-              "", // colony Name
+          "address2": saveCustRegReqModel.colonySocietyApartment.toString() ?? "", // colony Name
           "town": saveCustRegReqModel.town ?? "",
           "district_id": saveCustRegReqModel.districtId ?? "",
           "pin_code": saveCustRegReqModel.pinCode ?? "",

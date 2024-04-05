@@ -74,7 +74,7 @@ class TextFieldWidget extends StatelessWidget {
             suffix: suffixIcon,
             prefixIcon: prefixIcon,
             hintText: hintText,
-            labelText: labelText ?? "",
+            label: Text(labelText ?? "",style: AppStyle.styleN(),),
             fillColor: Colors.white,
             hintStyle: AppStyle.styleN(),
             labelStyle: AppStyle.styleN(),

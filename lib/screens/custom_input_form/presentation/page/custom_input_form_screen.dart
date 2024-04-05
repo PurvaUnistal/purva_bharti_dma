@@ -1246,7 +1246,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       var box = await Hive.openBox<SaveCustomerRegistrationOfflineModel>(
           "saveCustRegDataBoxName");
       var mmm = box.length;
-      if (mmm <= 5) {
+      if (mmm <= 10) {
         var box = await Hive.openBox<SaveCustomerRegistrationOfflineModel>(
             "saveCustRegDataBoxName");
         await box.add(data);
@@ -1624,6 +1624,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                 style:  AppStyle.styleN(),
                 isExpanded: true,
                 isDense: false,
+
                 iconEnabledColor:  AppColor.black,
                 decoration: InputDecoration(
                   focusedBorder: AppStyle.border(color: AppColor.black),
@@ -1631,6 +1632,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   enabledBorder: AppStyle.border(color: AppColor.black),
                   border: AppStyle.border(color: AppColor.black),
                   errorBorder:AppStyle.border(color: AppColor.red),
+                  //label: Text(AppStrings.depositType),
+                  hintText: AppStrings.depositType,
                   contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                 ),
                 items: _depositTypeList,
@@ -2433,7 +2436,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _depositStatusDropDown() {
     return ReusedDropDownOptionItem(
       textLabel: AppStrings.initialDepositStatusLabel,
-      hint: AppStrings.depositStatusLabel,
+      hint: AppStrings.initialDepositStatusLabel,
       items: dropListDepositStatusList,
       value: depositStatusValue,
       onChanged: (value) {
