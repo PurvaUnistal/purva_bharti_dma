@@ -40,7 +40,7 @@ class DropdownWidget<T> extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Flexible(child: Text(star??"", style:Styles.stars)),
-                Flexible(flex : 6,child: Text(label  ?? "", style:Styles.labels)),
+                Flexible(child: Text(label  ?? "", style:Styles.labels)),
               ],
             ),
           ),

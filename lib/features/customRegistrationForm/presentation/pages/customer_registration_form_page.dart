@@ -263,7 +263,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       star: AppString.star,
       label:stateData.labelModel.registration == null ? AppString.registrationType :stateData.labelModel.registration!.registrationType,
       hint: stateData.labelModel.registration == null ? AppString.registrationType :stateData.labelModel.registration!.registrationType ,
-      dropdownValue: stateData.interestValue,
+      dropdownValue: stateData.interestValue == null ? null : stateData.interestValue,
       items: stateData.getNotInterestedList,
       onChanged: (val) {
         log("stateData.interestValue-->${stateData.interestValue}");
@@ -723,7 +723,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     return DropdownWidget(
       label: stateData.labelModel.registration == null ? AppString.fuel :stateData.labelModel.registration!.fuel,
       hint: stateData.labelModel.registration == null ? AppString.fuel :stateData.labelModel.registration!.fuel,
-      dropdownValue: stateData.existingCookingFuelValue,
+      dropdownValue: stateData.existingCookingFuelValue == null ? null : stateData.existingCookingFuelValue,
       items: stateData.existingCookingFuelList,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetExistingCookingFuelValue(existingCookingFuelValue: val));
@@ -777,9 +777,9 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
   Widget _kycDoc1Dropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
       star: AppString.star,
-      label: stateData.labelModel.kyc == null ? AppString.idProof :stateData.labelModel.kyc!.uploadDoc1,
-      hint: stateData.labelModel.kyc == null ? AppString.idProof :stateData.labelModel.kyc!.uploadDoc1,
-      dropdownValue: stateData.identityProofValue,
+      label: AppString.idProof,
+      hint: AppString.idProof,
+      dropdownValue: stateData.identityProofValue == null ? null : stateData.identityProofValue,
       items: stateData.identityProofList,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetKycDoc1Value(kycDoc1Value: val));
@@ -806,322 +806,13 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     );
   }
 
-  Widget _fileImage({required File fileImage,}) {
-    if (fileImage.path.isNotEmpty) {
-      return CircleAvatar(
-        radius: 41,
-        backgroundColor: AppColor.prime,
-        child: CircleAvatar(
-          radius: 40,
-          backgroundImage: FileImage(fileImage),
-        ),
-      );
-    } else {
-      return CircleAvatar(
-        radius: 41,
-        child: CircleAvatar(
-          backgroundImage: FileImage(fileImage),
-          radius: 40,
-        ),
-      );
-    }
-  }
-
-  Widget _idFrontFileImg({required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-        star: AppString.star,
-        label: stateData.labelModel.kyc == null ? AppString.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,
-        child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
-        _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
-        onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context){
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
-            },
-          );
-        });
-      });
-  }
-
-
-  Widget _idBackFileImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      label: stateData.labelModel.kyc == null ? AppString.idProofBack : stateData.labelModel.kyc!.uploadDoc1Back,
-      child: stateData.idBackFilePath.path.isEmpty || stateData.idBackFilePath == "" ?
-      _localBorderImg() : _fileImage(fileImage: stateData.idBackFilePath),
-      onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context){
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdBackCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdBackGalleryCapture());
-            },
-          );
-        });
-      },
-    );
-  }
-
-  Widget _eleBillFrontImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      label: stateData.labelModel.kyc == null ? AppString.idProofFront : stateData.labelModel.kyc!.uploadDoc2Front,
-      child: stateData.eleBillFrontPath.path.isEmpty || stateData.eleBillFrontPath == "" ?
-      _localBorderImg() : _fileImage(fileImage: stateData.eleBillFrontPath),
-      star: stateData.interestValue != "Future Registration" ?AppString.star : "",
-      onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context){
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddFrontCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddFrontGalleryCapture());
-            },
-          );
-        });
-      },
-    );
-  }
-
-  Widget _eleBillBackImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-        label: stateData.labelModel.kyc == null ? AppString.idProofBack : stateData.labelModel.kyc!.uploadDoc1Back,
-        child: stateData.eleBillBackPath.path.isEmpty || stateData.eleBillBackPath == "" ?
-        _localBorderImg() : _fileImage(fileImage: stateData.eleBillBackPath),
-      onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context){
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddBackCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddBackGalleryCapture());
-            },
-          );
-        });
-      });
-  }
-
-  Widget _customerConsentImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-        label: stateData.labelModel.kyc == null ? AppString.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,
-        child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
-        _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
-      onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context){
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
-            },
-          );
-        });
-      });
-  }
-
-  Widget _nocDocImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-        child: stateData.nocDocPath.path.isEmpty || stateData.nocDocPath == "" ?
-        _localBorderImg() : _fileImage(fileImage: stateData.nocDocPath),
-        star: AppString.star,
-        label: stateData.labelModel.kyc == null ? AppString.nocDoc : stateData.labelModel.kyc!.uploadDoc3,
-      onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context){
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectNocDocCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectNocDocBackGalleryCapture());
-            },
-          );
-        });
-      });
-  }
-
-  /* Widget _nocBackImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      onTap: () {
-        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetNocBackPath(nocBackPath: stateData.nocBackPath, context: context));
-      },
-      child: stateData.nocBackPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.nocBackPath.toString())),
-      label: AppString.nocBackImgLabel,
-    );
-  }*/
-
-  Widget _uploadCustomerImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      child: stateData.uploadCustomerPath.path.isEmpty || stateData.uploadCustomerPath == "" ?
-      _localBorderImg() : _fileImage(fileImage: stateData.uploadCustomerPath),
-      label: stateData.labelModel.photo == null ? AppString.idProofFront : stateData.labelModel.photo!.customerPhoto,
-      onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context){
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectCustomerCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectCustomerGalleryCapture());
-            },
-          );
-        });
-      }
-      );
-  }
-
-  Widget _uploadHouseImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      child: stateData.uploadHousePath.path.isEmpty || stateData.uploadHousePath == "" ?
-      _localBorderImg() : _fileImage(fileImage: stateData.uploadHousePath),
-      label: stateData.labelModel.photo == null ? AppString.idProofFront : stateData.labelModel.photo!.homePhoto,
-      onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context){
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectHouseCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectHouseGalleryCapture());
-            },
-          );
-        });
-      },
-      );
-  }
-
-
-  Widget _ownerConsentImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
-      _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
-      label: stateData.labelModel.kyc == null ? AppString.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,
-      onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context){
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
-            },
-          );
-        });
-      },
-     );
-  }
-
-  Widget _cancelChequeImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == ""
-          ? _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
-      label: stateData.labelModel.kyc == null ? AppString.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,
-      onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context) {
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(
-                  SelectIdFrontCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(
-                  SelectIdFrontGalleryCapture());
-            },
-          );
-        });
-      }
-    );
-  }
-
-  Widget _chequeImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      child: stateData.chequePath.path.isEmpty || stateData.chequePath == "" ?
-      _localBorderImg() : _fileImage(fileImage: stateData.chequePath),
-      star: AppString.star,
-      label: stateData.labelModel.deposit == null ? AppString.chqPhoto : stateData.labelModel.deposit!.chqPhoto,
-      onTap: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context, builder: (BuildContext context){
-          return ImagePopWidget(
-            onTapCamera: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectChqCameraCapture());
-            },
-            onTapGallery: () async {
-              Navigator.of(context).pop();
-              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectChqGalleryCapture());
-            },
-          );
-        });
-      },
-     );
-  }
 
   Widget _kycDoc2Dropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
       star: stateData.interestValue != "Future Registration" ?AppString.star : "",
       label: stateData.labelModel.kyc == null ? AppString.addProof :stateData.labelModel.kyc!.uploadDoc2,
       hint:  stateData.labelModel.kyc == null ? AppString.addProof :stateData.labelModel.kyc!.uploadDoc2,
-      dropdownValue: stateData.ownershipProofValue,
+      dropdownValue: stateData.ownershipProofValue == null ? null : stateData.ownershipProofValue,
       items: stateData.ownershipProofList,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetKycDoc2Value(kycDoc2Value: val));
@@ -1131,7 +822,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   Widget _kycDoc2Widget({required CustomRegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      star: stateData.interestValue != "Future Registration" ?AppString.star : "",
+      star: stateData.interestValue != "Future Registration" ? AppString.star : "",
       label:  stateData.labelModel.kyc == null ? AppString.addProof : stateData.labelModel.kyc!.uploadDoc2No,
       hintText:  stateData.labelModel.kyc == null ? AppString.addProof : stateData.labelModel.kyc!.uploadDoc2No,
       controller: stateData.kyc2NumberController,
@@ -1151,10 +842,9 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       star: AppString.star,
       label: AppString.ownershipProperty,
       hint: AppString.ownershipProperty,
-      dropdownValue: stateData.kycDoc3Value,
+      dropdownValue: stateData.kycDoc3Value == null ? null :stateData.kycDoc3Value,
       items: stateData.kycDocList,
       onChanged: (val) {
-        log("efrgthujkj${stateData.kycDoc3Value.toString()}");
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetKycDoc3Value(kycDoc3Value: val));
       },
     );
@@ -1180,7 +870,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     return DropdownWidget(
       label:stateData.labelModel.consent == null ? AppString.billingMode : stateData.labelModel.consent!.preferredBilling,
       hint:stateData.labelModel.consent == null ? AppString.billingMode : stateData.labelModel.consent!.preferredBilling,
-      dropdownValue: stateData.eBillingValue,
+      dropdownValue: stateData.eBillingValue == null ? null :stateData.eBillingValue,
       items: stateData.eBillingList,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetPreferredBillValue(preferredBillValue: val));
@@ -1192,7 +882,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
     return DropdownWidget(
       label: stateData.labelModel.consent == null ? AppString.customerBankName : stateData.labelModel.consent!.custBank,
       hint:  stateData.labelModel.consent == null ? AppString.customerBankName : stateData.labelModel.consent!.custBank,
-      dropdownValue: stateData.custBankNameValue,
+      dropdownValue: stateData.custBankNameValue == null ? null :stateData.custBankNameValue,
       items: stateData.custBankNameList,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetCustBankNameValue(custBankNameValue: val));
@@ -1271,7 +961,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       star:AppString.star,
       label: stateData.labelModel.deposit == null ? AppString.depositStatus : stateData.labelModel.deposit!.depositSta,
       hint: stateData.labelModel.deposit == null ? AppString.depositStatus : stateData.labelModel.deposit!.depositSta,
-      dropdownValue: stateData.initialDepositStatusValue,
+      dropdownValue: stateData.initialDepositStatusValue == null ? null :stateData.initialDepositStatusValue,
       items: stateData.initialDepositStatusList,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetInitialDepositStatusValue(initialDepositStatusValue: val));
@@ -1379,14 +1069,13 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       star:AppString.star,
       label: stateData.labelModel.deposit == null ? AppString.chqDate : stateData.labelModel.deposit!.chqDate,
       hintText: stateData.labelModel.deposit == null ? AppString.chqDate : stateData.labelModel.deposit!.chqDate,
-      prefixIcon: Icon(
+      suffixIcon: Icon(
         Icons.calendar_today,
         color: AppColor.prime,
       ),
       controller: stateData.chequeDateController,
       enabled: true,
       autofocus: false,
-      //  readOnly: true,
       keyboardType: TextInputType.datetime,
       onTap: () {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetChequeDateEvent(context: context));
@@ -1453,7 +1142,313 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
           formGlobalKey.currentState?.validate();
         });
   }
+  Widget _fileImage({required File fileImage,}) {
+    if (fileImage.path.isNotEmpty) {
+      return CircleAvatar(
+        radius: 41,
+        backgroundColor: AppColor.prime,
+        child: CircleAvatar(
+          radius: 40,
+          backgroundImage: FileImage(fileImage),
+        ),
+      );
+    } else {
+      return CircleAvatar(
+        radius: 41,
+        child: CircleAvatar(
+          backgroundImage: FileImage(fileImage),
+          radius: 40,
+        ),
+      );
+    }
+  }
 
+  Widget _idFrontFileImg({required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+        star: AppString.star,
+        label: stateData.labelModel.kyc == null ? AppString.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,
+        child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
+        _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
+        onTap: () {
+          showModalBottomSheet(
+              enableDrag: true,
+              isScrollControlled: true,
+              context: context, builder: (BuildContext context){
+            return ImagePopWidget(
+              onTapCamera: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
+              },
+              onTapGallery: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
+              },
+            );
+          });
+        });
+  }
+
+  Widget _idBackFileImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+      label: stateData.labelModel.kyc == null ? AppString.idProofBack : stateData.labelModel.kyc!.uploadDoc1Back,
+      child: stateData.idBackFilePath.path.isEmpty || stateData.idBackFilePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.idBackFilePath),
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdBackCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdBackGalleryCapture());
+            },
+          );
+        });
+      },
+    );
+  }
+
+  Widget _eleBillFrontImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+      label: stateData.labelModel.kyc == null ? AppString.idProofFront : stateData.labelModel.kyc!.uploadDoc2Front,
+      child: stateData.eleBillFrontPath.path.isEmpty || stateData.eleBillFrontPath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.eleBillFrontPath),
+      star: stateData.interestValue != "Future Registration" ?AppString.star : "",
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddFrontCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddFrontGalleryCapture());
+            },
+          );
+        });
+      },
+    );
+  }
+
+  Widget _eleBillBackImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+        label: stateData.labelModel.kyc == null ? AppString.idProofBack : stateData.labelModel.kyc!.uploadDoc1Back,
+        child: stateData.eleBillBackPath.path.isEmpty || stateData.eleBillBackPath == "" ?
+        _localBorderImg() : _fileImage(fileImage: stateData.eleBillBackPath),
+        onTap: () {
+          showModalBottomSheet(
+              enableDrag: true,
+              isScrollControlled: true,
+              context: context, builder: (BuildContext context){
+            return ImagePopWidget(
+              onTapCamera: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddBackCameraCapture());
+              },
+              onTapGallery: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectAddBackGalleryCapture());
+              },
+            );
+          });
+        });
+  }
+
+  Widget _customerConsentImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+        label: stateData.labelModel.kyc == null ? AppString.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,
+        child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
+        _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
+        onTap: () {
+          showModalBottomSheet(
+              enableDrag: true,
+              isScrollControlled: true,
+              context: context, builder: (BuildContext context){
+            return ImagePopWidget(
+              onTapCamera: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
+              },
+              onTapGallery: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
+              },
+            );
+          });
+        });
+  }
+
+  Widget _nocDocImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+        child: stateData.nocDocPath.path.isEmpty || stateData.nocDocPath == "" ?
+        _localBorderImg() : _fileImage(fileImage: stateData.nocDocPath),
+        star: AppString.star,
+        label: stateData.labelModel.kyc == null ? AppString.nocDoc : stateData.labelModel.kyc!.uploadDoc3,
+        onTap: () {
+          showModalBottomSheet(
+              enableDrag: true,
+              isScrollControlled: true,
+              context: context, builder: (BuildContext context){
+            return ImagePopWidget(
+              onTapCamera: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectNocDocCameraCapture());
+              },
+              onTapGallery: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectNocDocBackGalleryCapture());
+              },
+            );
+          });
+        });
+  }
+
+  /* Widget _nocBackImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+      onTap: () {
+        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetNocBackPath(nocBackPath: stateData.nocBackPath, context: context));
+      },
+      child: stateData.nocBackPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.nocBackPath.toString())),
+      label: AppString.nocBackImgLabel,
+    );
+  }*/
+
+  Widget _uploadCustomerImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+        child: stateData.uploadCustomerPath.path.isEmpty || stateData.uploadCustomerPath == "" ?
+        _localBorderImg() : _fileImage(fileImage: stateData.uploadCustomerPath),
+        label: stateData.labelModel.photo == null ? AppString.idProofFront : stateData.labelModel.photo!.customerPhoto,
+        onTap: () {
+          showModalBottomSheet(
+              enableDrag: true,
+              isScrollControlled: true,
+              context: context, builder: (BuildContext context){
+            return ImagePopWidget(
+              onTapCamera: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectCustomerCameraCapture());
+              },
+              onTapGallery: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectCustomerGalleryCapture());
+              },
+            );
+          });
+        }
+    );
+  }
+
+  Widget _uploadHouseImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+      child: stateData.uploadHousePath.path.isEmpty || stateData.uploadHousePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.uploadHousePath),
+      label: stateData.labelModel.photo == null ? AppString.idProofFront : stateData.labelModel.photo!.homePhoto,
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectHouseCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectHouseGalleryCapture());
+            },
+          );
+        });
+      },
+    );
+  }
+
+  Widget _ownerConsentImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+      child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
+      label: stateData.labelModel.kyc == null ? AppString.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectIdFrontGalleryCapture());
+            },
+          );
+        });
+      },
+    );
+  }
+
+  Widget _cancelChequeImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+        child: stateData.idFrontFilePath.path.isEmpty || stateData.idFrontFilePath == ""
+            ? _localBorderImg() : _fileImage(fileImage: stateData.idFrontFilePath),
+        label: stateData.labelModel.kyc == null ? AppString.idProofFront : stateData.labelModel.kyc!.uploadDoc1Front,
+        onTap: () {
+          showModalBottomSheet(
+              enableDrag: true,
+              isScrollControlled: true,
+              context: context, builder: (BuildContext context) {
+            return ImagePopWidget(
+              onTapCamera: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(
+                    SelectIdFrontCameraCapture());
+              },
+              onTapGallery: () async {
+                Navigator.of(context).pop();
+                BlocProvider.of<CustomRegistrationFormBloc>(context).add(
+                    SelectIdFrontGalleryCapture());
+              },
+            );
+          });
+        }
+    );
+  }
+
+  Widget _chequeImg({required BuildContext context, required CustomRegistrationFormGetAllDataState stateData}) {
+    return ImageWidget(
+      child: stateData.chequePath.path.isEmpty || stateData.chequePath == "" ?
+      _localBorderImg() : _fileImage(fileImage: stateData.chequePath),
+      star: AppString.star,
+      label: stateData.labelModel.deposit == null ? AppString.chqPhoto : stateData.labelModel.deposit!.chqPhoto,
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            isScrollControlled: true,
+            context: context, builder: (BuildContext context){
+          return ImagePopWidget(
+            onTapCamera: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectChqCameraCapture());
+            },
+            onTapGallery: () async {
+              Navigator.of(context).pop();
+              BlocProvider.of<CustomRegistrationFormBloc>(context).add(SelectChqGalleryCapture());
+            },
+          );
+        });
+      },
+    );
+  }
   Widget _previewButton() {
     return ButtonWidget(
       text: AppString.preview,
@@ -1498,10 +1493,10 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
 
   editPageData({required CustomRegistrationFormGetAllDataState stateData}){
-    if(widget.isUpdate){
+    /*if(widget.isUpdate){
       stateData.interestValue = widget.localData!.interested!;
-      stateData.conversionPolicyValue.text = widget.localData!.acceptConversionPolicy!;
-      stateData.extraFittingValue.text = widget.localData!.acceptExtraFittingCost!;
+      stateData.conversionPolicyValue = widget.localData!.acceptConversionPolicy!;
+      stateData.extraFittingValue = widget.localData!.acceptExtraFittingCost!;
       stateData.societyAllowValue = widget.localData!.societyAllowedMdpe!;
       stateData.guardianTypeValue = widget.localData!.guardianType!;
       stateData.propertyCategoryValue = widget.localData!.propertyCategoryId.toString();
@@ -1548,7 +1543,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       stateData.chequeMicrNoController.text = widget.localData!.chequeMicrAccount!;
       stateData.custBankNameValue = widget.localData!.bankNameOfBank!;
       stateData.paymentBankNameValue = widget.localData!.payementBankName!;
-      /*stateData.idFrontFilePath = widget.localData!.backSidePhoto1!;
+      *//*stateData.idFrontFilePath = widget.localData!.backSidePhoto1!;
       stateData.idBackFilePath = widget.localData!.documentUploadsPhoto1!;
       stateData.eleBillFrontPath = widget.localData!.backSidePhoto2!;
       stateData.eleBillBackPath = widget.localData!.mobileNumber!;
@@ -1559,7 +1554,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       stateData.customerConsentPath = widget.localData!.customerConsentPhoto!;
       stateData.ownerConsentPath = widget.localData!.ownerConsent!;
       stateData.cancelChequePath = widget.localData!.canceledChequePhoto!;
-      stateData.chequePath = widget.localData!.chequePhoto!;*/
-    }
+      stateData.chequePath = widget.localData!.chequePhoto!;*//*
+    }*/
   }
 }

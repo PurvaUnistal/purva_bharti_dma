@@ -62,17 +62,6 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   bool _isSaveLoader = false;
   bool get isSaveLoader => _isSaveLoader;
 
-  dynamic _interestValue;
-  dynamic get interestValue => _interestValue;
-
-  dynamic _conversionPolicyValue;
-  dynamic get conversionPolicyValue => _conversionPolicyValue;
-
-  dynamic _extraFittingValue;
-  dynamic get extraFittingValue => _extraFittingValue;
-
-  dynamic _societyAllowValue;
-  dynamic get societyAllowValue => _societyAllowValue;
 
   GetChargeAreaListModel? chargeAreaValue;
   GetAllAreaModel? areaValue;
@@ -80,175 +69,77 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   GetPropertyClassModel? propertyClassValue;
   GetAllDistrictModel? allDistrictValue;
   GetAllDepositOfflineModel? depositTypeValue;
-
-  dynamic _guardianTypeValue;
-  dynamic get guardianTypeValue => _guardianTypeValue;
-
-  dynamic _residentStatusValue;
-  dynamic get residentStatusValue => _residentStatusValue;
-
-  dynamic _existingCookingFuelValue;
-  dynamic get existingCookingFuelValue => _existingCookingFuelValue;
-
-  dynamic _kycDoc1Value;
-  dynamic get kycDoc1Value => _kycDoc1Value;
-
-  dynamic _kycDoc2Value;
-  dynamic get kycDoc2Value => _kycDoc2Value;
-
-  dynamic _kycDoc3Value;
-  dynamic get kycDoc3Value => _kycDoc3Value;
-
-  dynamic _preferredBillValue;
-  dynamic get preferredBillValue => _preferredBillValue;
-
-  dynamic _custBankNameValue;
-  dynamic get custBankNameValue => _custBankNameValue;
-
-  dynamic _paymentBankNameValue;
-  dynamic get paymentBankNameValue => _paymentBankNameValue;
-
-  dynamic _initialDepositStatusValue;
-  dynamic get initialDepositStatusValue => _initialDepositStatusValue;
-
-
-
-  /* dynamic _depositTypeValue;
-  dynamic get depositTypeValue => _depositTypeValue;*/
-
-  dynamic _modeDepositValue;
-  dynamic get modeDepositValue => _modeDepositValue;
-
-  File _idFrontPath = File("");
-  File get idFrontPath => _idFrontPath;
-
-  File _idBackPath = File("");
-  File get idBackPath => _idBackPath;
-
-
-  File _addFrontPath =File("");
-  File get addFrontPath => _addFrontPath;
-
-  File _addBackPath =File("");
-  File get addBackPath => _addBackPath;
-
-  File _nocDocPath =File("");
-  File get nocDocPath => _nocDocPath;
-
-  File _nocFrontPath =File("");
-  File get nocFrontPath => _nocFrontPath;
-
-  File _nocBackPath =File("");
-  File get nocBackPath => _nocBackPath;
-
-  File _uploadCustomerPath =File("");
-  File get uploadCustomerPath => _uploadCustomerPath;
-
-  File _uploadHousePath =File("");
-  File get uploadHousePath => _uploadHousePath;
-
-  File _ownerConsentPath =File("");
-  File get ownerConsentPath => _ownerConsentPath;
-
-  File _customerConsentPath =File("");
-  File get customerConsentPath => _customerConsentPath;
-
-  File _cancelChequePath =File("");
-  File get cancelChequePath => _cancelChequePath;
-
-  File _chequePath =File("");
-  File get chequePath => _chequePath;
-
-  CustRegSync _saveCusRegData = CustRegSync();
-  CustRegSync get saveCusRegData => _saveCusRegData;
-
-  final TextEditingController reasonRegistrationController = TextEditingController();
-  final TextEditingController mobileController = TextEditingController();
-  final TextEditingController altMobileController = TextEditingController();
-  final TextEditingController firstController = TextEditingController();
-  final TextEditingController middleController = TextEditingController();
-  final TextEditingController lastController = TextEditingController();
-  TextEditingController guardianNameController = TextEditingController();
-  final TextEditingController emailIdController = TextEditingController();
-  final TextEditingController buildingNumberController = TextEditingController();
-  final TextEditingController houseNumberController = TextEditingController();
-  final TextEditingController colonyController = TextEditingController();
-  final TextEditingController streetController = TextEditingController();
-  final TextEditingController townController = TextEditingController();
-  final TextEditingController pinCodeController = TextEditingController();
-  final TextEditingController numberKitchenController = TextEditingController(text: "1");
-  final TextEditingController numberBathroomController = TextEditingController(text: "1");
-  final TextEditingController familyMemberController = TextEditingController(text: "4");
-  final TextEditingController nearestLandmarkController = TextEditingController();
-  final TextEditingController kyc1NumberController = TextEditingController();
-  final TextEditingController kyc2NumberController = TextEditingController();
-  final TextEditingController kyc3NumberController = TextEditingController();
-  final TextEditingController custBankAccNumberController = TextEditingController();
-  final TextEditingController custIfscCodeController = TextEditingController();
-  final TextEditingController custBankAddController = TextEditingController();
-  final TextEditingController reasonDepositStsController = TextEditingController();
-  TextEditingController depositAmountController = TextEditingController();
-  final TextEditingController chequeNoController = TextEditingController();
-  final TextEditingController chequeDateController = TextEditingController();
-  final TextEditingController chequeAccountNoController = TextEditingController();
-  final TextEditingController chequeMicrNoController = TextEditingController();
-  TextEditingController latController = TextEditingController();
-  TextEditingController longController = TextEditingController();
+  String? interestValue;
+  String? conversionPolicyValue;
+  String? extraFittingValue;
+  String? societyAllowValue;
+  String? guardianTypeValue;
+  String? residentStatusValue;
+  String? existingCookingFuelValue;
+  String? kycDoc1Value;
+  String? kycDoc2Value;
+  String? kycDoc3Value;
+  String? preferredBillValue;
+  String? custBankNameValue;
+  String? paymentBankNameValue;
+  String? initialDepositStatusValue;
+  String? modeDepositValue;
 
   GetLabelModel _labelModel = GetLabelModel();
   GetLabelModel get labelModel => _labelModel;
 
-  List<dynamic> _getNotInterestedList = [];
-  List<dynamic> get getNotInterestedList => _getNotInterestedList;
+  List _getNotInterestedList = [];
+  List get getNotInterestedList => _getNotInterestedList;
   GetNotInterestedModel _getNotInterestedModel = GetNotInterestedModel();
   GetNotInterestedModel get getNotInterestedModel => _getNotInterestedModel;
 
-  List<dynamic> _conversionPolicyList = [];
-  List<dynamic> get conversionPolicyList => _conversionPolicyList;
+  List _conversionPolicyList = [];
+  List get conversionPolicyList => _conversionPolicyList;
   GetAcceptConversionPolicyModel _getAcceptConversionPolicyModel = GetAcceptConversionPolicyModel();
   GetAcceptConversionPolicyModel get getAcceptConversionPolicyModel => _getAcceptConversionPolicyModel;
 
-  List<dynamic> _extraFittingCostList = [];
-  List<dynamic> get extraFittingCostList => _extraFittingCostList;
+  List _extraFittingCostList = [];
+  List get extraFittingCostList => _extraFittingCostList;
+
   GetAcceptExtraFittingCostModel _getAcceptExtraFittingCostModel = GetAcceptExtraFittingCostModel();
   GetAcceptExtraFittingCostModel get getAcceptExtraFittingCostModel => _getAcceptExtraFittingCostModel;
 
   List<GetAllDistrictModel> _getAllDistrictModel = [];
   List<GetAllDistrictModel> get getAllDistrictModel => _getAllDistrictModel;
 
-  List<dynamic> _societyAllowList = [];
-  List<dynamic> get societyAllowList => _societyAllowList;
+  List _societyAllowList = [];
+  List get societyAllowList => _societyAllowList;
   GetSocietyAllowModel _getSocietyAllowModel = GetSocietyAllowModel();
   GetSocietyAllowModel get getSocietyAllowModel => _getSocietyAllowModel;
 
-  List<dynamic> _getIdentityProofList = [];
-  List<dynamic> get getIdentityProofList => _getIdentityProofList;
+  List _getIdentityProofList = [];
+  List get getIdentityProofList => _getIdentityProofList;
   GetIdentityProofModel _getIdentityProofModel = GetIdentityProofModel();
   GetIdentityProofModel get getIdentityProofModel => _getIdentityProofModel;
 
-  List<dynamic> _getOwnershipProofList = [];
-  List<dynamic> get getOwnershipProofList => _getOwnershipProofList;
+  List _getOwnershipProofList = [];
+  List get getOwnershipProofList => _getOwnershipProofList;
   GetOwnershipProofModel _getOwnershipProofModel = GetOwnershipProofModel();
   GetOwnershipProofModel get getOwnershipProofModel => _getOwnershipProofModel;
 
-  List<dynamic> _getKycDocList = [];
-  List<dynamic> get getKycDocList => _getKycDocList;
+  List _getKycDocList = [];
+  List get getKycDocList => _getKycDocList;
   GetKycDocModel _getKycDocModel = GetKycDocModel();
   GetKycDocModel get getKycDocModel => _getKycDocModel;
 
-  List<dynamic> _getGuardianTypeList = [];
-  List<dynamic> get getGuardianTypeList => _getGuardianTypeList;
+  List _getGuardianTypeList = [];
+  List get getGuardianTypeList => _getGuardianTypeList;
 
   GetGuardianTypeModel _getGuardianTypeModel = GetGuardianTypeModel();
   GetGuardianTypeModel get getGuardianTypeModel => _getGuardianTypeModel;
 
-  List<dynamic> _existingCookingFuelList = [];
-  List<dynamic> get existingCookingFuelList => _existingCookingFuelList;
+  List _existingCookingFuelList = [];
+  List get existingCookingFuelList => _existingCookingFuelList;
   GetExistingCookingFuelModel _getExistingCookingFuelModel = GetExistingCookingFuelModel();
   GetExistingCookingFuelModel get getExistingCookingFuelModel => _getExistingCookingFuelModel;
 
-  List<dynamic> _getResidentStatusList = [];
-  List<dynamic> get getResidentStatusList => _getResidentStatusList;
+  List _getResidentStatusList = [];
+  List get getResidentStatusList => _getResidentStatusList;
   GetResidentStatusModel _getResidentStatusModel = GetResidentStatusModel();
   GetResidentStatusModel get getResidentStatusModel => _getResidentStatusModel;
 
@@ -264,14 +155,14 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   List<GetChargeAreaListModel> _getChargeAreaListModel = [];
   List<GetChargeAreaListModel> get getChargeAreaListModel => _getChargeAreaListModel;
 
-  List<dynamic> _eBillingList = [];
-  List<dynamic> get eBillingList => _eBillingList;
+  List _eBillingList = [];
+  List get eBillingList => _eBillingList;
 
   GetEBillingModel _getEBillingModel = GetEBillingModel();
   GetEBillingModel get getEBillingModel => _getEBillingModel;
 
-  List<dynamic> _initialDepositStatusList = [];
-  List<dynamic> get initialDepositStatusList => _initialDepositStatusList;
+  List _initialDepositStatusList = [];
+  List get initialDepositStatusList => _initialDepositStatusList;
 
   GetInitialDepositStatusModel _getInitialDepositStatusModel = GetInitialDepositStatusModel();
   GetInitialDepositStatusModel get getInitialDepositStatusModel => _getInitialDepositStatusModel;
@@ -282,23 +173,79 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   GetAllDepositOfflineModel _getAllDepositOfflineModel = GetAllDepositOfflineModel();
   GetAllDepositOfflineModel get getAllDepositOfflineModel => _getAllDepositOfflineModel;
 
-  List<dynamic> _modeDepositList = [];
-  List<dynamic> get modeDepositList => _modeDepositList;
+  List _modeDepositList = [];
+  List get modeDepositList => _modeDepositList;
 
-  List<String> _custBankNameList = [];
-  List<String> get custBankNameList => _custBankNameList;
+  List _custBankNameList = [];
+  List get custBankNameList => _custBankNameList;
 
-  List<String> _paymentBankNameList = [];
-  List<String> get paymentBankNameList => _paymentBankNameList;
+  List _paymentBankNameList = [];
+  List get paymentBankNameList => _paymentBankNameList;
 
   GetModeOfDepositModel _getModeOfDepositModel = GetModeOfDepositModel();
   GetModeOfDepositModel get getModeOfDepositModel => _getModeOfDepositModel;
+
+  CustRegSync _saveCusRegData = CustRegSync();
+  CustRegSync get saveCusRegData => _saveCusRegData;
+
+  File customerConsent = File("");
+  File canceledCheque = File("");
+  File idFrontPath = File("");
+  File idBackPath = File("");
+  File addFrontPath = File("");
+  File addBackPath = File("");
+  File nocDocPath = File("");
+  File nocFrontPath = File("");
+  File nocBackPath = File("");
+  File uploadCustomerPath = File("");
+  File uploadHousePath = File("");
+  File ownerConsentPath = File("");
+  File customerConsentPath = File("");
+  File cancelChequePath = File("");
+  File chequePath = File("");
+
+
+
+   TextEditingController reasonRegistrationController = TextEditingController();
+   TextEditingController mobileController = TextEditingController();
+   TextEditingController altMobileController = TextEditingController();
+   TextEditingController firstController = TextEditingController();
+   TextEditingController middleController = TextEditingController();
+   TextEditingController lastController = TextEditingController();
+  TextEditingController guardianNameController = TextEditingController();
+   TextEditingController emailIdController = TextEditingController();
+   TextEditingController buildingNumberController = TextEditingController();
+   TextEditingController houseNumberController = TextEditingController();
+   TextEditingController colonyController = TextEditingController();
+   TextEditingController streetController = TextEditingController();
+   TextEditingController townController = TextEditingController();
+   TextEditingController pinCodeController = TextEditingController();
+   TextEditingController numberKitchenController = TextEditingController(text: "1");
+   TextEditingController numberBathroomController = TextEditingController(text: "1");
+   TextEditingController familyMemberController = TextEditingController(text: "4");
+   TextEditingController nearestLandmarkController = TextEditingController();
+   TextEditingController kyc1NumberController = TextEditingController();
+   TextEditingController kyc2NumberController = TextEditingController();
+   TextEditingController kyc3NumberController = TextEditingController();
+   TextEditingController custBankAccNumberController = TextEditingController();
+   TextEditingController custIfscCodeController = TextEditingController();
+   TextEditingController custBankAddController = TextEditingController();
+   TextEditingController reasonDepositStsController = TextEditingController();
+   TextEditingController depositAmountController = TextEditingController();
+   TextEditingController chequeNoController = TextEditingController();
+   TextEditingController chequeDateController = TextEditingController();
+   TextEditingController chequeAccountNoController = TextEditingController();
+   TextEditingController chequeMicrNoController = TextEditingController();
+  TextEditingController latController = TextEditingController();
+  TextEditingController longController = TextEditingController();
+
+
 
 
 
   _pageLoad(CustomRegistrationFormPageLoadEvent event, emit) async {
     emit(CustomRegistrationFormPageLoadState());
-     await SharedPreferences.getInstance();
+    await SharedPreferences.getInstance();
     _isPageLoader = false;
     _isUpdate = false;
     _labelModel = GetLabelModel();
@@ -308,9 +255,21 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     propertyClassValue = GetPropertyClassModel();
     allDistrictValue = GetAllDistrictModel();
     depositTypeValue = GetAllDepositOfflineModel();
-    _modeDepositValue = null;
-    _paymentBankNameValue = null;
-    _custBankNameValue = null;
+     interestValue = null;
+     conversionPolicyValue = null;
+     extraFittingValue = null;
+     societyAllowValue = null;
+     guardianTypeValue = null;
+     residentStatusValue = null;
+     existingCookingFuelValue = null;
+     kycDoc1Value = null;
+     kycDoc2Value = null;
+     kycDoc3Value = null;
+     preferredBillValue = null;
+     custBankNameValue = null;
+     paymentBankNameValue = null;
+     initialDepositStatusValue = null;
+     modeDepositValue = null;
     _getNotInterestedList = [];
     _extraFittingCostList = [];
     _conversionPolicyList = [];
@@ -333,19 +292,21 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     _modeDepositList = [];
     _custBankNameList = [];
     _paymentBankNameList = [];
-    _idBackPath = File("");
-    _idFrontPath =  File("");
-    _addBackPath =  File("");
-    _addFrontPath =  File("");
-    _nocDocPath =  File("");
-    _nocFrontPath =  File("");
-    _nocBackPath =  File("");
-    _uploadCustomerPath =  File("");
-    _uploadHousePath =  File("");
-    _ownerConsentPath =  File("");
-    _customerConsentPath =  File("");
-    _cancelChequePath =  File("");
-    _chequePath = File("");
+    idBackPath = File("");
+    idFrontPath =  File("");
+    addBackPath =  File("");
+    addFrontPath =  File("");
+    nocDocPath =  File("");
+    nocFrontPath =  File("");
+    nocBackPath =  File("");
+    uploadCustomerPath =  File("");
+    uploadHousePath =  File("");
+    ownerConsentPath =  File("");
+    customerConsentPath =  File("");
+    cancelChequePath =  File("");
+    chequePath = File("");
+    canceledCheque = File("");
+    customerConsent = File("");
     await fetchLabelApi(context: event.context);
     await fetchNotInterestedApi(context: event.context);
     await fetchInitialDepositStatusApi(context: event.context);
@@ -374,22 +335,22 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
 
 
   _setInterestValue(CustomRegistrationFormSetInterestValue event, emit) {
-    _interestValue = event.interestValue;
+    interestValue = event.interestValue;
     _eventCompleted(emit);
   }
 
   _setConversionPolicyValue(CustomRegistrationFormSetConversionPolicyValue event, emit) {
-    _conversionPolicyValue = event.conversionPolicyValue;
+    conversionPolicyValue = event.conversionPolicyValue;
     _eventCompleted(emit);
   }
 
   _setExtraFittingValue(CustomRegistrationFormSetExtraFittingValue event, emit) {
-    _extraFittingValue = event.extraFittingValue;
+    extraFittingValue = event.extraFittingValue;
     _eventCompleted(emit);
   }
 
   _setSocietyAllowValue(CustomRegistrationFormSetSocietyAllowValue event, emit) {
-    _societyAllowValue = event.societyAllowValue;
+    societyAllowValue = event.societyAllowValue;
     _eventCompleted(emit);
   }
 
@@ -406,7 +367,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   }
 
   _setGuardianTypeValue(CustomRegistrationFormSetGuardianTypeValue event, emit) {
-    _guardianTypeValue = event.guardianTypeValue;
+    guardianTypeValue = event.guardianTypeValue;
     _eventCompleted(emit);
   }
 
@@ -430,48 +391,47 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   }
 
   _setResidentStatusValue(CustomRegistrationFormSetResidentStatusValue event, emit) {
-    _residentStatusValue = event.residentStatusValue;
+    residentStatusValue = event.residentStatusValue;
     _eventCompleted(emit);
   }
 
   _setExistingCookingFuelValue(CustomRegistrationFormSetExistingCookingFuelValue event, emit) {
-    _existingCookingFuelValue = event.existingCookingFuelValue;
+    existingCookingFuelValue = event.existingCookingFuelValue;
     _eventCompleted(emit);
   }
 
   _setKycDoc1Value(CustomRegistrationFormSetKycDoc1Value event, emit) {
-    _kycDoc1Value = event.kycDoc1Value;
+    kycDoc1Value = event.kycDoc1Value;
     _eventCompleted(emit);
   }
 
   _setKycDoc2Value(CustomRegistrationFormSetKycDoc2Value event, emit) {
-    _kycDoc2Value = event.kycDoc2Value;
+    kycDoc2Value = event.kycDoc2Value;
     _eventCompleted(emit);
   }
 
   _setKycDoc3Value(CustomRegistrationFormSetKycDoc3Value event, emit) {
-    _kycDoc3Value = event.kycDoc3Value;
-    log("_kycDoc3Value-->${_kycDoc3Value}");
+    kycDoc3Value = event.kycDoc3Value;
     _eventCompleted(emit);
   }
 
   _setPreferredBillValue(CustomRegistrationFormSetPreferredBillValue event, emit) {
-    _preferredBillValue = event.preferredBillValue;
+    preferredBillValue = event.preferredBillValue;
     _eventCompleted(emit);
   }
 
   _setCustBankNameValue(CustomRegistrationFormSetCustBankNameValue event, emit) {
-    _custBankNameValue = event.custBankNameValue;
+    custBankNameValue = event.custBankNameValue;
     _eventCompleted(emit);
   }
 
   _setPaymentBankNameValue(CustomRegistrationFormSetPaymentBankNameValue event, emit) {
-    _paymentBankNameValue = event.paymentBankNameValue;
+    paymentBankNameValue = event.paymentBankNameValue;
     _eventCompleted(emit);
   }
 
   _setInitialDepositStatusValue(CustomRegistrationFormSetInitialDepositStatusValue event, emit) {
-    _initialDepositStatusValue = event.initialDepositStatusValue;
+    initialDepositStatusValue = event.initialDepositStatusValue;
     log("initialDepositStatusValue-->$initialDepositStatusValue");
     _eventCompleted(emit);
   }
@@ -485,8 +445,8 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   }
 
   _setModeDepositValue(CustomRegistrationFormSetModeDepositValue event, emit) {
-    _modeDepositValue = event.modeDepositValue;
-    log("_modeDepositValueBloc-->${_modeDepositValue}");
+    modeDepositValue = event.modeDepositValue;
+    log("_modeDepositValueBloc-->${modeDepositValue}");
     _eventCompleted(emit);
   }
 
@@ -494,7 +454,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.cameraCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _idFrontPath  = photoPath;
+      idFrontPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -503,7 +463,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _idFrontPath  = photoPath;
+      idFrontPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -512,7 +472,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.cameraCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _idBackPath  = photoPath;
+      idBackPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -521,7 +481,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _idBackPath  = photoPath;
+      idBackPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -530,7 +490,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.cameraCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _addFrontPath  = photoPath;
+      addFrontPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -539,7 +499,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _addFrontPath  = photoPath;
+      addFrontPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -548,7 +508,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.cameraCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _addBackPath  = photoPath;
+      addBackPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -557,7 +517,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _addBackPath  = photoPath;
+      addBackPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -566,7 +526,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.cameraCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _nocDocPath  = photoPath;
+      nocDocPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -575,7 +535,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _nocDocPath  = photoPath;
+      nocDocPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -584,7 +544,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.cameraCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _uploadCustomerPath  = photoPath;
+      uploadCustomerPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -593,7 +553,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _uploadCustomerPath  = photoPath;
+      uploadCustomerPath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -602,7 +562,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.cameraCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _uploadHousePath  = photoPath;
+      uploadHousePath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -611,7 +571,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _uploadHousePath  = photoPath;
+      uploadHousePath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -620,7 +580,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.cameraCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _chequePath  = photoPath;
+      chequePath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -629,7 +589,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if(photoPath != null){
-      _chequePath  = photoPath;
+      chequePath  = photoPath;
     }
     _eventCompleted(emit);
   }
@@ -655,7 +615,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     if (res != null) {
       _getAcceptConversionPolicyModel = res;
       _conversionPolicyList = res.toJson().values.toList();
-      _conversionPolicyValue = _conversionPolicyList.first.toString();
+      conversionPolicyValue = _conversionPolicyList.first.toString();
     }
   }
 
@@ -664,7 +624,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     if (res != null) {
       _getAcceptExtraFittingCostModel = res;
       _extraFittingCostList = res.toJson().values.toList();
-      _extraFittingValue = _extraFittingCostList.first.toString();
+      extraFittingValue = _extraFittingCostList.first.toString();
     }
   }
 
@@ -673,7 +633,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     if (res != null) {
       _getSocietyAllowModel = res;
       _societyAllowList = res.toJson().values.toList();
-      _societyAllowValue = _societyAllowList.last.toString();
+      societyAllowValue = _societyAllowList.last.toString();
     }
   }
 
@@ -704,7 +664,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     if (res != null) {
       _getGuardianTypeModel = res;
       _getGuardianTypeList = res.toJson().values.toList();
-      _guardianTypeValue = _getGuardianTypeList.first.toString();
+      guardianTypeValue = _getGuardianTypeList.first.toString();
     }
   }
 
@@ -736,7 +696,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     if (res != null) {
       _getResidentStatusModel = res;
       _getResidentStatusList = res.toJson().values.toList();
-      _residentStatusValue = _getResidentStatusList.first.toString();
+      residentStatusValue = _getResidentStatusList.first.toString();
     }
   }
 
@@ -745,7 +705,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     if (res != null) {
       _getIdentityProofModel = res;
       _getIdentityProofList = res.toJson().values.toList();
-      _kycDoc1Value = _getIdentityProofList.first.toString();
+      kycDoc1Value = _getIdentityProofList.first.toString();
     }
   }
 
@@ -754,7 +714,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     if (res != null) {
       _getOwnershipProofModel = res;
       _getOwnershipProofList = res.toJson().values.toList();
-      _kycDoc2Value = _getOwnershipProofList.first.toString();
+      kycDoc2Value = _getOwnershipProofList.first.toString();
     }
   }
 
@@ -763,7 +723,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     if (res != null) {
       _getKycDocModel = res;
       _getKycDocList = res.toJson().values.toList();
-     // _kycDoc3Value = _getKycDocList.first.toString();
+      kycDoc3Value = _getKycDocList.first.toString();
     }
   }
 
@@ -772,7 +732,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     if (res != null) {
       _getExistingCookingFuelModel = res;
       _existingCookingFuelList = res.toJson().values.toList();
-      _existingCookingFuelValue = _existingCookingFuelList.first.toString();
+      existingCookingFuelValue = _existingCookingFuelList.first.toString();
     }
   }
 
@@ -782,7 +742,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       _getEBillingModel = res;
       _eBillingList = res.toJson().values.toList();
       _eBillingList.sort();
-      _preferredBillValue = _eBillingList.last..toString();
+      preferredBillValue = _eBillingList.last..toString();
     }
   }
 
@@ -792,7 +752,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       _getInitialDepositStatusModel = res;
       _initialDepositStatusList = res.toJson().values.toList();
       _initialDepositStatusList.sort();
-      _initialDepositStatusValue = _initialDepositStatusList.last.toString();
+      initialDepositStatusValue = _initialDepositStatusList.last.toString();
     }
   }
 
@@ -835,37 +795,37 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   _previewPage(CustomRegistrationFormPreviewPageEvent event, emit) async {
     var textFiledValidationCheck = await CustomRegistrationFormHelper.textFieldValidationCheck(
       context: event.context,
-      registrationType: interestValue.toString(),
+      registrationType: interestValue,
       reasonRegistration: reasonRegistrationController.text.toString(),
       chargeId: chargeAreaValue!.chargeAreaName.toString(),
-      areaId: areaValue!.areaName.toString(),
+      areaId: areaValue!.areaName,
       mobileNumber: mobileController.text.trim().toString(),
       altMobileNo: altMobileController.text.trim().toString(),
       firstName: firstController.text.trim().toString(),
       middleName: middleController.text.trim().toString(),
       lastName: lastController.text.trim().toString(),
-      guardianType: guardianTypeValue.toString(),
+      guardianType: guardianTypeValue,
       guardianName: guardianNameController.text.trim().toString(),
       emailId: emailIdController.text.trim().toString(),
-      propertyCategoryId: propertyCategoryValue!.name.toString(),
-      propertyClassId: propertyClassValue!.name.toString(),
+      propertyCategoryId: propertyCategoryValue!.id,
+      propertyClassId: propertyClassValue!.id,
       buildingNumber: buildingNumberController.text.trim().toString(),
       houseNumber: houseNumberController.text.trim().toString(),
       colonySocietyApartment: colonyController.text.trim().toString(),
       streetName: streetController.text.trim().toString(),
       town: townController.text.trim().toString(),
-      districtId: allDistrictValue.toString(),
+      districtId: allDistrictValue!.id,
       pinCode: pinCodeController.text.toString(),
       noOfKitchen: numberKitchenController.text.toString(),
       noOfBathroom: numberBathroomController.text.toString(),
-      existingCookingFuel: existingCookingFuelValue.toString(),
+      existingCookingFuel: existingCookingFuelValue,
       noOfFamilyMembers: familyMemberController.text.trim().toString(),
       latitude: latController.text.trim().toString(),
       longitude: longController.text.trim().toString(),
       nearestLandmark: nearestLandmarkController.text.trim().toString(),
       idProof: kycDoc1Value.toString(),
       idProofNo: kyc1NumberController.text.trim().toString(),
-      idFrontPath: idFrontPath.path.toString(),
+      idFrontPath: idFrontPath.path,
       idBackPath: idBackPath.path.toString(),
       addProof: kycDoc2Value.toString(),
       addProofNo: kyc2NumberController.text.trim().toString(),
@@ -890,12 +850,17 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       chequeAccountNo: chequeAccountNoController.text.trim().toString(),
       chequeMICRNo: chequeMicrNoController.text.trim().toString(),
       chequePath: chequePath.path.toString(),
-      canceledCheque: "",
-      bankAccountNumber: "",
-      bankAddress: "",
-      bankIfscCode: "",
+      canceledCheque: canceledCheque.path.toString(),
+      bankAccountNumber: custBankAccNumberController.text.trim().toString(),
+      bankAddress: custBankAddController.text.trim().toString(),
+      bankIfscCode: custIfscCodeController.text.trim().toString(),
+      bankNameOfBank:custBankAccNumberController.text.trim().toString(),
+      customerConsent: customerConsent.path.trim(),
+      eBillingModel:preferredBillValue.toString(),
+      residentStatus: residentStatusValue.toString(),
 
     );
+
     _isPreviewLoader = true;
     _eventCompleted(emit);
     if (textFiledValidationCheck != null) {
@@ -915,21 +880,14 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   _saveLocalData(CustomRegistrationFormSaveLocalDataEvent event, emit) async {
     _isSaveLoader = true;
     _eventCompleted(emit);
-     await CustomRegistrationFormHelper.addCustRegSyncLocalDB(
-         context: event.context, custRegSyncStore: saveCusRegData, isUpdate:_isUpdate,
-     );
+    await CustomRegistrationFormHelper.addCustRegSyncLocalDB(
+      context: event.context, custRegSyncStore: saveCusRegData, isUpdate:_isUpdate,
+    );
     _isSaveLoader = false;
     _eventCompleted(emit);
   }
 
   _updateLocalData(CustomRegistrationFormLoadUpdateLocalDataEvent event, emit) async {
-   /* _isSaveLoader = true;
-    _eventCompleted(emit);
-    Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
-        CustomerRegistrationFormPage(isUpdate: true, position: event.index, localData: saveCusRegData)));
-    await CustomRegistrationFormHelper.updateCustomerFormInLocalDatabase(context: event.context, saveCusRegData: saveCusRegData);
-    _isSaveLoader = false;
-    _eventCompleted(emit);*/
   }
 
   _eventCompleted(Emitter<CustomRegistrationFormState> emit) {

@@ -1,6 +1,6 @@
 class AppUrl {
- // static String baseUrl = 'http://142.79.231.30:8099/';
-  static String baseUrl = 'http://pbgpl.smartgasnet.com/';
+  static String baseUrl = 'http://142.79.231.30:8097/';
+//  static String baseUrl = 'http://pbgpl.smartgasnet.com/';
   static String auth = "${baseUrl}api/auth";
   static String getLabel = "${baseUrl}api/getLabel";
   static String notInterested = "${baseUrl}api/getConstant?key=notIntrested";
@@ -40,8 +40,7 @@ class AppUrl {
       "${baseUrl}api/saveDmaRegistrationDocsOffline";
   static String saveDmaRegistrationDocsStep2Offline =
       "${baseUrl}api/saveDmaRegistrationDocsStep2Offline";
-  static String saveCustomerConsentOffline =
-      "${baseUrl}api/storeConsentOffline";
+  static String saveCustomerConsentOffline = "${baseUrl}api/storeConsentOffline";
   static String saveSecurityDepositOffline =
       "${baseUrl}api/saveSecurityDepositOffline";
   static String getAllDeposit = baseUrl + "${baseUrl}api/getAllDepositOffline";
