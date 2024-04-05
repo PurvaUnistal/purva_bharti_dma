@@ -538,7 +538,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     AppStyle.vertical(context),
                     _depositStatusId != "1" ? _reasonDepositStatusWidget() : Container(),
                     AppStyle.vertical(context),
-                    _depositTypeDropDown(AppStrings.schemeType, AppStrings.star,),
+                    _depositTypeDropDown(AppStrings.schemeTypeLable, AppStrings.star,),
                     AppStyle.vertical(context),
                     _depositAmountWidget(),
                     AppStyle.vertical(context),
@@ -1034,7 +1034,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         Divider(),
                         _buildCardWidget(text: AppStrings.securityDepositLabel),
                         _buildRow(
-                          leading: AppStrings.depositStatusLabel,
+                          leading: AppStrings.initialDepositStatusLabel,
                           trailing: depositStatusValue.title.toString() ?? "-",
                         ),
                         _depositStatusId != "1"
@@ -1047,7 +1047,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         )
                             : Container(),
                         _buildRow(
-                          leading: AppStrings.depositTypeLabel,
+                          leading: AppStrings.schemeTypeLable,
                           trailing: AppStrings.depositName.toString() ?? "-",
                         ),
                         _buildRow(
@@ -1639,7 +1639,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                 items: _depositTypeList,
                 value: _depositTypeValue,
                 hint: Text(
-                    AppStrings.schemeType,
+                    AppStrings.schemeTypeLable,
                     style:  AppStyle.styleN()),
                 onChanged: (DepositItem value) {
                   setState(() {
