@@ -18,10 +18,9 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
 
   @override
   void initState() {
-    PreferenceUtils.init();
-    /* BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
+     BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
       context: context,
-    ));*/
+    ));
     super.initState();
   }
 
@@ -325,7 +324,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       star: AppString.star,
       label:stateData.labelModel.registration == null ? AppString.chargeArea :stateData.labelModel.registration!.chargeArea,
       hint: stateData.labelModel.registration == null ? AppString.chargeArea :stateData.labelModel.registration!.chargeArea,
-      dropdownValue: stateData.chargeAreaValue!.chargeAreaName != null ? stateData.chargeAreaValue:null,
+      dropdownValue: stateData.chargeAreaValue?.chargeAreaName != null ? stateData.chargeAreaValue: null,
       items: stateData.getChargeAreaListModel,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetChargeAreaValue(chargeAreaValue: val));
@@ -338,7 +337,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       star: AppString.star,
       label: stateData.labelModel.registration == null ? AppString.area :stateData.labelModel.registration!.area,
       hint: stateData.labelModel.registration == null ? AppString.area :stateData.labelModel.registration!.area,
-      dropdownValue: stateData.areaValue!.areaName != null ? stateData.areaValue:null,
+      dropdownValue: stateData.areaValue?.areaName != null ? stateData.areaValue:null,
       items: stateData.getAllAreaModel,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetAreaValue(areaValue: val));
@@ -527,7 +526,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       star: AppString.star,
       label: stateData.labelModel.registration == null ? AppString.propertyCategory : stateData.labelModel.registration!.propertyCategory,
       hint: stateData.labelModel.registration == null ? AppString.propertyCategory : stateData.labelModel.registration!.propertyCategory,
-      dropdownValue: stateData.propertyCategoryValue!.name != null ?stateData.propertyCategoryValue :null,
+      dropdownValue: stateData.propertyCategoryValue?.name != null ?stateData.propertyCategoryValue :null,
       items: stateData.getPropertyCategoryModel,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetPropertyCategoryValue(propertyCategoryValue: val));
@@ -540,7 +539,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       star: AppString.star,
       label: stateData.labelModel.registration == null ? AppString.propertyClass :stateData.labelModel.registration!.propertyClass,
       hint: stateData.labelModel.registration == null ? AppString.propertyClass :stateData.labelModel.registration!.propertyClass,
-      dropdownValue: stateData.propertyClassValue!.name != null ? stateData.propertyClassValue:null,
+      dropdownValue: stateData.propertyClassValue?.name != null ? stateData.propertyClassValue:null,
       items: stateData.getPropertyClassModel,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetPropertyClassValue(propertyClassValue: val));
@@ -656,7 +655,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       star: AppString.star,
       label: stateData.labelModel.registration == null ? AppString.district :stateData.labelModel.registration!.district,
       hint: stateData.labelModel.registration == null ? AppString.district :stateData.labelModel.registration!.district,
-      dropdownValue: stateData.allDistrictValue!.districtName != null ? stateData.allDistrictValue :null,
+      dropdownValue: stateData.allDistrictValue?.districtName != null ? stateData.allDistrictValue :null,
       items: stateData.getAllDistrictModel,
       onChanged: (val) {
         BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetDistrictValue(allDistrictValue: val));
@@ -986,7 +985,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       star:AppString.star,
       label:  stateData.labelModel.deposit == null ? AppString.depositType : stateData.labelModel.deposit!.depositType,
       hint: stateData.labelModel.deposit == null ? AppString.depositType : stateData.labelModel.deposit!.depositType,
-      dropdownValue: stateData.depositOfflineValue!.depositName != null ? stateData.depositOfflineValue :null,
+      dropdownValue: stateData.depositOfflineValue?.depositName != null ? stateData.depositOfflineValue :null,
       items: stateData.getAllDepositOfflineList,
       onChanged: (val) {
         log("depositTypeValue-->${stateData.depositOfflineValue!.depositName}");
@@ -1029,8 +1028,8 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
   Widget _modeDepositDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
       star:AppString.star,
-      label: stateData.labelModel.deposit == null ? AppString.modeDeposit : stateData.labelModel.deposit!.modeOfDep,
-      hint: stateData.labelModel.deposit == null ? AppString.modeDeposit : stateData.labelModel.deposit!.modeOfDep,
+      label:AppString.modeDeposit,
+      hint: AppString.modeDeposit,
       dropdownValue: stateData.modeDepositValue == null ? null :stateData.modeDepositValue,
       items: stateData.modeDepositList,
       onChanged: (val) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
 import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
 
 
@@ -85,105 +86,44 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   String? initialDepositStatusValue;
   String? modeDepositValue;
 
-  GetLabelModel _labelModel = GetLabelModel();
-  GetLabelModel get labelModel => _labelModel;
+  GetLabelModel getLabelModel = GetLabelModel();
+  GetNotInterestedModel getNotInterestedModel = GetNotInterestedModel();
+  GetInitialDepositStatusModel getInitialDepositStatusModel = GetInitialDepositStatusModel();
+  GetAcceptExtraFittingCostModel getAcceptExtraFittingCostModel = GetAcceptExtraFittingCostModel();
+  GetAcceptConversionPolicyModel getAcceptConversionPolicyModel = GetAcceptConversionPolicyModel();
+  GetResidentStatusModel getResidentStatusModel = GetResidentStatusModel();
+  GetModeOfDepositModel getModeOfDepositModel = GetModeOfDepositModel();
+  GetEBillingModel getEBillingModel = GetEBillingModel();
+  GetAllDepositOfflineModel getAllDepositOfflineModel = GetAllDepositOfflineModel();
+  GetKycDocModel getKycDocModel = GetKycDocModel();
+  GetOwnershipProofModel getOwnershipProofModel = GetOwnershipProofModel();
+  GetIdentityProofModel getIdentityProofModel = GetIdentityProofModel();
+  GetGuardianTypeModel getGuardianTypeModel = GetGuardianTypeModel();
+  GetExistingCookingFuelModel getExistingCookingFuelModel = GetExistingCookingFuelModel();
+  GetSocietyAllowModel getSocietyAllowModel = GetSocietyAllowModel();
 
-  List _getNotInterestedList = [];
-  List get getNotInterestedList => _getNotInterestedList;
-  GetNotInterestedModel _getNotInterestedModel = GetNotInterestedModel();
-  GetNotInterestedModel get getNotInterestedModel => _getNotInterestedModel;
-
-  List _conversionPolicyList = [];
-  List get conversionPolicyList => _conversionPolicyList;
-  GetAcceptConversionPolicyModel _getAcceptConversionPolicyModel = GetAcceptConversionPolicyModel();
-  GetAcceptConversionPolicyModel get getAcceptConversionPolicyModel => _getAcceptConversionPolicyModel;
-
-  List _extraFittingCostList = [];
-  List get extraFittingCostList => _extraFittingCostList;
-
-  GetAcceptExtraFittingCostModel _getAcceptExtraFittingCostModel = GetAcceptExtraFittingCostModel();
-  GetAcceptExtraFittingCostModel get getAcceptExtraFittingCostModel => _getAcceptExtraFittingCostModel;
-
-  List<GetAllDistrictModel> _getAllDistrictModel = [];
-  List<GetAllDistrictModel> get getAllDistrictModel => _getAllDistrictModel;
-
-  List _societyAllowList = [];
-  List get societyAllowList => _societyAllowList;
-  GetSocietyAllowModel _getSocietyAllowModel = GetSocietyAllowModel();
-  GetSocietyAllowModel get getSocietyAllowModel => _getSocietyAllowModel;
-
-  List _getIdentityProofList = [];
-  List get getIdentityProofList => _getIdentityProofList;
-  GetIdentityProofModel _getIdentityProofModel = GetIdentityProofModel();
-  GetIdentityProofModel get getIdentityProofModel => _getIdentityProofModel;
-
-  List _getOwnershipProofList = [];
-  List get getOwnershipProofList => _getOwnershipProofList;
-  GetOwnershipProofModel _getOwnershipProofModel = GetOwnershipProofModel();
-  GetOwnershipProofModel get getOwnershipProofModel => _getOwnershipProofModel;
-
-  List _getKycDocList = [];
-  List get getKycDocList => _getKycDocList;
-  GetKycDocModel _getKycDocModel = GetKycDocModel();
-  GetKycDocModel get getKycDocModel => _getKycDocModel;
-
-  List _getGuardianTypeList = [];
-  List get getGuardianTypeList => _getGuardianTypeList;
-
-  GetGuardianTypeModel _getGuardianTypeModel = GetGuardianTypeModel();
-  GetGuardianTypeModel get getGuardianTypeModel => _getGuardianTypeModel;
-
-  List _existingCookingFuelList = [];
-  List get existingCookingFuelList => _existingCookingFuelList;
-  GetExistingCookingFuelModel _getExistingCookingFuelModel = GetExistingCookingFuelModel();
-  GetExistingCookingFuelModel get getExistingCookingFuelModel => _getExistingCookingFuelModel;
-
-  List _getResidentStatusList = [];
-  List get getResidentStatusList => _getResidentStatusList;
-  GetResidentStatusModel _getResidentStatusModel = GetResidentStatusModel();
-  GetResidentStatusModel get getResidentStatusModel => _getResidentStatusModel;
-
-  List<GetPropertyCategoryModel> _getPropertyCategoryModel = [];
-  List<GetPropertyCategoryModel> get getPropertyCategoryModel => _getPropertyCategoryModel;
-
-  List<GetPropertyClassModel> _getPropertyClassModel = [];
-  List<GetPropertyClassModel> get getPropertyClassModel => _getPropertyClassModel;
-
-  List<GetAllAreaModel> _getAllAreaModel = [];
-  List<GetAllAreaModel> get getAllAreaModel => _getAllAreaModel;
-
-  List<GetChargeAreaListModel> _getChargeAreaListModel = [];
-  List<GetChargeAreaListModel> get getChargeAreaListModel => _getChargeAreaListModel;
-
-  List _eBillingList = [];
-  List get eBillingList => _eBillingList;
-
-  GetEBillingModel _getEBillingModel = GetEBillingModel();
-  GetEBillingModel get getEBillingModel => _getEBillingModel;
-
-  List _initialDepositStatusList = [];
-  List get initialDepositStatusList => _initialDepositStatusList;
-
-  GetInitialDepositStatusModel _getInitialDepositStatusModel = GetInitialDepositStatusModel();
-  GetInitialDepositStatusModel get getInitialDepositStatusModel => _getInitialDepositStatusModel;
-
-  List<GetAllDepositOfflineModel> _getAllDepositOfflineList = [];
-  List<GetAllDepositOfflineModel> get getAllDepositOfflineList => _getAllDepositOfflineList;
-
-  GetAllDepositOfflineModel _getAllDepositOfflineModel = GetAllDepositOfflineModel();
-  GetAllDepositOfflineModel get getAllDepositOfflineModel => _getAllDepositOfflineModel;
-
-  List _modeDepositList = [];
-  List get modeDepositList => _modeDepositList;
-
-  List _custBankNameList = [];
-  List get custBankNameList => _custBankNameList;
-
-  List _paymentBankNameList = [];
-  List get paymentBankNameList => _paymentBankNameList;
-
-  GetModeOfDepositModel _getModeOfDepositModel = GetModeOfDepositModel();
-  GetModeOfDepositModel get getModeOfDepositModel => _getModeOfDepositModel;
+  List<GetLabelModel> listOfAllLabel = [];
+  List<GetNotInterestedModel> listOfNotInterested = [];
+  List<GetInitialDepositStatusModel> listOfInitialDepositStatus = [];
+  List<GetAcceptExtraFittingCostModel> listOfExtraFittingCost = [];
+  List<GetAcceptConversionPolicyModel> listOfConversionPolicy = [];
+  List<GetAllDistrictModel> listOfAllDistrict = [];
+  List<GetResidentStatusModel> listOfResidentStatus = [];
+  List<GetModeOfDepositModel> listOfModeOfDeposit = [];
+  List<GetEBillingModel> listOfEBilling = [];
+  List<GetKycDocModel> listOfKycDoc = [];
+  List<GetOwnershipProofModel> listOfOwnershipProof = [];
+  List<GetIdentityProofModel> listOfIdentityProof = [];
+  List<GetGuardianTypeModel> listOfGuardianType = [];
+  List<GetExistingCookingFuelModel> listOfCookingFuel = [];
+  List<GetSocietyAllowModel> listOfSocietyAllow = [];
+  List<GetPropertyClassModel> listOfProClass = [];
+  List<GetPropertyCategoryModel> listOfProCategory = [];
+  List<GetAllAreaModel> listOfAllArea = [];
+  List<GetChargeAreaListModel> listOfChargeArea = [];
+  List<GetAllDepositOfflineModel> listOfDepositOffline = [];
+  List listOfCustBankName = [];
+  List listOfChqBankName = [];
 
   CustRegSync _saveCusRegData = CustRegSync();
   CustRegSync get saveCusRegData => _saveCusRegData;
@@ -206,36 +146,36 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
 
 
 
-   TextEditingController reasonRegistrationController = TextEditingController();
-   TextEditingController mobileController = TextEditingController();
-   TextEditingController altMobileController = TextEditingController();
-   TextEditingController firstController = TextEditingController();
-   TextEditingController middleController = TextEditingController();
-   TextEditingController lastController = TextEditingController();
+  TextEditingController reasonRegistrationController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController altMobileController = TextEditingController();
+  TextEditingController firstController = TextEditingController();
+  TextEditingController middleController = TextEditingController();
+  TextEditingController lastController = TextEditingController();
   TextEditingController guardianNameController = TextEditingController();
-   TextEditingController emailIdController = TextEditingController();
-   TextEditingController buildingNumberController = TextEditingController();
-   TextEditingController houseNumberController = TextEditingController();
-   TextEditingController colonyController = TextEditingController();
-   TextEditingController streetController = TextEditingController();
-   TextEditingController townController = TextEditingController();
-   TextEditingController pinCodeController = TextEditingController();
-   TextEditingController numberKitchenController = TextEditingController(text: "1");
-   TextEditingController numberBathroomController = TextEditingController(text: "1");
-   TextEditingController familyMemberController = TextEditingController(text: "4");
-   TextEditingController nearestLandmarkController = TextEditingController();
-   TextEditingController kyc1NumberController = TextEditingController();
-   TextEditingController kyc2NumberController = TextEditingController();
-   TextEditingController kyc3NumberController = TextEditingController();
-   TextEditingController custBankAccNumberController = TextEditingController();
-   TextEditingController custIfscCodeController = TextEditingController();
-   TextEditingController custBankAddController = TextEditingController();
-   TextEditingController reasonDepositStsController = TextEditingController();
-   TextEditingController depositAmountController = TextEditingController();
-   TextEditingController chequeNoController = TextEditingController();
-   TextEditingController chequeDateController = TextEditingController();
-   TextEditingController chequeAccountNoController = TextEditingController();
-   TextEditingController chequeMicrNoController = TextEditingController();
+  TextEditingController emailIdController = TextEditingController();
+  TextEditingController buildingNumberController = TextEditingController();
+  TextEditingController houseNumberController = TextEditingController();
+  TextEditingController colonyController = TextEditingController();
+  TextEditingController streetController = TextEditingController();
+  TextEditingController townController = TextEditingController();
+  TextEditingController pinCodeController = TextEditingController();
+  TextEditingController numberKitchenController = TextEditingController(text: "1");
+  TextEditingController numberBathroomController = TextEditingController(text: "1");
+  TextEditingController familyMemberController = TextEditingController(text: "4");
+  TextEditingController nearestLandmarkController = TextEditingController();
+  TextEditingController kyc1NumberController = TextEditingController();
+  TextEditingController kyc2NumberController = TextEditingController();
+  TextEditingController kyc3NumberController = TextEditingController();
+  TextEditingController custBankAccNumberController = TextEditingController();
+  TextEditingController custIfscCodeController = TextEditingController();
+  TextEditingController custBankAddController = TextEditingController();
+  TextEditingController reasonDepositStsController = TextEditingController();
+  TextEditingController depositAmountController = TextEditingController();
+  TextEditingController chequeNoController = TextEditingController();
+  TextEditingController chequeDateController = TextEditingController();
+  TextEditingController chequeAccountNoController = TextEditingController();
+  TextEditingController chequeMicrNoController = TextEditingController();
   TextEditingController latController = TextEditingController();
   TextEditingController longController = TextEditingController();
 
@@ -248,50 +188,30 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     await SharedPreferences.getInstance();
     _isPageLoader = false;
     _isUpdate = false;
-    _labelModel = GetLabelModel();
-    chargeAreaValue = GetChargeAreaListModel();
-    areaValue = GetAllAreaModel();
-    propertyCategoryValue = GetPropertyCategoryModel();
-    propertyClassValue = GetPropertyClassModel();
-    allDistrictValue = GetAllDistrictModel();
-    depositTypeValue = GetAllDepositOfflineModel();
-     interestValue = null;
-     conversionPolicyValue = null;
-     extraFittingValue = null;
-     societyAllowValue = null;
-     guardianTypeValue = null;
-     residentStatusValue = null;
-     existingCookingFuelValue = null;
-     kycDoc1Value = null;
-     kycDoc2Value = null;
-     kycDoc3Value = null;
-     preferredBillValue = null;
-     custBankNameValue = null;
-     paymentBankNameValue = null;
-     initialDepositStatusValue = null;
-     modeDepositValue = null;
-    _getNotInterestedList = [];
-    _extraFittingCostList = [];
-    _conversionPolicyList = [];
-    _societyAllowList = [];
-    _getChargeAreaListModel = [];
-    _getAllAreaModel = [];
-    _getGuardianTypeList = [];
-    _getPropertyCategoryModel = [];
-    _getPropertyClassModel = [];
-    _getAllDistrictModel = [];
-    _getResidentStatusList = [];
-    _existingCookingFuelList = [];
-    _getIdentityProofList = [];
-    _getOwnershipProofList = [];
-    _getKycDocList = [];
-    _eBillingList = [];
-    _initialDepositStatusList = [];
-    _getAllDepositOfflineList = [];
-    _getAllDepositOfflineModel = GetAllDepositOfflineModel();
-    _modeDepositList = [];
-    _custBankNameList = [];
-    _paymentBankNameList = [];
+    listOfAllLabel = [];
+    listOfNotInterested = [];
+    listOfInitialDepositStatus = [];
+    listOfExtraFittingCost = [];
+    listOfConversionPolicy = [];
+    listOfAllDistrict = [];
+    listOfResidentStatus = [];
+    listOfModeOfDeposit = [];
+    listOfEBilling = [];
+    listOfKycDoc = [];
+    listOfOwnershipProof = [];
+    listOfIdentityProof = [];
+    listOfGuardianType = [];
+    listOfCookingFuel = [];
+    listOfSocietyAllow = [];
+    listOfProClass = [];
+    listOfProCategory = [];
+    listOfAllArea = [];
+    listOfChargeArea = [];
+    listOfDepositOffline = [];
+    listOfCustBankName = [];
+    listOfChqBankName = [];
+    getLabelModel = GetLabelModel();
+    getNotInterestedModel = GetNotInterestedModel();
     idBackPath = File("");
     idFrontPath =  File("");
     addBackPath =  File("");
@@ -307,7 +227,31 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     chequePath = File("");
     canceledCheque = File("");
     customerConsent = File("");
-    await fetchLabelApi(context: event.context);
+
+    listOfAllLabel = HiveDataBase.allLabelBox!.values.toSet().toList();
+    listOfNotInterested =HiveDataBase.notInterestedBox!.values.toSet().toList();
+    listOfInitialDepositStatus =HiveDataBase.initDepositStatusBox!.values.toSet().toList();
+    listOfExtraFittingCost =HiveDataBase.acceptExtraFittingCostBox!.values.toSet().toList();
+    listOfConversionPolicy =HiveDataBase.acceptConversionPolicyBox!.values.toSet().toList();
+    listOfAllDistrict =HiveDataBase.allDistrictBox!.values.toSet().toList();
+    listOfResidentStatus =HiveDataBase.resStatusBox!.values.toSet().toList();
+    listOfModeOfDeposit =HiveDataBase.modeOfDepositBox!.values.toSet().toList();
+    listOfEBilling =HiveDataBase.eBillingBox!.values.toSet().toList();
+    listOfKycDoc =HiveDataBase.kycDocBox!.values.toSet().toList();
+    listOfOwnershipProof =HiveDataBase.ownershipProofBox!.values.toSet().toList();
+    listOfIdentityProof =HiveDataBase.idProofBox!.values.toSet().toList();
+    listOfGuardianType =HiveDataBase.guardianTypeBox!.values.toSet().toList();
+    listOfCookingFuel =HiveDataBase.cookingFuelBox!.values.toSet().toList();
+    listOfSocietyAllow =HiveDataBase.societyAllowBox!.values.toSet().toList();
+    listOfProClass =HiveDataBase.proClassBox!.values.toSet().toList();
+    listOfProCategory =HiveDataBase.proCateBox!.values.toSet().toList();
+    listOfAllArea =HiveDataBase.allAreaBox!.values.toSet().toList();
+    listOfChargeArea =HiveDataBase.chargeAreaListBox!.values.toSet().toList();
+    listOfDepositOffline =HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
+    listOfCustBankName =HiveDataBase.allLabelBox!.values.toSet().toList();
+    listOfChqBankName =HiveDataBase.allLabelBox!.values.toSet().toList();
+
+  /*  await fetchLabelApi(context: event.context);
     await fetchNotInterestedApi(context: event.context);
     await fetchInitialDepositStatusApi(context: event.context);
     await fetchModeOfDepositApi(context: event.context);
@@ -326,7 +270,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     await fetchPropertyCategoryApi(context: event.context);
     await fetchAllAreaApi(context: event.context);
     await fetchChargeAreaListApi(context: event.context);
-    await fetchAllDepositOfflineApi(context: event.context);
+    await fetchAllDepositOfflineApi(context: event.context);*/
     await fetchBackNameListApi(context: event.context);
     _setLocation();
     _eventCompleted(emit);
@@ -598,87 +542,90 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   fetchLabelApi({required BuildContext context}) async {
     var res = await DashboardHelper.getLabelApi(context: context);
     if (res != null) {
-      _labelModel = res;
+      getLabelModel = res;
     }
   }
 
   fetchNotInterestedApi({required BuildContext context}) async {
     var res = await DashboardHelper.getNotInterestedApi(context: context);
     if (res != null) {
-      _getNotInterestedModel = res;
-      _getNotInterestedList = res.toJson().values.toList();
+      getNotInterestedModel = res;
+      //  listOfNotInterested = getNotInterestedModel!.toJson().values.toList();
+      listOfNotInterested = getNotInterestedModel.toJson().entries.cast<GetNotInterestedModel>().toList();
     }
   }
 
   fetchAcceptConversionPolicyApi({required BuildContext context}) async {
     var res = await DashboardHelper.getAcceptConversionPolicyApi(context: context);
     if (res != null) {
-      _getAcceptConversionPolicyModel = res;
-      _conversionPolicyList = res.toJson().values.toList();
-      conversionPolicyValue = _conversionPolicyList.first.toString();
+      getAcceptConversionPolicyModel = res;
+      listOfConversionPolicy = getAcceptConversionPolicyModel.toJson().entries.cast<GetAcceptConversionPolicyModel>().toList();
+      conversionPolicyValue = listOfConversionPolicy.first.toString();
     }
   }
 
   fetchAcceptExtraFittingCostApi({required BuildContext context}) async {
     var res = await DashboardHelper.getAcceptExtraFittingCostApi(context: context);
     if (res != null) {
-      _getAcceptExtraFittingCostModel = res;
-      _extraFittingCostList = res.toJson().values.toList();
-      extraFittingValue = _extraFittingCostList.first.toString();
+      getAcceptExtraFittingCostModel = res;
+      listOfExtraFittingCost = getAcceptExtraFittingCostModel.toJson().entries.cast<GetAcceptExtraFittingCostModel>().toList();
+      extraFittingValue = listOfExtraFittingCost.first.toString();
     }
   }
 
   fetchSocietyAllowApi({required BuildContext context}) async {
     var res = await DashboardHelper.getSocietyAllowApi(context: context);
     if (res != null) {
-      _getSocietyAllowModel = res;
-      _societyAllowList = res.toJson().values.toList();
-      societyAllowValue = _societyAllowList.last.toString();
+      getSocietyAllowModel = res;
+      listOfSocietyAllow = getSocietyAllowModel.toJson().entries.cast<GetSocietyAllowModel>().toList();
+      societyAllowValue = listOfSocietyAllow.last.toString();
     }
   }
 
   fetchChargeAreaListApi({required BuildContext context}) async {
     var chargeAreaListRes = await DashboardHelper.getChargeAreaListApi(context: context);
     if (chargeAreaListRes != null) {
-     // _getChargeAreaListModel = chargeAreaListRes;
+      // _getChargeAreaListModel = chargeAreaListRes;
     }
   }
 
   fetchBackNameListApi({required BuildContext context}) async {
     var bankNameListRes = await DashboardHelper.getBankNameListApi(context: context);
     if (bankNameListRes != null) {
-      _custBankNameList = bankNameListRes;
-      _paymentBankNameList = bankNameListRes;
+      listOfCustBankName.clear();
+      listOfChqBankName.clear();
+      listOfCustBankName = bankNameListRes;
+      listOfChqBankName = bankNameListRes;
     }
   }
 
   fetchAllAreaApi({required BuildContext context}) async {
     var allAreaRes = await DashboardHelper.getAllAreaApi(context: context);
     if (allAreaRes != null) {
-   //   _getAllAreaModel = allAreaRes;
+      //   _getAllAreaModel = allAreaRes;
     }
   }
 
   fetchGuardianTypeApi({required BuildContext context}) async {
     var res = await DashboardHelper.getGuardianTypeApi(context: context);
     if (res != null) {
-      _getGuardianTypeModel = res;
-      _getGuardianTypeList = res.toJson().values.toList();
-      guardianTypeValue = _getGuardianTypeList.first.toString();
+      getGuardianTypeModel = res;
+      listOfGuardianType = getGuardianTypeModel.toJson().entries.cast<GetGuardianTypeModel>().toList();
+      guardianTypeValue = listOfGuardianType.first.toString();
     }
   }
 
   fetchPropertyCategoryApi({required BuildContext context}) async {
     var res = await DashboardHelper.getPropertyCategoryApi(context: context);
     if (res != null) {
-    //  _getPropertyCategoryModel = res;
+      //  _getPropertyCategoryModel = res;
     }
   }
 
   Future<List<GetPropertyClassModel>?> fetchPropertyClassApi({required BuildContext context}) async {
     var res = await DashboardHelper.getPropertyClassApi(context: context);
     if (res != null) {
-    //  _getPropertyClassModel = res;
+      //  _getPropertyClassModel = res;
       //  _propertyClassValue = _getPropertyClassModel.first.toString();
     }
     return null;
@@ -687,87 +634,87 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   fetchAllDistrictApi({required BuildContext context}) async {
     var res = await DashboardHelper.getAllDistrictModelApi(context: context);
     if (res != null) {
-    //  _getAllDistrictModel = res!;
+      //  _getAllDistrictModel = res!;
     }
   }
 
   fetchResidentStatusApi({required BuildContext context}) async {
     var res = await DashboardHelper.getResidentStatusApi(context: context);
     if (res != null) {
-      _getResidentStatusModel = res;
-      _getResidentStatusList = res.toJson().values.toList();
-      residentStatusValue = _getResidentStatusList.first.toString();
+      getResidentStatusModel = res;
+      listOfResidentStatus = getResidentStatusModel.toJson().entries.cast<GetResidentStatusModel>().toList();
+      residentStatusValue = listOfResidentStatus.first.toString();
     }
   }
 
   fetchIdentityProofApi({required BuildContext context}) async {
     var res = await DashboardHelper.getIdentityProofApi(context: context);
     if (res != null) {
-      _getIdentityProofModel = res;
-      _getIdentityProofList = res.toJson().values.toList();
-      kycDoc1Value = _getIdentityProofList.first.toString();
+      getIdentityProofModel = res;
+      listOfIdentityProof = res.toJson().entries.cast<GetIdentityProofModel>().toList();
+      kycDoc1Value = listOfIdentityProof.first.toString();
     }
   }
 
   fetchOwnershipProofApi({required BuildContext context}) async {
     var res = await DashboardHelper.getOwnershipProofApi(context: context);
     if (res != null) {
-      _getOwnershipProofModel = res;
-      _getOwnershipProofList = res.toJson().values.toList();
-      kycDoc2Value = _getOwnershipProofList.first.toString();
+      getOwnershipProofModel = res;
+      listOfOwnershipProof = getOwnershipProofModel.toJson().entries.cast<GetOwnershipProofModel>().toList();
+      kycDoc2Value = listOfOwnershipProof.first.toString();
     }
   }
 
   fetchKycDocApi({required BuildContext context}) async {
     var res = await DashboardHelper.getKycDocApi(context: context);
     if (res != null) {
-      _getKycDocModel = res;
-      _getKycDocList = res.toJson().values.toList();
-      kycDoc3Value = _getKycDocList.first.toString();
+      getKycDocModel = res;
+      listOfKycDoc = getKycDocModel.toJson().entries.cast<GetKycDocModel>().toList();
+      kycDoc3Value = listOfKycDoc.first.toString();
     }
   }
 
   fetchExistingCookingFuelApi({required BuildContext context}) async {
     var res = await DashboardHelper.getExistingCookingFuelApi(context: context);
     if (res != null) {
-      _getExistingCookingFuelModel = res;
-      _existingCookingFuelList = res.toJson().values.toList();
-      existingCookingFuelValue = _existingCookingFuelList.first.toString();
+      getExistingCookingFuelModel = res;
+      listOfCookingFuel = getExistingCookingFuelModel.toJson().entries.cast<GetExistingCookingFuelModel>().toList();
+      existingCookingFuelValue = listOfCookingFuel.first.toString();
     }
   }
 
   fetchEBillingApi({required BuildContext context}) async {
     var res = await DashboardHelper.getEBillingApi(context: context);
     if (res != null) {
-      _getEBillingModel = res;
-      _eBillingList = res.toJson().values.toList();
-      _eBillingList.sort();
-      preferredBillValue = _eBillingList.last..toString();
+      getEBillingModel = res;
+      listOfEBilling = getEBillingModel.toJson().entries.cast<GetEBillingModel>().toList();
+      listOfEBilling.sort();
+      preferredBillValue = listOfEBilling.last.toString();
     }
   }
 
   fetchInitialDepositStatusApi({required BuildContext context}) async {
     var res = await DashboardHelper.getInitialDepositStatusApi(context: context);
     if (res != null) {
-      _getInitialDepositStatusModel = res;
-      _initialDepositStatusList = res.toJson().values.toList();
-      _initialDepositStatusList.sort();
-      initialDepositStatusValue = _initialDepositStatusList.last.toString();
+      getInitialDepositStatusModel = res;
+      listOfInitialDepositStatus = getInitialDepositStatusModel.toJson().entries.cast<GetInitialDepositStatusModel>().toList();
+      listOfInitialDepositStatus.sort();
+      initialDepositStatusValue = listOfInitialDepositStatus.last.toString();
     }
   }
 
   fetchAllDepositOfflineApi({required BuildContext context}) async {
     var res = await DashboardHelper.getAllDepositOfflineApi(context: context);
     if (res != null) {
-     // _getAllDepositOfflineList = res;
+      // _getAllDepositOfflineList = res;
     }
   }
 
   fetchModeOfDepositApi({required BuildContext context}) async {
     var res = await DashboardHelper.getModeOfDepositApi(context: context);
     if (res != null) {
-      _getModeOfDepositModel = res;
-      _modeDepositList = res.toJson().values.toList();
+      getModeOfDepositModel = res;
+      listOfModeOfDeposit = getModeOfDepositModel.toJson().entries.cast<GetModeOfDepositModel>().toList();
     }
   }
 
@@ -894,55 +841,55 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     emit(CustomRegistrationFormGetAllDataState(
       isPageLoader : isPageLoader,
       isUpdate : isUpdate,
-      labelModel: labelModel,
+      labelModel: getLabelModel,
       interestValue: interestValue,
-      getNotInterestedList: getNotInterestedList,
+      getNotInterestedList: listOfNotInterested,
       conversionPolicyValue: conversionPolicyValue,
-      conversionPolicyList: conversionPolicyList,
+      conversionPolicyList: listOfConversionPolicy,
       extraFittingValue: extraFittingValue,
-      extraFittingCostList: extraFittingCostList,
+      extraFittingCostList: listOfExtraFittingCost,
       societyAllowValue: societyAllowValue,
-      societyAllowList: societyAllowList,
+      societyAllowList: listOfSocietyAllow,
       getNotInterestedModel: getNotInterestedModel,
       getAcceptConversionPolicyModel: getAcceptConversionPolicyModel,
       getAcceptExtraFittingCostModel: getAcceptExtraFittingCostModel,
       getSocietyAllowModel: getSocietyAllowModel,
       chargeAreaValue: chargeAreaValue,
-      getChargeAreaListModel: getChargeAreaListModel,
+      getChargeAreaListModel: listOfChargeArea,
       areaValue: areaValue,
-      getAllAreaModel: getAllAreaModel,
+      getAllAreaModel: listOfAllArea,
       guardianTypeValue: guardianTypeValue,
-      getGuardianTypeList: getGuardianTypeList,
+      getGuardianTypeList: listOfGuardianType,
       propertyCategoryValue: propertyCategoryValue,
       propertyClassValue: propertyClassValue,
       identityProofValue: kycDoc1Value,
-      identityProofList: getIdentityProofList,
+      identityProofList: listOfIdentityProof,
       getIdentityProofModel: getIdentityProofModel,
       ownershipProofValue: kycDoc2Value,
-      ownershipProofList: getOwnershipProofList,
+      ownershipProofList: listOfOwnershipProof,
       getOwnershipProofModel: getOwnershipProofModel,
       kycDoc3Value: kycDoc3Value,
-      kycDocList: getKycDocList,
+      kycDocList: listOfKycDoc,
       getKycDocModel: getKycDocModel,
       getGuardianTypeModel: getGuardianTypeModel,
       existingCookingFuelValue: existingCookingFuelValue,
-      existingCookingFuelList: existingCookingFuelList,
+      existingCookingFuelList: listOfCookingFuel,
       getExistingCookingFuelModel: getExistingCookingFuelModel,
       residentStatusValue: residentStatusValue,
-      getResidentStatusList: getResidentStatusList,
+      getResidentStatusList: listOfResidentStatus,
       getResidentStatusModel: getResidentStatusModel,
-      getPropertyClassModel: getPropertyClassModel,
-      getPropertyCategoryModel: getPropertyCategoryModel,
+      getPropertyClassModel: listOfProClass,
+      getPropertyCategoryModel: listOfProCategory,
       eBillingValue: preferredBillValue,
-      eBillingList: eBillingList,
+      eBillingList: listOfEBilling,
       getEBillingModel: getEBillingModel,
       initialDepositStatusValue: initialDepositStatusValue,
-      initialDepositStatusList: initialDepositStatusList,
+      initialDepositStatusList: listOfInitialDepositStatus,
       depositOfflineValue: depositTypeValue,
       getAllDepositOfflineModel: getAllDepositOfflineModel,
-      getAllDepositOfflineList: getAllDepositOfflineList,
+      getAllDepositOfflineList: listOfDepositOffline,
       modeDepositValue: modeDepositValue,
-      modeDepositList: modeDepositList,
+      modeDepositList: listOfModeOfDeposit,
       getInitialDepositStatusModel: getInitialDepositStatusModel,
       getModeOfDepositModel: getModeOfDepositModel,
       reasonRegistrationController: reasonRegistrationController,
@@ -972,7 +919,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       reasonDepositStsController: reasonDepositStsController,
       depositAmountController: depositAmountController,
       allDistrictValue: allDistrictValue,
-      getAllDistrictModel: getAllDistrictModel,
+      getAllDistrictModel: listOfAllDistrict,
       latitudeController: latController,
       longitudeController: longController,
       chequeNoController: chequeNoController,
@@ -981,8 +928,8 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       chequeMicrNoController: chequeMicrNoController,
       custBankNameValue: custBankNameValue,
       paymentBankNameValue: paymentBankNameValue,
-      custBankNameList: custBankNameList,
-      paymentBankNameList: paymentBankNameList,
+      custBankNameList: listOfCustBankName,
+      paymentBankNameList: listOfChqBankName,
       idBackFilePath: idBackPath,
       idFrontFilePath: idFrontPath,
       eleBillFrontPath: addFrontPath,

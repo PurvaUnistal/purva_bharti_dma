@@ -27,4 +27,9 @@ class GetAcceptExtraFittingCostModel {
     data['3'] = this.s3;
     return data;
   }
+  @override
+  String toString() {
+    // TODO: implement toString
+    return '{ ${this.s1}, ${this.s2}${this.s3} }';
+  }
 }

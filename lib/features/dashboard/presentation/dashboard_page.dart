@@ -16,10 +16,10 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
-    //  PreferenceUtils.init();
-    /*   BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormPageLoadEvent(
+      PreferenceUtils.init();
+    BlocProvider.of<DashboardBloc>(context).add(SelectSyncFetchAllDataEvent(
       context: context,
-    ));*/
+    ));
     super.initState();
   }
 

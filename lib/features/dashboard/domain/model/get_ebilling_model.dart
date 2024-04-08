@@ -25,4 +25,9 @@ class GetEBillingModel {
     data['2'] = this.s2;
     return data;
   }
+  @override
+  String toString() {
+    // TODO: implement toString
+    return '{ ${this.s1}, ${this.s2}}';
+  }
 }

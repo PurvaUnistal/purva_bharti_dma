@@ -42,7 +42,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   GetInitialDepositStatusModel getInitialDepositStatusModel = GetInitialDepositStatusModel();
   GetAcceptExtraFittingCostModel getAcceptExtraFittingCostModel = GetAcceptExtraFittingCostModel();
   GetAcceptConversionPolicyModel getAcceptConversionPolicyModel = GetAcceptConversionPolicyModel();
-  GetAllDistrictModel getAllDistrictModel = GetAllDistrictModel();
   GetResidentStatusModel getResidentStatusModel = GetResidentStatusModel();
   GetModeOfDepositModel getModeOfDepositModel = GetModeOfDepositModel();
   GetEBillingModel getEBillingModel = GetEBillingModel();

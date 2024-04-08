@@ -34,4 +34,9 @@ class GetGuardianTypeModel {
         "Father": father,
         "Spouse": spouse,
       };
+  @override
+  String toString() {
+    // TODO: implement toString
+    return '{ ${this.father}, ${this.spouse} }';
+  }
 }

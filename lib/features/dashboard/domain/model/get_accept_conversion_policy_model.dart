@@ -1,7 +1,14 @@
-
+import 'dart:convert';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
 part 'get_accept_conversion_policy_model.g.dart';
+
+List<GetAcceptConversionPolicyModel> getAcceptConversionPolicyModelFromJson(String str) =>
+    List<GetAcceptConversionPolicyModel>.from(
+        json.decode(str).map((x) => GetAcceptConversionPolicyModel.fromJson(x)));
+
+String getAcceptConversionPolicyModelToJson(List<GetAcceptConversionPolicyModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 @HiveType(typeId: HiveTypeId.GetAcceptConversionPolicyId)
 
@@ -27,5 +34,10 @@ class GetAcceptConversionPolicyModel {
     data['2'] = this.s2;
     data['3'] = this.s3;
     return data;
+  }
+  @override
+  String toString() {
+    // TODO: implement toString
+    return '{ ${this.s1}, ${this.s2}${this.s3} }';
   }
 }

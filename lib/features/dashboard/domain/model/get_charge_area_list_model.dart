@@ -48,14 +48,14 @@ class GetChargeAreaListModel {
 
   factory GetChargeAreaListModel.fromJson(Map<String, dynamic> json) =>
       GetChargeAreaListModel(
-        gid: json["gid"],
-        chargeAreaCode: json["charge_area_code"],
-        projectId: json["project_id"],
-        objectid: json["objectid"],
-        shapeLeng: json["shape_leng"],
-        shapeArea: json["shape_area"],
-        chargeAreaName: json["charge_area_name"],
-        billingType: json["billing_type"],
+        gid: json["gid"] ?? "",
+        chargeAreaCode: json["charge_area_code"] ?? "",
+        projectId: json["project_id"] ?? "",
+        objectid: json["objectid"] ?? "",
+        shapeLeng: json["shape_leng"] ?? "",
+        shapeArea: json["shape_area"] ?? "",
+        chargeAreaName: json["charge_area_name"] ?? "",
+        billingType: json["billing_type"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
