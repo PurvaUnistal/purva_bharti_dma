@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 class DropdownWidget<T> extends StatelessWidget {
-  final T? dropdownValue;
+  final dynamic dropdownValue;
   final String hint;
   final String? label;
   final String? star;
 //  final ValueChanged<T?> onChanged;
-  final void Function(T?)? onChanged;
-  final List<T> items;
+  final void Function(dynamic)? onChanged;
+  final List<dynamic> items;
 
    DropdownWidget({
     Key? key,
@@ -22,7 +22,7 @@ class DropdownWidget<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<T>(
+    return DropdownButtonFormField<dynamic>(
         borderRadius: BorderRadius.circular(5),
         decoration: InputDecoration(
           fillColor: AppColor.white,
@@ -49,8 +49,8 @@ class DropdownWidget<T> extends StatelessWidget {
         style: Styles.labels,
         isExpanded: true,
         value: dropdownValue != null ? dropdownValue : null,
-        items: items.map<DropdownMenuItem<T>>((T value) {
-          return DropdownMenuItem<T>(
+        items: items.map<DropdownMenuItem<dynamic>>((dynamic value) {
+          return DropdownMenuItem<dynamic>(
             value: value,
             child: Text(
               value.toString(),

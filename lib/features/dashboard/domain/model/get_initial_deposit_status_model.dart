@@ -7,25 +7,32 @@ part 'get_initial_deposit_status_model.g.dart';
 @HiveType(typeId: HiveTypeId.GetInitDepositStatusId)
 class GetInitialDepositStatusModel {
   @HiveField(0)
-  String? s0;
+  String? key;
   @HiveField(1)
-  String? s1;
-  @HiveField(2)
-  String? s2;
+  String? value;
 
-  GetInitialDepositStatusModel({this.s0, this.s1, this.s2});
+  GetInitialDepositStatusModel({this.key, this.value,});
 
   GetInitialDepositStatusModel.fromJson(Map<String, dynamic> json) {
-    s0 = json['0'];
-    s1 = json['1'];
-    s2 = json['2'];
+    key = json['key'];
+    value = json['value'];
   }
+
+  static List<GetInitialDepositStatusModel> mapToList(Map<String, dynamic> mapData) {
+    return mapData.entries.map((e) => GetInitialDepositStatusModel(key: e.key, value: e.value)).toList();
+  }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['0'] = this.s0;
-    data['1'] = this.s1;
-    data['2'] = this.s2;
+    data['key'] = this.key;
+    data['value'] = this.value;
     return data;
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return value ?? "";
   }
 }

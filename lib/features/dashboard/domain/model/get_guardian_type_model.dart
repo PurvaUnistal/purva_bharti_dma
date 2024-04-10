@@ -16,27 +16,31 @@ String getGuardianTypeModelToJson(GetGuardianTypeModel data) => json.encode(data
 
 class GetGuardianTypeModel {
   @HiveField(0)
-  final String? father;
+  final String? key;
   @HiveField(1)
-  final String? spouse;
+  final String? value;
 
   GetGuardianTypeModel({
-    this.father,
-    this.spouse,
+    this.key,
+    this.value,
   });
 
   factory GetGuardianTypeModel.fromJson(Map<String, dynamic> json) => GetGuardianTypeModel(
-        father: json["Father"],
-        spouse: json["Spouse"],
+        key: json["key"],
+        value: json["value"],
       );
 
+  static List<GetGuardianTypeModel> mapToList(Map<String, dynamic> mapData) {
+    return mapData.entries.map((e) => GetGuardianTypeModel(key: e.key, value: e.value)).toList();
+  }
+
   Map<String, dynamic> toJson() => {
-        "Father": father,
-        "Spouse": spouse,
+        "key": key,
+        "value": value,
       };
   @override
   String toString() {
     // TODO: implement toString
-    return '{ ${this.father}, ${this.spouse} }';
+    return value ?? "";
   }
 }

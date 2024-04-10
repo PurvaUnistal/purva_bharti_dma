@@ -27,7 +27,7 @@ class AppString{
 
   static String locationLat = 'Latitude';
   static String locationLong = 'Longitude';
-  static String star = "*";
+  static String star = "* ";
 
   static String registrationType =  'Registration Type';
   static String reasonRegistration =  'Reason Registration';
@@ -52,7 +52,8 @@ class AppString{
   static String pinCode = 'Pin Code';
   static String noOfKitchen = 'Kitchen No.';
   static String noOfBathroom = 'Bathroom No.';
-  static String fuel = 'Existing Cooking Fuel';
+//  static String fuel = 'Existing Cooking Fuel';
+  static String fuel = 'Cooking Fuel';
   static String noOfFamilyMembers = 'Family Members No.';
   static String nearestLandmark = 'Nearest Landmark';
   static String idProof = 'KYC(Identification Proof)';

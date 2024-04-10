@@ -7,27 +7,31 @@ part 'get_kyc_doc_model.g.dart';
 @HiveType(typeId: HiveTypeId.GetKycDocId)
 class GetKycDocModel {
   @HiveField(0)
-  String? s1;
+  String? key;
   @HiveField(1)
-  String? s2;
-  @HiveField(2)
-  String? s3;
+  String? value;
 
-  GetKycDocModel({this.s1, this.s2,
-    this.s3
+  GetKycDocModel({this.key, this.value,
   });
 
   GetKycDocModel.fromJson(Map<String, dynamic> json) {
-    s1 = json['1'] == null ? "" : json['1'];
-    s2 = json['2'] == null ? "" : json['2'];
-    s3 = json['3']== null ? "" : json['3'];
+    key = json['key'] == null ? "" : json['key'];
+    value = json['value'] == null ? "" : json['value'];
+  }
+
+  static List<GetKycDocModel> mapToList(Map<String, dynamic> mapData) {
+    return mapData.entries.map((e) => GetKycDocModel(key: e.key, value: e.value)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['1'] = this.s1;
-    data['2'] = this.s2;
-    data['3'] = this.s3;
+    data['key'] = this.key;
+    data['value'] = this.value;
     return data;
+  }
+  @override
+  String toString() {
+    // TODO: implement toString
+    return value ?? "";
   }
 }

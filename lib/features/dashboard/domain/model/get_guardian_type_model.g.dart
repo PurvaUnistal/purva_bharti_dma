@@ -17,8 +17,8 @@ class GetGuardianTypeModelAdapter extends TypeAdapter<GetGuardianTypeModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GetGuardianTypeModel(
-      father: fields[0] as String?,
-      spouse: fields[1] as String?,
+      key: fields[0] as String?,
+      value: fields[1] as String?,
     );
   }
 
@@ -27,9 +27,9 @@ class GetGuardianTypeModelAdapter extends TypeAdapter<GetGuardianTypeModel> {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.father)
+      ..write(obj.key)
       ..writeByte(1)
-      ..write(obj.spouse);
+      ..write(obj.value);
   }
 
   @override

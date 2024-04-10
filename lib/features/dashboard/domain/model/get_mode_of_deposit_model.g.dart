@@ -17,8 +17,8 @@ class GetModeOfDepositModelAdapter extends TypeAdapter<GetModeOfDepositModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GetModeOfDepositModel(
-      s1: fields[0] as String?,
-      s2: fields[1] as String?,
+      key: fields[0] as String?,
+      value: fields[1] as String?,
     );
   }
 
@@ -27,9 +27,9 @@ class GetModeOfDepositModelAdapter extends TypeAdapter<GetModeOfDepositModel> {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.s1)
+      ..write(obj.key)
       ..writeByte(1)
-      ..write(obj.s2);
+      ..write(obj.value);
   }
 
   @override

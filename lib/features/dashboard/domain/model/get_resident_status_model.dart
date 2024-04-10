@@ -19,27 +19,31 @@ String getResidentStatusModelToJson(GetResidentStatusModel data) => json.encode(
 
 class GetResidentStatusModel {
   @HiveField(0)
-  final String? owner;
+  String? key;
   @HiveField(1)
-  final String? tenant;
-  @HiveField(2)
-  final String? unoccupied;
+  String? value;
 
   GetResidentStatusModel({
-    this.owner,
-    this.tenant,
-    this.unoccupied,
+    this.key,
+    this.value,
   });
 
   factory GetResidentStatusModel.fromJson(Map<String, dynamic> json) => GetResidentStatusModel(
-        owner: json["Owner"],
-        tenant: json["Tenant"],
-        unoccupied: json["Unoccupied"],
+        key: json["key"],
+        value: json["value"],
       );
 
+  static List<GetResidentStatusModel> mapToList(Map<String, dynamic> mapData) {
+    return mapData.entries.map((e) => GetResidentStatusModel(key: e.key, value: e.value)).toList();
+  }
+
   Map<String, dynamic> toJson() => {
-        "Owner": owner,
-        "Tenant": tenant,
-        "Unoccupied": unoccupied,
+        "key": key,
+        "value": value,
       };
+  @override
+  String toString() {
+    // TODO: implement toString
+    return value ?? "";
+  }
 }

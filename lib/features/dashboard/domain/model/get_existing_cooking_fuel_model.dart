@@ -17,37 +17,31 @@ String getExistingCookingFuelModelToJson(GetExistingCookingFuelModel data) => js
 
 class GetExistingCookingFuelModel {
   @HiveField(0)
-  final String? gasCylinder;
+  final String? key;
   @HiveField(1)
-  final String? electric;
-  @HiveField(2)
-  final String? kerosene;
-  @HiveField(3)
-  final String? coal;
-  @HiveField(5)
-  final String? wood;
+  final String? value;
 
   GetExistingCookingFuelModel({
-    this.gasCylinder,
-    this.electric,
-    this.kerosene,
-    this.coal,
-    this.wood,
+    this.key,
+    this.value,
   });
 
   factory GetExistingCookingFuelModel.fromJson(Map<String, dynamic> json) => GetExistingCookingFuelModel(
-        gasCylinder: json["Gas Cylinder"],
-        electric: json["Electric"],
-        kerosene: json["Kerosene"],
-        coal: json["Coal"],
-        wood: json["Wood"],
+        key: json["key"],
+        value: json["value"],
       );
 
+  static List<GetExistingCookingFuelModel> mapToList(Map<String, dynamic> mapData) {
+    return mapData.entries.map((e) => GetExistingCookingFuelModel(key: e.key, value: e.value)).toList();
+  }
+
   Map<String, dynamic> toJson() => {
-        "Gas Cylinder": gasCylinder,
-        "Electric": electric,
-        "Kerosene": kerosene,
-        "Coal": coal,
-        "Wood": wood,
+        "key": key,
+        "value": value,
       };
+  @override
+  String toString() {
+    // TODO: implement toString
+    return value ?? "";
+  }
 }

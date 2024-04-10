@@ -17,8 +17,8 @@ class GetNotInterestedModelAdapter extends TypeAdapter<GetNotInterestedModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GetNotInterestedModel(
-      no: fields[0] as String?,
-      yes: fields[1] as String?,
+      key: fields[0] as String?,
+      value: fields[1] as String?,
     );
   }
 
@@ -27,9 +27,9 @@ class GetNotInterestedModelAdapter extends TypeAdapter<GetNotInterestedModel> {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.no)
+      ..write(obj.key)
       ..writeByte(1)
-      ..write(obj.yes);
+      ..write(obj.value);
   }
 
   @override

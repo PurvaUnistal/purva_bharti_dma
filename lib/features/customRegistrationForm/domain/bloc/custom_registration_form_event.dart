@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_not_interested_model.dart';
+
+import '../../../dashboard/domain/model/get_accept_conversion_policy_model.dart';
 
 abstract class CustomRegistrationFormEvent extends Equatable {}
 
@@ -13,7 +16,7 @@ class CustomRegistrationFormPageLoadEvent extends CustomRegistrationFormEvent {
 }
 
 class CustomRegistrationFormSetInterestValue extends CustomRegistrationFormEvent {
-  final dynamic interestValue;
+  final GetNotInterestedModel interestValue;
   CustomRegistrationFormSetInterestValue({required this.interestValue});
   @override
   // TODO: implement props
@@ -21,7 +24,7 @@ class CustomRegistrationFormSetInterestValue extends CustomRegistrationFormEvent
 }
 
 class CustomRegistrationFormSetConversionPolicyValue extends CustomRegistrationFormEvent {
-  final dynamic conversionPolicyValue;
+  final GetAcceptConversionPolicyModel conversionPolicyValue;
   CustomRegistrationFormSetConversionPolicyValue({required this.conversionPolicyValue});
   @override
   // TODO: implement props

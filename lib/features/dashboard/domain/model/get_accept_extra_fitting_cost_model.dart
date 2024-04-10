@@ -6,30 +6,32 @@ part 'get_accept_extra_fitting_cost_model.g.dart';
 
 class GetAcceptExtraFittingCostModel {
   @HiveField(0)
-  String? s1;
+  String? key;
   @HiveField(1)
-  String? s2;
+  String? value;
   @HiveField(2)
   String? s3;
 
-  GetAcceptExtraFittingCostModel({this.s1, this.s2, this.s3});
+  GetAcceptExtraFittingCostModel({this.key, this.value});
 
   GetAcceptExtraFittingCostModel.fromJson(Map<String, dynamic> json) {
-    s1 = json['1'];
-    s2 = json['2'];
-    s3 = json['3'];
+    key = json['key'];
+    value = json['value'];
+  }
+
+  static List<GetAcceptExtraFittingCostModel> mapToList(Map<String, dynamic> mapData) {
+    return mapData.entries.map((e) => GetAcceptExtraFittingCostModel(key: e.key, value: e.value)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['1'] = this.s1;
-    data['2'] = this.s2;
-    data['3'] = this.s3;
+    data['key'] = this.key;
+    data['value'] = this.value;
     return data;
   }
   @override
   String toString() {
     // TODO: implement toString
-    return '{ ${this.s1}, ${this.s2}${this.s3} }';
+    return value ?? "";
   }
 }

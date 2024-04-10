@@ -7,28 +7,36 @@ part 'get_not_interested_model.g.dart';
 
 class GetNotInterestedModel {
   @HiveField(0)
-  final String? no;
+   String? key;
   @HiveField(1)
-  final String? yes;
+   String? value;
 
   GetNotInterestedModel({
-    this.no,
-    this.yes,
+    this.key,
+    this.value,
   });
 
-  factory GetNotInterestedModel.fromRawJson(String str) =>
-      GetNotInterestedModel.fromJson(json.decode(str));
+  GetNotInterestedModel.fromJson(Map<String, dynamic> json) {
+    key = json['key'];
+    value = json['value'];
+  }
 
-  String toRawJson() => json.encode(toJson());
+  static List<GetNotInterestedModel> mapToList(Map<String, dynamic> mapData) {
+    return mapData.entries.map((e) =>
+        GetNotInterestedModel(key: e.key, value: e.value)).toList();
+  }
 
-  factory GetNotInterestedModel.fromJson(Map<String, dynamic> json) =>
-      GetNotInterestedModel(
-        no: json["0"],
-        yes: json["1"],
-      );
 
-  Map<String, dynamic> toJson() => {
-        "0": no,
-        "1": yes,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['key'] = this.key;
+    data['value'] = this.value;
+    return data;
+  }
+  @override
+  String toString() {
+    // TODO: implement toString
+    return value ?? "";
+  }
 }
+

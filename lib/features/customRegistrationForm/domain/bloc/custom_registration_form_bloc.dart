@@ -70,21 +70,21 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   GetPropertyClassModel? propertyClassValue;
   GetAllDistrictModel? allDistrictValue;
   GetAllDepositOfflineModel? depositTypeValue;
-  String? interestValue;
-  String? conversionPolicyValue;
-  String? extraFittingValue;
-  String? societyAllowValue;
-  String? guardianTypeValue;
-  String? residentStatusValue;
-  String? existingCookingFuelValue;
-  String? kycDoc1Value;
-  String? kycDoc2Value;
-  String? kycDoc3Value;
-  String? preferredBillValue;
-  String? custBankNameValue;
-  String? paymentBankNameValue;
-  String? initialDepositStatusValue;
-  String? modeDepositValue;
+  GetNotInterestedModel? interestValue;
+  GetAcceptConversionPolicyModel? conversionPolicyValue;
+  GetAcceptExtraFittingCostModel? extraFittingValue;
+  GetSocietyAllowModel? societyAllowValue;
+  GetGuardianTypeModel? guardianTypeValue;
+  GetResidentStatusModel? residentStatusValue;
+  GetExistingCookingFuelModel? existingCookingFuelValue;
+  GetIdentityProofModel? kycDoc1Value;
+  GetOwnershipProofModel? kycDoc2Value;
+  GetKycDocModel? kycDoc3Value;
+  GetEBillingModel? preferredBillValue;
+  GetLabelModel? custBankNameValue;
+  GetLabelModel? paymentBankNameValue;
+  GetInitialDepositStatusModel? initialDepositStatusValue;
+  GetModeOfDepositModel? modeDepositValue;
 
   GetLabelModel getLabelModel = GetLabelModel();
   GetNotInterestedModel getNotInterestedModel = GetNotInterestedModel();
@@ -227,7 +227,8 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     chequePath = File("");
     canceledCheque = File("");
     customerConsent = File("");
-
+    await fetchBackNameListApi(context: event.context);
+    await _setLocation();
     listOfAllLabel = HiveDataBase.allLabelBox!.values.toSet().toList();
     listOfNotInterested =HiveDataBase.notInterestedBox!.values.toSet().toList();
     listOfInitialDepositStatus =HiveDataBase.initDepositStatusBox!.values.toSet().toList();
@@ -250,33 +251,21 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     listOfDepositOffline =HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
     listOfCustBankName =HiveDataBase.allLabelBox!.values.toSet().toList();
     listOfChqBankName =HiveDataBase.allLabelBox!.values.toSet().toList();
-
-  /*  await fetchLabelApi(context: event.context);
-    await fetchNotInterestedApi(context: event.context);
-    await fetchInitialDepositStatusApi(context: event.context);
-    await fetchModeOfDepositApi(context: event.context);
-    await fetchAcceptExtraFittingCostApi(context: event.context);
-    await fetchAcceptConversionPolicyApi(context: event.context);
-    await fetchAllDistrictApi(context: event.context);
-    await fetchEBillingApi(context: event.context);
-    await fetchKycDocApi(context: event.context);
-    await fetchOwnershipProofApi(context: event.context);
-    await fetchIdentityProofApi(context: event.context);
-    await fetchGuardianTypeApi(context: event.context);
-    await fetchExistingCookingFuelApi(context: event.context);
-    await fetchResidentStatusApi(context: event.context);
-    await fetchSocietyAllowApi(context: event.context);
-    await fetchPropertyClassApi(context: event.context);
-    await fetchPropertyCategoryApi(context: event.context);
-    await fetchAllAreaApi(context: event.context);
-    await fetchChargeAreaListApi(context: event.context);
-    await fetchAllDepositOfflineApi(context: event.context);*/
-    await fetchBackNameListApi(context: event.context);
-    _setLocation();
+    interestValue = listOfNotInterested.first;
+    conversionPolicyValue = listOfConversionPolicy.first;
+    extraFittingValue = listOfExtraFittingCost.first;
+    societyAllowValue = listOfSocietyAllow.first;
+    guardianTypeValue = listOfGuardianType.first;
+    propertyCategoryValue = listOfProCategory.first;
+    propertyClassValue = listOfProClass.first;
+    existingCookingFuelValue = listOfCookingFuel.first;
+    kycDoc1Value = listOfIdentityProof.first;
+    kycDoc2Value = listOfOwnershipProof.first;
+    kycDoc3Value = listOfKycDoc.first;
+    preferredBillValue = listOfEBilling.first;
+    initialDepositStatusValue = listOfInitialDepositStatus.first;
     _eventCompleted(emit);
   }
-
-
 
   _setInterestValue(CustomRegistrationFormSetInterestValue event, emit) {
     interestValue = event.interestValue;
@@ -300,13 +289,11 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
 
   _setChargeAreaValue(CustomRegistrationFormSetChargeAreaValue event, emit) {
     chargeAreaValue = event.chargeAreaValue;
-    log("chargeAreaValue==>${chargeAreaValue!.gid.toString()}");
     _eventCompleted(emit);
   }
 
   _setAreaValue(CustomRegistrationFormSetAreaValue event, emit) {
     areaValue = event.areaValue;
-    log("areaValue==>${areaValue!.gid.toString()}");
     _eventCompleted(emit);
   }
 
@@ -317,20 +304,16 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
 
   _setPropertyCategoryValue(CustomRegistrationFormSetPropertyCategoryValue event, emit) {
     propertyCategoryValue = event.propertyCategoryValue;
-    // _propertyCategoryValue = _getPropertyCategoryModel.first.toString();
-    log("_propertyCategoryValue-->${propertyCategoryValue!.name.toString()}");
     _eventCompleted(emit);
   }
 
   _setPropertyClassValue(CustomRegistrationFormSetPropertyClassValue event, emit) {
     propertyClassValue = event.propertyClassValue;
-    log("propertyClassValue-->${propertyClassValue!.name.toString()}");
     _eventCompleted(emit);
   }
 
   _setDistrictValue(CustomRegistrationFormSetDistrictValue event, emit) {
     allDistrictValue = event.allDistrictValue;
-    log("allDistrictValue-->${allDistrictValue!.districtName.toString()}");
     _eventCompleted(emit);
   }
 
@@ -376,21 +359,18 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
 
   _setInitialDepositStatusValue(CustomRegistrationFormSetInitialDepositStatusValue event, emit) {
     initialDepositStatusValue = event.initialDepositStatusValue;
-    log("initialDepositStatusValue-->$initialDepositStatusValue");
     _eventCompleted(emit);
   }
 
   _setDepositTypeValue(CustomRegistrationFormSetDepositTypeValue event, emit) {
     depositTypeValue = event.depositTypeValue;
+    depositAmountController.clear();
     depositAmountController.text = depositTypeValue!.depositAmount.toString();
-    log("_depositTypeValue-->${depositTypeValue.toString()}");
-    log("_depositTypeValue-->${depositAmountController.toString()}");
     _eventCompleted(emit);
   }
 
   _setModeDepositValue(CustomRegistrationFormSetModeDepositValue event, emit) {
     modeDepositValue = event.modeDepositValue;
-    log("_modeDepositValueBloc-->${modeDepositValue}");
     _eventCompleted(emit);
   }
 
@@ -538,57 +518,6 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     _eventCompleted(emit);
   }
 
-
-  fetchLabelApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getLabelApi(context: context);
-    if (res != null) {
-      getLabelModel = res;
-    }
-  }
-
-  fetchNotInterestedApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getNotInterestedApi(context: context);
-    if (res != null) {
-      getNotInterestedModel = res;
-      //  listOfNotInterested = getNotInterestedModel!.toJson().values.toList();
-      listOfNotInterested = getNotInterestedModel.toJson().entries.cast<GetNotInterestedModel>().toList();
-    }
-  }
-
-  fetchAcceptConversionPolicyApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getAcceptConversionPolicyApi(context: context);
-    if (res != null) {
-      getAcceptConversionPolicyModel = res;
-      listOfConversionPolicy = getAcceptConversionPolicyModel.toJson().entries.cast<GetAcceptConversionPolicyModel>().toList();
-      conversionPolicyValue = listOfConversionPolicy.first.toString();
-    }
-  }
-
-  fetchAcceptExtraFittingCostApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getAcceptExtraFittingCostApi(context: context);
-    if (res != null) {
-      getAcceptExtraFittingCostModel = res;
-      listOfExtraFittingCost = getAcceptExtraFittingCostModel.toJson().entries.cast<GetAcceptExtraFittingCostModel>().toList();
-      extraFittingValue = listOfExtraFittingCost.first.toString();
-    }
-  }
-
-  fetchSocietyAllowApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getSocietyAllowApi(context: context);
-    if (res != null) {
-      getSocietyAllowModel = res;
-      listOfSocietyAllow = getSocietyAllowModel.toJson().entries.cast<GetSocietyAllowModel>().toList();
-      societyAllowValue = listOfSocietyAllow.last.toString();
-    }
-  }
-
-  fetchChargeAreaListApi({required BuildContext context}) async {
-    var chargeAreaListRes = await DashboardHelper.getChargeAreaListApi(context: context);
-    if (chargeAreaListRes != null) {
-      // _getChargeAreaListModel = chargeAreaListRes;
-    }
-  }
-
   fetchBackNameListApi({required BuildContext context}) async {
     var bankNameListRes = await DashboardHelper.getBankNameListApi(context: context);
     if (bankNameListRes != null) {
@@ -596,125 +525,6 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       listOfChqBankName.clear();
       listOfCustBankName = bankNameListRes;
       listOfChqBankName = bankNameListRes;
-    }
-  }
-
-  fetchAllAreaApi({required BuildContext context}) async {
-    var allAreaRes = await DashboardHelper.getAllAreaApi(context: context);
-    if (allAreaRes != null) {
-      //   _getAllAreaModel = allAreaRes;
-    }
-  }
-
-  fetchGuardianTypeApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getGuardianTypeApi(context: context);
-    if (res != null) {
-      getGuardianTypeModel = res;
-      listOfGuardianType = getGuardianTypeModel.toJson().entries.cast<GetGuardianTypeModel>().toList();
-      guardianTypeValue = listOfGuardianType.first.toString();
-    }
-  }
-
-  fetchPropertyCategoryApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getPropertyCategoryApi(context: context);
-    if (res != null) {
-      //  _getPropertyCategoryModel = res;
-    }
-  }
-
-  Future<List<GetPropertyClassModel>?> fetchPropertyClassApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getPropertyClassApi(context: context);
-    if (res != null) {
-      //  _getPropertyClassModel = res;
-      //  _propertyClassValue = _getPropertyClassModel.first.toString();
-    }
-    return null;
-  }
-
-  fetchAllDistrictApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getAllDistrictModelApi(context: context);
-    if (res != null) {
-      //  _getAllDistrictModel = res!;
-    }
-  }
-
-  fetchResidentStatusApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getResidentStatusApi(context: context);
-    if (res != null) {
-      getResidentStatusModel = res;
-      listOfResidentStatus = getResidentStatusModel.toJson().entries.cast<GetResidentStatusModel>().toList();
-      residentStatusValue = listOfResidentStatus.first.toString();
-    }
-  }
-
-  fetchIdentityProofApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getIdentityProofApi(context: context);
-    if (res != null) {
-      getIdentityProofModel = res;
-      listOfIdentityProof = res.toJson().entries.cast<GetIdentityProofModel>().toList();
-      kycDoc1Value = listOfIdentityProof.first.toString();
-    }
-  }
-
-  fetchOwnershipProofApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getOwnershipProofApi(context: context);
-    if (res != null) {
-      getOwnershipProofModel = res;
-      listOfOwnershipProof = getOwnershipProofModel.toJson().entries.cast<GetOwnershipProofModel>().toList();
-      kycDoc2Value = listOfOwnershipProof.first.toString();
-    }
-  }
-
-  fetchKycDocApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getKycDocApi(context: context);
-    if (res != null) {
-      getKycDocModel = res;
-      listOfKycDoc = getKycDocModel.toJson().entries.cast<GetKycDocModel>().toList();
-      kycDoc3Value = listOfKycDoc.first.toString();
-    }
-  }
-
-  fetchExistingCookingFuelApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getExistingCookingFuelApi(context: context);
-    if (res != null) {
-      getExistingCookingFuelModel = res;
-      listOfCookingFuel = getExistingCookingFuelModel.toJson().entries.cast<GetExistingCookingFuelModel>().toList();
-      existingCookingFuelValue = listOfCookingFuel.first.toString();
-    }
-  }
-
-  fetchEBillingApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getEBillingApi(context: context);
-    if (res != null) {
-      getEBillingModel = res;
-      listOfEBilling = getEBillingModel.toJson().entries.cast<GetEBillingModel>().toList();
-      listOfEBilling.sort();
-      preferredBillValue = listOfEBilling.last.toString();
-    }
-  }
-
-  fetchInitialDepositStatusApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getInitialDepositStatusApi(context: context);
-    if (res != null) {
-      getInitialDepositStatusModel = res;
-      listOfInitialDepositStatus = getInitialDepositStatusModel.toJson().entries.cast<GetInitialDepositStatusModel>().toList();
-      listOfInitialDepositStatus.sort();
-      initialDepositStatusValue = listOfInitialDepositStatus.last.toString();
-    }
-  }
-
-  fetchAllDepositOfflineApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getAllDepositOfflineApi(context: context);
-    if (res != null) {
-      // _getAllDepositOfflineList = res;
-    }
-  }
-
-  fetchModeOfDepositApi({required BuildContext context}) async {
-    var res = await DashboardHelper.getModeOfDepositApi(context: context);
-    if (res != null) {
-      getModeOfDepositModel = res;
-      listOfModeOfDeposit = getModeOfDepositModel.toJson().entries.cast<GetModeOfDepositModel>().toList();
     }
   }
 
@@ -742,7 +552,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   _previewPage(CustomRegistrationFormPreviewPageEvent event, emit) async {
     var textFiledValidationCheck = await CustomRegistrationFormHelper.textFieldValidationCheck(
       context: event.context,
-      registrationType: interestValue,
+      registrationType: interestValue?.value ?? "",
       reasonRegistration: reasonRegistrationController.text.toString(),
       chargeId: chargeAreaValue!.chargeAreaName.toString(),
       areaId: areaValue!.areaName,
@@ -751,7 +561,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       firstName: firstController.text.trim().toString(),
       middleName: middleController.text.trim().toString(),
       lastName: lastController.text.trim().toString(),
-      guardianType: guardianTypeValue,
+      guardianType: guardianTypeValue?.value ?? "",
       guardianName: guardianNameController.text.trim().toString(),
       emailId: emailIdController.text.trim().toString(),
       propertyCategoryId: propertyCategoryValue!.id,
@@ -765,28 +575,28 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       pinCode: pinCodeController.text.toString(),
       noOfKitchen: numberKitchenController.text.toString(),
       noOfBathroom: numberBathroomController.text.toString(),
-      existingCookingFuel: existingCookingFuelValue,
+      existingCookingFuel: existingCookingFuelValue!.value?? "",
       noOfFamilyMembers: familyMemberController.text.trim().toString(),
       latitude: latController.text.trim().toString(),
       longitude: longController.text.trim().toString(),
       nearestLandmark: nearestLandmarkController.text.trim().toString(),
-      idProof: kycDoc1Value.toString(),
+      idProof: kycDoc1Value!.value,
       idProofNo: kyc1NumberController.text.trim().toString(),
       idFrontPath: idFrontPath.path,
       idBackPath: idBackPath.path.toString(),
-      addProof: kycDoc2Value.toString(),
+      addProof: kycDoc2Value!.value,
       addProofNo: kyc2NumberController.text.trim().toString(),
       addFrontPath: addFrontPath.path.toString(),
       addBackPath: addBackPath.path.toString(),
-      ownershipProperty: kycDoc3Value.toString(),
+      ownershipProperty: kycDoc3Value!.value,
       ownerConsent: ownerConsentPath.path.toString(),
       housePath: uploadHousePath.path.toString(),
       customerPath: uploadCustomerPath.path.toString(),
       nocDocPath: nocDocPath.path.toString(),
       acceptConversionPolicy: conversionPolicyValue.toString(),
-      acceptExtraFittingCost: extraFittingValue.toString(),
-      societyAllowedMdpe: societyAllowValue.toString(),
-      depositStatus: initialDepositStatusValue.toString(),
+      acceptExtraFittingCost: extraFittingValue!.value,
+      societyAllowedMdpe: societyAllowValue!.value,
+      depositStatus: initialDepositStatusValue!.value,
       reasonDeposit: reasonDepositStsController.text.trim().toString(),
       depositType: depositTypeValue.toString(),
       depositAmt: depositAmountController.text.trim().toString(),
@@ -803,11 +613,9 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
       bankIfscCode: custIfscCodeController.text.trim().toString(),
       bankNameOfBank:custBankAccNumberController.text.trim().toString(),
       customerConsent: customerConsent.path.trim(),
-      eBillingModel:preferredBillValue.toString(),
-      residentStatus: residentStatusValue.toString(),
-
+      eBillingModel:preferredBillValue!.value,
+      residentStatus: residentStatusValue!.value,
     );
-
     _isPreviewLoader = true;
     _eventCompleted(emit);
     if (textFiledValidationCheck != null) {

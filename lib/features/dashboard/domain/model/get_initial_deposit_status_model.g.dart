@@ -18,22 +18,19 @@ class GetInitialDepositStatusModelAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GetInitialDepositStatusModel(
-      s0: fields[0] as String?,
-      s1: fields[1] as String?,
-      s2: fields[2] as String?,
+      key: fields[0] as String?,
+      value: fields[1] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, GetInitialDepositStatusModel obj) {
     writer
-      ..writeByte(3)
-      ..writeByte(0)
-      ..write(obj.s0)
-      ..writeByte(1)
-      ..write(obj.s1)
       ..writeByte(2)
-      ..write(obj.s2);
+      ..writeByte(0)
+      ..write(obj.key)
+      ..writeByte(1)
+      ..write(obj.value);
   }
 
   @override

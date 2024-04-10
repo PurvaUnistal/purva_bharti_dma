@@ -18,10 +18,9 @@ class GetAcceptExtraFittingCostModelAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GetAcceptExtraFittingCostModel(
-      s1: fields[0] as String?,
-      s2: fields[1] as String?,
-      s3: fields[2] as String?,
-    );
+      key: fields[0] as String?,
+      value: fields[1] as String?,
+    )..s3 = fields[2] as String?;
   }
 
   @override
@@ -29,9 +28,9 @@ class GetAcceptExtraFittingCostModelAdapter
     writer
       ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.s1)
+      ..write(obj.key)
       ..writeByte(1)
-      ..write(obj.s2)
+      ..write(obj.value)
       ..writeByte(2)
       ..write(obj.s3);
   }

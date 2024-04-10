@@ -17,9 +17,9 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
       PreferenceUtils.init();
-    BlocProvider.of<DashboardBloc>(context).add(SelectSyncFetchAllDataEvent(
+    /*BlocProvider.of<DashboardBloc>(context).add(SelectSyncFetchAllDataEvent(
       context: context,
-    ));
+    ));*/
     super.initState();
   }
 

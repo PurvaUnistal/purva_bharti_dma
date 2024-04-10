@@ -31,26 +31,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<SelectSyncFetchAllDataEvent>(_selectSyncFetchAllData);
   }
 
-
   bool _isLoader = false;
   bool get isLoader => _isLoader;
 
   String? schema;
-
   GetLabelModel getLabelModel = GetLabelModel();
-  GetNotInterestedModel getNotInterestedModel = GetNotInterestedModel();
-  GetInitialDepositStatusModel getInitialDepositStatusModel = GetInitialDepositStatusModel();
-  GetAcceptExtraFittingCostModel getAcceptExtraFittingCostModel = GetAcceptExtraFittingCostModel();
-  GetAcceptConversionPolicyModel getAcceptConversionPolicyModel = GetAcceptConversionPolicyModel();
-  GetResidentStatusModel getResidentStatusModel = GetResidentStatusModel();
-  GetModeOfDepositModel getModeOfDepositModel = GetModeOfDepositModel();
-  GetEBillingModel getEBillingModel = GetEBillingModel();
-  GetKycDocModel getKycDocModel = GetKycDocModel();
-  GetOwnershipProofModel getOwnershipProofModel = GetOwnershipProofModel();
-  GetIdentityProofModel getIdentityProofModel = GetIdentityProofModel();
-  GetGuardianTypeModel getGuardianTypeModel = GetGuardianTypeModel();
-  GetExistingCookingFuelModel getExistingCookingFuelModel = GetExistingCookingFuelModel();
-  GetSocietyAllowModel getSocietyAllowModel = GetSocietyAllowModel();
+
 
   List<GetLabelModel> listOfAllLabel = [];
   List<GetNotInterestedModel> listOfNotInterested = [];
@@ -103,7 +89,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     listOfCustBankName = [];
     listOChqBankName = [];
     getLabelModel = GetLabelModel();
-    getNotInterestedModel = GetNotInterestedModel();
     _eventCompleted(emit);
   }
 
@@ -149,7 +134,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getNotInterestedApi(context: context);
       if (res != null) {
-        getNotInterestedModel = res;
+        listOfNotInterested = res;
       }
     } else {
       listOfNotInterested = HiveDataBase.notInterestedBox!.values.toList();
@@ -160,7 +145,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getInitialDepositStatusApi(context: context);
       if (res != null) {
-        getInitialDepositStatusModel = res;
+        listOfInitialDepositStatus = res;
       }
     } else {
       listOfInitialDepositStatus = HiveDataBase.initDepositStatusBox!.values.toList();
@@ -171,7 +156,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getAcceptExtraFittingCostApi(context: context);
       if (res != null) {
-        getAcceptExtraFittingCostModel = res;
+        listOfExtraFittingCost = res;
       }
     } else {
       listOfExtraFittingCost = HiveDataBase.acceptExtraFittingCostBox!.values.toList();
@@ -182,7 +167,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getAcceptConversionPolicyApi(context: context);
       if (res != null) {
-        getAcceptConversionPolicyModel = res;
+        listOfConversionPolicy = res;
       }
     } else {
       listOfConversionPolicy = HiveDataBase.acceptConversionPolicyBox!.values.toList();
@@ -204,7 +189,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getResidentStatusApi(context: context);
       if (res != null) {
-         getResidentStatusModel = res;
+        listOfResidentStatus = res;
       }
     } else {
       listOfResidentStatus = HiveDataBase.resStatusBox!.values.toList();
@@ -215,7 +200,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getModeOfDepositApi(context: context);
       if (res != null) {
-        getModeOfDepositModel = res;
+        listOfModeOfDeposit = res;
       }
     } else {
       listOfModeOfDeposit = HiveDataBase.modeOfDepositBox!.values.toList();
@@ -226,7 +211,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getEBillingApi(context: context);
       if (res != null) {
-        getEBillingModel = res;
+        listOfEBilling = res;
       }
     } else {
       listOfEBilling = HiveDataBase.eBillingBox!.values.toList();
@@ -237,7 +222,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getKycDocApi(context: context);
       if (res != null) {
-        getKycDocModel = res;
+        listOfKycDoc = res;
       }
     } else {
       listOfKycDoc = HiveDataBase.kycDocBox!.values.toList();
@@ -248,7 +233,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getOwnershipProofApi(context: context);
       if (res != null) {
-        getOwnershipProofModel = res;
+        listOfOwnershipProof = res;
       }
     } else {
       listOfOwnershipProof = HiveDataBase.ownershipProofBox!.values.toList();
@@ -259,7 +244,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getIdentityProofApi(context: context);
       if (res != null) {
-        getIdentityProofModel = res;
+        listOfIdentityProof = res;
       }
     } else {
       listOfIdentityProof = HiveDataBase.idProofBox!.values.toList();
@@ -270,7 +255,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getGuardianTypeApi(context: context);
       if (res != null) {
-        getGuardianTypeModel = res;
+        listOfGuardianType = res;
       }
     } else {
       listOfGuardianType = HiveDataBase.guardianTypeBox!.values.toList();
@@ -281,7 +266,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getExistingCookingFuelApi(context: context);
       if (res != null) {
-        getExistingCookingFuelModel = res;
+        listOfCookingFuel = res;
       }
     } else {
       listOfCookingFuel = HiveDataBase.cookingFuelBox!.values.toList();
@@ -292,7 +277,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (await DashboardHelper.isInternetConnected()) {
       var res = await DashboardHelper.getSocietyAllowApi(context: context);
       if (res != null) {
-        getSocietyAllowModel = res;
+        listOfSocietyAllow = res;
       }
     } else {
       listOfSocietyAllow = HiveDataBase.societyAllowBox!.values.toList();

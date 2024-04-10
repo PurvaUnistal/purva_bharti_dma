@@ -80,8 +80,8 @@ class TextFieldWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Flexible(child: Text(star??"",  style:Styles.stars)),
-              Flexible(child: Text(label  ?? "", style:Styles.labels),
+              Flexible(flex : 1, child: Text(star ??"",  style:Styles.stars)),
+              Flexible(flex : 7,child: Text(label ?? "", style:Styles.labels),
               ),
             ],
           ),
@@ -99,6 +99,6 @@ class TextFieldWidget extends StatelessWidget {
 
   OutlineInputBorder border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(5.0),
-    borderSide: BorderSide(color: AppColor.prime, style: BorderStyle.solid, width: 0.80),
+    borderSide: BorderSide(color: AppColor.green, style: BorderStyle.solid, width: 0.80),
   );
 }

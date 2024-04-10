@@ -7,42 +7,32 @@ part 'get_ownership_proof_model.g.dart';
 @HiveType(typeId: HiveTypeId.GetOwnershipProofId)
 class GetOwnershipProofModel {
   @HiveField(0)
-  String? s1;
+  String? key;
   @HiveField(1)
-  String? s2;
-  @HiveField(2)
-  String? s3;
-  @HiveField(3)
-  String? s4;
-  @HiveField(4)
-  String? s5;
-  @HiveField(5)
-  String? s6;
-  @HiveField(6)
-  String? s7;
+  String? value;
 
   GetOwnershipProofModel(
-      {this.s1, this.s2, this.s3, this.s4, this.s5, this.s6, this.s7});
+      {this.key, this.value,});
 
   GetOwnershipProofModel.fromJson(Map<String, dynamic> json) {
-    s1 = json['1'];
-    s2 = json['2'];
-    s3 = json['3'];
-    s4 = json['4'];
-    s5 = json['5'];
-    s6 = json['6'];
-    s7 = json['7'];
+    key = json['key'];
+    value = json['value'];
+  }
+
+  static List<GetOwnershipProofModel> mapToList(Map<String, dynamic> mapData) {
+    return mapData.entries.map((e) => GetOwnershipProofModel(key: e.key, value: e.value)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['1'] = this.s1;
-    data['2'] = this.s2;
-    data['3'] = this.s3;
-    data['4'] = this.s4;
-    data['5'] = this.s5;
-    data['6'] = this.s6;
-    data['7'] = this.s7;
+    data['key'] = this.key;
+    data['value'] = this.value;
     return data;
   }
+   @override
+  String toString() {
+    // TODO: implement toString
+    return value ?? "";
+  }
 }
+

@@ -8,21 +8,30 @@ part 'get_society_allow_model.g.dart';
 
 class GetSocietyAllowModel {
   @HiveField(0)
-  String? s0;
+  String? key;
   @HiveField(1)
-  String? s1;
+  String? value;
 
-  GetSocietyAllowModel({this.s0, this.s1});
+  GetSocietyAllowModel({this.key, this.value});
 
   GetSocietyAllowModel.fromJson(Map<String, dynamic> json) {
-    s0 = json['0'];
-    s1 = json['1'];
+    key = json['key'];
+    value = json['value'];
+  }
+
+  static List<GetSocietyAllowModel> mapToList(Map<String, dynamic> mapData) {
+    return mapData.entries.map((e) => GetSocietyAllowModel(key: e.key, value: e.value)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['0'] = this.s0;
-    data['1'] = this.s1;
+    data['key'] = this.key;
+    data['value'] = this.value;
     return data;
+  }
+   @override
+  String toString() {
+    // TODO: implement toString
+    return value ?? "";
   }
 }

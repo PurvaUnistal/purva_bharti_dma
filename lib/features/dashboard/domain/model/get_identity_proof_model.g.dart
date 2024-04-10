@@ -17,34 +17,19 @@ class GetIdentityProofModelAdapter extends TypeAdapter<GetIdentityProofModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GetIdentityProofModel(
-      s1: fields[0] as String?,
-      s2: fields[1] as String?,
-      s3: fields[2] as String?,
-      s4: fields[3] as String?,
-      s5: fields[4] as String?,
-      s6: fields[5] as String?,
-      s7: fields[6] as String?,
+      key: fields[0] as String?,
+      value: fields[1] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, GetIdentityProofModel obj) {
     writer
-      ..writeByte(7)
-      ..writeByte(0)
-      ..write(obj.s1)
-      ..writeByte(1)
-      ..write(obj.s2)
       ..writeByte(2)
-      ..write(obj.s3)
-      ..writeByte(3)
-      ..write(obj.s4)
-      ..writeByte(4)
-      ..write(obj.s5)
-      ..writeByte(5)
-      ..write(obj.s6)
-      ..writeByte(6)
-      ..write(obj.s7);
+      ..writeByte(0)
+      ..write(obj.key)
+      ..writeByte(1)
+      ..write(obj.value);
   }
 
   @override

@@ -65,9 +65,25 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
        }
      }
    }catch(e){
-
+     log(e.toString());
    }
+  }
 
+
+  Future<void> clearCache() async {
+    Directory path = Directory("/data/user/0/com.unistal.igl_dma_app/cache/");
+    if(await path.exists()) {
+      List<FileSystemEntity> files = path.listSync();
+      for(FileSystemEntity f in files) {
+        if(f is File) {
+          await f.delete();
+        }
+      }
+    }
+    Directory path2 = Directory("/data/user/0/com.unistal.igl_dma_app/cache/file_picker/");
+    if(await path2.exists()) {
+      path2.deleteSync(recursive: true);
+    }
   }
 
   _eventCompleted(Emitter<ViewSyncRecordState> emit) {

@@ -8,26 +8,29 @@ part 'get_ebilling_model.g.dart';
 
 class GetEBillingModel {
   @HiveField(0)
-  String? s1;
+  String? key;
   @HiveField(1)
-  String? s2;
+  String? value;
 
-  GetEBillingModel({this.s1, this.s2});
+  GetEBillingModel({this.key, this.value});
 
   GetEBillingModel.fromJson(Map<String, dynamic> json) {
-    s1 = json['1'];
-    s2 = json['2'];
+    key = json['key'];
+    value = json['value'];
+  }
+  static List<GetEBillingModel> mapToList(Map<String, dynamic> mapData) {
+    return mapData.entries.map((e) => GetEBillingModel(key: e.key, value: e.value)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['1'] = this.s1;
-    data['2'] = this.s2;
+    data['key'] = this.key;
+    data['value'] = this.value;
     return data;
   }
   @override
   String toString() {
     // TODO: implement toString
-    return '{ ${this.s1}, ${this.s2}}';
+    return value ?? "";
   }
 }

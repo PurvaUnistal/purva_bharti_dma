@@ -18,22 +18,19 @@ class GetResidentStatusModelAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GetResidentStatusModel(
-      owner: fields[0] as String?,
-      tenant: fields[1] as String?,
-      unoccupied: fields[2] as String?,
+      key: fields[0] as String?,
+      value: fields[1] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, GetResidentStatusModel obj) {
     writer
-      ..writeByte(3)
-      ..writeByte(0)
-      ..write(obj.owner)
-      ..writeByte(1)
-      ..write(obj.tenant)
       ..writeByte(2)
-      ..write(obj.unoccupied);
+      ..writeByte(0)
+      ..write(obj.key)
+      ..writeByte(1)
+      ..write(obj.value);
   }
 
   @override
