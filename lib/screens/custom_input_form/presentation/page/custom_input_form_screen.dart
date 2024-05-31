@@ -1236,7 +1236,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
       chequeBankAccount: chequeAccountNoController.text.trim().toString() ?? "",
       micr: chequeMICRNoController.text.trim().toString() ?? "",
     );
-    log("initialDepositeDatefghj" + data.initialDepositeDate.toString());
     if (widget.isUpdate) {
       var box = await Hive.openBox<SaveCustomerRegistrationOfflineModel>(
           "saveCustRegDataBoxName");
@@ -1271,8 +1270,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
         setState(() {
           interestedId = value.id;
           interestedValue = value;
-          log("interestedId-->${interestedId.toString()}");
-          log("interestedId-->${interestedId.toString()}");
           if (interestedId == '0') {
             familyMemController.text = '1';
             bathroomController.text = '1';
@@ -1646,17 +1643,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     _depositTypeValue = value;
                     _depositTypeString = _depositTypeValue.id.toString();
                     _schemeMonth = value.schememonth;
-                    log("_schemeMonth-->" + _schemeMonth.toString());
                     if (_schemeMonth > 0) {
                       _depositTypeValue = value;
                       depositAmountController.text = value.firstamount.toString();
-                      log(depositAmountController.text.toString());
-                      log("_isDepositId-->" + _depositTypeString.toString());
                     } else {
                       _depositTypeValue = value;
                       depositAmountController.text = value.amount.toString();
-                      log(depositAmountController.text.toString());
-                      log("_isDepositId-->" + _depositTypeString.toString());
                     }
                     AppStrings.depositName = value.title;
                     AppStrings.depositAmountController = value.amount.toString();
@@ -3302,7 +3294,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> fetchArea(String id) async {
     var resArea = prefs.getString(GlobalConstants.area);
     List dataList = json.decode(resArea);
-    log("dataList--${dataList.toString()}");
     List<DropdownMenuItem<OptionItem>> menuItems = [];
     for (int i = 0; i < dataList.length; i++) {
       //   if (dataList[i]['charge_area_id'] == id) {
@@ -3331,7 +3322,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> fetchChargeAreaList() async {
     var resChargeAreaName = prefs.getString(GlobalConstants.chargeAreaName);
     List dataChargeList = json.decode(resChargeAreaName);
-    log(dataChargeList.toString());
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length,
           (i) => DropdownMenuItem(
@@ -3389,36 +3379,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
       }
     });
   }
-
-  /*Future<void> interestedList() async {
-    var resInterested = prefs.getString(GlobalConstants.Interested);
-    final map = json.decode(resInterested);
-    //  final dataInterestedList = map.values.toList();
-    log("dataInterestedList.toString()");
-    log(map.toString());
-    List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
-      map.length,
-      (i) => DropdownMenuItem(
-        value: OptionItem(id: map[i].toString(), title: map[i]),
-        child: Text("${map[i]}"),
-      ),
-    );
-    if (!mounted) return;
-    setState(() {
-      interestedListItems = menuItems;
-      if (widget.isUpdate == true) {
-        if (widget.studentModel.interested != null) {
-          interestedValue = interestedListItems
-              .firstWhere(
-                  (element) =>
-                      element.value.id == widget.studentModel.interested,
-                  orElse: null)
-              .value;
-        }
-      }
-    });
-  }*/
-
   Future<void> _getSocietyAllow() async {
     var resSociatyAllow = prefs.getString(GlobalConstants.sociaty_allow);
     final decoded = jsonDecode(resSociatyAllow) as Map;
@@ -3594,7 +3554,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> _getBankData() async {
     var resAllBanks = prefs.getString(GlobalConstants.AllBanks);
     final decoded = (jsonDecode(resAllBanks) as List<dynamic>).cast<String>();
-    log("getBankGetBank---> $resAllBanks");
     setState(() {
       _customerBankNameList = decoded;
       if (widget.isUpdate == true) {
@@ -3602,7 +3561,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
           if (widget.studentModel.nameOfBank != null) {
             _customerBankValue = _customerBankNameList.firstWhere(
                     (element) => element == widget.studentModel.nameOfBank,
-                orElse: null);
+                orElse: () => null);
+          }else{
+            _customerBankValue = null;
           }
         }
       }
@@ -3612,7 +3573,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> _getPayementBankData() async {
     var resAllBanks = prefs.getString(GlobalConstants.AllBanks);
     final decoded = (jsonDecode(resAllBanks) as List<dynamic>).cast<String>();
-    log("getBankGetBank2--> $resAllBanks");
     setState(() {
       _payementBankNameList = decoded;
     });
@@ -3621,7 +3581,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> _getBillingModeList() async {
     var resEbilling = prefs.getString(GlobalConstants.Ebilling);
     final decoded = jsonDecode(resEbilling) as Map;
-    log("Ebilling --> $resEbilling");
     decoded.forEach((k, v) {
       billingModeList.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -3723,7 +3682,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> _getInitialDepositeStatusList() async {
     var resDepositeStatus = prefs.getString(GlobalConstants.DepositeStatus);
     final decoded = jsonDecode(resDepositeStatus) as Map;
-    log("_getInitialDepositeStatusList$resDepositeStatus");
     decoded.forEach((k, v) {
       dropListDepositStatusList.add(DropdownMenuItem(
         value: OptionItem(id: k, title: v),
@@ -3752,7 +3710,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> _getAllDepositScheme() async {
     var resSchemeType = prefs.getString(GlobalConstants.SchemeType);
     List dataList = json.decode(resSchemeType);
-    log("dataList-->${dataList}");
     List<DropdownMenuItem<DepositItem>> menuItems = [];
     List<DropdownMenuItem<DepositItem>> menuItems2 = [];
     menuItems.add(DropdownMenuItem(
@@ -3780,14 +3737,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
     if (dataList != null) {
       for (int i = 0; i < dataList.length; i++) {
         try {
-          log("dataList[i]['deposit_types_id']-->${dataList[i]['deposit_types_id']}");
-
           menuItems2.add(DropdownMenuItem(
             value: DepositItem(
                 id: dataList[i]['deposit_types_id'] ?? "",
                 title: dataList[i]['deposit_name'] ?? "",
-                /*firstamount: dataList[i]['firstDepositAmount'] ?? "",
-            amount: dataList[i]['totalAmount'] ?? "",*/
                 firstamount: dataList[i]['firstDepositAmountWith'] ?? "",
                 amount: dataList[i]['firstDepositAmountWith'] ?? "",
                 schememonth: dataList[i]['scheme_month'] ?? "",
@@ -3812,37 +3765,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         }
       }
     }
-
-    /* menuItems2 = List.generate(
-      dataList.length,
-      (i) => DropdownMenuItem(
-        value: DepositItem(
-            id: dataList[i]['deposit_types_id'],
-            title: dataList[i]['deposit_name'],
-            */ /*firstamount: dataList[i]['firstDepositAmount'],
-            amount: dataList[i]['totalAmount'],*/
-    /*
-            firstamount: dataList[i]['firstDepositAmountWith'],
-            amount: dataList[i]['amountfield'],
-            schememonth: dataList[i]['scheme_month'],
-            gas_amount: dataList[i]['gas_deposit_amount'],
-            scheme_type: dataList[i]['scheme_type'],
-            scheme_code: dataList[i]['scheme_code'],
-            deposit_amount: dataList[i]['deposit_amount'],
-            equipment_deposit_amount: dataList[i]['equipment_deposit_amount'],
-            interest_amount: dataList[i]['interest_amount'],
-            registration_gst: dataList[i]['registration_gst'],
-            totalAmount: dataList[i]['totalAmount'],
-            nextCycleAmount: dataList[i]['nextCycleAmount'],
-            registration_tax_name: dataList[i]['registration_tax_name'],
-            interest_tax_amt: dataList[i]['interest_tax_amt'],
-            reg_tax: dataList[i]['reg_tax']),
-        child: Text("${dataList[i]['deposit_name']}"),
-      ),
-    );*/
     menuItems.addAll(menuItems2);
-    log("menuItems2-->${menuItems2}");
-    log("menuItems-->${menuItems}");
     if (!mounted) return;
     setState(() {
       _depositTypeList = menuItems;
@@ -3856,8 +3779,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     widget.studentModel.depositeType,
                 orElse: null)
                 .value;
-            //  depositAmountController.text = _depositCategoryType.amount.toString();
-            log("asdfghjgfedwsqawegtfhj" + _depositTypeValue.amount.toString());
           }
         }
       }
@@ -3910,7 +3831,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   _width(){
-    print(MediaQuery.of(context).size.width * 0.03,);
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.03,
     );

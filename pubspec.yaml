@@ -39,6 +39,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  hive_generator:
+  build_runner:
 
 flutter_icons:
   android: "pbg_logo"

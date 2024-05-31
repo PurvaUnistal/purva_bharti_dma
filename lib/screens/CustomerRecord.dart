@@ -262,7 +262,7 @@ class _SaveCustomerRegistrationPageState
           docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1.toString(),
           docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2.toString(),
           docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
-          customerConsent: saveCustRegOffModel.customerConsentPhoto,
+          customerConsent: saveCustRegOffModel.customerConsentPhoto.toString(),
           ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
           acceptConversionPolicy:
           saveCustRegOffModel.acceptConversionPolicy.toString(),
