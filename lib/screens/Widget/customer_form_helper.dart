@@ -75,7 +75,8 @@ class CustomerFormHelper {
         CustomToast.showToast('Please select charge area type');
         return false;
       }
-      if (areaTypeId == "0") {
+      if (areaTypeId == "0" || areaTypeId == null ||
+          areaTypeId.isEmpty) {
         CustomToast.showToast('Please select area type');
         return false;
       }

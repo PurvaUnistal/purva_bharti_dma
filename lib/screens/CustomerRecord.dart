@@ -54,117 +54,117 @@ class _SaveCustomerRegistrationPageState
 
   Future fetchCustomerDataList() async {
     if(await ApiIntegration.isInternetConnected() == true){
+      List<SaveCustomerRegistrationOfflineModel> data =   customerRegistrationBox.values.toList();
       int count = 0;
-      for (int i = 0; i < customerRegistrationList.length; i++) {
-        SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
-        customerRegistrationList[i];
+      for (int i = 0; i < data.length; i++) {
+        log("data.length-->${customerRegistrationList.length}");
         setState(() {
           isLoading = true;
         });
         saveCustRegReqModel = SaveCustRegReqModel(
-          schema: saveCustRegOffModel.schema.toString(),
-          interested: saveCustRegOffModel.interested.toString(),
-          societyAllowedMdpe: saveCustRegOffModel.societyAllowedMdpe.toString(),
-          areaId: saveCustRegOffModel.areaId.toString(),
-          firstName: saveCustRegOffModel.firstName.toString(),
-          middleName: saveCustRegOffModel.middleName.toString(),
-          lastName: saveCustRegOffModel.lastName.toString(),
-          mobileNumber: saveCustRegOffModel.mobileNumber.toString(),
-          alternateNumber: saveCustRegOffModel.alternateMobileNo.toString(),
-          emailId: saveCustRegOffModel.emailId.toString(),
-          guardianType: saveCustRegOffModel.guardianType.toString(),
-          guardianName: saveCustRegOffModel.guardianName.toString(),
-          propertyCategoryId: saveCustRegOffModel.propertyCategoryId.toString(),
-          propertyClassId: saveCustRegOffModel.propertyClassId.toString(),
-          reasonForHold: saveCustRegOffModel.reasonForHold.toString(),
-          dmaUserId: saveCustRegOffModel.dmaUserId.toString(),
-          dmaUserName: saveCustRegOffModel.dmaUserName.toString(),
-          houseNumber: saveCustRegOffModel.houseNumber.toString(),
+          schema: data[i].schema.toString(),
+          interested: data[i].interested.toString(),
+          societyAllowedMdpe: data[i].societyAllowedMdpe.toString(),
+          areaId: data[i].areaId.toString(),
+          firstName: data[i].firstName.toString(),
+          middleName: data[i].middleName.toString(),
+          lastName: data[i].lastName.toString(),
+          mobileNumber: data[i].mobileNumber.toString(),
+          alternateNumber: data[i].alternateMobileNo.toString(),
+          emailId: data[i].emailId.toString(),
+          guardianType: data[i].guardianType.toString(),
+          guardianName: data[i].guardianName.toString(),
+          propertyCategoryId: data[i].propertyCategoryId.toString(),
+          propertyClassId: data[i].propertyClassId.toString(),
+          reasonForHold: data[i].reasonForHold.toString(),
+          dmaUserId: data[i].dmaUserId.toString(),
+          dmaUserName: data[i].dmaUserName.toString(),
+          houseNumber: data[i].houseNumber.toString(),
           colonySocietyApartment:
-          saveCustRegOffModel.colonySocietyApartment.toString(),
-          streetName: saveCustRegOffModel.streetName.toString(),
-          town: saveCustRegOffModel.town.toString(),
-          districtId: saveCustRegOffModel.districtId.toString(),
-          pinCode: saveCustRegOffModel.pinCode.toString(),
-          residentStatus: saveCustRegOffModel.residentStatus.toString(),
-          noOfKitchen: saveCustRegOffModel.noOfKitchen.toString(),
-          noOfBathroom: saveCustRegOffModel.noOfBathroom.toString(),
+          data[i].colonySocietyApartment.toString(),
+          streetName: data[i].streetName.toString(),
+          town: data[i].town.toString(),
+          districtId: data[i].districtId.toString(),
+          pinCode: data[i].pinCode.toString(),
+          residentStatus: data[i].residentStatus.toString(),
+          noOfKitchen: data[i].noOfKitchen.toString(),
+          noOfBathroom: data[i].noOfBathroom.toString(),
           existingCookingFuel:
-          saveCustRegOffModel.existingCookingFuel.toString(),
-          noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers.toString(),
-          latitude: saveCustRegOffModel.latitude.toString(),
-          longitude: saveCustRegOffModel.longitude.toString(),
-          remarks: saveCustRegOffModel.remarks.toString(),
-          kycDocument1: saveCustRegOffModel.kycDocument1.toString(),
-          kycDocument1Number: saveCustRegOffModel.kycDocument1Number.toString(),
-          kycDocument2: saveCustRegOffModel.kycDocument2.toString(),
-          kycDocument2Number: saveCustRegOffModel.kycDocument2Number.toString(),
-          kycDocument3: saveCustRegOffModel.kycDocument3.toString(),
-          kycDocument3Number: saveCustRegOffModel.kycDocument3Number.toString(),
-          initialAmount: saveCustRegOffModel.initialAmount.toString(),
-          bankAccountNumber: saveCustRegOffModel.bankAccountNumber.toString(),
-          bankAddress: saveCustRegOffModel.bankAddress.toString(),
-          bankIfscCode: saveCustRegOffModel.bankIfscCode.toString(),
-          chequeBankAccount: saveCustRegOffModel.chequeBankAccount.toString(),
-          chequeNumber: saveCustRegOffModel.chequeNumber.toString(),
-          depositeType: saveCustRegOffModel.depositeType.toString(),
+          data[i].existingCookingFuel.toString(),
+          noOfFamilyMembers: data[i].noOfFamilyMembers.toString(),
+          latitude: data[i].latitude.toString(),
+          longitude: data[i].longitude.toString(),
+          remarks: data[i].remarks.toString(),
+          kycDocument1: data[i].kycDocument1.toString(),
+          kycDocument1Number: data[i].kycDocument1Number.toString(),
+          kycDocument2: data[i].kycDocument2.toString(),
+          kycDocument2Number: data[i].kycDocument2Number.toString(),
+          kycDocument3: data[i].kycDocument3.toString(),
+          kycDocument3Number: data[i].kycDocument3Number.toString(),
+          initialAmount: data[i].initialAmount.toString(),
+          bankAccountNumber: data[i].bankAccountNumber.toString(),
+          bankAddress: data[i].bankAddress.toString(),
+          bankIfscCode: data[i].bankIfscCode.toString(),
+          chequeBankAccount: data[i].chequeBankAccount.toString(),
+          chequeNumber: data[i].chequeNumber.toString(),
+          depositeType: data[i].depositeType.toString(),
           initialDepositeDate:
-          saveCustRegOffModel.initialDepositeDate.toString(),
+          data[i].initialDepositeDate.toString(),
           initialDepositeStatus:
-          saveCustRegOffModel.initialDepositeStatus.toString(),
-          modeOfDeposite: saveCustRegOffModel.modeOfDeposite.toString(),
-          nameOfBank: saveCustRegOffModel.nameOfBank.toString().toString(),
-          payementBankName: saveCustRegOffModel.payementBankName.toString(),
-          backSideImg1: saveCustRegOffModel.backSidePhoto1.toString(),
-          backSideImg2: saveCustRegOffModel.backSidePhoto2.toString(),
-          backSideImg3: saveCustRegOffModel.backSidePhoto3.toString(),
-          canceledCheque: saveCustRegOffModel.canceledChequePhoto.toString(),
-          chequePhoto: saveCustRegOffModel.chequePhoto.toString(),
+          data[i].initialDepositeStatus.toString(),
+          modeOfDeposite: data[i].modeOfDeposite.toString(),
+          nameOfBank: data[i].nameOfBank.toString().toString(),
+          payementBankName: data[i].payementBankName.toString(),
+          backSideImg1: data[i].backSidePhoto1.toString(),
+          backSideImg2: data[i].backSidePhoto2.toString(),
+          backSideImg3: data[i].backSidePhoto3.toString(),
+          canceledCheque: data[i].canceledChequePhoto.toString(),
+          chequePhoto: data[i].chequePhoto.toString(),
           uploadCustomerPhoto:
-          saveCustRegOffModel.uploadCustomerPhoto.toString(),
-          uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto.toString(),
-          docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1.toString(),
-          docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2.toString(),
-          docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
-          customerConsent: saveCustRegOffModel.customerConsentPhoto,
-          ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
+          data[i].uploadCustomerPhoto.toString(),
+          uploadHousePhoto: data[i].uploadHousePhoto.toString(),
+          docUploadsImg1: data[i].documentUploadsPhoto1.toString(),
+          docUploadsImg2: data[i].documentUploadsPhoto2.toString(),
+          docUploadsImg3: data[i].documentUploadsPhoto3.toString(),
+          customerConsent: data[i].customerConsentPhoto,
+          ownerConsent: data[i].ownerConsent.toString(),
           acceptConversionPolicy:
-          saveCustRegOffModel.acceptConversionPolicy.toString(),
+          data[i].acceptConversionPolicy.toString(),
           acceptExtraFittingCost:
-          saveCustRegOffModel.acceptExtraFittingCost.toString(),
-          micr: saveCustRegOffModel.micr.toString(),
-          buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
+          data[i].acceptExtraFittingCost.toString(),
+          micr: data[i].micr.toString(),
+          buildingNumber: data[i].buildingNumber.toString(),
         );
         try {
-          var response = await apiIntegration.saveCustRegApi(context,saveCustRegReqModel);
-          log("response-->"+response.toString());
+          var response = await apiIntegration.saveCustRegApi(context, saveCustRegReqModel);
           if (response != null) {
-            setState(() {
+            setState(()  {
               isLoading = false;
               count++;
+              log("deleteAt.length-->${customerRegistrationList.length}");
             });
-            CustomToast.showToast(response.message[i].message.toString());
-            customerRegistrationList.removeAt(i);
-            customerRegistrationBox.deleteAt(i);
-            print("azsxdfvghjm${customerRegistrationList[i]}");
+            await customerRegistrationBox.deleteAt(i);
+            await CustomToast.showToast(response.message[i].message.toString());
           } else {
             setState(() {
               isLoading = false;
             });
-            //  CustomToast.showToast(response.message[0].message.toString());
           }
         } catch (e) {
-          setState(() {
-            isLoading = false;
-          });
-          log("fghjkl-->${e.toString()}");
-        //  CustomToast.showToast(e.toString());
+          if (mounted) {
+            setState (() => isLoading = false);
+          }
+
         }
-      }
-      if (count == customerRegistrationList.length) {
-        customerRegistrationList.clear();
-        await customerRegistrationBox.clear();
-        clearCache();
+        if (count == customerRegistrationList.length) {
+          await clearCache();
+          await customerRegistrationBox.clear();
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => RegistrationForm()),
+                (Route<dynamic> route) => false,
+          );
+        }
       }
     }
   }
@@ -186,7 +186,7 @@ class _SaveCustomerRegistrationPageState
     if(await path2.exists()) {
       path2.deleteSync(recursive: true);
     }
-}
+  }
 
 
   Future fetchCustomerDataGrpList() async {

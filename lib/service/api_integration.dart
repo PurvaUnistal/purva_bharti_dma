@@ -118,8 +118,6 @@ class ApiIntegration {
           "property_class_id": saveCustRegReqModel.propertyClassId ?? "",
           "building_number": saveCustRegReqModel.buildingNumber ?? "",
           "house_number": saveCustRegReqModel.houseNumber ?? "",
-          /*"locality": saveCustRegReqModel.colonySocietyApartment ?? "", // streetName
-      "address2": saveCustRegReqModel.streetName.toString() ?? "",  // colony Name*/
           "locality": saveCustRegReqModel.streetName ?? "", // streetName
           "address2": saveCustRegReqModel.colonySocietyApartment.toString() ?? "", // colony Name
           "town": saveCustRegReqModel.town ?? "",
@@ -145,7 +143,8 @@ class ApiIntegration {
           "bank_ifsc_code": saveCustRegReqModel.bankIfscCode ?? "",
           "bank_address": saveCustRegReqModel.bankAddress ?? "",
           "initial_deposite_status":
-          saveCustRegReqModel.initialDepositeStatus ?? "",
+        //  saveCustRegReqModel.initialDepositeStatus ?? "",
+          "0" ?? "",
           "reason_for_hold": saveCustRegReqModel.reasonForHold ?? "",
           "deposite_type": saveCustRegReqModel.depositeType ?? "",
           "initial_amount": saveCustRegReqModel.initialAmount ?? "",
@@ -166,8 +165,6 @@ class ApiIntegration {
         }
         request.fields.addAll(requestBody);
         request.headers.addAll(headers);
-        print("request.fields.addAll-->${requestBody}");
-
         if (saveCustRegReqModel.backSideImg1.isNotEmpty) {
           var backSide1Image = await http.MultipartFile.fromPath(
               "backside1", saveCustRegReqModel.backSideImg1,
