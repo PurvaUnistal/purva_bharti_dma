@@ -4,7 +4,7 @@ class GlobalConstants {
   bool isLoggedIn = false;
 
    static String BaseUrl = 'http://142.79.231.30:8097/';
-  //static String BaseUrl = 'http://pbgpl.smartgasnet.com/';
+ //static String BaseUrl = 'http://pbgpl.smartgasnet.com/';
   static String Login = BaseUrl + "api/auth";
   static String saveCustomerRegistration =
       BaseUrl + "api/saveCustomerRegistration";

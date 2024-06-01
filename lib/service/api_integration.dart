@@ -52,9 +52,9 @@ class ApiIntegration {
       }
     } catch (e) {
       if (e is SocketException) {
-        CustomToast.showErrorSnackBar("No Internet", context);
+        CustomToast.showErrorSnackBar(e.message, context);
       } else if (e is TimeoutException) {
-        CustomToast.showErrorSnackBar("TimeOut, Please try again", context);
+        CustomToast.showErrorSnackBar(e.message, context);
       } else {
         CustomToast.showErrorSnackBar(e.toString(), context);
       }

@@ -14,6 +14,7 @@ import 'package:pbg_app/models/GetLabelModel.dart';
 import 'package:pbg_app/models/save_customer_registration_offline_model.dart';
 import 'package:pbg_app/screens/Registration.dart';
 import 'package:pbg_app/screens/Widget/customer_form_helper.dart';
+import 'package:pbg_app/screens/custom_input_form/helper/customer_input_form_helper.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/widget/border_form_widget.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/widget/card_image_widget.dart';
 import 'package:pbg_app/utils/common_widgets/app_color.dart';
@@ -108,12 +109,14 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   @override
   void initState() {
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    getLocalData();
-    _getCurrentLocation();
+    getData();
     updateValue();
     super.initState();
+  }
+
+  getData() async {
+   await getLocalData();
+   await _getCurrentLocation();
   }
 
   updateValue() {
@@ -220,26 +223,31 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<Position> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      await Geolocator.openLocationSettings();
-      return Future.error('Location services are disabled.');
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+    try {
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        await Geolocator.openLocationSettings();
+        return Future.error('Location services are disabled.');
       }
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          return Future.error('Location permissions are denied');
+        }
+      }
+      if (permission == LocationPermission.deniedForever) {
+        return Future.error(
+            'Location permissions are permanently denied, we cannot request permissions.');
+      }
+      Position position =  await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      latitudeController.text = position.latitude.toString();
+      longitudeController.text = position.longitude.toString();
+      return position;
+    }catch(e) {
+      log(e);
     }
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-    Position position =  await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    latitudeController.text = position.latitude.toString();
-    longitudeController.text = position.longitude.toString();
-    return position;
+
   }
 
   TextEditingController searchController = TextEditingController();
@@ -1762,17 +1770,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       hintText: AppStrings.buildingNumberLabel,
       controller: buildingNumberController,
       textInputType: TextInputType.text,
-      /*validator: (value) {
-        if (value != buildingNumberController.text.trim()) {
-          return AppStrings.blankSpace;
-        } else if (value.isEmpty) {
-          return "Please enter building number";
-        }
-        return null;
-      },
-      onChanged: (v) {
-        formGlobalKey.currentState.validate();
-      },*/
+
     );
   }
 
@@ -1824,28 +1822,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
       hintText: AppStrings.townLabel,
       controller: townController,
       textInputType: TextInputType.name,
-      /*validator: (value) {
-        if (value != townController.text.trim()) {
-          return AppStrings.blankSpace;
-        } else if (value.isEmpty) {
-          return "Please enter the town";
-        }
-        return null;
-      },
-      onChanged: (v) {
-        formGlobalKey.currentState.validate();
-      },*/
     );
   }
 
-  /*Widget _districtWidget() {
-    return DropdownWidget(
-      dropdownValue: "",
-      hint: AppStrings.districtLabel,
-      items: getAllDistrictModel,
-      onChanged: (value) {},
-    );
-  }*/
   Widget _districtWidget() {
     return ReusedDropDownOptionItem(
       star: AppStrings.star,
@@ -1959,20 +1938,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
     );
   }
 
-  Widget _landmarkWidget() {
-    return TextFieldWidget(
-      headingLabel: AppStrings.landmarkLabel,
-      hintText: AppStrings.landmarkLabel,
-      controller: landmarkController,
-      textInputType: TextInputType.text,
-      validator: (value) {
-        if (value != landmarkController.text.trim()) {
-          return AppStrings.blankSpace;
-        }
-        return null;
-      },
-    );
-  }
 
   Widget _fuelDropdownWidget() {
     return ReusedDropDownString(
@@ -1986,17 +1951,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
     );
   }
 
-  _residentStatusDropdownWidget() {
-    return ReusedDropDownString(
-      textLabel: AppStrings.residentStatusLabel,
-      items: _residentDropdownItems,
-      value: _residentStatusValue,
-      hint: AppStrings.residentStatusLabel,
-      onChanged: (String value) {
-        setState(() => _residentStatusValue = value);
-      },
-    );
-  }
 
   _kYCDoc1DropDown() {
     return ReusedDropDownOptionItem(
@@ -2059,20 +2013,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
         });
   }
 
-  Widget _ownerConsentImageWidget() {
-    return CardImageWidget(
-      star: AppStrings.star,
-      imgString: AppStrings.customerConsentImgLabel,
-      children:InkWell(
-          onTap: () => _openCustomerConsentImgSource(context,),
-          child: customerConsentImageFile != null &&
-              customerConsentImageFile.isNotEmpty
-              ? customerConsentImageFile.split('.').last == "pdf"
-              ? _pdfImageWidget(customerConsentImageFile)
-              : _fileImage(fileImage: File(customerConsentImageFile))
-              : _localBorderImg()),
-    );
-  }
 
   Widget _frontImageWidget() {
     return CardImageWidget(
@@ -2611,10 +2551,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  frontImageFile = result.files.single.path;
+                  frontImageFile = result.path;
                 });
               } else {
                 log("User canceled the picker");
@@ -2656,10 +2599,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  backImageFile = result.files.single.path;
+                  backImageFile = result.path;
                 });
               } else {
                 log("User canceled the picker");
@@ -2701,10 +2647,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  electricBillFrontImgFile = result.files.single.path;
+                  electricBillFrontImgFile = result.path;
                 });
               } else {
                 log("User canceled the picker");
@@ -2746,10 +2695,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  electricBillBackImgFile = result.files.single.path;
+                  electricBillBackImgFile = result.path;
                 });
               } else {
                 log("User canceled the picker");
@@ -2791,10 +2743,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  nocFrontImgFile = result.files.single.path;
+                  nocFrontImgFile = result.path;
                   log("nocFrontImgFile-->" + nocFrontImgFile);
                 });
               } else {
@@ -2837,10 +2792,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  nocBackImgFile = result.files.single.path;
+                  nocBackImgFile = result.path;
                 });
               } else {
                 log("User canceled the picker");
@@ -2883,10 +2841,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  uploadCustomerImgFile = result.files.single.path;
+                  uploadCustomerImgFile = result.path;
                 });
               } else {
                 log("User canceled the picker");
@@ -2928,10 +2889,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  uploadHouseImgFile = result.files.single.path;
+                  uploadHouseImgFile = result.path;
                 });
               } else {
                 log("User canceled the picker");
@@ -2973,10 +2937,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  customerConsentImageFile = result.files.single.path;
+                  customerConsentImageFile = result.path;
                 });
               } else {
                 log("User canceled the picker");
@@ -3018,10 +2985,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  ownerConsentImageFile = result.files.single.path;
+                  ownerConsentImageFile = result.path;
                 });
               } else {
                 log("User canceled the picker");
@@ -3063,10 +3033,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  chqCancelledPhotoFile = result.files.single.path;
+                  chqCancelledPhotoFile = result.path;
                 });
               } else {
                 log("User canceled the picker");
@@ -3108,10 +3081,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
           onTapGallery: () async {
             Navigator.of(context).pop();
             try {
-              FilePickerResult result = await FilePicker.platform.pickFiles();
+              final result = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                maxHeight: 900,
+                maxWidth: 1000,);
               if (result != null) {
                 setState(() {
-                  chqPhotoFile = result.files.single.path;
+                  chqPhotoFile = result.path;
                 });
               } else {
                 log("User canceled the picker");

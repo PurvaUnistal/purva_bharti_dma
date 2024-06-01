@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CustomerInputFormHelper{
@@ -64,6 +65,26 @@ class CustomerInputFormHelper{
     return galleryImage;
 
     //  }
+  }
+
+  static Future<Position> getCurrentLocation() async {
+    await Geolocator.requestPermission();
+    await Permission.locationAlways.request();
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    log('latitude : ${position.latitude} longitude : ${position.longitude}');
+    return position;
+  }
+
+  static Future<bool> isInternetConnected() async {
+    bool isConnect = false;
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        isConnect = true;
+      }
+    } on SocketException catch (_) {}
+
+    return isConnect;
   }
 
 
