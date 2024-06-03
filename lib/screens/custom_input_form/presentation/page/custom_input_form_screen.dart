@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,7 +13,6 @@ import 'package:pbg_app/models/GetLabelModel.dart';
 import 'package:pbg_app/models/save_customer_registration_offline_model.dart';
 import 'package:pbg_app/screens/Registration.dart';
 import 'package:pbg_app/screens/Widget/customer_form_helper.dart';
-import 'package:pbg_app/screens/custom_input_form/helper/customer_input_form_helper.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/widget/border_form_widget.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/widget/card_image_widget.dart';
 import 'package:pbg_app/utils/common_widgets/app_color.dart';
@@ -384,7 +382,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   String userId = "";
   String depositSum = "";
-  final formGlobalKey = GlobalKey<FormState>();
+    final formGlobalKey = GlobalKey<FormState>();
 
   _buildLayout() {
     modeOfDepositString =
@@ -1366,7 +1364,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           chargeAreaType = value;
           areaTypeValue = null;
           areaItems.clear();
-          fetchArea(value.id);
+          fetchArea(chargeAreaId ?? "");
         });
       },
     );
@@ -3269,10 +3267,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Future<void> fetchArea(String id) async {
     var resArea = prefs.getString(GlobalConstants.area);
-    List dataList = json.decode(resArea);
+    List outputList = json.decode(resArea);
+    List dataList  = outputList.where((element) => element['charge_area_id'].toString() == id).toList();
     List<DropdownMenuItem<OptionItem>> menuItems = [];
     for (int i = 0; i < dataList.length; i++) {
-      //   if (dataList[i]['charge_area_id'] == id) {
       menuItems.add(DropdownMenuItem(
         value:
         OptionItem(id: dataList[i]['gid'], title: dataList[i]['area_name']),
@@ -3323,9 +3321,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
     });
     if (widget.isUpdate == true) {
       await fetchArea(chargeAreaType.id);
-    } else {
-      await fetchArea(dataChargeList[0]['gid']);
     }
+   /* else {
+      await fetchArea(dataChargeList[0]['gid']);
+    }*/
   }
 
   Future<void> interestedList() async {
@@ -3688,7 +3687,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
     List dataList = json.decode(resSchemeType);
     List<DropdownMenuItem<DepositItem>> menuItems = [];
     List<DropdownMenuItem<DepositItem>> menuItems2 = [];
-    menuItems.add(DropdownMenuItem(
+    /*menuItems.add(DropdownMenuItem(
       value: DepositItem(
           id: "0",
           title: "Select Deposit Type",
@@ -3708,7 +3707,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           interest_tax_amt: '',
           reg_tax: ''),
       child: Text('Select Deposit Type'),
-    ));
+    ));*/
 
     if (dataList != null) {
       for (int i = 0; i < dataList.length; i++) {

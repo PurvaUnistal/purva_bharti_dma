@@ -32,6 +32,7 @@ class _SaveCustomerRegistrationPageState
   @override
   void dispose() {
     _connectivitySubscription.cancel();
+
     super.dispose();
   }
   bool _mobileData = false;
@@ -188,212 +189,98 @@ class _SaveCustomerRegistrationPageState
     }
   }
 
-
-  Future fetchCustomerDataGrpList() async {
-    if(await ApiIntegration.isInternetConnected() == true){
-      for (int i = 0; i < customerRegistrationList.length; i++) {
-        SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
-        customerRegistrationList[i];
-        setState(() {
-          isLoading = true;
-        });
-        saveCustRegReqModel = SaveCustRegReqModel(
-          schema: saveCustRegOffModel.schema.toString(),
-          interested: saveCustRegOffModel.interested.toString(),
-          societyAllowedMdpe: saveCustRegOffModel.societyAllowedMdpe.toString(),
-          areaId: saveCustRegOffModel.areaId.toString(),
-          firstName: saveCustRegOffModel.firstName.toString(),
-          middleName: saveCustRegOffModel.middleName.toString(),
-          lastName: saveCustRegOffModel.lastName.toString(),
-          mobileNumber: saveCustRegOffModel.mobileNumber.toString(),
-          alternateNumber: saveCustRegOffModel.alternateMobileNo.toString(),
-          emailId: saveCustRegOffModel.emailId.toString(),
-          guardianType: saveCustRegOffModel.guardianType.toString(),
-          guardianName: saveCustRegOffModel.guardianName.toString(),
-          propertyCategoryId: saveCustRegOffModel.propertyCategoryId.toString(),
-          propertyClassId: saveCustRegOffModel.propertyClassId.toString(),
-          reasonForHold: saveCustRegOffModel.reasonForHold.toString(),
-          dmaUserId: saveCustRegOffModel.dmaUserId.toString(),
-          dmaUserName: saveCustRegOffModel.dmaUserName.toString(),
-          houseNumber: saveCustRegOffModel.houseNumber.toString(),
-          colonySocietyApartment:
-          saveCustRegOffModel.colonySocietyApartment.toString(),
-          streetName: saveCustRegOffModel.streetName.toString(),
-          town: saveCustRegOffModel.town.toString(),
-          districtId: saveCustRegOffModel.districtId.toString(),
-          pinCode: saveCustRegOffModel.pinCode.toString(),
-          residentStatus: saveCustRegOffModel.residentStatus.toString(),
-          noOfKitchen: saveCustRegOffModel.noOfKitchen.toString(),
-          noOfBathroom: saveCustRegOffModel.noOfBathroom.toString(),
-          existingCookingFuel:
-          saveCustRegOffModel.existingCookingFuel.toString(),
-          noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers.toString(),
-          latitude: saveCustRegOffModel.latitude.toString(),
-          longitude: saveCustRegOffModel.longitude.toString(),
-          remarks: saveCustRegOffModel.remarks.toString(),
-          kycDocument1: saveCustRegOffModel.kycDocument1.toString(),
-          kycDocument1Number: saveCustRegOffModel.kycDocument1Number.toString(),
-          kycDocument2: saveCustRegOffModel.kycDocument2.toString(),
-          kycDocument2Number: saveCustRegOffModel.kycDocument2Number.toString(),
-          kycDocument3: saveCustRegOffModel.kycDocument3.toString(),
-          kycDocument3Number: saveCustRegOffModel.kycDocument3Number.toString(),
-          initialAmount: saveCustRegOffModel.initialAmount.toString(),
-          bankAccountNumber: saveCustRegOffModel.bankAccountNumber.toString(),
-          bankAddress: saveCustRegOffModel.bankAddress.toString(),
-          bankIfscCode: saveCustRegOffModel.bankIfscCode.toString(),
-          chequeBankAccount: saveCustRegOffModel.chequeBankAccount.toString(),
-          chequeNumber: saveCustRegOffModel.chequeNumber.toString(),
-          depositeType: saveCustRegOffModel.depositeType.toString(),
-          initialDepositeDate:
-          saveCustRegOffModel.initialDepositeDate.toString(),
-          initialDepositeStatus:
-          saveCustRegOffModel.initialDepositeStatus.toString(),
-          modeOfDeposite: saveCustRegOffModel.modeOfDeposite.toString(),
-          nameOfBank: saveCustRegOffModel.nameOfBank.toString().toString(),
-          payementBankName: saveCustRegOffModel.payementBankName.toString(),
-          backSideImg1: saveCustRegOffModel.backSidePhoto1.toString(),
-          backSideImg2: saveCustRegOffModel.backSidePhoto2.toString(),
-          backSideImg3: saveCustRegOffModel.backSidePhoto3.toString(),
-          canceledCheque: saveCustRegOffModel.canceledChequePhoto.toString(),
-          chequePhoto: saveCustRegOffModel.chequePhoto.toString(),
-          uploadCustomerPhoto:
-          saveCustRegOffModel.uploadCustomerPhoto.toString(),
-          uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto.toString(),
-          docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1.toString(),
-          docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2.toString(),
-          docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
-          customerConsent: saveCustRegOffModel.customerConsentPhoto.toString(),
-          ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
-          acceptConversionPolicy:
-          saveCustRegOffModel.acceptConversionPolicy.toString(),
-          acceptExtraFittingCost:
-          saveCustRegOffModel.acceptExtraFittingCost.toString(),
-          micr: saveCustRegOffModel.micr.toString(),
-          buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
-        );
-        log("saveCustRegReqModel--->" +
-            saveCustRegReqModel.toJson().toString());
-        log("saveCustRegReqModellengthlengthlength--->" + saveCustRegReqModel.toJson().length.toString());
-        try {
-          var response =
-          await apiIntegration.saveCustRegApi(context,saveCustRegReqModel);
-          log("response-->${response.toString()}");
-          if (response != null) {
-            setState(() {
-              isLoading = false;
-            });
-            clearCache();
-            imageCache.clear();
-            imageCache.clearLiveImages();
-            customerRegistrationBox.clear();
-            CustomToast.showToast(response.message[i].message.toString());
-          } else {
-            setState(() {
-              isLoading = false;
-            });
-            //  CustomToast.showToast(response.message[0].message.toString());
-          }
-        } catch (e) {
-          setState(() {
-            isLoading = false;
-          });
-          CustomToast.showToast(e.toString());
-        }
-      }
-    }
-  }
-
   Future fetchCustomerDataSingle({int index}) async {
     if(await ApiIntegration.isInternetConnected() == true){
       setState(() {
         isLoading = true;
       });
-      SaveCustomerRegistrationOfflineModel saveCustRegOffModel =
-      customerRegistrationList[index];
+      List<SaveCustomerRegistrationOfflineModel> data =   customerRegistrationBox.values.toList();
       saveCustRegReqModel = SaveCustRegReqModel(
-        schema: saveCustRegOffModel.schema.toString(),
-        interested: saveCustRegOffModel.interested.toString(),
-        societyAllowedMdpe: saveCustRegOffModel.societyAllowedMdpe.toString(),
-        areaId: saveCustRegOffModel.areaId.toString(),
-        firstName: saveCustRegOffModel.firstName.toString(),
-        middleName: saveCustRegOffModel.middleName.toString(),
-        lastName: saveCustRegOffModel.lastName.toString(),
-        mobileNumber: saveCustRegOffModel.mobileNumber.toString(),
-        alternateNumber: saveCustRegOffModel.alternateMobileNo.toString(),
-        emailId: saveCustRegOffModel.emailId.toString(),
-        guardianType: saveCustRegOffModel.guardianType.toString(),
-        guardianName: saveCustRegOffModel.guardianName.toString(),
-        propertyCategoryId: saveCustRegOffModel.propertyCategoryId.toString(),
-        propertyClassId: saveCustRegOffModel.propertyClassId.toString(),
-        reasonForHold: saveCustRegOffModel.reasonForHold.toString(),
-        dmaUserId: saveCustRegOffModel.dmaUserId.toString(),
-        dmaUserName: saveCustRegOffModel.dmaUserName.toString(),
-        houseNumber: saveCustRegOffModel.houseNumber.toString(),
+        schema: data[index].schema.toString(),
+        interested: data[index].interested.toString(),
+        societyAllowedMdpe: data[index].societyAllowedMdpe.toString(),
+        areaId: data[index].areaId.toString(),
+        firstName: data[index].firstName.toString(),
+        middleName: data[index].middleName.toString(),
+        lastName: data[index].lastName.toString(),
+        mobileNumber: data[index].mobileNumber.toString(),
+        alternateNumber: data[index].alternateMobileNo.toString(),
+        emailId: data[index].emailId.toString(),
+        guardianType: data[index].guardianType.toString(),
+        guardianName: data[index].guardianName.toString(),
+        propertyCategoryId: data[index].propertyCategoryId.toString(),
+        propertyClassId: data[index].propertyClassId.toString(),
+        reasonForHold: data[index].reasonForHold.toString(),
+        dmaUserId: data[index].dmaUserId.toString(),
+        dmaUserName: data[index].dmaUserName.toString(),
+        houseNumber: data[index].houseNumber.toString(),
         colonySocietyApartment:
-        saveCustRegOffModel.colonySocietyApartment.toString(),
-        streetName: saveCustRegOffModel.streetName.toString(),
-        town: saveCustRegOffModel.town.toString(),
-        districtId: saveCustRegOffModel.districtId.toString(),
-        pinCode: saveCustRegOffModel.pinCode.toString(),
-        residentStatus: saveCustRegOffModel.residentStatus.toString(),
-        noOfKitchen: saveCustRegOffModel.noOfKitchen.toString(),
-        noOfBathroom: saveCustRegOffModel.noOfBathroom.toString(),
-        existingCookingFuel: saveCustRegOffModel.existingCookingFuel.toString(),
-        noOfFamilyMembers: saveCustRegOffModel.noOfFamilyMembers.toString(),
-        latitude: saveCustRegOffModel.latitude.toString(),
-        longitude: saveCustRegOffModel.longitude.toString(),
-        remarks: saveCustRegOffModel.remarks.toString(),
-        kycDocument1: saveCustRegOffModel.kycDocument1.toString(),
-        kycDocument1Number: saveCustRegOffModel.kycDocument1Number.toString(),
-        kycDocument2: saveCustRegOffModel.kycDocument2.toString(),
-        kycDocument2Number: saveCustRegOffModel.kycDocument2Number.toString(),
-        kycDocument3: saveCustRegOffModel.kycDocument3.toString(),
-        kycDocument3Number: saveCustRegOffModel.kycDocument3Number.toString(),
-        initialAmount: saveCustRegOffModel.initialAmount.toString(),
-        bankAccountNumber: saveCustRegOffModel.bankAccountNumber.toString(),
-        bankAddress: saveCustRegOffModel.bankAddress.toString(),
-        bankIfscCode: saveCustRegOffModel.bankIfscCode.toString(),
-        chequeBankAccount: saveCustRegOffModel.chequeBankAccount.toString(),
-        chequeNumber: saveCustRegOffModel.chequeNumber.toString(),
-        depositeType: saveCustRegOffModel.depositeType.toString(),
-        initialDepositeDate: saveCustRegOffModel.initialDepositeDate.toString(),
+        data[index].colonySocietyApartment.toString(),
+        streetName: data[index].streetName.toString(),
+        town: data[index].town.toString(),
+        districtId: data[index].districtId.toString(),
+        pinCode: data[index].pinCode.toString(),
+        residentStatus: data[index].residentStatus.toString(),
+        noOfKitchen: data[index].noOfKitchen.toString(),
+        noOfBathroom: data[index].noOfBathroom.toString(),
+        existingCookingFuel: data[index].existingCookingFuel.toString(),
+        noOfFamilyMembers: data[index].noOfFamilyMembers.toString(),
+        latitude: data[index].latitude.toString(),
+        longitude: data[index].longitude.toString(),
+        remarks: data[index].remarks.toString(),
+        kycDocument1: data[index].kycDocument1.toString(),
+        kycDocument1Number: data[index].kycDocument1Number.toString(),
+        kycDocument2: data[index].kycDocument2.toString(),
+        kycDocument2Number: data[index].kycDocument2Number.toString(),
+        kycDocument3: data[index].kycDocument3.toString(),
+        kycDocument3Number: data[index].kycDocument3Number.toString(),
+        initialAmount: data[index].initialAmount.toString(),
+        bankAccountNumber: data[index].bankAccountNumber.toString(),
+        bankAddress: data[index].bankAddress.toString(),
+        bankIfscCode: data[index].bankIfscCode.toString(),
+        chequeBankAccount: data[index].chequeBankAccount.toString(),
+        chequeNumber: data[index].chequeNumber.toString(),
+        depositeType: data[index].depositeType.toString(),
+        initialDepositeDate: data[index].initialDepositeDate.toString(),
         initialDepositeStatus:
-        saveCustRegOffModel.initialDepositeStatus.toString(),
-        modeOfDeposite: saveCustRegOffModel.modeOfDeposite.toString(),
-        nameOfBank: saveCustRegOffModel.nameOfBank.toString().toString(),
-        payementBankName: saveCustRegOffModel.payementBankName.toString(),
-        backSideImg1: saveCustRegOffModel.backSidePhoto1.toString(),
-        backSideImg2: saveCustRegOffModel.backSidePhoto2.toString(),
-        backSideImg3: saveCustRegOffModel.backSidePhoto3.toString(),
-        canceledCheque: saveCustRegOffModel.canceledChequePhoto.toString(),
-        chequePhoto: saveCustRegOffModel.chequePhoto.toString(),
-        uploadCustomerPhoto: saveCustRegOffModel.uploadCustomerPhoto.toString(),
-        uploadHousePhoto: saveCustRegOffModel.uploadHousePhoto.toString(),
-        docUploadsImg1: saveCustRegOffModel.documentUploadsPhoto1.toString(),
-        docUploadsImg2: saveCustRegOffModel.documentUploadsPhoto2.toString(),
-        docUploadsImg3: saveCustRegOffModel.documentUploadsPhoto3.toString(),
-        customerConsent: saveCustRegOffModel.customerConsentPhoto,
-        ownerConsent: saveCustRegOffModel.ownerConsent.toString(),
+        data[index].initialDepositeStatus.toString(),
+        modeOfDeposite: data[index].modeOfDeposite.toString(),
+        nameOfBank: data[index].nameOfBank.toString().toString(),
+        payementBankName: data[index].payementBankName.toString(),
+        backSideImg1: data[index].backSidePhoto1.toString(),
+        backSideImg2: data[index].backSidePhoto2.toString(),
+        backSideImg3: data[index].backSidePhoto3.toString(),
+        canceledCheque: data[index].canceledChequePhoto.toString(),
+        chequePhoto: data[index].chequePhoto.toString(),
+        uploadCustomerPhoto: data[index].uploadCustomerPhoto.toString(),
+        uploadHousePhoto: data[index].uploadHousePhoto.toString(),
+        docUploadsImg1: data[index].documentUploadsPhoto1.toString(),
+        docUploadsImg2: data[index].documentUploadsPhoto2.toString(),
+        docUploadsImg3: data[index].documentUploadsPhoto3.toString(),
+        customerConsent: data[index].customerConsentPhoto,
+        ownerConsent: data[index].ownerConsent.toString(),
         acceptConversionPolicy:
-        saveCustRegOffModel.acceptConversionPolicy.toString(),
+        data[index].acceptConversionPolicy.toString(),
         acceptExtraFittingCost:
-        saveCustRegOffModel.acceptExtraFittingCost.toString(),
-        micr: saveCustRegOffModel.micr.toString(),
-        buildingNumber: saveCustRegOffModel.buildingNumber.toString(),
+        data[index].acceptExtraFittingCost.toString(),
+        micr: data[index].micr.toString(),
+        buildingNumber: data[index].buildingNumber.toString(),
       );
-      log("saveCustRegReqModellengthlengthlength--->" + saveCustRegReqModel.toJson().length.toString());
-      var response = await apiIntegration.saveCustRegApi(context,saveCustRegReqModel);
+      var response = await apiIntegration.saveCustRegApi(context, saveCustRegReqModel);
       try {
         if (response != null) {
-          setState(() {
+          setState(()  {
             isLoading = false;
+            customerRegistrationBox.deleteAt(index);
+            customerRegistrationList.removeAt(index);
+          //  clearCache();
           });
-          customerRegistrationList.removeAt(index);
-          customerRegistrationBox.deleteAt(index);
-          clearCache();
-          imageCache.clear();
-          imageCache.clearLiveImages();
-          CustomToast.showToast(response.message[0].message);
+         await  CustomToast.showToast(response.message[0].message);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => RegistrationForm()),
+                (Route<dynamic> route) => false,
+          );
         } else {
           setState(() {
             isLoading = false;
@@ -511,10 +398,9 @@ class _SaveCustomerRegistrationPageState
                                                       color: Colors
                                                           .blue.shade900,
                                                     ),
-                                                    onPressed: () =>
-                                                        fetchCustomerDataSingle(
-                                                            index:
-                                                            position),
+                                                    onPressed: () async {
+                                                      fetchCustomerDataSingle(index: position);
+                                                    }
                                                   ),
                                                   InkWell(
                                                       onTap: () async {

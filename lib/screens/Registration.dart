@@ -152,7 +152,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 01-06-2024",
+                      "Date : 03-06-2024",
                       style: TextStyle(
                           color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
@@ -411,7 +411,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   Future<void> fetchArea() async {
-    String url = GlobalConstants.getAllArea + "?schema=" + schema;
+    String url = GlobalConstants.getAllArea + "?schema=" + schema+ "&gid=""";
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.area,
