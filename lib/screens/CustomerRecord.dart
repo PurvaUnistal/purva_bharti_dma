@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/models/save_customer_registration_model.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/page/custom_input_form_screen.dart';
+import 'package:pbg_app/utils/common_widgets/dotted_loader_widget.dart';
 import 'package:pbg_app/utils/common_widgets/spin_loader.dart';
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
@@ -273,9 +274,9 @@ class _SaveCustomerRegistrationPageState
             isLoading = false;
             customerRegistrationBox.deleteAt(index);
             customerRegistrationList.removeAt(index);
-          //  clearCache();
+            //  clearCache();
           });
-         await  CustomToast.showToast(response.message[0].message);
+          await  CustomToast.showToast(response.message[0].message);
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => RegistrationForm()),
@@ -318,7 +319,7 @@ class _SaveCustomerRegistrationPageState
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: ListView(
+          child: Column(
             children: [
               new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -329,11 +330,18 @@ class _SaveCustomerRegistrationPageState
                   _buildBox(
                       color: _wifiData ? Colors.green : Colors.red,
                       textTitle: "WI-FI"),
-                  _buildBox(
+                  isLoading == false
+                      ? _buildBox(
                     color: _bothTypeData ? Colors.green : Colors.red,
-                    textTitle: isLoading ? "Loading" : "Submit",
+                    textTitle:  "Submit",
                     onTap: () async {
                       fetchCustomerDataList();
+                    },
+                  )
+                      : _buildBox(
+                    color: _bothTypeData ? Colors.green : Colors.red,
+                    textTitle: "Loading",
+                    onTap: () async {
                     },
                   ),
                 ],
@@ -341,18 +349,42 @@ class _SaveCustomerRegistrationPageState
               SizedBox(
                 height: 15,
               ),
-              Stack(
-                children: [
-                  SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: ValueListenableBuilder(
+             Flexible(
+                child: Stack(
+                  children: [
+                    isLoading  == true ?
+                    Dialog(
+                      child: Padding(
+                        padding:
+                        const EdgeInsets
+                            .all(
+                            18.0),
+                        child: Column(
+                          mainAxisSize:
+                          MainAxisSize
+                              .min,
+                          mainAxisAlignment:
+                          MainAxisAlignment
+                              .center,
+                          crossAxisAlignment:
+                          CrossAxisAlignment
+                              .center,
+                          children: [
+                            Text('Please Wait',style: TextStyle(fontWeight: FontWeight.bold)),
+                            //  SpinLoader(),
+                            DottedLoaderWidget()
+                          ],
+                        ),
+                      ),
+                    ) : Container(),
+                    ValueListenableBuilder(
                         valueListenable: customerRegistrationBox.listenable(),
                         builder: (context, box, _) {
                           return customerRegistrationList.length == 0
                               ? SizedBox(height: MediaQuery.of(context).size.height * 0.7,child: const Center(child: Text("No Data Found")))
                               : ListView.builder(
                               shrinkWrap: true,
-                              physics: ClampingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
                               itemCount: customerRegistrationList.length,
                               itemBuilder: (context, position) {
                                 SaveCustomerRegistrationOfflineModel
@@ -392,16 +424,14 @@ class _SaveCustomerRegistrationPageState
                                                     appbarHeadingStyle,
                                                   ),
                                                   Spacer(),
-                                                  IconButton(
-                                                    icon: Icon(
-                                                      Icons.sync,
-                                                      color: Colors
-                                                          .blue.shade900,
-                                                    ),
-                                                    onPressed: () async {
-                                                      fetchCustomerDataSingle(index: position);
-                                                    }
-                                                  ),
+                                                  isLoading == false ? IconButton(
+                                                      icon: Icon(
+                                                        Icons.sync, color: Colors.blue.shade900,),
+                                                      onPressed: () async {
+                                                        fetchCustomerDataSingle(index: position);
+                                                      }
+                                                  ) :Icon(
+                                                    Icons.sync, color: Colors.blue.shade900,),
                                                   InkWell(
                                                       onTap: () async {
                                                         await showDialog(
@@ -551,9 +581,8 @@ class _SaveCustomerRegistrationPageState
                                 );
                               });
                         }),
-                  ),
-                  isLoading ? SizedBox(height: MediaQuery.of(context).size.height * 0.7, child: Center(child: SpinLoader())) : Container()
-                ],
+                  ],
+                ),
               )
             ],
           ),
