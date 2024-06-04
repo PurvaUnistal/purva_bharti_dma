@@ -276,12 +276,7 @@ class _SaveCustomerRegistrationPageState
             customerRegistrationList.removeAt(index);
             //  clearCache();
           });
-          await  CustomToast.showToast(response.message[0].message);
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => RegistrationForm()),
-                (Route<dynamic> route) => false,
-          );
+          await  CustomToast.showToast(response.message[index].message);
         } else {
           setState(() {
             isLoading = false;
@@ -340,8 +335,8 @@ class _SaveCustomerRegistrationPageState
                   )
                       : _buildBox(
                     color: _bothTypeData ? Colors.green : Colors.red,
-                    textTitle: "Loading",
-                    onTap: () async {
+                    textTitle:  "Loading",
+                    onTap: ()  {
                     },
                   ),
                 ],
@@ -352,31 +347,6 @@ class _SaveCustomerRegistrationPageState
              Flexible(
                 child: Stack(
                   children: [
-                    isLoading  == true ?
-                    Dialog(
-                      child: Padding(
-                        padding:
-                        const EdgeInsets
-                            .all(
-                            18.0),
-                        child: Column(
-                          mainAxisSize:
-                          MainAxisSize
-                              .min,
-                          mainAxisAlignment:
-                          MainAxisAlignment
-                              .center,
-                          crossAxisAlignment:
-                          CrossAxisAlignment
-                              .center,
-                          children: [
-                            Text('Please Wait',style: TextStyle(fontWeight: FontWeight.bold)),
-                            //  SpinLoader(),
-                            DottedLoaderWidget()
-                          ],
-                        ),
-                      ),
-                    ) : Container(),
                     ValueListenableBuilder(
                         valueListenable: customerRegistrationBox.listenable(),
                         builder: (context, box, _) {
@@ -581,6 +551,34 @@ class _SaveCustomerRegistrationPageState
                                 );
                               });
                         }),
+                    isLoading == true ? Positioned(
+                      child: AlertDialog(
+                        title: Padding(
+                          padding:
+                          const EdgeInsets
+                              .all(
+                              18.0),
+                          child: Column(
+                            mainAxisSize:
+                            MainAxisSize
+                                .min,
+                            mainAxisAlignment:
+                            MainAxisAlignment
+                                .center,
+                            crossAxisAlignment:
+                            CrossAxisAlignment
+                                .center,
+                            children: [
+                              Text('Please Wait',style: TextStyle(fontWeight: FontWeight.bold)),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              DottedLoaderWidget()
+                            ],
+                          ),
+                        ),
+                      ),
+                    ) :Container()
                   ],
                 ),
               )

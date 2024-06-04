@@ -175,18 +175,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
     }
   }
 
-  @override
-  void dispose() {
-    _connectivitySubscription.cancel();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
             child: CustomAppBar(
@@ -711,7 +706,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                       _buildRow(
                         leading: AppStrings.alternateMobileNoLabel,
                         trailing:
-                        alternateMobileNoController.text.trim().toString() ?? "-",
+                        alternateMobileNoController.text.trim().toString() ?? "--",
                       ),
                       _buildRow(
                         leading: AppStrings.firstNameLabel,

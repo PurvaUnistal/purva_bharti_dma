@@ -499,8 +499,6 @@ class SaveCustRegReqModel {
       "property_category_id": propertyCategoryId,
       "property_class_id": propertyClassId,
       "house_number": houseNumber.toString() ?? "",
-      /*"locality": colonySocietyApartment.toString() ?? "",
-      "address2": streetName.toString() ?? "",*/
       "locality": streetName.toString() ?? "",
       "address2": colonySocietyApartment.toString() ?? "",
       "town": town.toString() ?? "",

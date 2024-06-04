@@ -108,6 +108,7 @@ class ApiIntegration {
           saveCustRegReqModel.acceptExtraFittingCost ?? "",
           "area_id": saveCustRegReqModel.areaId ?? "",
           "mobile_number": saveCustRegReqModel.mobileNumber ?? "",
+          "alternateMobile": saveCustRegReqModel.alternateNumber ?? "",
           "first_name": saveCustRegReqModel.firstName ?? "",
           "middle_name": saveCustRegReqModel.middleName ?? "",
           "last_name": saveCustRegReqModel.lastName ?? "",
