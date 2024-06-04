@@ -393,13 +393,14 @@ class _CustomInputFormState extends State<CustomInputForm> {
               _interestedDropDown(),
               AppStyle.vertical(context),
               interestedId == '0' ? _reasonInterestedWidget() : Container(),
-              AppStyle.vertical(context),
               _chargeAreaDropDown(),
               AppStyle.vertical(context),
               _areaDropDown(),
               AppStyle.vertical(context),
               _mobileWidget(),
+              AppStyle.vertical(context),
               _alternateMobileWidget(),
+              AppStyle.vertical(context),
               _firstNameWidget(),
               AppStyle.vertical(context),
               _middleWidget(),
@@ -464,8 +465,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
                 ),
               ],
               if(interestedId == '1')...[
-                /*  _residentStatusDropdownWidget(),
-                AppStyle.vertical(context),*/
                 Row(
                   children: [
                     Flexible(
@@ -481,7 +480,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                       child: _noFamilyWidget(),),
                   ],
                 ),
-                // AppStyle.vertical(context),
+              AppStyle.vertical(context),
                 _fuelDropdownWidget(),
                 AppStyle.vertical(context),
                 _kYCDoc1DropDown(),
@@ -552,10 +551,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           AppStyle.vertical(context),
                           _chequeDateWidget(),
                           AppStyle.vertical(context),
-                          _chequeAccountNoWidget(),
                           _payementBankNameDropDown(),
                           AppStyle.vertical(context),
                           _chequeAccountNoWidget(),
+                          AppStyle.vertical(context),
                           _chequeMICRNoWidget(),
                           _chequeImageWidget(),
                         ],
@@ -1331,18 +1330,23 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   Widget _reasonInterestedWidget() {
-    return TextFieldWidget(
-      enabled: true,
-      headingLabel: AppStrings.reasonInterestedLabel,
-      textInputType: TextInputType.text,
-      controller: reasonInterestedController,
-      hintText: AppStrings.reasonInterestedLabel,
-      validator: (value) {
-        if (value != reasonInterestedController.text.trim()) {
-          return AppStrings.blankSpace;
-        }
-        return null;
-      },
+    return Column(
+      children: [
+        TextFieldWidget(
+          enabled: true,
+          headingLabel: AppStrings.reasonInterestedLabel,
+          textInputType: TextInputType.text,
+          controller: reasonInterestedController,
+          hintText: AppStrings.reasonInterestedLabel,
+          validator: (value) {
+            if (value != reasonInterestedController.text.trim()) {
+              return AppStrings.blankSpace;
+            }
+            return null;
+          },
+        ),
+        AppStyle.vertical(context),
+      ],
     );
   }
 
@@ -3682,28 +3686,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
     List dataList = json.decode(resSchemeType);
     List<DropdownMenuItem<DepositItem>> menuItems = [];
     List<DropdownMenuItem<DepositItem>> menuItems2 = [];
-    /*menuItems.add(DropdownMenuItem(
-      value: DepositItem(
-          id: "0",
-          title: "Select Deposit Type",
-          firstamount: 0,
-          amount: '0.0',
-          schememonth: 0,
-          gas_amount: 0,
-          scheme_type: '',
-          scheme_code: '',
-          deposit_amount: '',
-          equipment_deposit_amount: '',
-          interest_amount: '',
-          registration_gst: '',
-          totalAmount: '',
-          nextCycleAmount: '',
-          registration_tax_name: '',
-          interest_tax_amt: '',
-          reg_tax: ''),
-      child: Text('Select Deposit Type'),
-    ));*/
-
     if (dataList != null) {
       for (int i = 0; i < dataList.length; i++) {
         try {

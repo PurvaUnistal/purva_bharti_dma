@@ -71,6 +71,7 @@ class TextFieldWidget extends StatelessWidget {
           inputFormatters : inputFormatters,
           cursorColor: AppColor.black,
           decoration: InputDecoration(
+            counterText: '',
             suffix: suffixIcon,
             prefixIcon: prefixIcon,
             hintText: hintText,

@@ -196,7 +196,7 @@ class CustomerFormHelper {
           }
         }
         if (depositType == "") {
-          CustomToast.showToast("Please select deposit Type");
+          CustomToast.showToast("Please select scheme Type");
           return null;
         }
         if (mdpeValue.isEmpty || mdpeValue == null) {
@@ -210,7 +210,7 @@ class CustomerFormHelper {
         if (modeOfDeposit == "" ||
             modeOfDeposit == null ||
             modeOfDeposit.isEmpty) {
-          CustomToast.showToast("Please select mode of deposite");
+          CustomToast.showToast("Please select mode of deposit");
           return false;
         } else if (modeOfDeposit == "1") {
           if (chequeNo == "") {

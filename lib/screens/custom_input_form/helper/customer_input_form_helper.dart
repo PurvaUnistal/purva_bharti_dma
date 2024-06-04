@@ -1,9 +1,4 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -11,16 +6,6 @@ class CustomerInputFormHelper{
 
 
   static Future<dynamic> cameraPiker({BuildContext context, File cameraImage}) async {
-    /*  await Permission.photos.request();
-    var permissionStatus = await Permission.photos.status;
-    final androidInfo = await DeviceInfoPlugin().androidInfo;
-    if (Platform.isAndroid) {
-      */ /*if (androidInfo.version.sdkInt <= 32) {
-        /// use [Permissions.storage.status]
-      }  else {
-        /// use [Permissions.photos.status]
-      }*/ /*
-    }*/
     if (await Permission.camera.request().isGranted) {
       try {
         final XFile camera = await ImagePicker().pickImage(
