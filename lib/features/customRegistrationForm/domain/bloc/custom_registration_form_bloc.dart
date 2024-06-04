@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
-import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
-
+import 'package:pbg_app/features/customRegistrationForm/helper/custom_registration_form_helper.dart';
+import 'package:pbg_app/features/customRegistrationForm/presentation/widgets/customer_registration_form_preview_pop_widget.dart';
 
 class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, CustomRegistrationFormState> {
   CustomRegistrationFormBloc() : super(CustomRegistrationFormInitialState()) {
@@ -185,7 +183,6 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
 
   _pageLoad(CustomRegistrationFormPageLoadEvent event, emit) async {
     emit(CustomRegistrationFormPageLoadState());
-    await SharedPreferences.getInstance();
     _isPageLoader = false;
     _isUpdate = false;
     listOfAllLabel = [];

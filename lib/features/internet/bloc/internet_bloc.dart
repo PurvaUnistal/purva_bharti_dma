@@ -1,4 +1,7 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/features/internet/bloc/internet_event.dart';
+import 'package:pbg_app/features/internet/bloc/internet_state.dart';
 
 class InternetBloc extends Bloc<InternetEvent, InternetState> {
   StreamSubscription? subscription;

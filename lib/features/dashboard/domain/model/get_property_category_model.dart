@@ -1,11 +1,4 @@
-// To parse this JSON data, do
-//
-//     final getPropertyCategoryModel = getPropertyCategoryModelFromJson(jsonString);
-
-import 'dart:convert';
-
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_property_category_model.g.dart';
 
 List<GetPropertyCategoryModel> getPropertyCategoryModelFromJson(String str) =>

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pbg_app/common/Utils/SharedPrefs/SharedPreference.dart';
-import 'package:pbg_app/common/Utils/common_widget/app_string.dart';
-import 'package:pbg_app/common/Utils/common_widget/button_widget.dart';
-import 'package:pbg_app/common/Utils/common_widget/styles_widget.dart';
-import 'package:pbg_app/features/login/presentation/login_page.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 
 class LogoutWidget extends StatelessWidget {
   const LogoutWidget({super.key});
@@ -33,7 +29,7 @@ class LogoutWidget extends StatelessWidget {
                             MaterialPageRoute(builder: (context) => const LoginView()),
                                 (route) => false
                         );
-                        await PreferenceUtils.clearAll();
+                        await SharedPref.clearAll();
                       }
                   ),
                 ),

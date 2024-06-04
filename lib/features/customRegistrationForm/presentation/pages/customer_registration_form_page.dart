@@ -1,5 +1,20 @@
+import 'package:flutter/services.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
+import 'package:pbg_app/Utils/common_widgets/Loader/SpinLoader.dart';
+import 'package:pbg_app/Utils/common_widgets/app_bar_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/app_color.dart';
+import 'package:pbg_app/Utils/common_widgets/app_string.dart';
+import 'package:pbg_app/Utils/common_widgets/button_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/dropdown_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/message_box_two_button_pop.dart';
+import 'package:pbg_app/Utils/common_widgets/styles_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/text_form_widget.dart';
+import 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_bloc.dart';
+import 'package:pbg_app/features/customRegistrationForm/presentation/widgets/border_widget.dart';
+import 'package:pbg_app/features/customRegistrationForm/presentation/widgets/column_widget.dart';
+import 'package:pbg_app/features/customRegistrationForm/presentation/widgets/image_pop_widget.dart';
+import 'package:pbg_app/features/customRegistrationForm/presentation/widgets/image_widget.dart';
 
 class CustomerRegistrationFormPage extends StatefulWidget {
   final bool isUpdate;
@@ -32,14 +47,14 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: AppBarWidget(
-            titleAppBar: AppString.customerRegistrationForm,
+            title: AppString.customerRegistrationForm,
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios_rounded,
                 color: Colors.white,
               ),
               onPressed: () {
-                Navigator.pushReplacementNamed(context, RoutesName.dashboardView);
+                Navigator.pushReplacementNamed(context, RoutesName.dashboard);
               },
             ),
           ),
@@ -270,7 +285,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       items: stateData.getNotInterestedList,
       onChanged: (val) {
         log("stateData.interestValue-->${stateData.interestValue}");
-        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetInterestValue(interestValue: val));
+        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetInterestValue(interestValue: val!));
       },
     );
   }
@@ -294,10 +309,11 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
       dropdownValue: stateData.conversionPolicyValue == null? null:stateData.conversionPolicyValue,
       items: stateData.conversionPolicyList,
       onChanged: (val) {
-        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetConversionPolicyValue(conversionPolicyValue: val));
+        BlocProvider.of<CustomRegistrationFormBloc>(context).add(CustomRegistrationFormSetConversionPolicyValue(conversionPolicyValue: val!));
       },
     );
   }
+
   Widget _acceptExtraFittingCostDropdown({required CustomRegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetAcceptExtraFittingCostModel>(
       label: AppString.fittingCost,
@@ -1482,7 +1498,7 @@ class _CustomerRegistrationFormPageState extends State<CustomerRegistrationFormP
         radius: 40,
         backgroundColor: Colors.white,
         backgroundImage: AssetImage(
-          AppIcon.imageCaptureIcon,
+          ImgAsset.imageCaptureIcon,
         ),
       ),
     );

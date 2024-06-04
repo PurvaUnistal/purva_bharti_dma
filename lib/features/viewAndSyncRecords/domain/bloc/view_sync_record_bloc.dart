@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
-import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
 
 
 class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> {
@@ -41,7 +39,7 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
           onPressed: () async {
             if (HiveDataBase.custRegSyncBox!.values.isNotEmpty) {
               Navigator.pop(event.context);
-              Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
+              Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
               log("Data Length P ============== ${HiveDataBase.custRegSyncBox!.values.length}");
               return await HiveDataBase.custRegSyncBox!.deleteAt(event.index);
             }
@@ -61,7 +59,7 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
          _isSaveServerLoader = false;
          _eventCompleted(emit);
          Utils.successSnackBar(msg: res.message[i].message, context: event.context);
-         Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecordPage);
+         Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecord);
        }
      }
    }catch(e){

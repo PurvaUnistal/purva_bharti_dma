@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pbg_app/common/Utils/common_widget/app_color.dart';
-import 'package:pbg_app/common/Utils/common_widget/styles_widget.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 
 class RowBtnWidget extends StatelessWidget {
   final IconData icon;
@@ -22,7 +21,7 @@ class RowBtnWidget extends StatelessWidget {
             children: [
               Icon(icon, color: Colors.white,),
               SizedBox(width: 2,),
-              Text(text, textAlign: TextAlign.center,style: Styles.textW,),
+              Text(text, textAlign: TextAlign.center,style: Styles.labels,),
             ],
           ),
         ),

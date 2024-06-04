@@ -1,7 +1,5 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
-import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
-import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
 
 
 class CustomRegistrationFormHelper {
@@ -245,10 +243,11 @@ class CustomRegistrationFormHelper {
           }
         }
       }
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? schema = prefs.getString(PrefsValue.schema);
-      String? dmaUserId = prefs.getString(PrefsValue.userId);
-      String? dmaUserName = prefs.getString(PrefsValue.userName);
+
+      String schema = await SharedPref.getString(key: PrefsValue.schema);
+      String dmaUserId = await SharedPref.getString(key: PrefsValue.userId);
+      String dmaUserName = await SharedPref.getString(key: PrefsValue.userName);
+
       CustRegSync custRegSyncStore = CustRegSync(
         schema: schema,
         dmaUserId: dmaUserId,
@@ -405,7 +404,7 @@ class CustomRegistrationFormHelper {
         if (mmm <= 15) {
           print("mmmLength-->${mmm.toString().length}");
           Utils.successSnackBar(msg:"Great Success! Record Save",  context: context);
-          Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecordPage);
+          Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
           return await HiveDataBase.custRegSyncBox!.add(custRegSyncAdd);
         } else {
           Utils.errorSnackBar(msg:'Error !!! \nPlease Upload Previous records', context : context);

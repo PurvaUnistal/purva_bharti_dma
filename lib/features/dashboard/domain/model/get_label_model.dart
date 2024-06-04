@@ -1,11 +1,4 @@
-// To parse this JSON data, do
-//
-//     final getLabelModel = getLabelModelFromJson(jsonString);
-
-import 'dart:convert';
-
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_label_model.g.dart';
 
 GetLabelModel getLabelModelFromJson(String str) => GetLabelModel.fromJson(json.decode(str));

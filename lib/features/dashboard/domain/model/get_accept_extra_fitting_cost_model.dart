@@ -1,5 +1,4 @@
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_accept_extra_fitting_cost_model.g.dart';
 
 @HiveType(typeId: HiveTypeId.GetAcceptExtraFittingCostId)

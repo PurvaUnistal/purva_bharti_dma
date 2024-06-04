@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
-import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
+import 'package:pbg_app/Utils/common_widgets/Loader/SpinLoader.dart';
+import 'package:pbg_app/Utils/common_widgets/app_bar_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/app_color.dart';
+import 'package:pbg_app/Utils/common_widgets/app_string.dart';
+import 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_bloc.dart';
+import 'package:pbg_app/features/internet/bloc/internet_bloc.dart';
+import 'package:pbg_app/features/internet/bloc/internet_event.dart';
+import 'package:pbg_app/features/internet/bloc/internet_state.dart';
+import 'package:pbg_app/features/viewAndSyncRecords/domain/bloc/view_sync_record_bloc.dart';
+import 'package:pbg_app/features/viewAndSyncRecords/domain/bloc/view_sync_record_event.dart';
+import 'package:pbg_app/features/viewAndSyncRecords/domain/bloc/view_sync_record_state.dart';
 
 class ViewSyncRecordPage extends StatefulWidget {
   const ViewSyncRecordPage({Key? key}) : super(key: key);
@@ -31,7 +40,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: AppBarWidget(
-            titleAppBar: AppString.viewSyncRecord,
+            title: RoutesName.viewSyncRecord,
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios_rounded,
@@ -39,7 +48,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
               ),
               onPressed: () {
                 Navigator.pushReplacementNamed(
-                    context, RoutesName.dashboardView);
+                    context, RoutesName.dashboard);
               },
             ),
           ),

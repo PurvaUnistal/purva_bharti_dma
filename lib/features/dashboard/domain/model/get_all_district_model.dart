@@ -2,10 +2,7 @@
 //
 //     final getAllDistrictModel = getAllDistrictModelFromJson(jsonString);
 
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:meta/meta.dart';
-import 'dart:convert';
-import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_all_district_model.g.dart';
 
 List<GetAllDistrictModel> getAllDistrictModelFromJson(String str) =>

@@ -1,13 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pbg_app/common/Utils/Loader/dotted_loader_widget.dart';
-import 'package:pbg_app/common/Utils/common_widget/app_assets.dart';
-import 'package:pbg_app/common/Utils/common_widget/app_color.dart';
-import 'package:pbg_app/common/Utils/common_widget/app_string.dart';
-import 'package:pbg_app/common/Utils/common_widget/button_widget.dart';
-import 'package:pbg_app/common/Utils/common_widget/styles_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/Loader/DottedLoader.dart';
+import 'package:pbg_app/Utils/common_widgets/app_color.dart';
+import 'package:pbg_app/Utils/common_widgets/app_string.dart';
+import 'package:pbg_app/Utils/common_widgets/button_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/styles_widget.dart';
 import 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_bloc.dart';
 import 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_event.dart';
 import 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_state.dart';
@@ -223,7 +221,7 @@ Widget _divider(){
         radius: 40,
         backgroundColor: Colors.white,
         backgroundImage: AssetImage(
-          AppIcon.imageCaptureIcon,
+          ImgAsset.imageCaptureIcon,
         ),
       ),
     );

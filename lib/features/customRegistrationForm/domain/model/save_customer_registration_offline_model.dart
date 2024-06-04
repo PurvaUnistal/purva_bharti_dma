@@ -1,5 +1,4 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
 
 part 'save_customer_registration_offline_model.g.dart';
 

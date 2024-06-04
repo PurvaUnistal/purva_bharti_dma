@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/Loader/SpinLoader.dart';
 import 'package:pbg_app/features/dashboard/domain/bloc/dashboard_bloc.dart';
 import 'package:pbg_app/features/dashboard/domain/bloc/dashboard_event.dart';
 import 'package:pbg_app/features/dashboard/presentation/widget/logout_widget.dart';
 import 'package:pbg_app/features/dashboard/presentation/widget/row_btn_widget.dart';
+import 'package:pbg_app/features/internet/bloc/internet_bloc.dart';
+import 'package:pbg_app/features/internet/bloc/internet_event.dart';
+import 'package:pbg_app/features/internet/bloc/internet_state.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -16,7 +20,6 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
-      PreferenceUtils.init();
     /*BlocProvider.of<DashboardBloc>(context).add(SelectSyncFetchAllDataEvent(
       context: context,
     ));*/
@@ -92,7 +95,7 @@ class _DashboardPageState extends State<DashboardPage> {
             CardBtnWidget(
                 onTap: () {
                   Navigator.pushReplacementNamed(
-                      context, RoutesName.viewSyncRecordPage);
+                      context, RoutesName.viewSyncRecord);
                 },
                 text: AppString.titleList[1],
                 icon: AppString.iconList[1]),

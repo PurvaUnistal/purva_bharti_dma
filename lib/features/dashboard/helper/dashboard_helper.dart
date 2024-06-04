@@ -1,8 +1,9 @@
-import 'dart:convert';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/common/HiveDatabase/hive_database.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_bank_name_list_model.dart';
 
 class DashboardHelper {
 
@@ -113,10 +114,9 @@ class DashboardHelper {
   }
 
   static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi({required BuildContext context}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(PrefsValue.schema);
+    String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDistrict + schema!, context: context);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDistrict + schema, context: context);
         if (res != null) {
           List<GetAllDistrictModel> response = getAllDistrictModelFromJson(res);
           if (response.isNotEmpty) {
@@ -325,10 +325,9 @@ class DashboardHelper {
   }
 
   static Future<List<GetPropertyClassModel>?> getPropertyClassApi({required BuildContext context}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(PrefsValue.schema);
+    String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyClass + schema!, context: context);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyClass + schema, context: context);
         if (res != null) {
           List<GetPropertyClassModel> response = getPropertyClassModelFromJson(res);
           if (response.isNotEmpty) {
@@ -348,10 +347,9 @@ class DashboardHelper {
   }
 
   static Future<List<GetPropertyCategoryModel>?> getPropertyCategoryApi({required BuildContext context}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(PrefsValue.schema);
+    String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyCategory + schema!, context: context);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getPropertyCategory + schema, context: context);
         if (res != null) {
           List<GetPropertyCategoryModel> response = getPropertyCategoryModelFromJson(res);
           if (response.isNotEmpty) {
@@ -371,10 +369,9 @@ class DashboardHelper {
   }
 
   static Future<List<GetAllAreaModel>?> getAllAreaApi({required BuildContext context}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(PrefsValue.schema);
+    String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllArea + schema!, context: context);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllArea + schema, context: context);
         if (res != null) {
           List<GetAllAreaModel> response = getAllAreaModelFromJson(res);
           if (response.isNotEmpty) {
@@ -394,10 +391,9 @@ class DashboardHelper {
   }
 
   static Future<List<GetChargeAreaListModel>?> getChargeAreaListApi({required BuildContext context}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(PrefsValue.schema);
+    String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-      var res = await ApiServer.getData(urlEndPoint: AppUrl.getChargeAreaList + schema!, context: context);
+      var res = await ApiServer.getData(urlEndPoint: AppUrl.getChargeAreaList + schema, context: context);
         if (res != null) {
           List<GetChargeAreaListModel> response = getChargeAreaListModelFromJson(res);
           if (response.isNotEmpty) {
@@ -417,10 +413,9 @@ class DashboardHelper {
   }
 
   static Future<List<GetAllDepositOfflineModel>?> getAllDepositOfflineApi({required BuildContext context}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? schema = prefs.getString(PrefsValue.schema);
+    String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDepositOffline + schema!, context: context);
+        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllDepositOffline + schema, context: context);
         if (res != null) {
           List<GetAllDepositOfflineModel> response = getAllDepositOfflineModelFromJson(res);
           if (response.isNotEmpty) {
@@ -444,15 +439,11 @@ class DashboardHelper {
       if (await isInternetConnected() == true) {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllBanks, context: context);
         if (res != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString(PrefsValue.getAllBanks, jsonEncode(bankNameListModelFromJson(res)));
+          SharedPref.setString(key: PrefsValue.getAllBanks, value: jsonEncode(bankNameListModelFromJson(res)));
           return bankNameListModelFromJson(res);
         }
       } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey(PrefsValue.getAllBanks)) {
-          return bankNameListModelFromJson(prefs.getString(PrefsValue.getAllBanks) ?? "");
-        }
+        return bankNameListModelFromJson(SharedPref.getString(key: PrefsValue.getAllBanks) ?? "");
       }
     } catch (e) {
       print("bankNameListModelFromJson-->${e.toString()}");

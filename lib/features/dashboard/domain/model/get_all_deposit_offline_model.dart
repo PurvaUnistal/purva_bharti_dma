@@ -2,10 +2,7 @@
 //
 //     final getAllDepositOfflineModel = getAllDepositOfflineModelFromJson(jsonString);
 
-import 'dart:convert';
-
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pbg_app/common/HiveDatabase/hive_box_name.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_all_deposit_offline_model.g.dart';
 
 List<GetAllDepositOfflineModel> getAllDepositOfflineModelFromJson(String str) => List<GetAllDepositOfflineModel>.from(json.decode(str).map((x) => GetAllDepositOfflineModel.fromJson(x)));

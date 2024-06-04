@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/app_color.dart';
+import 'package:pbg_app/Utils/common_widgets/styles_widget.dart';
 
 class ImageWidget extends StatelessWidget {
   final String? star;
