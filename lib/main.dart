@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/Routes/routes.dart';
-import 'package:pbg_app/Utils/common_widgets/app_string.dart';
 import 'package:pbg_app/features/Login/domain/bloc/login_bloc.dart';
-import 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_bloc.dart';
 import 'package:pbg_app/features/dashboard/domain/bloc/dashboard_bloc.dart';
 import 'package:pbg_app/features/internet/bloc/internet_bloc.dart';
 import 'package:pbg_app/features/viewAndSyncRecords/domain/bloc/view_sync_record_bloc.dart';
@@ -22,7 +20,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => InternetBloc()),
         BlocProvider(create: (BuildContext context) => LoginBloc()),
         BlocProvider(create: (BuildContext context) => DashboardBloc()),
-        BlocProvider(create: (BuildContext context) => CustomRegistrationFormBloc()),
+        BlocProvider(create: (BuildContext context) => RegistrationFormBloc()),
         BlocProvider(create: (BuildContext context) => ViewSyncRecordBloc()),
       ],
       child: MaterialApp(
