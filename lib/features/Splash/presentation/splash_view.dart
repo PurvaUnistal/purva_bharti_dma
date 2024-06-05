@@ -1,8 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/Utils/common_widgets/SharedPerfs/shared_pref.dart';
-import 'package:pbg_app/Utils/common_widgets/app_string.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});

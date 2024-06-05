@@ -1,9 +1,6 @@
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/features/dashboard/domain/model/get_bank_name_list_model.dart';
 
 class DashboardHelper {
 
@@ -201,8 +198,10 @@ class DashboardHelper {
   static Future<List<GetKycDocModel>?> getKycDocApi({required BuildContext context}) async {
     try {
         var res = await ApiServer.getData(urlEndPoint: AppUrl.kycDoc, context: context);
+        log("resKycDoc-->${res}");
         if (res != null) {
           List<GetKycDocModel> response = GetKycDocModel.mapToList(jsonDecode(res));
+          log("responseKycDoc-->${response}");
           if (response.isNotEmpty) {
             if (await HiveDataBase.kycDocBox!.isOpen) {
               await HiveDataBase.kycDocBox!.clear();

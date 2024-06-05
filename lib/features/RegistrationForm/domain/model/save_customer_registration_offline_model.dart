@@ -1,5 +1,4 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
-
 part 'save_customer_registration_offline_model.g.dart';
 
 @HiveType(typeId: HiveTypeId.CustomerRegId)

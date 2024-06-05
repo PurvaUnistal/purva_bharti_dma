@@ -1,8 +1,7 @@
 class RoutesName {
-  //splash, login, home
-  static const String splash = 'splash';
-  static const String login = 'login';
-  static const String dashboard = 'dashboard';
-  static const String customerRegistrationForm = 'CustomerRegistrationForm';
-  static const String viewSyncRecord = 'ViewSyncRecord';
+  static const String splash = 'Splash';
+  static const String login = 'Login';
+  static const String dashboard = 'Dashboard';
+  static const String customerRegistrationForm = 'Registration Form';
+  static const String viewSyncRecord = 'View Sync Record';
 }

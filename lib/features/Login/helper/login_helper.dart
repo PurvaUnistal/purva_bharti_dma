@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/Utils/common_widgets/app_string.dart';
 
 class LoginHelper {
   static String p = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";

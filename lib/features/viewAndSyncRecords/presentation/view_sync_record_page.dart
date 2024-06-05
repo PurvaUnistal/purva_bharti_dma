@@ -1,16 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/Utils/common_widgets/Loader/SpinLoader.dart';
-import 'package:pbg_app/Utils/common_widgets/app_bar_widget.dart';
-import 'package:pbg_app/Utils/common_widgets/app_color.dart';
-import 'package:pbg_app/Utils/common_widgets/app_string.dart';
-import 'package:pbg_app/features/customRegistrationForm/domain/bloc/custom_registration_form_bloc.dart';
-import 'package:pbg_app/features/internet/bloc/internet_bloc.dart';
-import 'package:pbg_app/features/internet/bloc/internet_event.dart';
-import 'package:pbg_app/features/internet/bloc/internet_state.dart';
-import 'package:pbg_app/features/viewAndSyncRecords/domain/bloc/view_sync_record_bloc.dart';
-import 'package:pbg_app/features/viewAndSyncRecords/domain/bloc/view_sync_record_event.dart';
-import 'package:pbg_app/features/viewAndSyncRecords/domain/bloc/view_sync_record_state.dart';
 
 class ViewSyncRecordPage extends StatefulWidget {
   const ViewSyncRecordPage({Key? key}) : super(key: key);
@@ -36,71 +25,74 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(50),
-          child: AppBarWidget(
-            title: RoutesName.viewSyncRecord,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios_rounded,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pushReplacementNamed(
-                    context, RoutesName.dashboard);
-              },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(50),
+            child: AppBarWidget(
+              boolLeading: true,
+              title: RoutesName.viewSyncRecord,
             ),
           ),
-        ),
-        body: BlocListener<InternetBloc, InternetState>(
-          listener: (context, state) {
-            // TODO: implement listener}
-            if (state is ConnectedState) {
-              state.isConnected
-                  ? Utils.successSnackBar(msg : state.msg,context: context)
-                  : Utils.errorSnackBar(msg :state.msg,context: context);
-            }
-          },
-          child: Column(children: [
-            BlocBuilder<InternetBloc, InternetState>(
-              builder: (context, state) {
-                if (state is ConnectedState) {
-                  return _checkNetBtnWidget(stateData: state);
-                } else {
-                  return const Center(child: SpinLoader());
-                }
-              },
-            ),
-            BlocBuilder<ViewSyncRecordBloc, ViewSyncRecordState>(
-              builder: (context, state) {
-                if (state is ViewSyncRecordDataState) {
-                  return _listData(dataState: state);
-                } else {
-                  return const Center(child: SpinLoader());
-                }
-              },
-            ),
-          ]),
-        ));
+          body: BlocListener<InternetBloc, InternetState>(
+            listener: (context, state) {
+              // TODO: implement listener}
+              if (state is ConnectedState) {
+                state.isConnected
+                    ? Utils.successSnackBar(msg : state.msg,context: context)
+                    : Utils.errorSnackBar(msg :state.msg,context: context);
+              }
+            },
+            child: Column(children: [
+              BlocBuilder<InternetBloc, InternetState>(
+                builder: (context, state) {
+                  if (state is ConnectedState) {
+                    return _checkNetBtnWidget(stateData: state);
+                  } else {
+                    return const Center(child: SpinLoader());
+                  }
+                },
+              ),
+              BlocBuilder<ViewSyncRecordBloc, ViewSyncRecordState>(
+                builder: (context, state) {
+                  if (state is ViewSyncRecordDataState) {
+                    return _listData(dataState: state);
+                  } else {
+                    return const Center(child: SpinLoader());
+                  }
+                },
+              ),
+            ]),
+          )),
+    );
   }
-
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+        context: context,
+        builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
+            message: "Do you want to exit an View Sync Record Page?",
+            okButtonText: "Exit",
+            onPressed: () =>  Navigator.of(context).pop(true)
+        ))
+    ) ?? false;
+  }
   _checkNetBtnWidget({required ConnectedState stateData}) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildBox(color: stateData.isMobile ? Colors.green : Colors.red,
+          RowBtnWidget(color: stateData.isMobile ? Colors.green : Colors.red,
               icon: Icons.signal_cellular_connected_no_internet_0_bar,
-              textTitle: AppString.mobile),
-          _buildBox(color: stateData.isWifi ? Colors.green : Colors.red,
+              text: AppString.mobile),
+          RowBtnWidget(color: stateData.isWifi ? Colors.green : Colors.red,
               icon: Icons.wifi,
-              textTitle: AppString.wifi),
-          _buildBox(
+              text: AppString.wifi),
+          RowBtnWidget(
             color: stateData.isConnected ? Colors.green : Colors.red,
             icon: Icons.sync,
-            textTitle: AppString.upload,
+            text: AppString.upload,
             onTap: () {
               BlocProvider.of<ViewSyncRecordBloc>(context)
                   .add(ViewSyncRecordLoadSaveServerDataEvent(context: context));
@@ -111,35 +103,6 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
     );
   }
 
-  Widget _buildBox(
-      {Color? color, IconData? icon, String? textTitle, Function()? onTap}) {
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        elevation: 10,
-        color: color,
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                color: Colors.white,
-              ),
-              SizedBox(
-                width: 2,
-              ),
-              Text(textTitle!, textAlign: TextAlign.center,
-                  style: new TextStyle(color: Colors.white,
-                      fontSize: 12.0,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.bold)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _row({required String leading, required String training}) {
     return Row(
@@ -188,8 +151,8 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                             ),
                             IconButton(
                                 onPressed: () {
-                                  BlocProvider.of<CustomRegistrationFormBloc>(context).
-                                  add(CustomRegistrationFormLoadUpdateLocalDataEvent(context: context,index: index
+                                  BlocProvider.of<RegistrationFormBloc>(context).
+                                  add(RegistrationFormLoadUpdateLocalDataEvent(context: context,index: index
                                   ));
                                   /*Navigator.push(context, MaterialPageRoute(builder: (context) =>
                                       CustomerRegistrationFormPage(isUpdate: true, position: index, localData: data)));*/

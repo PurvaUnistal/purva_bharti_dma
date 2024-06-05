@@ -85,7 +85,7 @@ class TextFieldWidget extends StatelessWidget {
         prefixIcon: prefixIcon,
         hintText: hintText,
         // labelText: "${star ?? ""}${label ?? ""}",
-        counterText: counterText,
+        counterText: "",
         label: Padding(
           padding: const EdgeInsets.only(left: 2.0),
           child: Row(

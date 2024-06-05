@@ -12,8 +12,6 @@ class AppString{
   static String update = "Update";
   static String upload = "Upload";
 
-  static final List<String> titleList = <String>['Customer Registration Form', 'View and Sync Records'];
-  static final List<IconData> iconList = <IconData>[Icons.picture_in_picture, Icons.receipt];
 
   static String emailLabel = "Enter User Name";
   static String passwordLabel = "Enter User Password";

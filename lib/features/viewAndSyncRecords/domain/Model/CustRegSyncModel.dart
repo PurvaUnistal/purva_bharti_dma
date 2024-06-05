@@ -170,39 +170,39 @@ class CustRegSync {
   @HiveField(59)
   final String? micr;
   @HiveField(60)
-  final String? backside1;
+  final File? backside1;
   @HiveField(61)
-  final String? backside2;
+  final File? backside2;
   @HiveField(62)
-  final String? backside3;
+  final File? backside3;
   @HiveField(63)
-  final String? documentUploads1;
+  final File? documentUploads1;
   @HiveField(64)
-  final String? documentUploads2;
+  final File? documentUploads2;
   @HiveField(65)
-  final String? documentUploads3;
+  final File? documentUploads3;
   @HiveField(66)
-  final String? kycDocument1Image;
+  final File? kycDocument1Image;
   @HiveField(67)
-  final String? kycDocument2Image;
+  final File? kycDocument2Image;
   @HiveField(68)
-  final String? kycDocument3Image;
+  final File? kycDocument3Image;
   @HiveField(69)
-  final String? canceledCheque;
+  final File? canceledCheque;
   @HiveField(70)
-  final String? uploadCustomerPhoto;
+  final File? uploadCustomerPhoto;
   @HiveField(71)
-  final String? uploadHousePhoto;
+  final File? uploadHousePhoto;
   @HiveField(72)
-  final String? chequePhoto;
+  final File? chequePhoto;
   @HiveField(73)
-  final String? customerPhoto;
+  final File? customerPhoto;
   @HiveField(74)
-  final String? housePhoto;
+  final File? housePhoto;
   @HiveField(75)
-  final String? ownerConsent;
+  final File? ownerConsent;
   @HiveField(76)
-  final String? customerConsent;
+  final File? customerConsent;
   @HiveField(78)
   bool? isDepositChq;
   @HiveField(79)

@@ -21,7 +21,7 @@ class RowBtnWidget extends StatelessWidget {
             children: [
               Icon(icon, color: Colors.white,),
               SizedBox(width: 2,),
-              Text(text, textAlign: TextAlign.center,style: Styles.labels,),
+              Text(text, textAlign: TextAlign.center,style: Styles.login,),
             ],
           ),
         ),
@@ -39,30 +39,39 @@ class CardBtnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      margin: EdgeInsets.all(18),
-      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
-      child: InkWell(
-        onTap: onTap,
-        child: Row(
-          children: <Widget>[
-            CircleAvatar(
-              radius: 22,
-              backgroundColor: AppColor.prime,
-              child: CircleAvatar(
-                radius: 21,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  icon,
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Card(
+        shape: Border(left: BorderSide(color: AppColor.prime, width: 15)),
+        elevation: 5,
+        shadowColor: AppColor.prime,
+        color: Colors.white,
+        child: Container(
+          color: Colors.white,
+          margin: EdgeInsets.all(18),
+          padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+          child: InkWell(
+            onTap: onTap,
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 22,
+                  backgroundColor: AppColor.prime,
+                  child: CircleAvatar(
+                    radius: 21,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      icon,
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(text,style: Styles.title,)
+              ],
             ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(text,style: Styles.title,)
-          ],
+          ),
         ),
       ),
     );

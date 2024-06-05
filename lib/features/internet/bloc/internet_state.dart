@@ -1,5 +1,4 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:equatable/equatable.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 
 abstract class InternetState extends Equatable {}
 

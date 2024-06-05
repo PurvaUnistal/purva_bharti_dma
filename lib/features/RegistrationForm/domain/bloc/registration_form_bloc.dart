@@ -1,37 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/features/customRegistrationForm/helper/custom_registration_form_helper.dart';
-import 'package:pbg_app/features/customRegistrationForm/presentation/widgets/customer_registration_form_preview_pop_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/message_box_one_button_pop.dart';
 
-class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, CustomRegistrationFormState> {
-  CustomRegistrationFormBloc() : super(CustomRegistrationFormInitialState()) {
-    on<CustomRegistrationFormPageLoadEvent>(_pageLoad);
-    on<CustomRegistrationFormSetInterestValue>(_setInterestValue);
-    on<CustomRegistrationFormSetConversionPolicyValue>(_setConversionPolicyValue);
-    on<CustomRegistrationFormSetExtraFittingValue>(_setExtraFittingValue);
-    on<CustomRegistrationFormSetSocietyAllowValue>(_setSocietyAllowValue);
-    on<CustomRegistrationFormSetChargeAreaValue>(_setChargeAreaValue);
-    on<CustomRegistrationFormSetAreaValue>(_setAreaValue);
-    on<CustomRegistrationFormSetGuardianTypeValue>(_setGuardianTypeValue);
-    on<CustomRegistrationFormSetPropertyCategoryValue>(_setPropertyCategoryValue);
-    on<CustomRegistrationFormSetPropertyClassValue>(_setPropertyClassValue);
-    on<CustomRegistrationFormSetDistrictValue>(_setDistrictValue);
-    on<CustomRegistrationFormSetLocation>(_btnLocation);
-    on<CustomRegistrationFormSetResidentStatusValue>(_setResidentStatusValue);
-    on<CustomRegistrationFormSetExistingCookingFuelValue>(_setExistingCookingFuelValue);
-    on<CustomRegistrationFormSetKycDoc1Value>(_setKycDoc1Value);
-    on<CustomRegistrationFormSetKycDoc2Value>(_setKycDoc2Value);
-    on<CustomRegistrationFormSetKycDoc3Value>(_setKycDoc3Value);
-    on<CustomRegistrationFormSetPreferredBillValue>(_setPreferredBillValue);
-    on<CustomRegistrationFormSetCustBankNameValue>(_setCustBankNameValue);
-    on<CustomRegistrationFormSetPaymentBankNameValue>(_setPaymentBankNameValue);
-    on<CustomRegistrationFormSetInitialDepositStatusValue>(_setInitialDepositStatusValue);
-    on<CustomRegistrationFormSetDepositTypeValue>(_setDepositTypeValue);
-    on<CustomRegistrationFormSetModeDepositValue>(_setModeDepositValue);
-    on<CustomRegistrationFormSetChequeDateEvent>(_setChequeDate);
-    on<CustomRegistrationFormPreviewPageEvent>(_previewPage);
-    on<CustomRegistrationFormSaveLocalDataEvent>(_saveLocalData);
-    on<CustomRegistrationFormLoadUpdateLocalDataEvent>(_updateLocalData);
+class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormState> {
+  RegistrationFormBloc() : super(RegistrationFormInitialState()) {
+    on<RegistrationFormPageLoadEvent>(_pageLoad);
+    on<RegistrationFormSetInterestValue>(_setInterestValue);
+    on<RegistrationFormSetConversionPolicyValue>(_setConversionPolicyValue);
+    on<RegistrationFormSetExtraFittingValue>(_setExtraFittingValue);
+    on<RegistrationFormSetSocietyAllowValue>(_setSocietyAllowValue);
+    on<RegistrationFormSetChargeAreaValue>(_setChargeAreaValue);
+    on<RegistrationFormSetAreaValue>(_setAreaValue);
+    on<RegistrationFormSetGuardianTypeValue>(_setGuardianTypeValue);
+    on<RegistrationFormSetPropertyCategoryValue>(_setPropertyCategoryValue);
+    on<RegistrationFormSetPropertyClassValue>(_setPropertyClassValue);
+    on<RegistrationFormSetDistrictValue>(_setDistrictValue);
+    on<RegistrationFormSetLocation>(_btnLocation);
+    on<RegistrationFormSetResidentStatusValue>(_setResidentStatusValue);
+    on<RegistrationFormSetExistingCookingFuelValue>(_setExistingCookingFuelValue);
+    on<RegistrationFormSetKycDoc1Value>(_setKycDoc1Value);
+    on<RegistrationFormSetKycDoc2Value>(_setKycDoc2Value);
+    on<RegistrationFormSetKycDoc3Value>(_setKycDoc3Value);
+    on<RegistrationFormSetPreferredBillValue>(_setPreferredBillValue);
+    on<RegistrationFormSetCustBankNameValue>(_setCustBankNameValue);
+    on<RegistrationFormSetPaymentBankNameValue>(_setPaymentBankNameValue);
+    on<RegistrationFormSetInitialDepositStatusValue>(_setInitialDepositStatusValue);
+    on<RegistrationFormSetDepositTypeValue>(_setDepositTypeValue);
+    on<RegistrationFormSetModeDepositValue>(_setModeDepositValue);
+    on<RegistrationFormSetChequeDateEvent>(_setChequeDate);
+    on<RegistrationFormPreviewPageEvent>(_previewPage);
+    on<RegistrationFormSaveLocalDataEvent>(_saveLocalData);
+    on<RegistrationFormLoadUpdateLocalDataEvent>(_updateLocalData);
     on<SelectIdFrontCameraCapture>(_selectIdFrontCameraCapture);
     on<SelectIdFrontGalleryCapture>(_selectIdFrontGalleryCapture);
     on<SelectIdBackCameraCapture>(_selectIdBackCameraCapture);
@@ -48,6 +47,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     on<SelectHouseGalleryCapture>(_selectHouseGalleryCapture);
     on<SelectChqCameraCapture>(_selectChqCameraCapture);
     on<SelectChqGalleryCapture>(_selectChqGalleryCapture);
+    on<SchemeTypeDetailEvent>(_selectSchemeTypeDetail);
   }
   bool _isUpdate = false;
   bool get isUpdate => _isUpdate;
@@ -123,8 +123,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   List listOfCustBankName = [];
   List listOfChqBankName = [];
 
-  CustRegSync _saveCusRegData = CustRegSync();
-  CustRegSync get saveCusRegData => _saveCusRegData;
+  CustRegSync saveCusRegData = CustRegSync();
 
   File customerConsent = File("");
   File canceledCheque = File("");
@@ -143,6 +142,10 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   File chequePath = File("");
 
 
+  String schemeMonth = "";
+  String equipmentAmt = "";
+  String gasAmt = "";
+  String firstDeposit = "";
 
   TextEditingController reasonRegistrationController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
@@ -177,14 +180,14 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
   TextEditingController latController = TextEditingController();
   TextEditingController longController = TextEditingController();
 
-
-
-
-
-  _pageLoad(CustomRegistrationFormPageLoadEvent event, emit) async {
-    emit(CustomRegistrationFormPageLoadState());
+  _pageLoad(RegistrationFormPageLoadEvent event, emit) async {
+    emit(RegistrationFormPageLoadState());
     _isPageLoader = false;
     _isUpdate = false;
+     schemeMonth = "";
+     equipmentAmt = "";
+     gasAmt = "";
+     firstDeposit = "";
     listOfAllLabel = [];
     listOfNotInterested = [];
     listOfInitialDepositStatus = [];
@@ -235,7 +238,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     listOfResidentStatus =HiveDataBase.resStatusBox!.values.toSet().toList();
     listOfModeOfDeposit =HiveDataBase.modeOfDepositBox!.values.toSet().toList();
     listOfEBilling =HiveDataBase.eBillingBox!.values.toSet().toList();
-    listOfKycDoc =HiveDataBase.kycDocBox!.values.toSet().toList();
+    listOfKycDoc = HiveDataBase.kycDocBox!.values.toSet().toList();
     listOfOwnershipProof =HiveDataBase.ownershipProofBox!.values.toSet().toList();
     listOfIdentityProof =HiveDataBase.idProofBox!.values.toSet().toList();
     listOfGuardianType =HiveDataBase.guardianTypeBox!.values.toSet().toList();
@@ -264,109 +267,119 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     _eventCompleted(emit);
   }
 
-  _setInterestValue(CustomRegistrationFormSetInterestValue event, emit) {
+  _setInterestValue(RegistrationFormSetInterestValue event, emit) {
     interestValue = event.interestValue;
     _eventCompleted(emit);
   }
 
-  _setConversionPolicyValue(CustomRegistrationFormSetConversionPolicyValue event, emit) {
+  _setConversionPolicyValue(RegistrationFormSetConversionPolicyValue event, emit) {
     conversionPolicyValue = event.conversionPolicyValue;
     _eventCompleted(emit);
   }
 
-  _setExtraFittingValue(CustomRegistrationFormSetExtraFittingValue event, emit) {
+  _setExtraFittingValue(RegistrationFormSetExtraFittingValue event, emit) {
     extraFittingValue = event.extraFittingValue;
     _eventCompleted(emit);
   }
 
-  _setSocietyAllowValue(CustomRegistrationFormSetSocietyAllowValue event, emit) {
+  _setSocietyAllowValue(RegistrationFormSetSocietyAllowValue event, emit) {
     societyAllowValue = event.societyAllowValue;
     _eventCompleted(emit);
   }
 
-  _setChargeAreaValue(CustomRegistrationFormSetChargeAreaValue event, emit) {
+  _setChargeAreaValue(RegistrationFormSetChargeAreaValue event, emit) {
     chargeAreaValue = event.chargeAreaValue;
     _eventCompleted(emit);
   }
 
-  _setAreaValue(CustomRegistrationFormSetAreaValue event, emit) {
+  _setAreaValue(RegistrationFormSetAreaValue event, emit) {
     areaValue = event.areaValue;
     _eventCompleted(emit);
   }
 
-  _setGuardianTypeValue(CustomRegistrationFormSetGuardianTypeValue event, emit) {
+  _setGuardianTypeValue(RegistrationFormSetGuardianTypeValue event, emit) {
     guardianTypeValue = event.guardianTypeValue;
     _eventCompleted(emit);
   }
 
-  _setPropertyCategoryValue(CustomRegistrationFormSetPropertyCategoryValue event, emit) {
+  _setPropertyCategoryValue(RegistrationFormSetPropertyCategoryValue event, emit) {
     propertyCategoryValue = event.propertyCategoryValue;
     _eventCompleted(emit);
   }
 
-  _setPropertyClassValue(CustomRegistrationFormSetPropertyClassValue event, emit) {
+  _setPropertyClassValue(RegistrationFormSetPropertyClassValue event, emit) {
     propertyClassValue = event.propertyClassValue;
     _eventCompleted(emit);
   }
 
-  _setDistrictValue(CustomRegistrationFormSetDistrictValue event, emit) {
+  _setDistrictValue(RegistrationFormSetDistrictValue event, emit) {
     allDistrictValue = event.allDistrictValue;
     _eventCompleted(emit);
   }
 
-  _setResidentStatusValue(CustomRegistrationFormSetResidentStatusValue event, emit) {
+  _setResidentStatusValue(RegistrationFormSetResidentStatusValue event, emit) {
     residentStatusValue = event.residentStatusValue;
     _eventCompleted(emit);
   }
 
-  _setExistingCookingFuelValue(CustomRegistrationFormSetExistingCookingFuelValue event, emit) {
+  _setExistingCookingFuelValue(RegistrationFormSetExistingCookingFuelValue event, emit) {
     existingCookingFuelValue = event.existingCookingFuelValue;
     _eventCompleted(emit);
   }
 
-  _setKycDoc1Value(CustomRegistrationFormSetKycDoc1Value event, emit) {
+  _setKycDoc1Value(RegistrationFormSetKycDoc1Value event, emit) {
     kycDoc1Value = event.kycDoc1Value;
     _eventCompleted(emit);
   }
 
-  _setKycDoc2Value(CustomRegistrationFormSetKycDoc2Value event, emit) {
+  _setKycDoc2Value(RegistrationFormSetKycDoc2Value event, emit) {
     kycDoc2Value = event.kycDoc2Value;
     _eventCompleted(emit);
   }
 
-  _setKycDoc3Value(CustomRegistrationFormSetKycDoc3Value event, emit) {
+  _setKycDoc3Value(RegistrationFormSetKycDoc3Value event, emit) {
     kycDoc3Value = event.kycDoc3Value;
     _eventCompleted(emit);
   }
 
-  _setPreferredBillValue(CustomRegistrationFormSetPreferredBillValue event, emit) {
+  _setPreferredBillValue(RegistrationFormSetPreferredBillValue event, emit) {
     preferredBillValue = event.preferredBillValue;
     _eventCompleted(emit);
   }
 
-  _setCustBankNameValue(CustomRegistrationFormSetCustBankNameValue event, emit) {
+  _setCustBankNameValue(RegistrationFormSetCustBankNameValue event, emit) {
     custBankNameValue = event.custBankNameValue;
     _eventCompleted(emit);
   }
 
-  _setPaymentBankNameValue(CustomRegistrationFormSetPaymentBankNameValue event, emit) {
+  _setPaymentBankNameValue(RegistrationFormSetPaymentBankNameValue event, emit) {
     paymentBankNameValue = event.paymentBankNameValue;
     _eventCompleted(emit);
   }
 
-  _setInitialDepositStatusValue(CustomRegistrationFormSetInitialDepositStatusValue event, emit) {
+  _setInitialDepositStatusValue(RegistrationFormSetInitialDepositStatusValue event, emit) {
     initialDepositStatusValue = event.initialDepositStatusValue;
     _eventCompleted(emit);
   }
 
-  _setDepositTypeValue(CustomRegistrationFormSetDepositTypeValue event, emit) {
+  _setDepositTypeValue(RegistrationFormSetDepositTypeValue event, emit) {
     depositTypeValue = event.depositTypeValue;
+    schemeMonth = "";
+    equipmentAmt = "";
+    gasAmt = "";
+    firstDeposit = "";
     depositAmountController.clear();
-    depositAmountController.text = depositTypeValue!.depositAmount.toString();
+    if(depositTypeValue != null){
+      depositAmountController.text = depositTypeValue!.firstDepositAmountWith.toString();
+      schemeMonth = depositTypeValue!.schemeMonth.toString();
+      equipmentAmt = depositTypeValue!.equipmentDepositAmount .toString();
+      gasAmt = depositTypeValue!.gasDepositAmount.toString();
+      firstDeposit = depositTypeValue!.firstDepositAmountWith.toString();
+    }
     _eventCompleted(emit);
   }
 
-  _setModeDepositValue(CustomRegistrationFormSetModeDepositValue event, emit) {
+  _setModeDepositValue(RegistrationFormSetModeDepositValue event, emit) {
     modeDepositValue = event.modeDepositValue;
     _eventCompleted(emit);
   }
@@ -525,7 +538,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     }
   }
 
-  _btnLocation(CustomRegistrationFormSetLocation event, emit){
+  _btnLocation(RegistrationFormSetLocation event, emit){
     _setLocation();
     _eventCompleted(emit);
   }
@@ -537,7 +550,7 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     return getLocation;
   }
 
-  _setChequeDate(CustomRegistrationFormSetChequeDateEvent event, emit) async {
+  _setChequeDate(RegistrationFormSetChequeDateEvent event, emit) async {
     DateTime? dateTime = await showDatePicker(context: event.context, initialDate: DateTime.now(), firstDate: DateTime(1950), lastDate: DateTime.now());
     if (dateTime != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
@@ -546,104 +559,149 @@ class CustomRegistrationFormBloc extends Bloc<CustomRegistrationFormEvent, Custo
     }
   }
 
-  _previewPage(CustomRegistrationFormPreviewPageEvent event, emit) async {
-    var textFiledValidationCheck = await CustomRegistrationFormHelper.textFieldValidationCheck(
-      context: event.context,
-      registrationType: interestValue?.value ?? "",
-      reasonRegistration: reasonRegistrationController.text.toString(),
-      chargeId: chargeAreaValue!.chargeAreaName.toString(),
-      areaId: areaValue!.areaName,
-      mobileNumber: mobileController.text.trim().toString(),
-      altMobileNo: altMobileController.text.trim().toString(),
-      firstName: firstController.text.trim().toString(),
-      middleName: middleController.text.trim().toString(),
-      lastName: lastController.text.trim().toString(),
-      guardianType: guardianTypeValue?.value ?? "",
-      guardianName: guardianNameController.text.trim().toString(),
-      emailId: emailIdController.text.trim().toString(),
-      propertyCategoryId: propertyCategoryValue!.id,
-      propertyClassId: propertyClassValue!.id,
-      buildingNumber: buildingNumberController.text.trim().toString(),
-      houseNumber: houseNumberController.text.trim().toString(),
-      colonySocietyApartment: colonyController.text.trim().toString(),
-      streetName: streetController.text.trim().toString(),
-      town: townController.text.trim().toString(),
-      districtId: allDistrictValue!.id,
-      pinCode: pinCodeController.text.toString(),
-      noOfKitchen: numberKitchenController.text.toString(),
-      noOfBathroom: numberBathroomController.text.toString(),
-      existingCookingFuel: existingCookingFuelValue!.value?? "",
-      noOfFamilyMembers: familyMemberController.text.trim().toString(),
-      latitude: latController.text.trim().toString(),
-      longitude: longController.text.trim().toString(),
-      nearestLandmark: nearestLandmarkController.text.trim().toString(),
-      idProof: kycDoc1Value!.value,
-      idProofNo: kyc1NumberController.text.trim().toString(),
-      idFrontPath: idFrontPath.path,
-      idBackPath: idBackPath.path.toString(),
-      addProof: kycDoc2Value!.value,
-      addProofNo: kyc2NumberController.text.trim().toString(),
-      addFrontPath: addFrontPath.path.toString(),
-      addBackPath: addBackPath.path.toString(),
-      ownershipProperty: kycDoc3Value!.value,
-      ownerConsent: ownerConsentPath.path.toString(),
-      housePath: uploadHousePath.path.toString(),
-      customerPath: uploadCustomerPath.path.toString(),
-      nocDocPath: nocDocPath.path.toString(),
-      acceptConversionPolicy: conversionPolicyValue.toString(),
-      acceptExtraFittingCost: extraFittingValue!.value,
-      societyAllowedMdpe: societyAllowValue!.value,
-      depositStatus: initialDepositStatusValue!.value,
-      reasonDeposit: reasonDepositStsController.text.trim().toString(),
-      depositType: depositTypeValue.toString(),
-      depositAmt: depositAmountController.text.trim().toString(),
-      modeDeposit: modeDepositValue.toString(),
-      chqNo: chequeNoController.text.trim().toString(),
-      chqDate: chequeDateController.text.trim().toString(),
-      chqBank: paymentBankNameValue.toString(),
-      chequeAccountNo: chequeAccountNoController.text.trim().toString(),
-      chequeMICRNo: chequeMicrNoController.text.trim().toString(),
-      chequePath: chequePath.path.toString(),
-      canceledCheque: canceledCheque.path.toString(),
-      bankAccountNumber: custBankAccNumberController.text.trim().toString(),
-      bankAddress: custBankAddController.text.trim().toString(),
-      bankIfscCode: custIfscCodeController.text.trim().toString(),
-      bankNameOfBank:custBankAccNumberController.text.trim().toString(),
-      customerConsent: customerConsent.path.trim(),
-      eBillingModel:preferredBillValue!.value,
-      residentStatus: residentStatusValue!.value,
-    );
-    _isPreviewLoader = true;
-    _eventCompleted(emit);
-    if (textFiledValidationCheck != null) {
-      _isPreviewLoader = false;
-      _eventCompleted(emit);
-      _saveCusRegData = textFiledValidationCheck;
-      log("_saveCusRegData==>${_saveCusRegData.toJson()}");
-      return showDialog<void>(
-        context: event.context,
-        builder: (BuildContext context) {
-          return CustomerRegistrationFormPreviewPopWidget(cusRegData: saveCusRegData);
-        },
-      );
+  _selectSchemeTypeDetail(SchemeTypeDetailEvent event, emit) {
+    if(depositTypeValue == null){
+    return  Utils.errorSnackBar(msg: " This scheme type id is requirement", context: event.context);
+    } else if(depositTypeValue != null){
+     return showDialog(
+          context: event.context,
+          builder: (BuildContext context) => MessageBoxOneButtonPopWidget(
+            child: Column(
+              children: [
+                RowWidget(
+                  lText: "Deposit Name",
+                  rText: depositTypeValue!.depositName.toString(),
+                ),
+                RowWidget(
+                  lText: "Deposit Amount",
+                  rText: depositAmountController.text.trim().toString(),
+                ),
+                RowWidget(
+                  lText: "Scheme Month",
+                  rText: schemeMonth,
+                ),
+                RowWidget(
+                  lText: "Equipment Deposit Amount",
+                  rText: equipmentAmt,
+                ),
+                RowWidget(
+                  lText: "GAS Amount",
+                  rText: gasAmt,
+                ),
+                RowWidget(
+                  lText: "First Deposit Amount",
+                  rText: firstDeposit,
+                ),
+              ],
+            ),
+          ));
     }
+
   }
 
-  _saveLocalData(CustomRegistrationFormSaveLocalDataEvent event, emit) async {
+  _previewPage(RegistrationFormPreviewPageEvent event, emit) async {
+  //  try{
+      var textFiledValidationCheck = await RegistrationFormHelper.textFieldValidationCheck(
+        context: event.context,
+        registrationType: interestValue?.value ?? "",
+        reasonRegistration: reasonRegistrationController.text.toString(),
+        chargeId: chargeAreaValue == null ? "": chargeAreaValue!.chargeAreaName,
+        areaId: areaValue== null ? "": areaValue!.areaName!.toString(),
+        mobileNumber: mobileController.text.trim().toString(),
+        altMobileNo: altMobileController.text.trim().toString(),
+        firstName: firstController.text.trim().toString(),
+        middleName: middleController.text.trim().toString(),
+        lastName: lastController.text.trim().toString(),
+        guardianType: guardianTypeValue == null ? "" : guardianTypeValue!.value,
+        guardianName: guardianNameController.text.trim().toString(),
+        emailId: emailIdController.text.trim().toString(),
+        propertyCategoryId: propertyCategoryValue == null ? "" : propertyCategoryValue!.id,
+        propertyClassId: propertyClassValue == null ? "" : propertyClassValue!.id,
+        buildingNumber: buildingNumberController.text.trim().toString(),
+        houseNumber: houseNumberController.text.trim().toString(),
+        colonySocietyApartment: colonyController.text.trim().toString(),
+        streetName: streetController.text.trim().toString(),
+        town: townController.text.trim().toString(),
+        districtId: allDistrictValue == null ? "": allDistrictValue!.id,
+        pinCode: pinCodeController.text.trim().toString(),
+        noOfKitchen: numberKitchenController.text.trim().toString(),
+        noOfBathroom: numberBathroomController.text.trim().toString(),
+        existingCookingFuel: existingCookingFuelValue == null ? "": existingCookingFuelValue!.value,
+        noOfFamilyMembers: familyMemberController.text.trim().toString(),
+        latitude: latController.text.trim().toString(),
+        longitude: longController.text.trim().toString(),
+        nearestLandmark: nearestLandmarkController.text.trim().toString(),
+        idProof: kycDoc1Value == null ? "" : kycDoc1Value!.value,
+        idProofNo: kyc1NumberController.text.trim().toString(),
+        idFrontPath: idFrontPath,
+        idBackPath: idBackPath,
+        addProof: kycDoc2Value == null ? "": kycDoc2Value!.value,
+        addProofNo: kyc2NumberController.text.trim().toString(),
+        addFrontPath: addFrontPath,
+        addBackPath: addBackPath,
+        ownershipProperty:kycDoc3Value == null ? "": kycDoc3Value!.value,
+        ownerConsent: ownerConsentPath,
+        housePath: uploadHousePath,
+        customerPath: uploadCustomerPath,
+        nocDocPath: nocDocPath,
+        acceptConversionPolicy: conversionPolicyValue == null ? "" : conversionPolicyValue.toString(),
+        acceptExtraFittingCost: extraFittingValue == null ? "" : extraFittingValue!.value,
+        societyAllowedMdpe: societyAllowValue == null ? "" : societyAllowValue!.value,
+        depositStatus: initialDepositStatusValue == null ? "" : initialDepositStatusValue!.value,
+        reasonDeposit: reasonDepositStsController.text.trim().toString(),
+        depositType: depositTypeValue == null ? "" : depositTypeValue.toString(),
+        depositAmt: depositAmountController.text.trim().toString(),
+        modeDeposit: modeDepositValue == null ? "" : modeDepositValue.toString(),
+        chqNo: chequeNoController.text.trim().toString(),
+        chqDate: chequeDateController.text.trim().toString(),
+        chqBank: paymentBankNameValue.toString(),
+        chequeAccountNo: chequeAccountNoController.text.trim().toString(),
+        chequeMICRNo: chequeMicrNoController.text.trim().toString(),
+        chequePath: chequePath,
+        canceledCheque: canceledCheque,
+        bankAccountNumber: custBankAccNumberController.text.trim().toString(),
+        bankAddress: custBankAddController.text.trim().toString(),
+        bankIfscCode: custIfscCodeController.text.trim().toString(),
+        bankNameOfBank:custBankAccNumberController.text.trim().toString(),
+        customerConsent: customerConsent,
+        eBillingModel: preferredBillValue == null ? "" : preferredBillValue!.value,
+        residentStatus: residentStatusValue == null ? "":residentStatusValue!.value,
+      );
+      _isPreviewLoader = true;
+      _eventCompleted(emit);
+      if (await textFiledValidationCheck == true) {
+        _isPreviewLoader = false;
+        _eventCompleted(emit);
+        saveCusRegData = textFiledValidationCheck;
+        log("saveCusRegData==>${saveCusRegData.toJson()}");
+        return showDialog<void>(
+          context: event.context,
+          builder: (BuildContext context) {
+            return CustomerRegistrationFormPreviewPopWidget(cusRegData: saveCusRegData);
+          },
+        );
+      }
+ /*   } catch(e){
+      log("previewCheck-->${e.toString()}");
+      return null;
+    }*/
+  }
+
+  _saveLocalData(RegistrationFormSaveLocalDataEvent event, emit) async {
     _isSaveLoader = true;
     _eventCompleted(emit);
-    await CustomRegistrationFormHelper.addCustRegSyncLocalDB(
+    await RegistrationFormHelper.addCustRegSyncLocalDB(
       context: event.context, custRegSyncStore: saveCusRegData, isUpdate:_isUpdate,
     );
     _isSaveLoader = false;
     _eventCompleted(emit);
   }
 
-  _updateLocalData(CustomRegistrationFormLoadUpdateLocalDataEvent event, emit) async {
+  _updateLocalData(RegistrationFormLoadUpdateLocalDataEvent event, emit) async {
   }
 
-  _eventCompleted(Emitter<CustomRegistrationFormState> emit) {
-    emit(CustomRegistrationFormGetAllDataState(
+  _eventCompleted(Emitter<RegistrationFormState> emit) {
+    emit(RegistrationFormGetAllDataState(
       isPageLoader : isPageLoader,
       isUpdate : isUpdate,
       labelModel: getLabelModel,

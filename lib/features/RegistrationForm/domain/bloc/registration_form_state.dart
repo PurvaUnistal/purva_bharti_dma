@@ -2,28 +2,28 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
 
 
-abstract class CustomRegistrationFormState extends Equatable {}
+abstract class RegistrationFormState extends Equatable {}
 
-class CustomRegistrationFormInitialState extends CustomRegistrationFormState {
+class RegistrationFormInitialState extends RegistrationFormState {
   @override
   List<Object> get props => [];
 }
 
-class CustomRegistrationFormPageLoadState extends CustomRegistrationFormInitialState {
+class RegistrationFormPageLoadState extends RegistrationFormInitialState {
   @override
   List<Object> get props => [];
 }
 
-class CustomRegistrationFormGetLabelState extends CustomRegistrationFormState {
+class RegistrationFormGetLabelState extends RegistrationFormState {
   final GetLabelModel getLabelModel;
-  CustomRegistrationFormGetLabelState({required this.getLabelModel});
+  RegistrationFormGetLabelState({required this.getLabelModel});
 
   @override
   // TODO: implement props
   List<Object?> get props => [getLabelModel];
 }
 
-class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState {
+class RegistrationFormGetAllDataState extends RegistrationFormState {
   final bool isPageLoader;
   final bool isUpdate;
   final GetLabelModel labelModel;
@@ -131,7 +131,7 @@ class CustomRegistrationFormGetAllDataState extends CustomRegistrationFormState 
   final bool isPreviewLoader;
   final bool isSaveLoader;
 
-  CustomRegistrationFormGetAllDataState({
+  RegistrationFormGetAllDataState({
     required this.isPageLoader,
     required this.isUpdate,
     required this.labelModel,

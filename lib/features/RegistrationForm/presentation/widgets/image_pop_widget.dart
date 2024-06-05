@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pbg_app/Utils/common_widgets/app_color.dart';
-import 'package:pbg_app/Utils/common_widgets/button_widget.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 
 class ImagePopWidget extends StatelessWidget {
   final void Function()? onTapGallery, onTapCamera;

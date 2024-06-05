@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 class MessageBoxTwoButtonPopWidget extends StatelessWidget {
+  final String? alertText;
   final String message;
   final String? subMessage;
   final String okButtonText;
   final VoidCallback onPressed;
 
-  const MessageBoxTwoButtonPopWidget(
-      {required this.message,
+  const MessageBoxTwoButtonPopWidget({
+         this.alertText,
+      required this.message,
       this.subMessage,
       required this.onPressed,
       required this.okButtonText});
@@ -29,7 +31,13 @@ class MessageBoxTwoButtonPopWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _closeButton(context: context),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  Text(
+                    alertText ?? "Alert !",style: Styles.stars,
+                    textAlign: TextAlign.center,
+                  ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.01,
                   ),
@@ -40,7 +48,7 @@ class MessageBoxTwoButtonPopWidget extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          message,style: Styles.title,
+                          message,textAlign: TextAlign.center,style: Styles.title,
                         ),
                         Text(
                           subMessage ?? "",style: Styles.title1,
@@ -51,11 +59,7 @@ class MessageBoxTwoButtonPopWidget extends StatelessWidget {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
-                  Container(
-                    height: 1.0,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.grey[350],
-                  ),
+                  Divider(),
                   Padding(
                     padding: const EdgeInsets.all(0.0),
                     child: Row(
@@ -90,24 +94,4 @@ class MessageBoxTwoButtonPopWidget extends StatelessWidget {
     );
   }
 
-  Widget _closeButton({required BuildContext context}) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.05,
-              right: MediaQuery.of(context).size.width * 0.05,
-              top: MediaQuery.of(context).size.width * 0.05,
-            ),
-            child: Text(
-              "Payment for ngc charges !",style: Styles.stars,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

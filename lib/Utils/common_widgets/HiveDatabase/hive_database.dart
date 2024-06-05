@@ -1,6 +1,6 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pbg_app/features/customRegistrationForm/domain/model/save_customer_registration_offline_model.dart';
+import 'package:pbg_app/features/RegistrationForm/domain/model/save_customer_registration_offline_model.dart';
 
 class HiveDataBase {
   static Box<GetAcceptConversionPolicyModel>? acceptConversionPolicyBox;
@@ -82,7 +82,7 @@ class HiveDataBase {
     guardianTypeBox = await Hive.openBox<GetGuardianTypeModel>(HiveBoxName.GuardianTypeBox);
     idProofBox = await Hive.openBox<GetIdentityProofModel>(HiveBoxName.IdProofBox);
     initDepositStatusBox = await Hive.openBox<GetInitialDepositStatusModel>(HiveBoxName.InitDepositStatusBox);
-    kycBox = await Hive.openBox<Kyc>(HiveBoxName.KycDocBox);
+    kycDocBox = await Hive.openBox<GetKycDocModel>(HiveBoxName.KycDocBox);
     allLabelBox = await Hive.openBox<GetLabelModel>(HiveBoxName.AllLabelBox);
     modeOfDepositBox = await Hive.openBox<GetModeOfDepositModel>(HiveBoxName.ModeOfDepositBox);
     notInterestedBox = await Hive.openBox<GetNotInterestedModel>(HiveBoxName.NotInterestedBox);
