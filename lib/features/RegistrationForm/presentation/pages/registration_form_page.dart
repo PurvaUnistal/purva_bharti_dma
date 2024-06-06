@@ -188,7 +188,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                   _initialDepositStatusDropdown(stateData: stateData),
                   _reasonDepositStatusWidget(stateData: stateData),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(flex: 6, child: _depositTypeDropdown(stateData: stateData)),
                       _widthSpace(),

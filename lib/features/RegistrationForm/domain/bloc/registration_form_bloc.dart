@@ -246,7 +246,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     listOfSocietyAllow =HiveDataBase.societyAllowBox!.values.toSet().toList();
     listOfProClass =HiveDataBase.proClassBox!.values.toSet().toList();
     listOfProCategory =HiveDataBase.proCateBox!.values.toSet().toList();
-    listOfAllArea =HiveDataBase.allAreaBox!.values.toSet().toList();
+ //   listOfAllArea =HiveDataBase.allAreaBox!.values.toSet().toList();
     listOfChargeArea =HiveDataBase.chargeAreaListBox!.values.toSet().toList();
     listOfDepositOffline =HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
     listOfCustBankName =HiveDataBase.allLabelBox!.values.toSet().toList();
@@ -289,6 +289,12 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
 
   _setChargeAreaValue(RegistrationFormSetChargeAreaValue event, emit) {
     chargeAreaValue = event.chargeAreaValue;
+    areaValue = null;
+    listOfAllArea = [];
+    if(chargeAreaValue != null){
+      List<GetAllAreaModel>  dataList = HiveDataBase.allAreaBox!.values.toSet().toList();
+      listOfAllArea = dataList.where((element) =>  chargeAreaValue!.gid == element.chargeAreaId).toList();
+    }
     _eventCompleted(emit);
   }
 
@@ -669,7 +675,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
       );
       _isPreviewLoader = true;
       _eventCompleted(emit);
-      if (await textFiledValidationCheck == true) {
+      if (await textFiledValidationCheck != null) {
         _isPreviewLoader = false;
         _eventCompleted(emit);
         saveCusRegData = textFiledValidationCheck;
