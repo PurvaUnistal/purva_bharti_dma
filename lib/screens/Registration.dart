@@ -152,7 +152,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 04-06-2024",
+                      "Date : 06-06-2024",
                       style: TextStyle(
                           color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
@@ -619,7 +619,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   Future<void> _getInitialDepositeScheme() async {
-    String url = GlobalConstants.getSchemeType + "?schema=" + schema;
+    String url = GlobalConstants.getSchemeType + "?schema=" + schema+ "&property_category_id=""";
     var res = await ApiIntegration.getData(
       urlEndPoint: url,
       setApiData: GlobalConstants.SchemeType,

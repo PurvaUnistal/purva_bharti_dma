@@ -355,7 +355,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
     _getAcceptExtraFittingCostList();
     _getMdeOfDeposite();
     _getInitialDepositeStatusList();
-    _getAllDepositScheme();
+    _getAllDepositScheme(propertyCategoryValue.id ?? "");
   }
 
   PhotoController consentPhoto = PhotoController();
@@ -1565,6 +1565,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
       onChanged: (OptionItem value) {
         setState(() {
           propertyCategoryValue = value;
+          if(propertyCategoryValue != null){
+            _depositTypeValue = null;
+            _depositTypeList.clear();
+            depositAmountController.clear();
+            _getAllDepositScheme(propertyCategoryValue.id);
+          }
         });
       },
       items: propertyCategoryList,
@@ -3681,9 +3687,11 @@ class _CustomInputFormState extends State<CustomInputForm> {
     });
   }
 
-  Future<void> _getAllDepositScheme() async {
+  Future<void> _getAllDepositScheme(String id) async {
     var resSchemeType = prefs.getString(GlobalConstants.SchemeType);
-    List dataList = json.decode(resSchemeType);
+  //  List dataList = json.decode(resSchemeType);
+    List listOfDepositScheme = json.decode(resSchemeType);
+    List dataList  = listOfDepositScheme.where((element) => element['property_category_id'].toString() == id).toList();
     List<DropdownMenuItem<DepositItem>> menuItems = [];
     List<DropdownMenuItem<DepositItem>> menuItems2 = [];
     if (dataList != null) {
@@ -3709,6 +3717,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                 registration_tax_name:
                 dataList[i]['registration_tax_name'] ?? "",
                 interest_tax_amt: dataList[i]['interest_tax_amt'] ?? "",
+                property_category_id: dataList[i]['property_category_id'] ?? "",
                 reg_tax: dataList[i]['reg_tax']),
             child: Text("${dataList[i]['deposit_name']}"),
           ));

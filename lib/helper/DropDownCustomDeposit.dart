@@ -207,6 +207,7 @@ class DepositItem {
   final dynamic total_amount;
   final dynamic interest_tax_amt;
   final String reg_tax;
+  final String property_category_id;
 
   DepositItem(
       {@required this.id,
@@ -227,5 +228,6 @@ class DepositItem {
       @required this.registration_tax_name,
       this.total_amount,
       @required this.interest_tax_amt,
+      @required this.property_category_id,
       @required this.reg_tax});
 }
