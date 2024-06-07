@@ -9,63 +9,60 @@ class ViewSyncRecordPage extends StatefulWidget {
 }
 
 class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
-  late List<CustRegSync> offlineDataList;
-  late Box<CustRegSync> offlineBox;
+  late List<SaveRegistrationFormModel> offlineDataList;
+  late Box<SaveRegistrationFormModel> offlineBox;
 
   @override
   void initState() {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
     BlocProvider.of<ViewSyncRecordBloc>(context).add(
         ViewSyncRecordLoadPageEvent(context: context));
-    HiveDataBase.custRegSyncBox!;
-    offlineBox = HiveDataBase.custRegSyncBox!;
+    HiveDataBase.registrationFormBox!;
+    offlineBox = HiveDataBase.registrationFormBox!;
     offlineDataList = offlineBox.values.toList();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(50),
-            child: AppBarWidget(
-              boolLeading: true,
-              title: RoutesName.viewSyncRecord,
-            ),
+    return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: AppBarWidget(
+            boolLeading: true,
+            title: RoutesName.viewSyncRecord,
           ),
-          body: BlocListener<InternetBloc, InternetState>(
-            listener: (context, state) {
-              // TODO: implement listener}
-              if (state is ConnectedState) {
-                state.isConnected
-                    ? Utils.successSnackBar(msg : state.msg,context: context)
-                    : Utils.errorSnackBar(msg :state.msg,context: context);
-              }
-            },
-            child: Column(children: [
-              BlocBuilder<InternetBloc, InternetState>(
-                builder: (context, state) {
-                  if (state is ConnectedState) {
-                    return _checkNetBtnWidget(stateData: state);
-                  } else {
-                    return const Center(child: SpinLoader());
-                  }
-                },
-              ),
-              BlocBuilder<ViewSyncRecordBloc, ViewSyncRecordState>(
-                builder: (context, state) {
-                  if (state is ViewSyncRecordDataState) {
-                    return _listData(dataState: state);
-                  } else {
-                    return const Center(child: SpinLoader());
-                  }
-                },
-              ),
-            ]),
-          )),
-    );
+        ),
+        body: BlocListener<InternetBloc, InternetState>(
+          listener: (context, state) {
+            // TODO: implement listener}
+            if (state is ConnectedState) {
+              state.isConnected
+                  ? Utils.successSnackBar(msg : state.msg,context: context)
+                  : Utils.errorSnackBar(msg :state.msg,context: context);
+            }
+          },
+          child: Column(children: [
+            BlocBuilder<InternetBloc, InternetState>(
+              builder: (context, state) {
+                if (state is ConnectedState) {
+                  return _checkNetBtnWidget(stateData: state);
+                } else {
+                  return const Center(child: SpinLoader());
+                }
+              },
+            ),
+            BlocBuilder<ViewSyncRecordBloc, ViewSyncRecordState>(
+              builder: (context, state) {
+                if (state is ViewSyncRecordDataState) {
+                  return _listData(dataState: state);
+                } else {
+                  return const Center(child: SpinLoader());
+                }
+              },
+            ),
+          ]),
+        ));
   }
   Future<bool> _onWillPop() async {
     return (await showDialog(
@@ -154,9 +151,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                   BlocProvider.of<RegistrationFormBloc>(context).
                                   add(RegistrationFormLoadUpdateLocalDataEvent(context: context,index: index
                                   ));
-                                  /*Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                      CustomerRegistrationFormPage(isUpdate: true, position: index, localData: data)));*/
-                                },
+                                  },
                                 icon: Icon(
                                   Icons.edit,
                                   color: AppColor.prime,

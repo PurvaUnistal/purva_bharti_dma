@@ -1,23 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'save_customer_registration_offline_model.dart';
+part of 'save_registration_form_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SaveCustomerRegistrationOfflineModelAdapter
-    extends TypeAdapter<SaveCustomerRegistrationOfflineModel> {
+class SaveRegistrationFormModelAdapter
+    extends TypeAdapter<SaveRegistrationFormModel> {
   @override
   final int typeId = 27;
 
   @override
-  SaveCustomerRegistrationOfflineModel read(BinaryReader reader) {
+  SaveRegistrationFormModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SaveCustomerRegistrationOfflineModel(
+    return SaveRegistrationFormModel(
       areaId: fields[0] as String?,
       chequePhoto: fields[41] as String?,
       noOfFamilyMembers: fields[19] as String?,
@@ -88,13 +88,17 @@ class SaveCustomerRegistrationOfflineModelAdapter
       ownerConsentText: fields[67] as String?,
       isDepositCheq: fields[68] as bool?,
       nearestLandmark: fields[69] as String?,
+      micr: fields[70] as String?,
+      customerConsent: fields[71] as String?,
+      alternateMobile: fields[72] as String?,
+      housePhoto: fields[73] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, SaveCustomerRegistrationOfflineModel obj) {
+  void write(BinaryWriter writer, SaveRegistrationFormModel obj) {
     writer
-      ..writeByte(70)
+      ..writeByte(74)
       ..writeByte(0)
       ..write(obj.areaId)
       ..writeByte(1)
@@ -234,7 +238,15 @@ class SaveCustomerRegistrationOfflineModelAdapter
       ..writeByte(68)
       ..write(obj.isDepositCheq)
       ..writeByte(69)
-      ..write(obj.nearestLandmark);
+      ..write(obj.nearestLandmark)
+      ..writeByte(70)
+      ..write(obj.micr)
+      ..writeByte(71)
+      ..write(obj.customerConsent)
+      ..writeByte(72)
+      ..write(obj.alternateMobile)
+      ..writeByte(73)
+      ..write(obj.housePhoto);
   }
 
   @override
@@ -243,7 +255,7 @@ class SaveCustomerRegistrationOfflineModelAdapter
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SaveCustomerRegistrationOfflineModelAdapter &&
+      other is SaveRegistrationFormModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

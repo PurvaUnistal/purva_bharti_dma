@@ -45,7 +45,8 @@ export 'package:pbg_app/features/RegistrationForm/presentation/widgets/border_wi
 export 'package:pbg_app/features/RegistrationForm/presentation/widgets/column_widget.dart';
 export 'package:pbg_app/features/RegistrationForm/presentation/widgets/image_pop_widget.dart';
 export 'package:pbg_app/features/RegistrationForm/presentation/widgets/image_widget.dart';
-export 'package:pbg_app/features/viewAndSyncRecords/domain/Model/CustRegSyncModel.dart';
+export 'package:pbg_app/features/RegistrationForm/domain/model/save_registration_form_model.dart';
+export 'package:pbg_app/features/viewAndSyncRecords/domain/Model/send_registration_offline_model.dart';
 /////////////////////////////////////////////////////////////////////////////
 export 'package:pbg_app/Utils/common_widgets/Loader/SpinLoader.dart';
 export 'package:pbg_app/Utils/common_widgets/dropdown_widget.dart';
@@ -59,6 +60,7 @@ export 'package:pbg_app/Utils/common_widgets/app_bar_widget.dart';
 export 'package:pbg_app/Utils/common_widgets/app_color.dart';
 export 'package:pbg_app/Utils/common_widgets/app_string.dart';
 export 'package:pbg_app/Utils/common_widgets/button_widget.dart';
+export 'package:pbg_app/Utils/common_widgets/Routes/routes.dart';
 export 'package:pbg_app/Utils/common_widgets/text_form_widget.dart';
 export 'package:pbg_app/Utils/common_widgets/message_box_two_button_pop.dart';
 export 'package:pbg_app/Utils/common_widgets/styles_widget.dart';

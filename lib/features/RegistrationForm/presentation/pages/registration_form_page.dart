@@ -1,11 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
+import 'package:pbg_app/features/RegistrationForm/domain/model/save_registration_form_model.dart';
 
 class RegistrationFormPage extends StatefulWidget {
   final bool isUpdate;
   final int position;
-  final SaveCustomerRegistrationOfflineModel? localData;
+  final SaveRegistrationFormModel? localData;
   const  RegistrationFormPage({Key? key,required this.isUpdate, required this.position, this.localData }) : super(key: key);
 
   @override

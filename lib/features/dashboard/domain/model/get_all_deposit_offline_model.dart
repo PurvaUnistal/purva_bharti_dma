@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getAllDepositOfflineModel = getAllDepositOfflineModelFromJson(jsonString);
-
 import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_all_deposit_offline_model.g.dart';
 
@@ -97,6 +93,8 @@ class GetAllDepositOfflineModel {
   final dynamic interestTaxName;
   @HiveField(41)
   final int? remainingCount;
+  @HiveField(42)
+  final String? propertyCategoryId;
 
   GetAllDepositOfflineModel({
      this.depositTypesId,
@@ -141,6 +139,7 @@ class GetAllDepositOfflineModel {
      this.registrationTaxName,
      this.interestTaxName,
      this.remainingCount,
+     this.propertyCategoryId,
   });
 
   factory GetAllDepositOfflineModel.fromJson(Map<String, dynamic> json) => GetAllDepositOfflineModel(
@@ -186,6 +185,7 @@ class GetAllDepositOfflineModel {
     registrationTaxName: json["registration_tax_name"] ?? "",
     interestTaxName: json["interest_tax_name"] ?? "",
     remainingCount: json["remainingCount"] ?? "",
+    propertyCategoryId: json["property_category_id"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {
@@ -231,6 +231,7 @@ class GetAllDepositOfflineModel {
     "registration_tax_name": registrationTaxName,
     "interest_tax_name": interestTaxName,
     "remainingCount": remainingCount,
+    "property_category_id": propertyCategoryId,
   };
 
   @override

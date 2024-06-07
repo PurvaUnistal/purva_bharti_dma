@@ -1,7 +1,6 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
 
-
 class RegistrationFormHelper {
 
   static Future<dynamic> textFieldValidationCheck({
@@ -135,7 +134,7 @@ class RegistrationFormHelper {
         Utils.errorSnackBar(msg: "The KYC(Identification Proof) field is required.", context: context);
         return null;
       } else if (idProofNo!.isEmpty) {
-        Utils.errorSnackBar(msg: "The KYC(Identification Proof) No field is required.", context: context);
+        Utils.errorSnackBar(msg: "The KYC(Identification Proof)Number field is required.", context: context);
         return null;
       } else if (idFrontPath!.path.isEmpty) {
         Utils.errorSnackBar(msg: "The Id Proof Front Image field is required.", context: context);
@@ -145,7 +144,7 @@ class RegistrationFormHelper {
           Utils.errorSnackBar(msg: "The KYC (Address Proof) field is required.", context: context);
           return null;
         } else if (addProofNo!.isEmpty) {
-          Utils.errorSnackBar(msg: "The KYC (Address Proof) Number field is required.", context: context);
+          Utils.errorSnackBar(msg: "The KYC (Address Proof)Number field is required.", context: context);
           return null;
         } else if (addFrontPath!.path.isEmpty) {
           Utils.errorSnackBar(msg: "The Address Proof Front Image field is required.", context: context);
@@ -202,7 +201,7 @@ class RegistrationFormHelper {
       String schema = await SharedPref.getString(key: PrefsValue.schema);
       String dmaUserId = await SharedPref.getString(key: PrefsValue.userId);
       String dmaUserName = await SharedPref.getString(key: PrefsValue.userName);
-      CustRegSync custRegSyncStore = CustRegSync(
+      SaveRegistrationFormModel custRegSyncStore = SaveRegistrationFormModel(
         schema: schema,
         dmaUserId: dmaUserId,
         dmaUserName: dmaUserName,
@@ -211,7 +210,7 @@ class RegistrationFormHelper {
         acceptExtraFittingCost: acceptExtraFittingCost,
         societyAllowedMdpe: societyAllowedMdpe,
         areaId: areaId,
-        chargeId: chargeId,
+        chargeArea: chargeId,
         mobileNumber: mobileNumber,
         alternateMobile: altMobileNo,
         firstName: firstName,
@@ -243,32 +242,32 @@ class RegistrationFormHelper {
         kycDocument2Number: addProofNo,
         kycDocument3: ownershipProperty,
         eBillingModel: eBillingModel,
-        nameOfBank: bankNameOfBank,
+        bankNameOfBank: bankNameOfBank,
         bankAccountNumber: bankAccountNumber,
         bankIfscCode: bankIfscCode,
         bankAddress: bankAddress,
-        initialDepositStatus: depositStatus,
+        initialDepositeStatus: depositStatus,
         noInitialDepositStatusReason: reasonDeposit,
-        depositType: depositType,
-        initialAmount: depositAmt,
-        modeOfDeposit: modeDeposit,
+        depositeType: depositType,
+        depositTypeAmount: depositAmt,
+        modeDepositValue: modeDeposit,
         chequeNumber: chqNo,
         chequeDepositDate: chqDate,
-        paymentBankName: chqBank,
+        payementBankName: chqBank,
         chequeBankAccount: chequeAccountNo,
         micr: chequeMICRNo,
-        backside1: idBackPath,
-        backside2: addBackPath,
-        backside3: nocDocPath,
-        documentUploads1: idFrontPath,
-        documentUploads2: addFrontPath,
-        documentUploads3: nocDocPath,
-        uploadHousePhoto: housePath,
-        uploadCustomerPhoto: customerPath,
-        customerConsent: customerConsent,
-        ownerConsent: ownerConsent,
-        canceledCheque: canceledCheque,
-        chequePhoto: chequePath,
+        backSidePhoto1: idBackPath!.path,
+        backSidePhoto2: addBackPath!.path,
+        backSidePhoto3: nocDocPath!.path,
+        documentUploadsPhoto1: idFrontPath.path,
+        documentUploadsPhoto2: addFrontPath!.path,
+        documentUploadsPhoto3: nocDocPath.path,
+        uploadHousePhoto: housePath!.path,
+        uploadCustomerPhoto: customerPath!.path,
+        customerConsent: customerConsent!.path,
+        ownerConsent: ownerConsent!.path,
+        canceledChequePhoto: canceledCheque!.path,
+        chequePhoto: chequePath!.path,
       );
       return custRegSyncStore;
     } catch (e) {
@@ -279,9 +278,9 @@ class RegistrationFormHelper {
   }
 
   static Future<dynamic> addCustRegSyncLocalDB({
-    required BuildContext context, required CustRegSync custRegSyncStore, required bool isUpdate,}) async {
+    required BuildContext context, required SaveRegistrationFormModel custRegSyncStore, required bool isUpdate,}) async {
     try {
-      CustRegSync custRegSyncAdd = CustRegSync(
+      SaveRegistrationFormModel custRegSyncAdd = SaveRegistrationFormModel(
         dmaUserName: custRegSyncStore.dmaUserName.toString(),
         dmaUserId: custRegSyncStore.dmaUserId.toString(),
         schema: custRegSyncStore.schema.toString(),
@@ -289,7 +288,7 @@ class RegistrationFormHelper {
         acceptConversionPolicy: custRegSyncStore.acceptConversionPolicy == null ? "":custRegSyncStore.acceptConversionPolicy,
         acceptExtraFittingCost: custRegSyncStore.acceptExtraFittingCost == null ? "":custRegSyncStore.acceptExtraFittingCost,
         societyAllowedMdpe: custRegSyncStore.societyAllowedMdpe == null ? "":custRegSyncStore.societyAllowedMdpe,
-        chargeId: custRegSyncStore.chargeId == null ? "":custRegSyncStore.chargeId,
+        chargeArea: custRegSyncStore.chargeArea == null ? "":custRegSyncStore.chargeArea,
         areaId: custRegSyncStore.areaId == null ? "": custRegSyncStore.areaId,
         mobileNumber: custRegSyncStore.mobileNumber == null ? "" :custRegSyncStore.mobileNumber,
         firstName: custRegSyncStore.firstName == null ? "" :custRegSyncStore.firstName,
@@ -322,44 +321,53 @@ class RegistrationFormHelper {
         kycDocument3: custRegSyncStore.kycDocument3 == null ? "" : custRegSyncStore.kycDocument3,
         kycDocument3Number: custRegSyncStore.kycDocument3Number== null ? "" : custRegSyncStore.kycDocument3Number,
         eBillingModel: custRegSyncStore.eBillingModel == null ? "" : custRegSyncStore.eBillingModel,
-        nameOfBank: custRegSyncStore.nameOfBank== null ? "" : custRegSyncStore.nameOfBank,
+        bankNameOfBank: custRegSyncStore.bankNameOfBank== null ? "" : custRegSyncStore.bankNameOfBank,
         bankAccountNumber: custRegSyncStore.bankAccountNumber == null ? "" : custRegSyncStore.bankAccountNumber,
         bankIfscCode: custRegSyncStore.bankIfscCode == null ? "" : custRegSyncStore.bankIfscCode,
         bankAddress: custRegSyncStore.bankAddress == null ? "" : custRegSyncStore.bankAddress,
-        initialDepositStatus:  custRegSyncStore.initialDepositStatus == null ? "" : custRegSyncStore.initialDepositStatus,
-        depositType:  custRegSyncStore.depositType == null ? "" : custRegSyncStore.depositType,
-        initialAmount: custRegSyncStore.initialAmount == null ? "" : custRegSyncStore.initialAmount,
-        modeOfDeposit:  custRegSyncStore.modeOfDeposit== null ? "" : custRegSyncStore.modeOfDeposit,
+        initialDepositeStatus:  custRegSyncStore.initialDepositeStatus == null ? "" : custRegSyncStore.initialDepositeStatus,
+        depositeType:  custRegSyncStore.depositeType == null ? "" : custRegSyncStore.depositeType,
+        depositTypeAmount: custRegSyncStore.depositTypeAmount == null ? "" : custRegSyncStore.depositTypeAmount,
+        modeDepositValue:  custRegSyncStore.modeDepositValue== null ? "" : custRegSyncStore.modeDepositValue,
         chequeNumber:custRegSyncStore.chequeNumber == null ? "" : custRegSyncStore.chequeNumber,
         chequeDepositDate: custRegSyncStore.chequeDepositDate == null ? "" : custRegSyncStore.chequeDepositDate,
-        paymentBankName: custRegSyncStore.paymentBankName == null ? "" : custRegSyncStore.paymentBankName,
+        payementBankName: custRegSyncStore.payementBankName == null ? "" : custRegSyncStore.payementBankName,
         chequeBankAccount: custRegSyncStore.chequeBankAccount == null ? "" : custRegSyncStore.chequeBankAccount,
         micr: custRegSyncStore.micr == null ? "" : custRegSyncStore.micr,
-        documentUploads1: custRegSyncStore.documentUploads1,
-        documentUploads2: custRegSyncStore.documentUploads2,
-        documentUploads3: custRegSyncStore.documentUploads3,
-        backside1: custRegSyncStore.backside1,
-        backside2: custRegSyncStore.backside2,
-        backside3: custRegSyncStore.backside3,
-        uploadCustomerPhoto: custRegSyncStore.uploadCustomerPhoto,
-        uploadHousePhoto: custRegSyncStore.uploadHousePhoto,
-        customerConsent: custRegSyncStore.customerConsent,
-        ownerConsent: custRegSyncStore.ownerConsent,
-        canceledCheque: custRegSyncStore.canceledCheque,
-        chequePhoto: custRegSyncStore.chequePhoto,
-        noInitialDepositStatusReason: custRegSyncStore.noInitialDepositStatusReason,
-        isDepositChq: false,
+        documentUploadsPhoto1:custRegSyncStore.documentUploadsPhoto1 == null ? "" : custRegSyncStore.documentUploadsPhoto1,
+        documentUploadsPhoto2: custRegSyncStore.documentUploadsPhoto2 == null ? "" : custRegSyncStore.documentUploadsPhoto2,
+        documentUploadsPhoto3:custRegSyncStore.documentUploadsPhoto3 == null ? "" : custRegSyncStore.documentUploadsPhoto3,
+        backSidePhoto1: custRegSyncStore.backSidePhoto1 == null ? "" : custRegSyncStore.backSidePhoto1,
+        backSidePhoto2: custRegSyncStore.backSidePhoto2 == null ? "" : custRegSyncStore.backSidePhoto2,
+        backSidePhoto3: custRegSyncStore.backSidePhoto3 == null ? "" : custRegSyncStore.backSidePhoto3,
+        uploadCustomerPhoto:  custRegSyncStore.uploadCustomerPhoto == null ? "" : custRegSyncStore.uploadCustomerPhoto,
+        uploadHousePhoto:custRegSyncStore.uploadHousePhoto == null ? "" : custRegSyncStore.uploadHousePhoto,
+        customerConsent:custRegSyncStore.customerConsent == null ? "" : custRegSyncStore.customerConsent,
+        ownerConsent:custRegSyncStore.ownerConsent == null ? "" :  custRegSyncStore.ownerConsent,
+        canceledChequePhoto: custRegSyncStore.canceledChequePhoto == null ? "" : custRegSyncStore.canceledChequePhoto,
+        chequePhoto: custRegSyncStore.chequePhoto == null ? "" : custRegSyncStore.chequePhoto,
+        noInitialDepositStatusReason: custRegSyncStore.noInitialDepositStatusReason == null ? "" : custRegSyncStore.noInitialDepositStatusReason,
+        isDepositCheq: false,
+        alternateMobile:custRegSyncStore.alternateMobile == null ? "" : custRegSyncStore.alternateMobile,
+        chequeMicrAccount: custRegSyncStore.chequeMicrAccount == null ? "" : custRegSyncStore.chequeMicrAccount,
+        customerConsentPhoto:custRegSyncStore.customerConsentPhoto == null ? "" : custRegSyncStore.customerConsentPhoto,
+        housePhoto: custRegSyncStore.housePhoto == null ? "" : custRegSyncStore.housePhoto,
+        modeOfDeposite:custRegSyncStore.modeOfDeposite == null ? "" : custRegSyncStore.modeOfDeposite,
+        ownerConsentText:custRegSyncStore.ownerConsentText == null ? "" : custRegSyncStore.ownerConsentText,
+        reasonForHold:custRegSyncStore.reasonForHold == null ? "" : custRegSyncStore.reasonForHold,
       );
-      var mmm = await HiveDataBase.custRegSyncBox!.values.toList().length;
+      var mmm = await HiveDataBase.registrationFormBox!.values.toList().length;
       if(isUpdate == true){
-        await HiveDataBase.custRegSyncBox!.put(mmm , custRegSyncAdd);
+        await HiveDataBase.registrationFormBox!.putAt(mmm , custRegSyncAdd);
+        Utils.successSnackBar(msg:"Data Update Successfully",  context: context);
+        Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
       } else{
         log("mmm-->${mmm}");
         if (mmm <= 15) {
           print("mmmLength-->${mmm.toString().length}");
-          Utils.successSnackBar(msg:"Great Success! Record Save",  context: context);
+           await HiveDataBase.registrationFormBox!.add(custRegSyncAdd);
+          Utils.successSnackBar(msg:"Data Save Successfully",  context: context);
           Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
-          return await HiveDataBase.custRegSyncBox!.add(custRegSyncAdd);
         } else {
           Utils.errorSnackBar(msg:'Error !!! \nPlease Upload Previous records', context : context);
           return null;
@@ -367,6 +375,7 @@ class RegistrationFormHelper {
       }
     } catch (e) {
       Utils.errorSnackBar(msg: e.toString(), context: context);
+      log("addCustRegSyncLocalDB-->${e.toString()}");
       return null;
     }
   }

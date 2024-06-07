@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pbg_app/features/RegistrationForm/domain/model/save_customer_registration_model.dart';
+import 'package:pbg_app/ExportFile/export_file.dart';
 
 class ViewSyncRecordPop extends StatelessWidget {
-  final SaveCusRegData cusRegData;
+  final SaveRegistrationFormModel cusRegData;
   const ViewSyncRecordPop({Key? key, required this.cusRegData}) : super(key: key);
 
   @override

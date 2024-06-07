@@ -37,11 +37,11 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
           message: "Do you really want to delete?",
           okButtonText: "Yes",
           onPressed: () async {
-            if (HiveDataBase.custRegSyncBox!.values.isNotEmpty) {
+            if (HiveDataBase.registrationFormBox!.values.isNotEmpty) {
               Navigator.pop(event.context);
               Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
-              log("Data Length P ============== ${HiveDataBase.custRegSyncBox!.values.length}");
-              return await HiveDataBase.custRegSyncBox!.deleteAt(event.index);
+              log("Data Length P ============== ${HiveDataBase.registrationFormBox!.values.length}");
+              return await HiveDataBase.registrationFormBox!.deleteAt(event.index);
             }
             _eventCompleted(emit);
           },
@@ -52,13 +52,13 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
    try{
      _isSaveServerLoader = true;
      _eventCompleted(emit);
-     List<CustRegSync> data = await HiveDataBase.custRegSyncBox!.values.toList();
+     List<SaveRegistrationFormModel> data = await HiveDataBase.registrationFormBox!.values.toList();
      for (int i = 0; i < data.length; i++) {
        var res = await ViewSyncRecordHelper.sendData(context: event.context, custRegSyncData: data[i]);
        if (res != null) {
          _isSaveServerLoader = false;
          _eventCompleted(emit);
-         Utils.successSnackBar(msg: res.message[i].message, context: event.context);
+         Utils.successSnackBar(msg: res.message![0].message!, context: event.context);
          Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecord);
        }
      }

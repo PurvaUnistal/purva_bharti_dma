@@ -12,14 +12,6 @@ class HiveBoxName {
   static String InitDepositStatusBox = "initDepositStatusBox";
   static String KycDocBox = "kycDocBox";
   static String AllLabelBox = "allLabelBox";
-  static String ConsentBox = "consentBox";
-  static String DepositBox = "depositBox";
-  static String InspectionBox = "inspectionBox";
-  static String KycBox = "kycBox";
-  static String LmcBox = "lmcBox";
-  static String PhotoBox = "photoBox";
-  static String RegistrationBox = "registrationBox";
-  static String StepsBox = "stepsBox";
   static String ModeOfDepositBox = "modeOfDepositBox";
   static String NotInterestedBox = "notInterestedBox";
   static String OwnershipProofBox = "ownershipProofBox";
@@ -27,8 +19,7 @@ class HiveBoxName {
   static String ProClassBox = "proClassBox";
   static String ResStatusBox = "resStatusBox";
   static String SocietyAllowBox = "societyAllowBox";
-  static String CustomerRegBox = "customerRegBox";
-  static String CustRegSyncBox = "custRegSyncBox";
+  static String registrationFormBox = "registrationFormBox";
 }
 
 class HiveTypeId {
@@ -59,7 +50,7 @@ class HiveTypeId {
   static const GetProClassId = 24;
   static const GetResStatusId = 25;
   static const GetSocietyAllowId = 26;
-  static const CustomerRegId = 27;
+  static const RegistrationFormId = 27;
   static const GetLabelId = 28;
-  static const CustRegSyncId = 29;
+  static const FileRegistrationFormId = 29;
 }

@@ -60,13 +60,14 @@ class GetAllDepositOfflineModelAdapter
       registrationTaxName: fields[39] as String?,
       interestTaxName: fields[40] as dynamic,
       remainingCount: fields[41] as int?,
+      propertyCategoryId: fields[42] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, GetAllDepositOfflineModel obj) {
     writer
-      ..writeByte(42)
+      ..writeByte(43)
       ..writeByte(0)
       ..write(obj.depositTypesId)
       ..writeByte(1)
@@ -150,7 +151,9 @@ class GetAllDepositOfflineModelAdapter
       ..writeByte(40)
       ..write(obj.interestTaxName)
       ..writeByte(41)
-      ..write(obj.remainingCount);
+      ..write(obj.remainingCount)
+      ..writeByte(42)
+      ..write(obj.propertyCategoryId);
   }
 
   @override

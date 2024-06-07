@@ -49,7 +49,7 @@ class Styles {
   static TextStyle table = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 15,
-      color: Colors.white
+      color:AppColor.red
   );
 
   static TextStyle labels = TextStyle(

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class AppString{
   static String appName = "Purba Bharati  DMA";
   static String companyNameDesc = "Unistal Private Ltd.";

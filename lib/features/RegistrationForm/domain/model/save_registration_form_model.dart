@@ -1,23 +1,23 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
-part 'save_customer_registration_offline_model.g.dart';
+part 'save_registration_form_model.g.dart';
 
-@HiveType(typeId: HiveTypeId.CustomerRegId)
+@HiveType(typeId: HiveTypeId.RegistrationFormId)
 
-class SaveCustomerRegistrationOfflineModel{
+class SaveRegistrationFormModel{
   @HiveField(0)
- String? areaId;
+  String? areaId;
   @HiveField(1)
- String? mobileNumber;
+  String? mobileNumber;
   @HiveField(2)
- String? firstName;
+  String? firstName;
   @HiveField(3)
- String? middleName;
+  String? middleName;
   @HiveField(4)
- String? lastName;
+  String? lastName;
   @HiveField(5)
- String? guardianType;
+  String? guardianType;
   @HiveField(6)
- String? guardianName;
+  String? guardianName;
   @HiveField(7)
   String? emailId;
   @HiveField(8)
@@ -144,77 +144,90 @@ class SaveCustomerRegistrationOfflineModel{
   bool? isDepositCheq;
   @HiveField(69)
   String? nearestLandmark;
+  @HiveField(70)
+  String? micr;
+  @HiveField(71)
+  String? customerConsent;
+  @HiveField(72)
+  String? alternateMobile;
+  @HiveField(73)
+  String? housePhoto;
 
-  SaveCustomerRegistrationOfflineModel({
-     this.areaId,
-     this.chequePhoto,
-     this.noOfFamilyMembers,
-     this.propertyClassId,
-     this.noOfBathroom,
-     this.noOfKitchen,
-     this.firstName,
-     this.middleName,
-     this.lastName,
-     this.mobileNumber,
-     this.schema,
-     this.emailId,
-     this.backSidePhoto1,
-     this.backSidePhoto2,
-     this.backSidePhoto3,
-     this.documentUploadsPhoto1,
-     this.documentUploadsPhoto2,
-     this.documentUploadsPhoto3,
-     this.canceledChequePhoto,
-     this.customerConsentPhoto,
-     this.bankAccountNumber,
-     this.bankAddress,
-     this.bankIfscCode,
-     this.chequeBankAccount,
-     this.chequeNumber,
-     this.depositeType,
-     this.districtId,
-     this.dmaUserId,
-     this.dmaUserName,
-     this.existingCookingFuel,
-     this.guardianName,
-     this.guardianType,
-     this.houseNumber,
-     this.depositTypeAmount,
-     this.initialDepositeStatus,
-     this.interested,
-     this.kycDocument1,
-     this.kycDocument1Number,
-     this.kycDocument2,
-     this.kycDocument2Number,
-     this.kycDocument3,
-     this.longitude,
-     this.latitude,
-     this.colonySocietyApartment,
-     this.modeOfDeposite,
-     this.bankNameOfBank,
-     this.ownerConsent,
-     this.payementBankName,
-     this.pinCode,
-     this.propertyCategoryId,
-     this.reasonForHold,
-     this.noInitialDepositStatusReason,
-     this.residentStatus,
-     this.societyAllowedMdpe,
-     this.town,
-     this.uploadCustomerPhoto,
-     this.uploadHousePhoto,
-     this.chequeDepositDate,
-     this.kycDocument3Number,
-     this.acceptConversionPolicy,
-     this.acceptExtraFittingCost,
-     this.chequeMicrAccount,
+  SaveRegistrationFormModel({
+    this.areaId,
+    this.chequePhoto,
+    this.noOfFamilyMembers,
+    this.propertyClassId,
+    this.noOfBathroom,
+    this.noOfKitchen,
+    this.firstName,
+    this.middleName,
+    this.lastName,
+    this.mobileNumber,
+    this.schema,
+    this.emailId,
+    this.backSidePhoto1,
+    this.backSidePhoto2,
+    this.backSidePhoto3,
+    this.documentUploadsPhoto1,
+    this.documentUploadsPhoto2,
+    this.documentUploadsPhoto3,
+    this.canceledChequePhoto,
+    this.customerConsentPhoto,
+    this.bankAccountNumber,
+    this.bankAddress,
+    this.bankIfscCode,
+    this.chequeBankAccount,
+    this.chequeNumber,
+    this.depositeType,
+    this.districtId,
+    this.dmaUserId,
+    this.dmaUserName,
+    this.existingCookingFuel,
+    this.guardianName,
+    this.guardianType,
+    this.houseNumber,
+    this.depositTypeAmount,
+    this.initialDepositeStatus,
+    this.interested,
+    this.kycDocument1,
+    this.kycDocument1Number,
+    this.kycDocument2,
+    this.kycDocument2Number,
+    this.kycDocument3,
+    this.longitude,
+    this.latitude,
+    this.colonySocietyApartment,
+    this.modeOfDeposite,
+    this.bankNameOfBank,
+    this.ownerConsent,
+    this.payementBankName,
+    this.pinCode,
+    this.propertyCategoryId,
+    this.reasonForHold,
+    this.noInitialDepositStatusReason,
+    this.residentStatus,
+    this.societyAllowedMdpe,
+    this.town,
+    this.uploadCustomerPhoto,
+    this.uploadHousePhoto,
+    this.chequeDepositDate,
+    this.kycDocument3Number,
+    this.acceptConversionPolicy,
+    this.acceptExtraFittingCost,
+    this.chequeMicrAccount,
     this.modeDepositValue,
-     this.buildingNumber,
-     this.chargeArea,
-     this.eBillingModel,
-     this.streetName,
+    this.buildingNumber,
+    this.chargeArea,
+    this.eBillingModel,
+    this.streetName,
     this.ownerConsentText,
     this.isDepositCheq = false,
     this.nearestLandmark,
+    this.micr,
+    this.customerConsent,
+    this.alternateMobile,
+    this.housePhoto,
   });
 }
+

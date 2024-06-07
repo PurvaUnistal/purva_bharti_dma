@@ -1,6 +1,5 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pbg_app/features/RegistrationForm/domain/model/save_customer_registration_offline_model.dart';
 
 class HiveDataBase {
   static Box<GetAcceptConversionPolicyModel>? acceptConversionPolicyBox;
@@ -16,14 +15,6 @@ class HiveDataBase {
   static Box<GetInitialDepositStatusModel>? initDepositStatusBox;
   static Box<GetKycDocModel>? kycDocBox;
   static Box<GetLabelModel>? allLabelBox;
-  static Box<Consent>? consentBox;
-  static Box<Deposit>? depositBox;
-  static Box<Inspection>? inspectionBox;
-  static Box<Kyc>? kycBox;
-  static Box<Lmc>? lmcBox;
-  static Box<Photo>? photoBox;
-  static Box<Registration>? registrationBox;
-  static Box<Steps>? stepsBox;
   static Box<GetModeOfDepositModel>? modeOfDepositBox;
   static Box<GetNotInterestedModel>? notInterestedBox;
   static Box<GetOwnershipProofModel>? ownershipProofBox;
@@ -31,14 +22,13 @@ class HiveDataBase {
   static Box<GetPropertyClassModel>? proClassBox;
   static Box<GetResidentStatusModel>? resStatusBox;
   static Box<GetSocietyAllowModel>? societyAllowBox;
- // static Box<SaveCustomerRegistrationOfflineModel>? customerRegBox;
-  static Box<CustRegSync>? custRegSyncBox;
+  static Box<SaveRegistrationFormModel>? registrationFormBox;
 
 
   Future<void> init() async {
     Directory tempDir = await getApplicationDocumentsDirectory();
     Directory filesDir = Directory(tempDir.path)..createSync(recursive: true);
-    Hive.init(filesDir.path);
+    await Hive.initFlutter(filesDir.path);
 
     Hive.registerAdapter(GetAcceptConversionPolicyModelAdapter());
     Hive.registerAdapter(GetAcceptExtraFittingCostModelAdapter());
@@ -68,8 +58,7 @@ class HiveDataBase {
     Hive.registerAdapter(GetPropertyClassModelAdapter());
     Hive.registerAdapter(GetResidentStatusModelAdapter());
     Hive.registerAdapter(GetSocietyAllowModelAdapter());
-    Hive.registerAdapter(SaveCustomerRegistrationOfflineModelAdapter());
-    Hive.registerAdapter(CustRegSyncAdapter());
+    Hive.registerAdapter(SaveRegistrationFormModelAdapter());
 
     acceptConversionPolicyBox = await Hive.openBox<GetAcceptConversionPolicyModel>(HiveBoxName.AcceptConversionPolicyBox);
     acceptExtraFittingCostBox = await Hive.openBox<GetAcceptExtraFittingCostModel>(HiveBoxName.AcceptExtraFittingCostBox);
@@ -91,7 +80,7 @@ class HiveDataBase {
     proClassBox = await Hive.openBox<GetPropertyClassModel>(HiveBoxName.ProClassBox);
     resStatusBox = await Hive.openBox<GetResidentStatusModel>(HiveBoxName.ResStatusBox);
     societyAllowBox = await Hive.openBox<GetSocietyAllowModel>(HiveBoxName.SocietyAllowBox);
-    custRegSyncBox = await Hive.openBox<CustRegSync>(HiveBoxName.CustRegSyncBox);
+    registrationFormBox = await Hive.openBox<SaveRegistrationFormModel>(HiveBoxName.registrationFormBox);
 
   }
 }

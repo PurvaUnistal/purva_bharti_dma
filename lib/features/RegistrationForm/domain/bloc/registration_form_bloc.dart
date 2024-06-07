@@ -49,17 +49,10 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     on<SelectChqGalleryCapture>(_selectChqGalleryCapture);
     on<SchemeTypeDetailEvent>(_selectSchemeTypeDetail);
   }
-  bool _isUpdate = false;
-  bool get isUpdate => _isUpdate;
-
-  bool _isPageLoader = false;
-  bool get isPageLoader => _isPageLoader;
-
-  bool _isPreviewLoader = false;
-  bool get isPreviewLoader => _isPreviewLoader;
-
-  bool _isSaveLoader = false;
-  bool get isSaveLoader => _isSaveLoader;
+  bool isUpdate = false;
+  bool isPageLoader = false;
+  bool isPreviewLoader = false;
+  bool isSaveLoader = false;
 
 
   GetChargeAreaListModel? chargeAreaValue;
@@ -123,7 +116,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
   List listOfCustBankName = [];
   List listOfChqBankName = [];
 
-  CustRegSync saveCusRegData = CustRegSync();
+  SaveRegistrationFormModel saveCusRegData = SaveRegistrationFormModel();
 
   File customerConsent = File("");
   File canceledCheque = File("");
@@ -182,8 +175,8 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
 
   _pageLoad(RegistrationFormPageLoadEvent event, emit) async {
     emit(RegistrationFormPageLoadState());
-    _isPageLoader = false;
-    _isUpdate = false;
+    isPageLoader = false;
+    isUpdate = false;
      schemeMonth = "";
      equipmentAmt = "";
      gasAmt = "";
@@ -227,8 +220,6 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     chequePath = File("");
     canceledCheque = File("");
     customerConsent = File("");
-    await fetchBackNameListApi(context: event.context);
-    await _setLocation();
     listOfAllLabel = HiveDataBase.allLabelBox!.values.toSet().toList();
     listOfNotInterested =HiveDataBase.notInterestedBox!.values.toSet().toList();
     listOfInitialDepositStatus =HiveDataBase.initDepositStatusBox!.values.toSet().toList();
@@ -246,11 +237,13 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     listOfSocietyAllow =HiveDataBase.societyAllowBox!.values.toSet().toList();
     listOfProClass =HiveDataBase.proClassBox!.values.toSet().toList();
     listOfProCategory =HiveDataBase.proCateBox!.values.toSet().toList();
- //   listOfAllArea =HiveDataBase.allAreaBox!.values.toSet().toList();
     listOfChargeArea =HiveDataBase.chargeAreaListBox!.values.toSet().toList();
-    listOfDepositOffline =HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
+    List<GetAllDepositOfflineModel> dataList = HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
+
+   // listOfDepositOffline =HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
     listOfCustBankName =HiveDataBase.allLabelBox!.values.toSet().toList();
     listOfChqBankName =HiveDataBase.allLabelBox!.values.toSet().toList();
+    initialDepositStatusValue = listOfInitialDepositStatus.first;
     interestValue = listOfNotInterested.first;
     conversionPolicyValue = listOfConversionPolicy.first;
     extraFittingValue = listOfExtraFittingCost.first;
@@ -263,7 +256,9 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     kycDoc2Value = listOfOwnershipProof.first;
     kycDoc3Value = listOfKycDoc.first;
     preferredBillValue = listOfEBilling.first;
-    initialDepositStatusValue = listOfInitialDepositStatus.first;
+    listOfDepositOffline = dataList.where((element) =>  propertyCategoryValue!.id == element.propertyCategoryId).toList();
+    await fetchBackNameListApi(context: event.context);
+    await _setLocation();
     _eventCompleted(emit);
   }
 
@@ -310,6 +305,13 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
 
   _setPropertyCategoryValue(RegistrationFormSetPropertyCategoryValue event, emit) {
     propertyCategoryValue = event.propertyCategoryValue;
+    listOfDepositOffline = [];
+    depositTypeValue = null;
+    depositAmountController.clear();
+    if(propertyCategoryValue != null){
+      List<GetAllDepositOfflineModel> dataList = HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
+      listOfDepositOffline = dataList.where((element) =>  propertyCategoryValue!.id == element.propertyCategoryId).toList();
+    }
     _eventCompleted(emit);
   }
 
@@ -606,104 +608,127 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
   }
 
   _previewPage(RegistrationFormPreviewPageEvent event, emit) async {
-  //  try{
+    try{
       var textFiledValidationCheck = await RegistrationFormHelper.textFieldValidationCheck(
         context: event.context,
         registrationType: interestValue?.value ?? "",
-        reasonRegistration: reasonRegistrationController.text.toString(),
+        reasonRegistration: reasonRegistrationController.text.isEmpty ? "": reasonRegistrationController.text.toString(),
         chargeId: chargeAreaValue == null ? "": chargeAreaValue!.chargeAreaName,
         areaId: areaValue== null ? "": areaValue!.areaName!.toString(),
-        mobileNumber: mobileController.text.trim().toString(),
-        altMobileNo: altMobileController.text.trim().toString(),
-        firstName: firstController.text.trim().toString(),
-        middleName: middleController.text.trim().toString(),
-        lastName: lastController.text.trim().toString(),
+        mobileNumber: mobileController.text.isEmpty ? "" : mobileController.text.trim().toString(),
+        altMobileNo: altMobileController.text.isEmpty ? "" : altMobileController.text.trim().toString(),
+        firstName: firstController.text.isEmpty ? "" : firstController.text.trim().toString(),
+        middleName: middleController.text.isEmpty ? "" : middleController.text.trim().toString(),
+        lastName: lastController.text.isEmpty ? "" : lastController.text.trim().toString(),
         guardianType: guardianTypeValue == null ? "" : guardianTypeValue!.value,
-        guardianName: guardianNameController.text.trim().toString(),
-        emailId: emailIdController.text.trim().toString(),
+        guardianName: guardianNameController.text.isEmpty ? "" : guardianNameController.text.trim().toString(),
+        emailId: emailIdController.text.isEmpty ? "" : emailIdController.text.trim().toString(),
         propertyCategoryId: propertyCategoryValue == null ? "" : propertyCategoryValue!.id,
         propertyClassId: propertyClassValue == null ? "" : propertyClassValue!.id,
-        buildingNumber: buildingNumberController.text.trim().toString(),
-        houseNumber: houseNumberController.text.trim().toString(),
-        colonySocietyApartment: colonyController.text.trim().toString(),
-        streetName: streetController.text.trim().toString(),
-        town: townController.text.trim().toString(),
-        districtId: allDistrictValue == null ? "": allDistrictValue!.id,
-        pinCode: pinCodeController.text.trim().toString(),
-        noOfKitchen: numberKitchenController.text.trim().toString(),
-        noOfBathroom: numberBathroomController.text.trim().toString(),
-        existingCookingFuel: existingCookingFuelValue == null ? "": existingCookingFuelValue!.value,
-        noOfFamilyMembers: familyMemberController.text.trim().toString(),
-        latitude: latController.text.trim().toString(),
-        longitude: longController.text.trim().toString(),
-        nearestLandmark: nearestLandmarkController.text.trim().toString(),
+        buildingNumber: buildingNumberController.text.isEmpty ? "" : buildingNumberController.text.trim().toString(),
+        houseNumber: houseNumberController.text.isEmpty ? "" : houseNumberController.text.trim().toString(),
+        colonySocietyApartment: colonyController.text.isEmpty ? "" : colonyController.text.trim().toString(),
+        streetName: streetController.text.isEmpty ? "" : streetController.text.trim().toString(),
+        town: townController.text.isEmpty ? "" : townController.text.trim().toString(),
+        districtId: allDistrictValue == null ? "" : allDistrictValue!.id,
+        pinCode: pinCodeController.text.isEmpty ? "" : pinCodeController.text.trim().toString(),
+        noOfKitchen: numberKitchenController.text.isEmpty ? "" : numberKitchenController.text.trim().toString(),
+        noOfBathroom: numberBathroomController.text.isEmpty ? "" : numberBathroomController.text.trim().toString(),
+        existingCookingFuel: existingCookingFuelValue == null ? "" : existingCookingFuelValue!.value,
+        noOfFamilyMembers: familyMemberController.text.isEmpty ? "" : familyMemberController.text.trim().toString(),
+        latitude: latController.text.isEmpty ? "" : latController.text.trim().toString(),
+        longitude: longController.text.isEmpty ? "" : longController.text.trim().toString(),
+        nearestLandmark: nearestLandmarkController.text.isEmpty ? "" : nearestLandmarkController.text.trim().toString(),
         idProof: kycDoc1Value == null ? "" : kycDoc1Value!.value,
-        idProofNo: kyc1NumberController.text.trim().toString(),
-        idFrontPath: idFrontPath,
-        idBackPath: idBackPath,
+        idProofNo: kyc1NumberController.text.isEmpty ? "" : kyc1NumberController.text.trim().toString(),
+        idFrontPath: idFrontPath.path.isEmpty ? File("") : idFrontPath,
+        idBackPath: idBackPath.path.isEmpty ? File("") : idBackPath,
         addProof: kycDoc2Value == null ? "": kycDoc2Value!.value,
-        addProofNo: kyc2NumberController.text.trim().toString(),
-        addFrontPath: addFrontPath,
-        addBackPath: addBackPath,
+        addProofNo: kyc2NumberController.text.isEmpty ? "" : kyc2NumberController.text.trim().toString(),
+        addFrontPath: addFrontPath.path.isEmpty ? File("") : addFrontPath,
+        addBackPath: addBackPath.path.isEmpty ? File("") : addBackPath,
         ownershipProperty:kycDoc3Value == null ? "": kycDoc3Value!.value,
-        ownerConsent: ownerConsentPath,
-        housePath: uploadHousePath,
-        customerPath: uploadCustomerPath,
-        nocDocPath: nocDocPath,
+        ownerConsent: ownerConsentPath.path.isEmpty ? File("") : ownerConsentPath,
+        housePath: uploadHousePath.path.isEmpty ? File("") : uploadHousePath,
+        customerPath: uploadCustomerPath.path.isEmpty ? File("") : uploadCustomerPath,
+        nocDocPath: nocDocPath.path.isEmpty ? File("") : nocDocPath,
         acceptConversionPolicy: conversionPolicyValue == null ? "" : conversionPolicyValue.toString(),
         acceptExtraFittingCost: extraFittingValue == null ? "" : extraFittingValue!.value,
         societyAllowedMdpe: societyAllowValue == null ? "" : societyAllowValue!.value,
         depositStatus: initialDepositStatusValue == null ? "" : initialDepositStatusValue!.value,
-        reasonDeposit: reasonDepositStsController.text.trim().toString(),
+        reasonDeposit: reasonDepositStsController.text.isEmpty ? "" : reasonDepositStsController.text.trim().toString(),
         depositType: depositTypeValue == null ? "" : depositTypeValue.toString(),
-        depositAmt: depositAmountController.text.trim().toString(),
+        depositAmt: depositAmountController.text.isEmpty ? "" : depositAmountController.text.trim().toString(),
         modeDeposit: modeDepositValue == null ? "" : modeDepositValue.toString(),
-        chqNo: chequeNoController.text.trim().toString(),
-        chqDate: chequeDateController.text.trim().toString(),
-        chqBank: paymentBankNameValue.toString(),
-        chequeAccountNo: chequeAccountNoController.text.trim().toString(),
-        chequeMICRNo: chequeMicrNoController.text.trim().toString(),
-        chequePath: chequePath,
-        canceledCheque: canceledCheque,
-        bankAccountNumber: custBankAccNumberController.text.trim().toString(),
-        bankAddress: custBankAddController.text.trim().toString(),
-        bankIfscCode: custIfscCodeController.text.trim().toString(),
-        bankNameOfBank:custBankAccNumberController.text.trim().toString(),
-        customerConsent: customerConsent,
+        chqNo: chequeNoController.text.isEmpty ? "" : chequeNoController.text.trim().toString(),
+        chqDate: chequeDateController.text.isEmpty ? "" : chequeDateController.text.trim().toString(),
+        chqBank: paymentBankNameValue ==null ? "" : paymentBankNameValue.toString(),
+        chequeAccountNo: chequeAccountNoController.text.isEmpty ? "" : chequeAccountNoController.text.trim().toString(),
+        chequeMICRNo: chequeMicrNoController.text.isEmpty ? "" : chequeMicrNoController.text.trim().toString(),
+        chequePath: chequePath.path.isEmpty ? File("") : chequePath,
+        canceledCheque: canceledCheque.path.isEmpty ? File("") : canceledCheque,
+        bankAccountNumber: custBankAccNumberController.text.isEmpty ? "" : custBankAccNumberController.text.trim().toString(),
+        bankAddress: custBankAddController.text.isEmpty ? "" : custBankAddController.text.trim().toString(),
+        bankIfscCode: custIfscCodeController.text.isEmpty ? "": custIfscCodeController.text.trim().toString(),
+        bankNameOfBank:custBankAccNumberController.text.isEmpty ? "": custBankAccNumberController.text.trim().toString(),
+        customerConsent: customerConsent.path.isEmpty ? File("") : customerConsent,
         eBillingModel: preferredBillValue == null ? "" : preferredBillValue!.value,
-        residentStatus: residentStatusValue == null ? "":residentStatusValue!.value,
+        residentStatus: residentStatusValue == null ? "" : residentStatusValue!.value,
       );
-      _isPreviewLoader = true;
+      isPreviewLoader = true;
       _eventCompleted(emit);
       if (await textFiledValidationCheck != null) {
-        _isPreviewLoader = false;
+        isPreviewLoader = false;
         _eventCompleted(emit);
         saveCusRegData = textFiledValidationCheck;
-        log("saveCusRegData==>${saveCusRegData.toJson()}");
+        log("saveCusRegData==>${saveCusRegData}");
         return showDialog<void>(
           context: event.context,
           builder: (BuildContext context) {
-            return CustomerRegistrationFormPreviewPopWidget(cusRegData: saveCusRegData);
+            return RegistrationFormPreviewPopWidget(cusRegData: saveCusRegData);
           },
         );
       }
- /*   } catch(e){
+    } catch(e){
       log("previewCheck-->${e.toString()}");
       return null;
-    }*/
+    }
   }
 
   _saveLocalData(RegistrationFormSaveLocalDataEvent event, emit) async {
-    _isSaveLoader = true;
-    _eventCompleted(emit);
-    await RegistrationFormHelper.addCustRegSyncLocalDB(
-      context: event.context, custRegSyncStore: saveCusRegData, isUpdate:_isUpdate,
-    );
-    _isSaveLoader = false;
-    _eventCompleted(emit);
+   try{
+     isSaveLoader = true;
+     _eventCompleted(emit);
+     await RegistrationFormHelper.addCustRegSyncLocalDB(
+       context: event.context,
+       custRegSyncStore: saveCusRegData,
+       isUpdate:isUpdate,
+     );
+     isSaveLoader = false;
+     _eventCompleted(emit);
+   } catch(e){
+     log("_saveLocalData-->${e.toString()}");
+   }
   }
 
   _updateLocalData(RegistrationFormLoadUpdateLocalDataEvent event, emit) async {
+    try{
+   //   if(isUpdate == true){
+        Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
+            RegistrationFormPage(isUpdate: true, position: event.index, localData: saveCusRegData)));
+    //  }
+     /* isSaveLoader = true;
+      _eventCompleted(emit);
+      await RegistrationFormHelper.addCustRegSyncLocalDB(
+        context: event.context,
+        custRegSyncStore: saveCusRegData,
+        isUpdate:isUpdate,
+      );
+      isSaveLoader = false;
+      _eventCompleted(emit);*/
+    } catch(e){
+      log("_saveLocalData-->${e.toString()}");
+    }
   }
 
   _eventCompleted(Emitter<RegistrationFormState> emit) {
