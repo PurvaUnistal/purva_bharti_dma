@@ -72,8 +72,8 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
   GetOwnershipProofModel? kycDoc2Value;
   GetKycDocModel? kycDoc3Value;
   GetEBillingModel? preferredBillValue;
-  GetLabelModel? custBankNameValue;
-  GetLabelModel? paymentBankNameValue;
+  dynamic custBankNameValue;
+  dynamic paymentBankNameValue;
   GetInitialDepositStatusModel? initialDepositStatusValue;
   GetModeOfDepositModel? modeDepositValue;
 
@@ -259,6 +259,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     listOfDepositOffline = dataList.where((element) =>  propertyCategoryValue!.id == element.propertyCategoryId).toList();
     await fetchBackNameListApi(context: event.context);
     await _setLocation();
+    await _createUpdateData(context: event.context);
     _eventCompleted(emit);
   }
 
@@ -713,24 +714,89 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
 
   _updateLocalData(RegistrationFormLoadUpdateLocalDataEvent event, emit) async {
     try{
-   //   if(isUpdate == true){
         Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
-            RegistrationFormPage(isUpdate: true, position: event.index, localData: saveCusRegData)));
-    //  }
-     /* isSaveLoader = true;
-      _eventCompleted(emit);
-      await RegistrationFormHelper.addCustRegSyncLocalDB(
-        context: event.context,
-        custRegSyncStore: saveCusRegData,
-        isUpdate:isUpdate,
-      );
-      isSaveLoader = false;
-      _eventCompleted(emit);*/
+            RegistrationFormPage(
+                isUpdate: true,
+                position: event.index,
+                localData: saveCusRegData)));
     } catch(e){
       log("_saveLocalData-->${e.toString()}");
     }
   }
 
+  _createUpdateData({required BuildContext context}) async {
+    SaveRegistrationFormModel dataBox = SaveRegistrationFormModel(
+      interested: interestValue!.key,
+      acceptConversionPolicy: conversionPolicyValue!.key,
+      acceptExtraFittingCost: extraFittingValue!.key,
+      societyAllowedMdpe: societyAllowValue!.key,
+      areaId: areaValue?.gid,
+      chargeArea: chargeAreaValue?.gid,
+      mobileNumber: mobileController.text,
+      alternateMobile: altMobileController.text,
+      firstName: firstController.text,
+      middleName: middleController.text,
+      lastName: lastController.text,
+      guardianType: guardianTypeValue?.key,
+      guardianName: guardianNameController.text,
+      emailId: emailIdController.text,
+      propertyCategoryId: propertyCategoryValue?.id,
+      propertyClassId: propertyClassValue?.id,
+      buildingNumber: buildingNumberController.text,
+      houseNumber: houseNumberController.text,
+      colonySocietyApartment: colonyController.text,
+      streetName: streetController.text,
+      town: townController.text,
+      districtId: allDistrictValue?.id,
+      pinCode: pinCodeController.text,
+      residentStatus: residentStatusValue?.key,
+      noOfKitchen: numberKitchenController.text,
+      noOfBathroom: numberBathroomController.text,
+      existingCookingFuel: existingCookingFuelValue?.key,
+      noOfFamilyMembers: familyMemberController.text,
+      latitude: latController.text,
+      longitude: longController.text,
+      nearestLandmark: nearestLandmarkController.text,
+      kycDocument1: idBackPath.path,
+      kycDocument1Number: kyc1NumberController.text,
+      kycDocument2: addBackPath.path,
+      kycDocument2Number: kyc2NumberController.text,
+      kycDocument3: kycDoc3Value?.key,
+      eBillingModel: preferredBillValue?.key,
+      bankNameOfBank: custBankNameValue,
+      bankAccountNumber: custBankAccNumberController.text,
+      bankIfscCode: "",
+      bankAddress: custBankAddController.text,
+      initialDepositeStatus: initialDepositStatusValue?.key,
+      noInitialDepositStatusReason: "",
+      depositeType: depositTypeValue?.depositTypesId,
+      depositTypeAmount: depositAmountController.text,
+      modeDepositValue: modeDepositValue?.key,
+      chequeNumber: chequeNoController.text,
+      chequeDepositDate: chequeDateController.text,
+      payementBankName: paymentBankNameValue.toString(),
+      chequeBankAccount: "",
+      micr: chequeMicrNoController.text,
+      backSidePhoto1: idBackPath.path,
+      backSidePhoto2: addBackPath.path,
+      backSidePhoto3: nocDocPath.path,
+      documentUploadsPhoto1: idFrontPath.path,
+      documentUploadsPhoto2: addFrontPath.path,
+      documentUploadsPhoto3: nocDocPath.path,
+      uploadHousePhoto: uploadHousePath.path,
+      uploadCustomerPhoto: uploadCustomerPath.path,
+      customerConsent: customerConsent.path,
+      ownerConsent: ownerConsentPath.path,
+      canceledChequePhoto: canceledCheque.path,
+      chequePhoto: chequePath.path,
+    );
+    var mmm = await HiveDataBase.registrationFormBox!.values.toList().length;
+    if(isUpdate == true){
+      await HiveDataBase.registrationFormBox!.putAt(mmm , dataBox);
+      Utils.successSnackBar(msg:"Data Update Successfully",  context: context);
+      Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
+    }
+    }
   _eventCompleted(Emitter<RegistrationFormState> emit) {
     emit(RegistrationFormGetAllDataState(
       isPageLoader : isPageLoader,
