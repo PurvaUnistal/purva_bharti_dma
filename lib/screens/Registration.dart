@@ -152,7 +152,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Date : 06-06-2024",
+                      "Date : 10-06-2024",
                       style: TextStyle(
                           color: Colors.green.shade800,
                           fontWeight: FontWeight.bold),
