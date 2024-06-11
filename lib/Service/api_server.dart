@@ -74,7 +74,8 @@ class ApiServer {
     }
   }
 
-  static Future<dynamic> postDataWithFile({required var endPoint, required var body,
+  static Future<dynamic> postDataWithFile({
+    required var endPoint, required var body,
     required BuildContext context,
     required String filePath1, required String keyWord1,
     required String filePath2, required String keyWord2,
@@ -96,7 +97,10 @@ class ApiServer {
         return null;
       }
       String token = await SharedPref.getString(key: PrefsValue.token) ?? "";
-      Map<String, String> headers = {"Authorization": token};
+      Map<String, String> headers = {
+      //  "Authorization": token,
+        "Content-Type": "multipart/form-data"
+      };
       var request = MultipartRequest("POST", Uri.parse(endPoint));
       if(filePath1.isNotEmpty){
         File f = new File(filePath1);
@@ -109,119 +113,107 @@ class ApiServer {
       if(filePath2.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath2, headerBytes: [0xFF, 0xD8])!.split('/');
         var uploadFile1 = await MultipartFile.fromPath(keyWord2, filePath2,
-            contentType: MediaType("image", filePath2.split('.').last))
-        //  contentType: MediaType(mimeTypeData[0], mimeTypeData[1]))
-            ;
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]))
+        ;
         request.files.add(uploadFile1);
       }
 
       if(filePath3.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath3, headerBytes: [0xFF, 0xD8])!.split('/');
         var uploadFile2 = await MultipartFile.fromPath(keyWord3, filePath3,
-            contentType: MediaType("image", filePath3.split('.').last));
-        //  contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
         request.files.add(uploadFile2);
       }
 
       if(filePath4.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath4, headerBytes: [0xFF, 0xD8])!.split('/');
         var uploadFile3 = await MultipartFile.fromPath(keyWord4, filePath4,
-            contentType: MediaType("image", filePath4.split('.').last));
-        // contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
         request.files.add(uploadFile3);
       }
 
       if(filePath5.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath5, headerBytes: [0xFF, 0xD8])!.split('/');
         var uploadFile4 = await MultipartFile.fromPath(keyWord5, filePath5,
-            contentType: MediaType("image", filePath5.split('.').last));
-        //  contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
         request.files.add(uploadFile4);
       }
 
       if(filePath6.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath6, headerBytes: [0xFF, 0xD8])!.split('/');
         var uploadFile5 = await MultipartFile.fromPath(keyWord6, filePath6,
-            contentType: MediaType("image", filePath6.split('.').last));
-        //  contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
         request.files.add(uploadFile5);
       }
       if(filePath7.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath7, headerBytes: [0xFF, 0xD8])!.split('/');
         var uploadFile6 = await MultipartFile.fromPath(keyWord7, filePath7,
-            contentType: MediaType("image", filePath7.split('.').last));
-        // contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
         request.files.add(uploadFile6);
       }
 
       if(filePath8.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath8, headerBytes: [0xFF, 0xD8])!.split('/');
         var uploadFile7 = await MultipartFile.fromPath(keyWord8, filePath8,
-            contentType: MediaType("image", filePath8.split('.').last));
-        //  contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
         request.files.add(uploadFile7);
       }
 
       if(filePath9.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath9, headerBytes: [0xFF, 0xD8])!.split('/');
         var uploadFile8 = await MultipartFile.fromPath(keyWord9, filePath9,
-            contentType: MediaType("image", filePath9.split('.').last));
-        //  contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
         request.files.add(uploadFile8);
       }
 
       if(filePath10.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath10, headerBytes: [0xFF, 0xD8])!.split('/');
         var uploadFile9 = await MultipartFile.fromPath(keyWord10, filePath10,
-            contentType: MediaType("image", filePath10.split('.').last));
-        // contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
         request.files.add(uploadFile9);
       }
 
       if(filePath11.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath11, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile10 = await MultipartFile.fromPath(keyWord11, filePath11,
-            contentType: MediaType("image", filePath11.split('.').last));
-        // contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile10);
+        var uploadFile11 = await MultipartFile.fromPath(keyWord11, filePath11,
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+        request.files.add(uploadFile11);
       }
 
       if(filePath12.isNotEmpty){
         final mimeTypeData = lookupMimeType(filePath12, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile11 = await MultipartFile.fromPath(keyWord12, filePath12,
-            contentType: MediaType("image", filePath12.split('.').last));
-        //  contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile11);
+        var uploadFile12 = await MultipartFile.fromPath(keyWord12, filePath12,
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+        request.files.add(uploadFile12);
       }
       request.fields.addAll(body);
       request.headers.addAll(headers);
       var response = await request.send();
-      if (response.statusCode == 200) {
-        var responseData = await response.stream.toBytes();
-        var result = json.decode(String.fromCharCodes(responseData));
+      var responseData = await response.stream.bytesToString();
+      if(response.statusCode == 200){
+        var result = json.decode(responseData);
         log("result-->${result.toString()}");
         return result;
-      } else if (response.statusCode == 401 || response == "Access denied") {
-        await SharedPref.clearAll();
-        return Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.splash, (Route<dynamic> route) => false);
-      } else if (response.statusCode == 415) {
-        var responseData = await response.stream.toBytes();
-        var result = json.decode(String.fromCharCodes(responseData));
+      } else if(response.statusCode == 415){
+        var result = json.decode(responseData);
         log(result.toString());
         return result;
-      } else if (response.statusCode == 400) {
-        var responseData = await response.stream.toBytes();
-        var result = json.decode(String.fromCharCodes(responseData));
+      } else if(response.statusCode == 400){
+        var result = json.decode(responseData);
         log(result.toString());
         return result;
-      } else {
+      }else if(response.statusCode == 500){
+        var result = json.decode(responseData);
+        log(result.toString());
+        return result;
+      }else {
         return null;
       }
-    } catch (e) {
-      log(e.toString());
+    }catch(e){
+      log("MultipartFile-->${e.toString()}");
       return null;
     }
-    }
+  }
 }
 
 

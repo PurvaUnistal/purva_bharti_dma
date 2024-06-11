@@ -63,13 +63,13 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                             ImageWidget(
                               star: AppString.star,
                               title: AppString.idProofFront,
-                              imgFile: File(cusRegData.documentUploadsPhoto1!).path.isEmpty ? File("") : File(cusRegData.documentUploadsPhoto1!),
+                              imgFile: cusRegData.documentUploadsPhoto1 == null ? File("") : File(cusRegData.documentUploadsPhoto1!),
                               onPressed: (){},
                             ),
                             ImageWidget(
                               // star: AppString.star,
                               title: AppString.idProofBack,
-                              imgFile: File(cusRegData.backSidePhoto1!).path.isEmpty ? File("") : File(cusRegData.backSidePhoto1!),
+                              imgFile: cusRegData.backSidePhoto1 == null ? File("") : File(cusRegData.backSidePhoto1!),
                               onPressed: (){},
                             ),
                           ],
@@ -83,12 +83,12 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                             ImageWidget(
                               star: cusRegData.interested != "Future Registration" ?AppString.star : "",
                               title: AppString.addProofFront,
-                              imgFile: File(cusRegData.documentUploadsPhoto2!).path.isEmpty ? File("") :File( cusRegData.documentUploadsPhoto2!),
+                              imgFile: cusRegData.documentUploadsPhoto2 == null ? File("") :File( cusRegData.documentUploadsPhoto2!),
                               onPressed: (){},
                             ),
                             ImageWidget(
                               title: AppString.addProofBack,
-                              imgFile:  File(cusRegData.backSidePhoto2!).path.isEmpty ? File("") : File(cusRegData.backSidePhoto2!),
+                              imgFile:  cusRegData.backSidePhoto2 == null  ? File("") : File(cusRegData.backSidePhoto2!),
                               onPressed: (){},
                             ),
                           ],
@@ -101,18 +101,18 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                             children: [
                               ImageWidget(
                                 title: AppString.customerImg,
-                                imgFile: File(cusRegData.customerConsentPhoto!).path.isEmpty ? File("") : File(cusRegData.customerConsentPhoto!),
+                                imgFile: cusRegData.customerConsentPhoto == null ? File("") : File(cusRegData.customerConsentPhoto!),
                                 onPressed: (){},
                               ),
                               cusRegData.kycDocument3 == "Rented"
                                   ?ImageWidget(
                                 star: AppString.star,
                                 title: AppString.nocDoc,
-                                imgFile: File(cusRegData.documentUploadsPhoto3!).path.isEmpty ? File("") : File(cusRegData.documentUploadsPhoto3!),
+                                imgFile: cusRegData.documentUploadsPhoto3 == null ? File("") : File(cusRegData.documentUploadsPhoto3!),
                                 onPressed: (){},
                               ):ImageWidget(
                                 title: AppString.houseImg,
-                                imgFile: File(cusRegData.housePhoto!).path.isEmpty ? File("") : File(cusRegData.housePhoto!),
+                                imgFile: cusRegData.housePhoto == null ? File("") : File(cusRegData.housePhoto!),
                                 onPressed: (){},
                               ),
                             ],
@@ -124,7 +124,7 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                               cusRegData.kycDocument3 == "Rented"
                                   ? ImageWidget(
                                 title: AppString.houseImg,
-                                imgFile: File(cusRegData.housePhoto!).path.isEmpty ? File("") : File(cusRegData.housePhoto!),
+                                imgFile:cusRegData.housePhoto == null ? File("") : File(cusRegData.housePhoto!),
                                 onPressed: (){},
                               )
                                   : Container(),
@@ -144,7 +144,7 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                             ImageWidget(
                               star: AppString.star,
                               title: AppString.chqPhoto,
-                              imgFile: File(cusRegData.chequePhoto!).path.isEmpty ? File("" ): File(cusRegData.chequePhoto!),
+                              imgFile:cusRegData.chequePhoto == null ? File("" ): File(cusRegData.chequePhoto!),
                               onPressed: (){},
                             ),
                           ]
@@ -172,7 +172,7 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
     );
   }
 
-  Widget _header({required BuildContext context}) {
+ static Widget _header({required BuildContext context}) {
     return Padding(
       padding: EdgeInsets.all(20.0),
       child: Row(
@@ -189,7 +189,7 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
     );
   }
 
-  Widget _itemBuilder({String? star, String? textName, String? textValue}) {
+  static Widget _itemBuilder({String? star, String? textName, String? textValue}) {
     return Column(
       children: [
         _divider(),
@@ -220,13 +220,13 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
     );
   }
 
-  Widget _divider(){
+  static Widget _divider(){
     return Divider(
       color: AppColor.prime,
     );
   }
 
-  Widget _actionButton({required BuildContext context, required RegistrationFormGetAllDataState dataState}) {
+  static Widget _actionButton({required BuildContext context, required RegistrationFormGetAllDataState dataState}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,

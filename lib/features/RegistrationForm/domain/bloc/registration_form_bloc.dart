@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/message_box_one_button_pop.dart';
+import 'package:pbg_app/features/RegistrationForm/presentation/widgets/pop_widget.dart';
 
 class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormState> {
   RegistrationFormBloc() : super(RegistrationFormInitialState()) {
@@ -259,7 +260,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     listOfDepositOffline = dataList.where((element) =>  propertyCategoryValue!.id == element.propertyCategoryId).toList();
     await fetchBackNameListApi(context: event.context);
     await _setLocation();
-    await _createUpdateData(context: event.context);
+   // await _createUpdateData(context: event.context);
     _eventCompleted(emit);
   }
 
@@ -612,16 +613,16 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     try{
       var textFiledValidationCheck = await RegistrationFormHelper.textFieldValidationCheck(
         context: event.context,
-        registrationType: interestValue?.value ?? "",
+        registrationType: interestValue == null ? "": interestValue!.key,
         reasonRegistration: reasonRegistrationController.text.isEmpty ? "": reasonRegistrationController.text.toString(),
-        chargeId: chargeAreaValue == null ? "": chargeAreaValue!.chargeAreaName,
-        areaId: areaValue== null ? "": areaValue!.areaName!.toString(),
+        chargeId: chargeAreaValue == null ? "": chargeAreaValue!.gid,
+        areaId: areaValue== null ? "": areaValue!.gid!.toString(),
         mobileNumber: mobileController.text.isEmpty ? "" : mobileController.text.trim().toString(),
         altMobileNo: altMobileController.text.isEmpty ? "" : altMobileController.text.trim().toString(),
         firstName: firstController.text.isEmpty ? "" : firstController.text.trim().toString(),
         middleName: middleController.text.isEmpty ? "" : middleController.text.trim().toString(),
         lastName: lastController.text.isEmpty ? "" : lastController.text.trim().toString(),
-        guardianType: guardianTypeValue == null ? "" : guardianTypeValue!.value,
+        guardianType: guardianTypeValue == null ? "" : guardianTypeValue!.key,
         guardianName: guardianNameController.text.isEmpty ? "" : guardianNameController.text.trim().toString(),
         emailId: emailIdController.text.isEmpty ? "" : emailIdController.text.trim().toString(),
         propertyCategoryId: propertyCategoryValue == null ? "" : propertyCategoryValue!.id,
@@ -635,30 +636,30 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
         pinCode: pinCodeController.text.isEmpty ? "" : pinCodeController.text.trim().toString(),
         noOfKitchen: numberKitchenController.text.isEmpty ? "" : numberKitchenController.text.trim().toString(),
         noOfBathroom: numberBathroomController.text.isEmpty ? "" : numberBathroomController.text.trim().toString(),
-        existingCookingFuel: existingCookingFuelValue == null ? "" : existingCookingFuelValue!.value,
+        existingCookingFuel: existingCookingFuelValue == null ? "" : existingCookingFuelValue!.key,
         noOfFamilyMembers: familyMemberController.text.isEmpty ? "" : familyMemberController.text.trim().toString(),
         latitude: latController.text.isEmpty ? "" : latController.text.trim().toString(),
         longitude: longController.text.isEmpty ? "" : longController.text.trim().toString(),
         nearestLandmark: nearestLandmarkController.text.isEmpty ? "" : nearestLandmarkController.text.trim().toString(),
-        idProof: kycDoc1Value == null ? "" : kycDoc1Value!.value,
+        idProof: kycDoc1Value == null ? "" : kycDoc1Value!.key,
         idProofNo: kyc1NumberController.text.isEmpty ? "" : kyc1NumberController.text.trim().toString(),
         idFrontPath: idFrontPath.path.isEmpty ? File("") : idFrontPath,
         idBackPath: idBackPath.path.isEmpty ? File("") : idBackPath,
-        addProof: kycDoc2Value == null ? "": kycDoc2Value!.value,
+        addProof: kycDoc2Value == null ? "": kycDoc2Value!.key,
         addProofNo: kyc2NumberController.text.isEmpty ? "" : kyc2NumberController.text.trim().toString(),
         addFrontPath: addFrontPath.path.isEmpty ? File("") : addFrontPath,
         addBackPath: addBackPath.path.isEmpty ? File("") : addBackPath,
-        ownershipProperty:kycDoc3Value == null ? "": kycDoc3Value!.value,
+        ownershipProperty:kycDoc3Value == null ? "": kycDoc3Value!.key,
         ownerConsent: ownerConsentPath.path.isEmpty ? File("") : ownerConsentPath,
         housePath: uploadHousePath.path.isEmpty ? File("") : uploadHousePath,
         customerPath: uploadCustomerPath.path.isEmpty ? File("") : uploadCustomerPath,
         nocDocPath: nocDocPath.path.isEmpty ? File("") : nocDocPath,
         acceptConversionPolicy: conversionPolicyValue == null ? "" : conversionPolicyValue.toString(),
-        acceptExtraFittingCost: extraFittingValue == null ? "" : extraFittingValue!.value,
-        societyAllowedMdpe: societyAllowValue == null ? "" : societyAllowValue!.value,
-        depositStatus: initialDepositStatusValue == null ? "" : initialDepositStatusValue!.value,
+        acceptExtraFittingCost: extraFittingValue == null ? "" : extraFittingValue!.key,
+        societyAllowedMdpe: societyAllowValue == null ? "" : societyAllowValue!.key,
+        depositStatus: initialDepositStatusValue == null ? "" : initialDepositStatusValue!.key,
         reasonDeposit: reasonDepositStsController.text.isEmpty ? "" : reasonDepositStsController.text.trim().toString(),
-        depositType: depositTypeValue == null ? "" : depositTypeValue.toString(),
+        depositType: depositTypeValue == null ? "" : depositTypeValue!.depositTypesId,
         depositAmt: depositAmountController.text.isEmpty ? "" : depositAmountController.text.trim().toString(),
         modeDeposit: modeDepositValue == null ? "" : modeDepositValue.toString(),
         chqNo: chequeNoController.text.isEmpty ? "" : chequeNoController.text.trim().toString(),
@@ -673,8 +674,8 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
         bankIfscCode: custIfscCodeController.text.isEmpty ? "": custIfscCodeController.text.trim().toString(),
         bankNameOfBank:custBankAccNumberController.text.isEmpty ? "": custBankAccNumberController.text.trim().toString(),
         customerConsent: customerConsent.path.isEmpty ? File("") : customerConsent,
-        eBillingModel: preferredBillValue == null ? "" : preferredBillValue!.value,
-        residentStatus: residentStatusValue == null ? "" : residentStatusValue!.value,
+        eBillingModel: preferredBillValue == null ? "" : preferredBillValue!.key,
+        residentStatus: residentStatusValue == null ? "" : residentStatusValue!.key,
       );
       isPreviewLoader = true;
       _eventCompleted(emit);
@@ -686,7 +687,181 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
         return showDialog<void>(
           context: event.context,
           builder: (BuildContext context) {
-            return RegistrationFormPreviewPopWidget(cusRegData: saveCusRegData);
+         //   return RegistrationFormPreviewPopWidget(cusRegData: saveCusRegData);
+            return  Scaffold(
+              body: Container(
+                color: AppColor.white,
+                margin: EdgeInsets.all(10.0),
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          PopWidget.header(context: context),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.registrationType, textValue: interestValue == null ? "" : interestValue!.value),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.conversionPolicy, textValue: conversionPolicyValue == null ? "" : conversionPolicyValue!.value),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.fittingCost, textValue:extraFittingValue == null ? "" : extraFittingValue!.value),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.mdpeAllow, textValue: societyAllowValue == null ? "" : societyAllowValue!.value),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.chargeArea, textValue: chargeAreaValue == null ? "" : chargeAreaValue!.chargeAreaName),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.area, textValue: areaValue == null ? "" : areaValue!.areaName),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.mobileNo, textValue: mobileController.text.isEmpty ? "" : mobileController.text),
+                          PopWidget.itemBuilder(textName: AppString.alternateMobileNo, textValue: altMobileController.text.isEmpty ? "" : altMobileController.text),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.firstName, textValue: firstController.text.isEmpty ? "" :  firstController.text),
+                          PopWidget.itemBuilder(textName: AppString.middleName, textValue: middleController.text.isEmpty ? "" : middleController.text),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.lastName, textValue: lastController.text.isEmpty ? "" : lastController.text),
+                          PopWidget.itemBuilder(star: interestValue!.value != "Future Registration"
+                              ? AppString.star : "", textName: AppString.guardianType, textValue: guardianTypeValue == null ? "" : guardianTypeValue!.value),
+                          PopWidget.itemBuilder(star: interestValue!.value != "Future Registration" ? AppString.star : "", textName: AppString.guardianName, textValue: guardianNameController.text.isEmpty ? "" : guardianNameController.text),
+                          PopWidget.itemBuilder(textName: AppString.emailAddress, textValue: emailIdController.text.isEmpty  ? "" : emailIdController.text),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.propertyCategory, textValue: propertyCategoryValue == null ? "" : propertyCategoryValue!.name),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.propertyClass, textValue: propertyClassValue == null ? "" : propertyClassValue!.name),
+                          PopWidget.itemBuilder(textName: AppString.buildingNumber, textValue: buildingNumberController.text.isEmpty ? "" : buildingNumberController.text),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.houseNumber, textValue: houseNumberController.text.isEmpty ? "" :  houseNumberController.text),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.colony, textValue: colonyController.text.isEmpty  ? "" : colonyController.text),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.streetName, textValue: streetController.text.isEmpty ? "" : streetController.text),
+                          PopWidget.itemBuilder(textName: AppString.town, textValue: townController.text.isEmpty ? "" : townController.text),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.district, textValue: allDistrictValue == null ? "" : allDistrictValue!.districtName),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.pinCode, textValue: pinCodeController.text.isEmpty ? "" : pinCodeController.text),
+                          PopWidget.itemBuilder(textName: AppString.noOfKitchen, textValue: numberKitchenController.text.isEmpty ? "" : numberKitchenController.text),
+                          PopWidget.itemBuilder(textName: AppString.noOfBathroom, textValue: numberBathroomController.text.isEmpty ? "" : numberBathroomController.text),
+                          PopWidget.itemBuilder(textName: AppString.fuel, textValue: existingCookingFuelValue == null ? "" : existingCookingFuelValue!.value ),
+                          PopWidget.itemBuilder(textName: AppString.noOfFamilyMembers, textValue: familyMemberController.text.isEmpty  ? "-" : familyMemberController.text),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.locationLat, textValue: latController.text.isEmpty ? "" : latController.text),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.locationLong, textValue: longController.text.isEmpty ? "-" : longController.text),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.idProof, textValue: kycDoc1Value == null ? "-" : kycDoc1Value!.value),
+                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.idProofNo, textValue: kyc1NumberController.text.isEmpty ? "" : kyc1NumberController.text),
+                          PopWidget.divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ImageWidget(
+                                star: AppString.star,
+                                title: AppString.idProofFront,
+                                imgFile: idFrontPath.path.isEmpty ? File("") : File(idFrontPath.path),
+                                onPressed: (){},
+                              ),
+                              ImageWidget(
+                                // star: AppString.star,
+                                title: AppString.idProofBack,
+                                imgFile: idBackPath.path.isEmpty  ? File("") : File(idBackPath.path),
+                                onPressed: (){},
+                              ),
+                            ],
+                          ),
+                          PopWidget.itemBuilder(star: interestValue!.value != "Future Registration" ?AppString.star : "",textName: AppString.addProof, textValue:kycDoc2Value == null ? "-" : kycDoc2Value!.value),
+                          PopWidget.itemBuilder(star: interestValue!.value != "Future Registration" ?AppString.star : "",textName: AppString.addProofNo, textValue: kyc2NumberController.text.isEmpty  ? "" : kyc2NumberController.text),
+                          PopWidget.divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ImageWidget(
+                                star: interestValue!.value != "Future Registration" ?AppString.star : "",
+                                title: AppString.addProofFront,
+                                imgFile: addFrontPath.path.isEmpty ? File("") : File(addFrontPath.path),
+                                onPressed: (){},
+                              ),
+                              ImageWidget(
+                                title: AppString.addProofBack,
+                                imgFile: addBackPath.path.isEmpty ? File("") : File(addBackPath.path),
+                                onPressed: (){},
+                              ),
+                            ],
+                          ),
+                          if(interestValue!.value != "Future Registration")...[
+                            PopWidget.itemBuilder(textName: AppString.ownershipProperty, textValue: kycDoc3Value == null ? "-" : kycDoc3Value!.value),
+                            PopWidget.divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ImageWidget(
+                                  title: AppString.customerImg,
+                                  imgFile: customerConsent.path.isEmpty ? File("") : File(customerConsent.path),
+                                  onPressed: (){},
+                                ),
+                                kycDoc3Value!.value == "Rented"
+                                    ?ImageWidget(
+                                  star: AppString.star,
+                                  title: AppString.nocDoc,
+                                  imgFile: nocDocPath.path.isEmpty ? File("") : File(nocDocPath.path),
+                                  onPressed: (){},
+                                ):ImageWidget(
+                                  title: AppString.houseImg,
+                                  imgFile: uploadHousePath.path.isEmpty ? File("") : File(uploadHousePath.path),
+                                  onPressed: (){},
+                                ),
+                              ],
+                            ),
+                            PopWidget.divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                kycDoc3Value!.value == "Rented"
+                                    ? ImageWidget(
+                                  title: AppString.houseImg,
+                                  imgFile: uploadHousePath.path.isEmpty  ? File("") : File(uploadHousePath.path),
+                                  onPressed: (){},
+                                )
+                                    : Container(),
+                              ],
+                            ),
+                            PopWidget.itemBuilder(textName: AppString.depositStatus, textValue: initialDepositStatusValue == null ? "-" : initialDepositStatusValue!.value),
+                            PopWidget.itemBuilder(textName: AppString.depositType, textValue: depositTypeValue == null ? "-" : depositTypeValue!.depositTypesId),
+                            PopWidget.itemBuilder(textName: AppString.depositAmt, textValue: depositAmountController.text.isEmpty ? "-" : depositAmountController.text),
+                            PopWidget.itemBuilder(textName: AppString.modeDeposit, textValue: modeDepositValue == null ? "-" : modeDepositValue!.value),
+                            if (modeDepositValue!.value == "Cheque") ...[
+                              PopWidget.itemBuilder(textName: AppString.chqNo, textValue: chequeNoController.text.isEmpty ? "-" : chequeNoController.text),
+                              PopWidget.itemBuilder(textName: AppString.chqDate, textValue: chequeDateController.text.isEmpty ? "" : chequeDateController.text),
+                              PopWidget.itemBuilder(textName: AppString.chqBank, textValue: paymentBankNameValue == null ? "": paymentBankNameValue.toString()),
+                              PopWidget.itemBuilder(textName: AppString.chequeAccountNo, textValue: chequeAccountNoController.text.isEmpty ? "":  chequeAccountNoController.text),
+                              PopWidget.itemBuilder(textName: AppString.chequeMICRNo, textValue: chequeMicrNoController.text.isEmpty ? "": chequeMicrNoController.text),
+                              PopWidget.divider(),
+                              ImageWidget(
+                                star: AppString.star,
+                                title: AppString.chqPhoto,
+                                imgFile:chequePath.path.isEmpty ? File("" ): File(chequePath.path),
+                                onPressed: (){},
+                              ),
+                            ]
+                          ],
+                          PopWidget.divider(),
+                          SizedBox(
+                              height:MediaQuery.of(context).size.height* 0.09
+                          )
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            isSaveLoader == false
+                                ? Flexible(
+                              child: ButtonWidget(
+                                  text: AppString.save,
+                                  onPressed: () {
+                                    BlocProvider.of<RegistrationFormBloc>(context)
+                                        .add(RegistrationFormSaveLocalDataEvent(context: context));
+                                  }),
+                            )
+                                : DottedLoaderWidget(),
+                            Flexible(
+                              child: ButtonWidget(
+                                  text: AppString.edit,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  }),
+                            ),
+                          ],
+                        ))
+                  ],
+                ),
+              ),
+            );
           },
         );
       }
@@ -714,11 +889,76 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
 
   _updateLocalData(RegistrationFormLoadUpdateLocalDataEvent event, emit) async {
     try{
+      SaveRegistrationFormModel dataBox = SaveRegistrationFormModel(
+        interested: interestValue?.key,
+        acceptConversionPolicy: conversionPolicyValue?.key,
+        acceptExtraFittingCost: extraFittingValue?.key,
+        societyAllowedMdpe: societyAllowValue?.key,
+        areaId: areaValue?.gid,
+        chargeArea: chargeAreaValue?.gid,
+        mobileNumber: mobileController.text,
+        alternateMobile: altMobileController.text,
+        firstName: firstController.text,
+        middleName: middleController.text,
+        lastName: lastController.text,
+        guardianType: guardianTypeValue?.key,
+        guardianName: guardianNameController.text,
+        emailId: emailIdController.text,
+        propertyCategoryId: propertyCategoryValue?.id,
+        propertyClassId: propertyClassValue?.id,
+        buildingNumber: buildingNumberController.text,
+        houseNumber: houseNumberController.text,
+        colonySocietyApartment: colonyController.text,
+        streetName: streetController.text,
+        town: townController.text,
+        districtId: allDistrictValue?.id,
+        pinCode: pinCodeController.text,
+        residentStatus: residentStatusValue?.key,
+        noOfKitchen: numberKitchenController.text,
+        noOfBathroom: numberBathroomController.text,
+        existingCookingFuel: existingCookingFuelValue?.key,
+        noOfFamilyMembers: familyMemberController.text,
+        latitude: latController.text,
+        longitude: longController.text,
+        nearestLandmark: nearestLandmarkController.text,
+        kycDocument1: idBackPath.path,
+        kycDocument1Number: kyc1NumberController.text,
+        kycDocument2: addBackPath.path,
+        kycDocument2Number: kyc2NumberController.text,
+        kycDocument3: kycDoc3Value?.key,
+        eBillingModel: preferredBillValue?.key,
+        bankNameOfBank: custBankNameValue,
+        bankAccountNumber: custBankAccNumberController.text,
+        bankIfscCode: "",
+        bankAddress: custBankAddController.text,
+        initialDepositeStatus: initialDepositStatusValue?.key,
+        noInitialDepositStatusReason: "",
+        depositeType: depositTypeValue?.depositTypesId,
+        depositTypeAmount: depositAmountController.text,
+        modeDepositValue: modeDepositValue?.key,
+        chequeNumber: chequeNoController.text,
+        chequeDepositDate: chequeDateController.text,
+        payementBankName: paymentBankNameValue.toString(),
+        chequeBankAccount: "",
+        micr: chequeMicrNoController.text,
+        backSidePhoto1: idBackPath.path,
+        backSidePhoto2: addBackPath.path,
+        backSidePhoto3: nocDocPath.path,
+        documentUploadsPhoto1: idFrontPath.path,
+        documentUploadsPhoto2: addFrontPath.path,
+        documentUploadsPhoto3: nocDocPath.path,
+        uploadHousePhoto: uploadHousePath.path,
+        uploadCustomerPhoto: uploadCustomerPath.path,
+        customerConsent: customerConsent.path,
+        ownerConsent: ownerConsentPath.path,
+        canceledChequePhoto: canceledCheque.path,
+        chequePhoto: chequePath.path,
+      );
         Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
             RegistrationFormPage(
                 isUpdate: true,
                 position: event.index,
-                localData: saveCusRegData)));
+                localData: dataBox)));
     } catch(e){
       log("_saveLocalData-->${e.toString()}");
     }

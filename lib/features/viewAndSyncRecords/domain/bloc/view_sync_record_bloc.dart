@@ -49,7 +49,7 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
   }
 
   _saveServerData(ViewSyncRecordLoadSaveServerDataEvent event, emit) async {
-   try{
+  // try{
      _isSaveServerLoader = true;
      _eventCompleted(emit);
      List<SaveRegistrationFormModel> data = await HiveDataBase.registrationFormBox!.values.toList();
@@ -58,13 +58,13 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
        if (res != null) {
          _isSaveServerLoader = false;
          _eventCompleted(emit);
-         Utils.successSnackBar(msg: res.message![0].message!, context: event.context);
+        await Utils.successSnackBar(msg: res.message![i].message!, context: event.context);
          Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecord);
        }
      }
-   }catch(e){
-     log(e.toString());
-   }
+  /* }catch(e){
+     log("_saveServerData-->${e.toString()}");
+   }*/
   }
 
 

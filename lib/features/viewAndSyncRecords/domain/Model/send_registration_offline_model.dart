@@ -11,20 +11,25 @@ String sendRegistrationOfflineModelToJson(SendRegistrationOfflineModel data) => 
 class SendRegistrationOfflineModel {
   final int? success;
   final List<Message>? message;
+  final List<ListOfData>? errors;
 
   SendRegistrationOfflineModel({
     this.success,
     this.message,
+    this.errors,
   });
 
   factory SendRegistrationOfflineModel.fromJson(Map<String, dynamic> json) => SendRegistrationOfflineModel(
     success: json["success"] ?? "",
-    message: List<Message>.from(json["message"].map((x) => Message.fromJson(x))),
+    message:json['message'] != null ? List<Message>.from(json["message"].map((x) => Message.fromJson(x))) : null,
+    errors: json["errors"] == null ? null :List<ListOfData>.from(json["errors"]!.map((x) => ListOfData.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "success": success,
     "message": List<dynamic>.from(message!.map((x) => x.toJson())),
+    "errors": List<dynamic>.from(errors!.map((x) => x.toJson())),
+
   };
 }
 
@@ -49,14 +54,14 @@ class Message {
 }
 
 class ListOfData {
-  final String? chequePhoto;
+  final dynamic chequePhoto;
   final String? chequeBankAccount;
   final dynamic crn;
   final String? firstName;
   final String? lastName;
   final String? dmaUserName;
   final String? guardianType;
-  final int? marketingApproval;
+  final dynamic marketingApproval;
   final dynamic markStatusTime;
   final dynamic marketingRejectReason;
   final String? dmaUserId;
@@ -69,8 +74,8 @@ class ListOfData {
   final String? backside2;
   final String? canceledCheque;
   final String? backside3;
-  final String? acceptConversionPolicy;
-  final String? acceptExtraFittingCost;
+  final dynamic acceptConversionPolicy;
+  final dynamic acceptExtraFittingCost;
   final String? kycDocument1Image;
   final String? kycDocument2Image;
   final String? kycDocument3Image;
