@@ -19,6 +19,7 @@ class HiveBoxName {
   static String ProClassBox = "proClassBox";
   static String ResStatusBox = "resStatusBox";
   static String SocietyAllowBox = "societyAllowBox";
+  static String AllBanksBox = "getAllBanksBox";
   static String registrationFormBox = "registrationFormBox";
 }
 
@@ -53,4 +54,5 @@ class HiveTypeId {
   static const RegistrationFormId = 27;
   static const GetLabelId = 28;
   static const FileRegistrationFormId = 29;
+  static const BankNameListModel = 30;
 }

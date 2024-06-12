@@ -9,17 +9,12 @@ class ViewSyncRecordPage extends StatefulWidget {
 }
 
 class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
-  late List<SaveRegistrationFormModel> offlineDataList;
-  late Box<SaveRegistrationFormModel> offlineBox;
 
   @override
   void initState() {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
     BlocProvider.of<ViewSyncRecordBloc>(context).add(
         ViewSyncRecordLoadPageEvent(context: context));
-    HiveDataBase.registrationFormBox!;
-    offlineBox = HiveDataBase.registrationFormBox!;
-    offlineDataList = offlineBox.values.toList();
     super.initState();
   }
 
@@ -92,7 +87,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
             text: AppString.upload,
             onTap: () {
               BlocProvider.of<ViewSyncRecordBloc>(context)
-                  .add(ViewSyncRecordLoadSaveServerDataEvent(context: context));
+                  .add(SyncRecordListServerDataEvent(context: context));
             },
           ),
         ],
@@ -113,64 +108,73 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
 
 
   Widget _listData({required ViewSyncRecordDataState dataState}) {
-    return Expanded(
-      child: ListView.builder(
-          itemCount: offlineDataList.length,
-          itemBuilder: (BuildContext context, int index) {
-            var data = offlineDataList[index];
-            return Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(width: 0.8, color: AppColor.prime)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Flexible(
+      child: Stack(
+        children: [
+          dataState.listOfRegistrationForm?.length == 0
+              ? SizedBox(height: MediaQuery.of(context).size.height * 0.7,child: const Center(child: Text("No Data Found")))
+              :  ListView.builder(
+              itemCount: dataState.listOfRegistrationForm?.length ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                var data = dataState.listOfRegistrationForm![index];
+                return Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(width: 0.8, color: AppColor.prime)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
                       children: [
-                        Text("Record : $index"),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.sync,
-                                  color: AppColor.prime,
-                                )),
-                            IconButton(
-                                icon: Icon(Icons.delete_forever, color: AppColor.prime,),
-                                onPressed: () {
-                                  BlocProvider.of<ViewSyncRecordBloc>(context).add(ViewSyncRecordDeleteLocalDataEvent(
-                                      index: index, context: context, mobileNo: data.mobileNumber!,
-                                  ));
-                                },
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  BlocProvider.of<RegistrationFormBloc>(context).
-                                  add(RegistrationFormLoadUpdateLocalDataEvent(context: context,index: index
-                                  ));
+                            Text("Record : $index"),
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.sync, color: AppColor.prime,),
+                                  onPressed: () {
+                                    BlocProvider.of<ViewSyncRecordBloc>(context)
+                                        .add(SyncRecordSingleServerDataEvent(context: context,index: index));
+                                    print("SyncRecordSingleServerDataEvent-->${index}");
                                   },
-                                icon: Icon(
-                                  Icons.edit,
-                                  color: AppColor.prime,
-                                )),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete_forever, color: AppColor.prime,),
+                                  onPressed: () {
+                                    BlocProvider.of<ViewSyncRecordBloc>(context).add(ViewSyncRecordDeleteLocalDataEvent(
+                                      index: index, context: context, mobileNo: data.mobileNumber!,
+                                    ));
+                                  },
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      BlocProvider.of<RegistrationFormBloc>(context).
+                                      add(RegistrationFormLoadUpdateLocalDataEvent(context: context,index: index
+                                      ));
+                                    },
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: AppColor.prime,
+                                    )),
+                              ],
+                            )
                           ],
-                        )
+                        ),
+                        Divider(),
+                        _row(leading: "Mobile Number : ",
+                            training: data.mobileNumber ?? ""),
+                        Divider(),
+                        _row(leading: "Name : ",
+                            training: "${data.firstName} ${data.lastName}"),
                       ],
                     ),
-                    Divider(),
-                    _row(leading: "Mobile Number : ",
-                        training: data.mobileNumber ?? ""),
-                    Divider(),
-                    _row(leading: "Name : ",
-                        training: "${data.firstName} ${data.lastName}"),
-                  ],
-                ),
-              ),
-            );
-          }),
+                  ),
+                );
+              }),
+          dataState.isSaveServerLoader == false ? Container(): Center(child: SpinLoader())
+        ],
+      ),
     );
   }
 }

@@ -73,8 +73,8 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
   GetOwnershipProofModel? kycDoc2Value;
   GetKycDocModel? kycDoc3Value;
   GetEBillingModel? preferredBillValue;
-  dynamic custBankNameValue;
-  dynamic paymentBankNameValue;
+  String? custBankNameValue;
+  String? paymentBankNameValue;
   GetInitialDepositStatusModel? initialDepositStatusValue;
   GetModeOfDepositModel? modeDepositValue;
 
@@ -93,6 +93,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
   GetGuardianTypeModel getGuardianTypeModel = GetGuardianTypeModel();
   GetExistingCookingFuelModel getExistingCookingFuelModel = GetExistingCookingFuelModel();
   GetSocietyAllowModel getSocietyAllowModel = GetSocietyAllowModel();
+  BankNameListModel bankNameListModel = BankNameListModel();
 
   List<GetLabelModel> listOfAllLabel = [];
   List<GetNotInterestedModel> listOfNotInterested = [];
@@ -114,8 +115,8 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
   List<GetAllAreaModel> listOfAllArea = [];
   List<GetChargeAreaListModel> listOfChargeArea = [];
   List<GetAllDepositOfflineModel> listOfDepositOffline = [];
-  List listOfCustBankName = [];
-  List listOfChqBankName = [];
+  List<String> listOfCustBankName = [];
+  List<String> paymentBankNameList = [];
 
   SaveRegistrationFormModel saveCusRegData = SaveRegistrationFormModel();
 
@@ -178,10 +179,46 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     emit(RegistrationFormPageLoadState());
     isPageLoader = false;
     isUpdate = false;
-     schemeMonth = "";
-     equipmentAmt = "";
-     gasAmt = "";
-     firstDeposit = "";
+    schemeMonth = "";
+    equipmentAmt = "";
+    gasAmt = "";
+    firstDeposit = "";
+    chargeAreaValue = null;
+    areaValue = null;
+    propertyCategoryValue = null;
+    propertyClassValue = null;
+    allDistrictValue = null;
+    depositTypeValue = null;
+    interestValue = null;
+    conversionPolicyValue = null;
+    extraFittingValue = null;
+    societyAllowValue = null;
+    guardianTypeValue = null;
+    residentStatusValue = null;
+    existingCookingFuelValue = null;
+    kycDoc1Value = null;
+    kycDoc2Value = null;
+    kycDoc3Value = null;
+    preferredBillValue = null;
+    custBankNameValue = null;
+    paymentBankNameValue = null;
+    initialDepositStatusValue = null;
+    modeDepositValue = null;
+    getLabelModel = GetLabelModel();
+    getNotInterestedModel = GetNotInterestedModel();
+    getInitialDepositStatusModel = GetInitialDepositStatusModel();
+    getAcceptExtraFittingCostModel = GetAcceptExtraFittingCostModel();
+    getAcceptConversionPolicyModel = GetAcceptConversionPolicyModel();
+    getResidentStatusModel = GetResidentStatusModel();
+    getModeOfDepositModel = GetModeOfDepositModel();
+    getEBillingModel = GetEBillingModel();
+    getAllDepositOfflineModel = GetAllDepositOfflineModel();
+    getKycDocModel = GetKycDocModel();
+    getOwnershipProofModel = GetOwnershipProofModel();
+    getIdentityProofModel = GetIdentityProofModel();
+    getGuardianTypeModel = GetGuardianTypeModel();
+    getExistingCookingFuelModel = GetExistingCookingFuelModel();
+    getSocietyAllowModel = GetSocietyAllowModel();
     listOfAllLabel = [];
     listOfNotInterested = [];
     listOfInitialDepositStatus = [];
@@ -203,7 +240,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     listOfChargeArea = [];
     listOfDepositOffline = [];
     listOfCustBankName = [];
-    listOfChqBankName = [];
+    paymentBankNameList = [];
     getLabelModel = GetLabelModel();
     getNotInterestedModel = GetNotInterestedModel();
     idBackPath = File("");
@@ -241,9 +278,8 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     listOfChargeArea =HiveDataBase.chargeAreaListBox!.values.toSet().toList();
     List<GetAllDepositOfflineModel> dataList = HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
 
-   // listOfDepositOffline =HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
-    listOfCustBankName =HiveDataBase.allLabelBox!.values.toSet().toList();
-    listOfChqBankName =HiveDataBase.allLabelBox!.values.toSet().toList();
+    listOfCustBankName = HiveDataBase.getAllBanksBox!.values.toSet().toList();
+    paymentBankNameList = HiveDataBase.getAllBanksBox!.values.toSet().toList();
     initialDepositStatusValue = listOfInitialDepositStatus.first;
     interestValue = listOfNotInterested.first;
     conversionPolicyValue = listOfConversionPolicy.first;
@@ -258,9 +294,9 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     kycDoc3Value = listOfKycDoc.first;
     preferredBillValue = listOfEBilling.first;
     listOfDepositOffline = dataList.where((element) =>  propertyCategoryValue!.id == element.propertyCategoryId).toList();
-    await fetchBackNameListApi(context: event.context);
+  //  await fetchBackNameListApi(context: event.context);
     await _setLocation();
-   // await _createUpdateData(context: event.context);
+    // await _createUpdateData(context: event.context);
     _eventCompleted(emit);
   }
 
@@ -538,7 +574,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     _eventCompleted(emit);
   }
 
-  fetchBackNameListApi({required BuildContext context}) async {
+  /*fetchBackNameListApi({required BuildContext context}) async {
     var bankNameListRes = await DashboardHelper.getBankNameListApi(context: context);
     if (bankNameListRes != null) {
       listOfCustBankName.clear();
@@ -546,7 +582,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
       listOfCustBankName = bankNameListRes;
       listOfChqBankName = bankNameListRes;
     }
-  }
+  }*/
 
   _btnLocation(RegistrationFormSetLocation event, emit){
     _setLocation();
@@ -571,9 +607,9 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
 
   _selectSchemeTypeDetail(SchemeTypeDetailEvent event, emit) {
     if(depositTypeValue == null){
-    return  Utils.errorSnackBar(msg: " This scheme type id is requirement", context: event.context);
+      return  Utils.errorSnackBar(msg: " This scheme type id is requirement", context: event.context);
     } else if(depositTypeValue != null){
-     return showDialog(
+      return showDialog(
           context: event.context,
           builder: (BuildContext context) => MessageBoxOneButtonPopWidget(
             child: Column(
@@ -616,7 +652,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
         registrationType: interestValue == null ? "": interestValue!.key,
         reasonRegistration: reasonRegistrationController.text.isEmpty ? "": reasonRegistrationController.text.toString(),
         chargeId: chargeAreaValue == null ? "": chargeAreaValue!.gid,
-        areaId: areaValue== null ? "": areaValue!.gid!.toString(),
+        areaId: areaValue== null ? "": areaValue!.gid,
         mobileNumber: mobileController.text.isEmpty ? "" : mobileController.text.trim().toString(),
         altMobileNo: altMobileController.text.isEmpty ? "" : altMobileController.text.trim().toString(),
         firstName: firstController.text.isEmpty ? "" : firstController.text.trim().toString(),
@@ -654,17 +690,17 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
         housePath: uploadHousePath.path.isEmpty ? File("") : uploadHousePath,
         customerPath: uploadCustomerPath.path.isEmpty ? File("") : uploadCustomerPath,
         nocDocPath: nocDocPath.path.isEmpty ? File("") : nocDocPath,
-        acceptConversionPolicy: conversionPolicyValue == null ? "" : conversionPolicyValue.toString(),
+        acceptConversionPolicy: conversionPolicyValue == null ? "" : conversionPolicyValue!.key,
         acceptExtraFittingCost: extraFittingValue == null ? "" : extraFittingValue!.key,
         societyAllowedMdpe: societyAllowValue == null ? "" : societyAllowValue!.key,
         depositStatus: initialDepositStatusValue == null ? "" : initialDepositStatusValue!.key,
         reasonDeposit: reasonDepositStsController.text.isEmpty ? "" : reasonDepositStsController.text.trim().toString(),
         depositType: depositTypeValue == null ? "" : depositTypeValue!.depositTypesId,
         depositAmt: depositAmountController.text.isEmpty ? "" : depositAmountController.text.trim().toString(),
-        modeDeposit: modeDepositValue == null ? "" : modeDepositValue.toString(),
+        modeDeposit: modeDepositValue == null ? "" : modeDepositValue!.value,
         chqNo: chequeNoController.text.isEmpty ? "" : chequeNoController.text.trim().toString(),
         chqDate: chequeDateController.text.isEmpty ? "" : chequeDateController.text.trim().toString(),
-        chqBank: paymentBankNameValue ==null ? "" : paymentBankNameValue.toString(),
+        chqBank: paymentBankNameValue == null ? "" : paymentBankNameValue.toString(),
         chequeAccountNo: chequeAccountNoController.text.isEmpty ? "" : chequeAccountNoController.text.trim().toString(),
         chequeMICRNo: chequeMicrNoController.text.isEmpty ? "" : chequeMicrNoController.text.trim().toString(),
         chequePath: chequePath.path.isEmpty ? File("") : chequePath,
@@ -687,7 +723,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
         return showDialog<void>(
           context: event.context,
           builder: (BuildContext context) {
-         //   return RegistrationFormPreviewPopWidget(cusRegData: saveCusRegData);
+            //   return RegistrationFormPreviewPopWidget(cusRegData: saveCusRegData);
             return  Scaffold(
               body: Container(
                 color: AppColor.white,
@@ -805,11 +841,11 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
                                     : Container(),
                               ],
                             ),
-                            PopWidget.itemBuilder(textName: AppString.depositStatus, textValue: initialDepositStatusValue == null ? "-" : initialDepositStatusValue!.value),
+                            PopWidget.itemBuilder(textName: AppString.initDepositStatus, textValue: initialDepositStatusValue == null ? "-" : initialDepositStatusValue!.value),
                             PopWidget.itemBuilder(textName: AppString.depositType, textValue: depositTypeValue == null ? "-" : depositTypeValue!.depositTypesId),
                             PopWidget.itemBuilder(textName: AppString.depositAmt, textValue: depositAmountController.text.isEmpty ? "-" : depositAmountController.text),
                             PopWidget.itemBuilder(textName: AppString.modeDeposit, textValue: modeDepositValue == null ? "-" : modeDepositValue!.value),
-                            if (modeDepositValue!.value == "Cheque") ...[
+                            if (modeDepositValue?.value == "Cheque") ...[
                               PopWidget.itemBuilder(textName: AppString.chqNo, textValue: chequeNoController.text.isEmpty ? "-" : chequeNoController.text),
                               PopWidget.itemBuilder(textName: AppString.chqDate, textValue: chequeDateController.text.isEmpty ? "" : chequeDateController.text),
                               PopWidget.itemBuilder(textName: AppString.chqBank, textValue: paymentBankNameValue == null ? "": paymentBankNameValue.toString()),
@@ -872,19 +908,19 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
   }
 
   _saveLocalData(RegistrationFormSaveLocalDataEvent event, emit) async {
-   try{
-     isSaveLoader = true;
-     _eventCompleted(emit);
-     await RegistrationFormHelper.addCustRegSyncLocalDB(
-       context: event.context,
-       custRegSyncStore: saveCusRegData,
-       isUpdate:isUpdate,
-     );
-     isSaveLoader = false;
-     _eventCompleted(emit);
-   } catch(e){
-     log("_saveLocalData-->${e.toString()}");
-   }
+    try{
+      isSaveLoader = true;
+      _eventCompleted(emit);
+      await RegistrationFormHelper.addCustRegSyncLocalDB(
+        context: event.context,
+        custRegSyncStore: saveCusRegData,
+        isUpdate:isUpdate,
+      );
+      isSaveLoader = false;
+      _eventCompleted(emit);
+    } catch(e){
+      log("_saveLocalData-->${e.toString()}");
+    }
   }
 
   _updateLocalData(RegistrationFormLoadUpdateLocalDataEvent event, emit) async {
@@ -927,7 +963,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
         kycDocument2Number: kyc2NumberController.text,
         kycDocument3: kycDoc3Value?.key,
         eBillingModel: preferredBillValue?.key,
-        bankNameOfBank: custBankNameValue,
+        bankNameOfBank: "",
         bankAccountNumber: custBankAccNumberController.text,
         bankIfscCode: "",
         bankAddress: custBankAddController.text,
@@ -954,11 +990,11 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
         canceledChequePhoto: canceledCheque.path,
         chequePhoto: chequePath.path,
       );
-        Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
-            RegistrationFormPage(
-                isUpdate: true,
-                position: event.index,
-                localData: dataBox)));
+      Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
+          RegistrationFormPage(
+              isUpdate: true,
+              position: event.index,
+              localData: dataBox)));
     } catch(e){
       log("_saveLocalData-->${e.toString()}");
     }
@@ -1036,7 +1072,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
       Utils.successSnackBar(msg:"Data Update Successfully",  context: context);
       Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
     }
-    }
+  }
   _eventCompleted(Emitter<RegistrationFormState> emit) {
     emit(RegistrationFormGetAllDataState(
       isPageLoader : isPageLoader,
@@ -1129,7 +1165,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
       custBankNameValue: custBankNameValue,
       paymentBankNameValue: paymentBankNameValue,
       custBankNameList: listOfCustBankName,
-      paymentBankNameList: listOfChqBankName,
+      paymentBankNameList: paymentBankNameList,
       idBackFilePath: idBackPath,
       idFrontFilePath: idFrontPath,
       eleBillFrontPath: addFrontPath,

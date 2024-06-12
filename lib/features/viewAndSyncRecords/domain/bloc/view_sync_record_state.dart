@@ -16,16 +16,20 @@ class ViewSyncRecordPageLoadState extends ViewSyncRecordState {
 class ViewSyncRecordDataState extends ViewSyncRecordState {
   final bool isSaveServerLoader;
   final bool isDeleteLoader;
-//  final SaveCustomerRegistrationOfflineModel saveCustomerRegistrationOfflineList;
- // final Box<SaveCustomerRegistrationOfflineModel> saveCustomerRegistrationOfflineData ;
-  ViewSyncRecordDataState({required this.isSaveServerLoader, required this.isDeleteLoader,
-  //  required this.saveCustomerRegistrationOfflineList,
-  //  required this.saveCustomerRegistrationOfflineData,
+  final List<SaveRegistrationFormModel>? listOfRegistrationForm;
+  final Box<SaveRegistrationFormModel>? boxOfRegistrationForm;
+  ViewSyncRecordDataState({
+    required this.isSaveServerLoader,
+    required this.isDeleteLoader,
+    required this.listOfRegistrationForm,
+    required this.boxOfRegistrationForm,
   });
 
   @override
-  List<Object> get props => [isSaveServerLoader, isDeleteLoader,
- //   saveCustomerRegistrationOfflineList,
-  //  saveCustomerRegistrationOfflineData
+  List<Object?> get props => [
+    isSaveServerLoader,
+    isDeleteLoader,
+    listOfRegistrationForm,
+    boxOfRegistrationForm,
   ];
 }

@@ -7,26 +7,29 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
     on<ViewSyncRecordLoadPageEvent>(_pageLoad);
     on<ViewSyncRecordLoadUpdateLocalDataEvent>(_updateLocalData);
     on<ViewSyncRecordDeleteLocalDataEvent>(_deleteLocalData);
-    on<ViewSyncRecordLoadSaveServerDataEvent>(_saveServerData);
+    on<SyncRecordListServerDataEvent>(_sendListData);
+    on<SyncRecordSingleServerDataEvent>(_sendSingleData);
   }
 
-  bool _isSaveServerLoader = false;
-  bool get isSaveServerLoader => _isSaveServerLoader;
+  bool isSaveServerLoader = false;
+  bool isDeleteLoader = false;
 
-  bool _isDeleteLoader = false;
-  bool get isDeleteLoader => _isDeleteLoader;
+  List<SaveRegistrationFormModel> listOfRegistrationForm = [];
+  Box<SaveRegistrationFormModel>? boxOfRegistrationForm;
 
-
-  _pageLoad(ViewSyncRecordLoadPageEvent event, emit) {
+  _pageLoad(ViewSyncRecordLoadPageEvent event, emit) async {
     emit(ViewSyncRecordPageLoadState());
-    _isSaveServerLoader = false;
-    _isDeleteLoader = false;
+    isSaveServerLoader = false;
+    isDeleteLoader = false;
+    listOfRegistrationForm = [];
+    boxOfRegistrationForm = await HiveDataBase.registrationFormBox;
+    listOfRegistrationForm = await boxOfRegistrationForm!.values.toList();
     _eventCompleted(emit);
   }
 
 
   _updateLocalData(ViewSyncRecordLoadUpdateLocalDataEvent event, emit) async {
-   /* await CustomRegistrationFormHelper.addCustomerFormInLocalDatabase(context: event.context, saveCusRegData: saveCusRegData);
+    /* await CustomRegistrationFormHelper.addCustomerFormInLocalDatabase(context: event.context, saveCusRegData: saveCusRegData);
     _eventCompleted(emit);*/
   }
 
@@ -41,30 +44,59 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
               Navigator.pop(event.context);
               Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
               log("Data Length P ============== ${HiveDataBase.registrationFormBox!.values.length}");
-              return await HiveDataBase.registrationFormBox!.deleteAt(event.index);
+              return await boxOfRegistrationForm!.deleteAt(event.index);
             }
             _eventCompleted(emit);
           },
         ));
   }
 
-  _saveServerData(ViewSyncRecordLoadSaveServerDataEvent event, emit) async {
-  // try{
-     _isSaveServerLoader = true;
-     _eventCompleted(emit);
-     List<SaveRegistrationFormModel> data = await HiveDataBase.registrationFormBox!.values.toList();
-     for (int i = 0; i < data.length; i++) {
-       var res = await ViewSyncRecordHelper.sendData(context: event.context, custRegSyncData: data[i]);
-       if (res != null) {
-         _isSaveServerLoader = false;
-         _eventCompleted(emit);
-        await Utils.successSnackBar(msg: res.message![i].message!, context: event.context);
-         Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecord);
-       }
-     }
-  /* }catch(e){
-     log("_saveServerData-->${e.toString()}");
-   }*/
+  _sendListData(SyncRecordListServerDataEvent event, emit) async {
+    try{
+      isSaveServerLoader = true;
+      _eventCompleted(emit);
+      if(listOfRegistrationForm.isNotEmpty){
+        for (int i = 0; i < listOfRegistrationForm.length; i++) {
+          var res = await ViewSyncRecordHelper.sendData(context: event.context, custRegSyncData: listOfRegistrationForm[i]);
+          if (res != null) {
+            isSaveServerLoader = false;
+            _eventCompleted(emit);
+            await Utils.successSnackBar(msg: res.message![0].message!, context: event.context);
+            await listOfRegistrationForm.removeAt(i);
+            _eventCompleted(emit);
+          }
+        }
+    //    Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecord);
+      }
+    } catch(e){
+      isSaveServerLoader = false;
+      log("_saveServerData-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: event.context);
+    }
+  }
+
+  _sendSingleData(SyncRecordSingleServerDataEvent event, emit) async {
+    try{
+      isSaveServerLoader = true;
+      _eventCompleted(emit);
+      if(listOfRegistrationForm.isNotEmpty){
+        var res = await ViewSyncRecordHelper.sendData(context: event.context, custRegSyncData: listOfRegistrationForm[event.index]);
+        if (res != null) {
+          isSaveServerLoader = false;
+          _eventCompleted(emit);
+          log("Data Length P ============== ${HiveDataBase.registrationFormBox!.values.length}");
+          await Utils.successSnackBar(msg: res.message![0].message!, context: event.context);
+         // await boxOfRegistrationForm!.deleteAt(event.index);
+          await listOfRegistrationForm.removeAt(event.index);
+          Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecord);
+          _eventCompleted(emit);
+        }
+      }
+    } catch(e){
+      isSaveServerLoader = false;
+      log("_sendSingleData-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: event.context);
+    }
   }
 
 
@@ -88,8 +120,8 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
     emit(ViewSyncRecordDataState(
       isSaveServerLoader: isSaveServerLoader,
       isDeleteLoader: isDeleteLoader,
-     // saveCustomerRegistrationOfflineList: offlineDataList,
-    //  saveCustomerRegistrationOfflineData: offlineBox!,
+      listOfRegistrationForm: listOfRegistrationForm,
+      boxOfRegistrationForm: boxOfRegistrationForm,
     ));
   }
 

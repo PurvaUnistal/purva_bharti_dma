@@ -34,8 +34,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   List<GetAllAreaModel> listOfAllArea = [];
   List<GetChargeAreaListModel> listOfChargeArea = [];
   List<GetAllDepositOfflineModel> listOfDepositOffline = [];
-  List listOfCustBankName = [];
-  List listOChqBankName = [];
+  List<String> listOfCustBankName = [];
+  List<String> listOChqBankName = [];
 
 
 
@@ -316,10 +316,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   fetchBankNameListApi({required BuildContext context}) async {
-    var bankNameListRes = await DashboardHelper.getBankNameListApi(context: context);
-    if (bankNameListRes != null) {
-      listOfCustBankName = bankNameListRes;
-      listOChqBankName = bankNameListRes;
+    var res = await DashboardHelper.getBankNameListApi(context: context);
+    if (res != null) {
+      listOfCustBankName = res;
+      listOChqBankName = res;
     }
   }
 

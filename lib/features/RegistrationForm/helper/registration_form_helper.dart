@@ -88,7 +88,7 @@ class RegistrationFormHelper {
       } else if (lastName!.isEmpty) {
         Utils.errorSnackBar(msg: "The Last Name field is required.", context: context);
         return null;
-      } else if(registrationType == "Registration For LMC"){
+      } else if(registrationType == "1"){
         if (guardianType == "") {
           Utils.errorSnackBar(msg: "The Guardian Type field is required.", context: context);
           return null;
@@ -139,7 +139,7 @@ class RegistrationFormHelper {
       } else if (idFrontPath!.path.isEmpty) {
         Utils.errorSnackBar(msg: "The Id Proof Front Image field is required.", context: context);
         return null;
-      } else if(registrationType == "Registration For LMC"){
+      } else if(registrationType == "1"){
         if (addProof == "") {
           Utils.errorSnackBar(msg: "The KYC (Address Proof) field is required.", context: context);
           return null;

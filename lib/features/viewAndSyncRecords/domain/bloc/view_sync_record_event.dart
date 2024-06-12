@@ -28,11 +28,22 @@ class ViewSyncRecordDeleteLocalDataEvent extends ViewSyncRecordEvent {
   List<Object?> get props => [index, context,mobileNo];
 }
 
-class ViewSyncRecordLoadSaveServerDataEvent extends ViewSyncRecordEvent {
+class SyncRecordListServerDataEvent extends ViewSyncRecordEvent {
   final BuildContext context;
-  ViewSyncRecordLoadSaveServerDataEvent({
+  SyncRecordListServerDataEvent({
     required this.context,
   });
   @override
   List<Object?> get props => [context,];
+}
+
+class SyncRecordSingleServerDataEvent extends ViewSyncRecordEvent {
+  final BuildContext context;
+  int index = 0;
+  SyncRecordSingleServerDataEvent({
+    required this.context,
+    required this.index,
+  });
+  @override
+  List<Object?> get props => [context,index];
 }

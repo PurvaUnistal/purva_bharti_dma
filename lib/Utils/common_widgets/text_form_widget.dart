@@ -103,13 +103,14 @@ class TextFieldWidget extends StatelessWidget {
         ),
         hintStyle: Styles.labels,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(
-            horizontal: 5.0, vertical: maxLine != null ? 8 : 0),
+        contentPadding: EdgeInsets.symmetric(horizontal: 5.0, vertical: maxLine != null ? 8 : 0),
         border: border,
         focusedBorder: border,
         disabledBorder: border,
         enabledBorder: border,
-      ),
+        errorBorder: borderE,
+        errorStyle:Styles.subStar,
+       ),
     );
   }
 
@@ -117,5 +118,10 @@ class TextFieldWidget extends StatelessWidget {
     borderRadius: BorderRadius.circular(5.0),
     borderSide: BorderSide(
         color: AppColor.prime, style: BorderStyle.solid, width: 0.80),
+  );
+  OutlineInputBorder borderE = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(5.0),
+    borderSide: BorderSide(
+        color: AppColor.red, style: BorderStyle.solid, width: 0.80),
   );
 }

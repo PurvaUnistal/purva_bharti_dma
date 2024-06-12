@@ -111,10 +111,10 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final TextEditingController chequeDateController;
   final TextEditingController chequeAccountNoController;
   final TextEditingController chequeMicrNoController;
-  GetLabelModel? custBankNameValue;
-  GetLabelModel? paymentBankNameValue;
-  final List custBankNameList;
-  final List paymentBankNameList;
+  final String? custBankNameValue;
+  final String? paymentBankNameValue;
+  final List<String> custBankNameList;
+  final List<String> paymentBankNameList;
   File idFrontFilePath;
   File idBackFilePath;
   File eleBillFrontPath;

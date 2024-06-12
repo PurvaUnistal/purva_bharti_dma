@@ -67,162 +67,165 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            _verticalSpace(),
-            _interestDropdown(stateData: stateData),
-             _remarkWidget(stateData: stateData),
-            _chargeAreaDropdown(stateData: stateData),
-            _areaDropdown(stateData: stateData),
-            _mobileNumberWidget(stateData: stateData),
-            _altMobileNumberWidget(stateData: stateData),
-            _firstNameWidget(stateData: stateData),
-            _middleNameWidget(stateData: stateData),
-            _lastNameWidget(stateData: stateData),
-            _guardianDropdown(stateData: stateData),
-            _guardianNameWidget(stateData: stateData),
-            _emailIdWidget(stateData: stateData),
-            Row(
-              children: [
-                Flexible(flex: 3, child: _propertyCategoryDropdown(stateData: stateData)),
-                _widthSpace(),
-                Flexible(flex: 3, child: _propertyClassDropdown(stateData: stateData)),
-              ],
-            ),
-            _verticalSpace(),
-            _buildNumberWidget(stateData: stateData),
-            _houseNumberWidget(stateData: stateData),
-            _colonyWidget(stateData: stateData),
-            _streetNameWidget(stateData: stateData),
-            _townWidget(stateData: stateData),
-            _districtDropdown(stateData: stateData),
-            _nearestLandmarkWidget(stateData: stateData),
-            _pinCodeWidget(stateData: stateData),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Flexible(flex: 3, child: _latWidget(stateData: stateData)),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.02,
-                ),
-                Flexible(flex: 3, child: _longWidget(stateData: stateData)),
-                IconButton(
-                  icon: Icon(Icons.location_on_outlined, color:  AppColor.prime),
-                  onPressed: (){
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(RegistrationFormSetLocation(context: context));
-                  },
-                  //  stateData: stateData
-                ),
-              ],
-            ),
-            _verticalSpace(),
-            if(stateData.interestValue?.value != "Future Registration")...[
+        child: Form(
+          key: formGlobalKey,
+          child: Column(
+            children: [
+              _verticalSpace(),
+              _interestDropdown(stateData: stateData),
+               _remarkWidget(stateData: stateData),
+              _chargeAreaDropdown(stateData: stateData),
+              _areaDropdown(stateData: stateData),
+              _mobileNumberWidget(stateData: stateData),
+              _altMobileNumberWidget(stateData: stateData),
+              _firstNameWidget(stateData: stateData),
+              _middleNameWidget(stateData: stateData),
+              _lastNameWidget(stateData: stateData),
+              _guardianDropdown(stateData: stateData),
+              _guardianNameWidget(stateData: stateData),
+              _emailIdWidget(stateData: stateData),
               Row(
                 children: [
-                  Flexible(flex: 3, child: _existCookingFuelDropdown(stateData: stateData)),
+                  Flexible(flex: 3, child: _propertyCategoryDropdown(stateData: stateData)),
                   _widthSpace(),
-                  Flexible(flex: 3, child: _numberKitchenWidget(stateData: stateData)),
+                  Flexible(flex: 3, child: _propertyClassDropdown(stateData: stateData)),
                 ],
               ),
               _verticalSpace(),
+              _buildNumberWidget(stateData: stateData),
+              _houseNumberWidget(stateData: stateData),
+              _colonyWidget(stateData: stateData),
+              _streetNameWidget(stateData: stateData),
+              _townWidget(stateData: stateData),
+              _districtDropdown(stateData: stateData),
+              _nearestLandmarkWidget(stateData: stateData),
+              _pinCodeWidget(stateData: stateData),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Flexible(flex: 3, child: _numberBathroomWidget(stateData: stateData)),
-                  _widthSpace(),
-                  Flexible(flex: 3, child: _familyMemberWidget(stateData: stateData)),
-                ],
-              ),
-            ],
-            _verticalSpace(),
-            _kycDoc1Dropdown(stateData: stateData),
-            _kycDoc1Widget(stateData: stateData),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _idFrontFileImg( stateData: stateData),
-                _idBackFileImg(context: context, stateData: stateData),
-              ],
-            ),
-            _verticalSpace(),
-            _kycDoc2Dropdown(stateData: stateData),
-            _kycDoc2Widget(stateData: stateData),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _eleBillFrontImg(context: context, stateData: stateData),
-                _eleBillBackImg(context: context, stateData: stateData),
-              ],
-            ),
-            _verticalSpace(),
-            if(stateData.interestValue?.value != "Future Registration")...[
-              _kycDoc3Dropdown(stateData: stateData),
-                  Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _uploadCustomerImg(context: context, stateData: stateData),
-                  stateData.kycDoc3Value?.value == "Rented" ? _nocDocImg(context: context, stateData: stateData) : _uploadHouseImg(context: context, stateData: stateData),
-                ],
-              ),
-              _verticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  stateData.kycDoc3Value?.value == "Rented" ?  _uploadHouseImg(context: context, stateData: stateData) : Container(),
-                ],
-              ),
-              _verticalSpace(),
-              Row(
-                children: [
-                  Flexible(flex: 3, child: _acceptConversionPolicyDropdown(stateData: stateData)),
-                  _widthSpace(),
-                  Flexible(flex: 3, child: _acceptExtraFittingCostDropdown(stateData: stateData)),
-                  _widthSpace(),
-                  Flexible(flex: 3, child: _societyAllowDropdown(stateData: stateData)),
-                ],
-              ),
-              BorderWidget(
-                children: [
-                  Text("Security Deposit",style: Styles.title,),
-                  _verticalSpace(),
-                  _initialDepositStatusDropdown(stateData: stateData),
-                  _reasonDepositStatusWidget(stateData: stateData),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(flex: 6, child: _depositTypeDropdown(stateData: stateData)),
-                      _widthSpace(),
-                      Flexible(flex: 3, child: _depositTypeDetailsButton(stateData: stateData)),
-                    ],
+                  Flexible(flex: 3, child: _latWidget(stateData: stateData)),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.02,
                   ),
-                  _verticalSpace(),
-                  _depositAmountWidget(stateData: stateData),
-                  _modeDepositDropdown(stateData: stateData),
+                  Flexible(flex: 3, child: _longWidget(stateData: stateData)),
+                  IconButton(
+                    icon: Icon(Icons.location_on_outlined, color:  AppColor.prime),
+                    onPressed: (){
+                      BlocProvider.of<RegistrationFormBloc>(context)
+                          .add(RegistrationFormSetLocation(context: context));
+                    },
+                    //  stateData: stateData
+                  ),
                 ],
               ),
               _verticalSpace(),
-              if (stateData.modeDepositValue != null && stateData.modeDepositValue?.value == "Cheque") ...[
-                BorderWidget(
+              if(stateData.interestValue?.key != "0")...[
+                Row(
                   children: [
-                    Text("Cheque",style: Styles.title,),
-                    _verticalSpace(),
-                    _chequeNoWidget(stateData: stateData),
-                    _chequeDateWidget(stateData: stateData),
-                    _verticalSpace(),
-                    _chequePaymentBankDropdown(stateData: stateData),
-                    _verticalSpace(),
-                    _chequeAccountNoWidget(stateData: stateData),
-                    _chequeMICRNoWidget(stateData: stateData),
-                    _chequeImg(context: context, stateData: stateData),
-                    _verticalSpace(),
+                    Flexible(flex: 3, child: _existCookingFuelDropdown(stateData: stateData)),
+                    _widthSpace(),
+                    Flexible(flex: 3, child: _numberKitchenWidget(stateData: stateData)),
+                  ],
+                ),
+                _verticalSpace(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(flex: 3, child: _numberBathroomWidget(stateData: stateData)),
+                    _widthSpace(),
+                    Flexible(flex: 3, child: _familyMemberWidget(stateData: stateData)),
                   ],
                 ),
               ],
+              _verticalSpace(),
+              _kycDoc1Dropdown(stateData: stateData),
+              _kycDoc1Widget(stateData: stateData),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _idFrontFileImg( stateData: stateData),
+                  _idBackFileImg(context: context, stateData: stateData),
+                ],
+              ),
+              _verticalSpace(),
+              _kycDoc2Dropdown(stateData: stateData),
+              _kycDoc2Widget(stateData: stateData),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _eleBillFrontImg(context: context, stateData: stateData),
+                  _eleBillBackImg(context: context, stateData: stateData),
+                ],
+              ),
+              _verticalSpace(),
+              if(stateData.interestValue?.key != "0")...[
+                _kycDoc3Dropdown(stateData: stateData),
+                    Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _uploadCustomerImg(context: context, stateData: stateData),
+                    stateData.kycDoc3Value?.value == "Rented" ? _nocDocImg(context: context, stateData: stateData) : _uploadHouseImg(context: context, stateData: stateData),
+                  ],
+                ),
+                _verticalSpace(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    stateData.kycDoc3Value?.value == "Rented" ?  _uploadHouseImg(context: context, stateData: stateData) : Container(),
+                  ],
+                ),
+                _verticalSpace(),
+                Row(
+                  children: [
+                    Flexible(flex: 3, child: _acceptConversionPolicyDropdown(stateData: stateData)),
+                    _widthSpace(),
+                    Flexible(flex: 3, child: _acceptExtraFittingCostDropdown(stateData: stateData)),
+                    _widthSpace(),
+                    Flexible(flex: 3, child: _societyAllowDropdown(stateData: stateData)),
+                  ],
+                ),
+                BorderWidget(
+                  children: [
+                    Text("Security Deposit",style: Styles.title,),
+                    _verticalSpace(),
+                    _initialDepositStatusDropdown(stateData: stateData),
+                    _reasonDepositStatusWidget(stateData: stateData),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(flex: 6, child: _depositTypeDropdown(stateData: stateData)),
+                        _widthSpace(),
+                        Flexible(flex: 3, child: _depositTypeDetailsButton(stateData: stateData)),
+                      ],
+                    ),
+                    _verticalSpace(),
+                    _depositAmountWidget(stateData: stateData),
+                    _modeDepositDropdown(stateData: stateData),
+                  ],
+                ),
+                _verticalSpace(),
+                if (stateData.modeDepositValue != null && stateData.modeDepositValue?.value == "Cheque") ...[
+                  BorderWidget(
+                    children: [
+                      Text("Cheque",style: Styles.title,),
+                      _verticalSpace(),
+                      _chequeNoWidget(stateData: stateData),
+                      _chequeDateWidget(stateData: stateData),
+                      _verticalSpace(),
+                      _chequePaymentBankDropdown(stateData: stateData),
+                      _verticalSpace(),
+                      _chequeAccountNoWidget(stateData: stateData),
+                      _chequeMICRNoWidget(stateData: stateData),
+                      _chequeImg(context: context, stateData: stateData),
+                      _verticalSpace(),
+                    ],
+                  ),
+                ],
+              ],
+              _previewButton(),
+              _verticalSpace(),
             ],
-            _previewButton(),
-            _verticalSpace(),
-          ],
+          ),
         ),
       ),
     );
@@ -245,7 +248,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   }
 
   Widget _remarkWidget({required RegistrationFormGetAllDataState stateData}) {
-    return stateData.interestValue?.value == "Future Registration" ? ColumnWidget(
+    return stateData.interestValue?.key == "0" ? ColumnWidget(
       child: TextFieldWidget(
         label: AppString.reasonRegistration ,
         hintText: AppString.reasonRegistration ,
@@ -439,7 +442,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _guardianDropdown({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetGuardianTypeModel>(
-        star:stateData.interestValue?.value != "Future Registration" ? AppString.star : "",
+        star:stateData.interestValue?.key != "0" ? AppString.star : "",
         label: stateData.labelModel.registration == null ? AppString.guardianType :stateData.labelModel.registration!.guardianType,
         hint: stateData.labelModel.registration == null ? AppString.guardianType :stateData.labelModel.registration!.guardianType,
         dropdownValue: stateData.guardianTypeValue == null ? null :stateData.guardianTypeValue,
@@ -454,7 +457,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _guardianNameWidget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: stateData.interestValue?.value != "Future Registration" ? AppString.star : "",
+        star: stateData.interestValue?.key != "0" ? AppString.star : "",
         label: stateData.labelModel.registration == null ? AppString.guardianName : stateData.labelModel.registration!.guardian,
         hintText:stateData.labelModel.registration == null ? AppString.guardianName : stateData.labelModel.registration!.guardian,
         controller: stateData.guardianNameController,
@@ -501,6 +504,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
             return null;
           }
           return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
         },
       ),
     );
@@ -681,7 +687,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
           },
           onChanged: (v) {
             formGlobalKey.currentState?.validate();
-          }),
+          }
+          ),
     );
   }
 
@@ -781,6 +788,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
           }
           return null;
         },
+          onChanged: (v) {
+            formGlobalKey.currentState?.validate();
+          }
       ),
     );
   }
@@ -812,11 +822,15 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
         validator: (value) {
           if (value != stateData.kyc1NumberController.text.trim()) {
             return "Blank space";
-          } else if (value!.isEmpty) {
-            return "Please enter id proof no.";
           }
+        /*  else if (value!.isEmpty) {
+            return "Please enter id proof no.";
+          }*/
           return null;
         },
+          onChanged: (v) {
+            formGlobalKey.currentState?.validate();
+          }
       ),
     );
   }
@@ -825,7 +839,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _kycDoc2Dropdown({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetOwnershipProofModel>(
-        star: stateData.interestValue?.value != "Future Registration" ?AppString.star : "",
+        star: stateData.interestValue?.key != "0" ?AppString.star : "",
         label: stateData.labelModel.kyc == null ? AppString.addProof :stateData.labelModel.kyc!.uploadDoc2,
         hint:  stateData.labelModel.kyc == null ? AppString.addProof :stateData.labelModel.kyc!.uploadDoc2,
         dropdownValue: stateData.ownershipProofValue == null ? null : stateData.ownershipProofValue,
@@ -840,7 +854,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _kycDoc2Widget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: stateData.interestValue?.value != "Future Registration" ? AppString.star : "",
+        star: stateData.interestValue?.key != "0" ? AppString.star : "",
         label:  stateData.labelModel.kyc == null ? AppString.addProofNo : stateData.labelModel.kyc!.uploadDoc2No,
         hintText:  stateData.labelModel.kyc == null ? AppString.addProofNo : stateData.labelModel.kyc!.uploadDoc2No,
         controller: stateData.kyc2NumberController,
@@ -852,6 +866,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
           }
           return null;
         },
+          onChanged: (v) {
+            formGlobalKey.currentState?.validate();
+          }
       ),
     );
   }
@@ -945,10 +962,10 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       controller: stateData.custIfscCodeController,
       keyboardType: TextInputType.text,
       maxLength: 11,
-      /*  validator: (value) {
-          if (value != IFSCController.text.trim()) {
+        validator: (value) {
+          if (value != stateData.custIfscCodeController.text.trim()) {
             return "Blank space";
-          } else if (value.isEmpty) {
+          } else if (value!.isEmpty) {
             return "Please enter Customer Ifsc Code";
           } else if (value.length <= 10) {
             return "Customer Ifsc Code must be of 11 digit";
@@ -956,8 +973,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
           return null;
         },
         onChanged: (v) {
-          formGlobalKey.currentState.validate();
-        }*/
+          formGlobalKey.currentState?.validate();
+        }
     );
   }
 
@@ -985,8 +1002,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     return ColumnWidget(
       child: DropdownWidget(
         star:AppString.star,
-        label: stateData.labelModel.deposit == null ? AppString.depositStatus : stateData.labelModel.deposit!.depositSta,
-        hint: stateData.labelModel.deposit == null ? AppString.depositStatus : stateData.labelModel.deposit!.depositSta,
+        label:  AppString.initDepositStatus ,
+        hint:  AppString.initDepositStatus ,
         dropdownValue: stateData.initialDepositStatusValue == null ? null :stateData.initialDepositStatusValue,
         items: stateData.initialDepositStatusList,
         onChanged: (val) {
@@ -1012,7 +1029,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       star:AppString.star,
       label: AppString.depositType,
       hint: AppString.depositType,
-      dropdownValue: stateData.depositOfflineValue == null ? null : stateData.depositOfflineValue,
+      dropdownValue: stateData.depositOfflineValue?.depositName == null ? null : stateData.depositOfflineValue,
       items: stateData.getAllDepositOfflineList,
       onChanged: (val) {
         log("depositTypeValue-->${stateData.depositOfflineValue?.depositName}");
@@ -1059,11 +1076,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
         star:AppString.star,
         label:AppString.modeDeposit,
         hint: AppString.modeDeposit,
-        dropdownValue: stateData.modeDepositValue == null ? null :stateData.modeDepositValue,
+        dropdownValue: stateData.modeDepositValue?.value == null ? null :stateData.modeDepositValue,
         items: stateData.modeDepositList,
         onChanged: (val) {
-          log("stateData.modeDepositValue-->${val}");
-          log("stateData.modeDepositValue-->${stateData.modeDepositValue}");
           BlocProvider.of<RegistrationFormBloc>(context).add(RegistrationFormSetModeDepositValue(modeDepositValue: val));
         },
       ),
@@ -1118,11 +1133,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _chequePaymentBankDropdown({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
-      child: DropdownWidget(
+      child: DropdownWidget<String>(
         star:AppString.star,
-        label:stateData.labelModel.deposit == null ? AppString.chqBank :  stateData.labelModel.deposit!.chqBank,
-        hint: stateData.labelModel.deposit == null ? AppString.chqBank :  stateData.labelModel.deposit!.chqBank,
-        dropdownValue: stateData.paymentBankNameValue,
+        label: AppString.chqBank ,
+        hint:  AppString.chqBank,
+        dropdownValue: stateData.paymentBankNameValue == null ? null :stateData.paymentBankNameValue,
         items: stateData.paymentBankNameList,
         onChanged: (val) {
           BlocProvider.of<RegistrationFormBloc>(context).add(RegistrationFormSetPaymentBankNameValue(paymentBankNameValue: val));
@@ -1232,7 +1247,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _eleBillFrontImg({required BuildContext context, required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
-      star: stateData.interestValue?.value != "Future Registration" ?AppString.star : "",
+      star: stateData.interestValue?.key != "0" ?AppString.star : "",
       title: AppString.addProofFront ,
       imgFile: stateData.eleBillFrontPath,
       onPressed: () {
@@ -1461,11 +1476,15 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     return ButtonWidget(
       text: AppString.preview,
       onPressed: () {
-        FocusScope.of(context).unfocus();
-        TextInput.finishAutofillContext();
-        BlocProvider.of<RegistrationFormBloc>(context).add(RegistrationFormPreviewPageEvent(
-          context: context,
-        ));
+        if(formGlobalKey.currentState!.validate()){
+          formGlobalKey.currentState?.save();
+          FocusScope.of(context).unfocus();
+          TextInput.finishAutofillContext();
+          BlocProvider.of<RegistrationFormBloc>(context).add(RegistrationFormPreviewPageEvent(
+            context: context,
+          ));
+        }
+
       },
     );
   }

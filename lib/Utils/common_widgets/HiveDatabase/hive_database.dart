@@ -22,6 +22,7 @@ class HiveDataBase {
   static Box<GetPropertyClassModel>? proClassBox;
   static Box<GetResidentStatusModel>? resStatusBox;
   static Box<GetSocietyAllowModel>? societyAllowBox;
+  static Box<String>? getAllBanksBox;
   static Box<SaveRegistrationFormModel>? registrationFormBox;
 
 
@@ -58,6 +59,7 @@ class HiveDataBase {
     Hive.registerAdapter(GetPropertyClassModelAdapter());
     Hive.registerAdapter(GetResidentStatusModelAdapter());
     Hive.registerAdapter(GetSocietyAllowModelAdapter());
+    Hive.registerAdapter(BankNameListModelAdapter());
     Hive.registerAdapter(SaveRegistrationFormModelAdapter());
 
     acceptConversionPolicyBox = await Hive.openBox<GetAcceptConversionPolicyModel>(HiveBoxName.AcceptConversionPolicyBox);
@@ -80,6 +82,7 @@ class HiveDataBase {
     proClassBox = await Hive.openBox<GetPropertyClassModel>(HiveBoxName.ProClassBox);
     resStatusBox = await Hive.openBox<GetResidentStatusModel>(HiveBoxName.ResStatusBox);
     societyAllowBox = await Hive.openBox<GetSocietyAllowModel>(HiveBoxName.SocietyAllowBox);
+    getAllBanksBox = await Hive.openBox<String>(HiveBoxName.AllBanksBox);
     registrationFormBox = await Hive.openBox<SaveRegistrationFormModel>(HiveBoxName.registrationFormBox);
 
   }

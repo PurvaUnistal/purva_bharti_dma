@@ -80,7 +80,7 @@ class AppString{
   static String conversionPolicy =  'Conversion Policy';
   static String fittingCost =  'Extra Fitting Cost';
   static String mdpeAllow = 'Society Allow MDPE';
-  static String depositStatus = 'Deposit Status';
+  static String initDepositStatus = 'Initial Deposit Status';
   static String reasonDeposit = 'Reason Deposit Status';
   static String depositType = 'Scheme Type';
   static String depositAmt = 'Deposit Amount';

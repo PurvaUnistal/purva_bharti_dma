@@ -435,17 +435,21 @@ class DashboardHelper {
 
   static Future<List<String>?> getBankNameListApi({required BuildContext context}) async {
     try {
-      if (await isInternetConnected() == true) {
-        var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllBanks, context: context);
-        if (res != null) {
-          SharedPref.setString(key: PrefsValue.getAllBanks, value: jsonEncode(bankNameListModelFromJson(res)));
-          return bankNameListModelFromJson(res);
+      var res = await ApiServer.getData(urlEndPoint: AppUrl.getAllBanks, context: context);
+      if (res != null) {
+        List<String> response = bankNameListModelFromJson(res);
+        if (response.isNotEmpty) {
+          if (await HiveDataBase.getAllBanksBox!.isOpen) {
+            await HiveDataBase.getAllBanksBox!.clear();
+            HiveDataBase.getAllBanksBox!.addAll(response);
+          }
         }
-      } else {
-        return bankNameListModelFromJson(SharedPref.getString(key: PrefsValue.getAllBanks) ?? "");
+        return response;
       }
     } catch (e) {
-      print("bankNameListModelFromJson-->${e.toString()}");
+      print("getAllBanksBox-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
     }
     return null;
   }
