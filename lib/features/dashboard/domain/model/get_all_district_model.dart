@@ -1,6 +1,6 @@
 // To parse this JSON data, do
 //
-//     final getAllDistrictModel = getAllDistrictModelFromJson(jsonString);
+//      getAllDistrictModel = getAllDistrictModelFromJson(jsonString);
 
 import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_all_district_model.g.dart';
@@ -16,21 +16,21 @@ String getAllDistrictModelToJson(List<GetAllDistrictModel> data) =>
 
 class GetAllDistrictModel {
   @HiveField(0)
-  final String? id;
+   String? id;
   @HiveField(1)
-  final String? districtName;
+   String? districtName;
   @HiveField(2)
-  final String? status;
+   String? status;
   @HiveField(3)
-  final DateTime? createdAt;
+   DateTime? createdAt;
   @HiveField(4)
-  final dynamic updatedAt;
+   dynamic updatedAt;
   @HiveField(5)
-  final String? approvalStatus;
+   String? approvalStatus;
   @HiveField(6)
-  final dynamic approvalDate;
+   dynamic approvalDate;
   @HiveField(7)
-  final dynamic remarks;
+   dynamic remarks;
 
   GetAllDistrictModel({
      this.id,

@@ -1,4 +1,6 @@
 class AppString{
+  static String rel = "Release";
+  static String relDate = "02-07-2024";
   static String appName = "Purba Bharati  DMA";
   static String companyNameDesc = "Unistal Private Ltd.";
   static String appLogo = "assets/images/pbg_logo.png";

@@ -10,91 +10,91 @@ String getAllDepositOfflineModelToJson(List<GetAllDepositOfflineModel> data) => 
 
 class GetAllDepositOfflineModel {
   @HiveField(0)
-  final String? depositTypesId;
+   String? depositTypesId;
   @HiveField(1)
-  final String? depositName;
+   String? depositName;
   @HiveField(2)
-  final int? depositFree;
+   int? depositFree;
   @HiveField(3)
-  final String? rentAmount;
+   String? rentAmount;
   @HiveField(4)
-  final String? depositAmount;
+   String? depositAmount;
   @HiveField(5)
-  final String? status;
+   String? status;
   @HiveField(6)
-  final int? schemeMonth;
+   int? schemeMonth;
   @HiveField(7)
-  final String? schemeType;
+   String? schemeType;
   @HiveField(8)
-  final DateTime? dateFrom;
+   DateTime? dateFrom;
   @HiveField(9)
-  final dynamic dateTo;
+   dynamic dateTo;
   @HiveField(10)
-  final int? depositAmountBeforeNgc;
+   int? depositAmountBeforeNgc;
   @HiveField(11)
-  final String? schemeCode;
+   String? schemeCode;
   @HiveField(12)
-  final int? gasDepositAmount;
+   int? gasDepositAmount;
   @HiveField(13)
-  final int? equipmentDepositAmount;
+   int? equipmentDepositAmount;
   @HiveField(14)
-  final String? interestAmount;
+   String? interestAmount;
   @HiveField(15)
-  final dynamic createdAt;
+   dynamic createdAt;
   @HiveField(16)
-  final dynamic updatedAt;
+   dynamic updatedAt;
   @HiveField(17)
-  final dynamic rejectComments;
+   dynamic rejectComments;
   @HiveField(18)
-  final String? customerCount;
+   String? customerCount;
   @HiveField(19)
-  final String? registrationGst;
+   String? registrationGst;
   @HiveField(20)
-  final dynamic interestTax;
+   dynamic interestTax;
   @HiveField(21)
-  final String? rebateId;
+   String? rebateId;
   @HiveField(22)
-  final String? totalAmount;
+   String? totalAmount;
   @HiveField(23)
-  final String? firstDepositAmount;
+   String? firstDepositAmount;
   @HiveField(24)
-  final String? nextCycleAmount;
+   String? nextCycleAmount;
   @HiveField(25)
-  final String? totalAmountWith;
+   String? totalAmountWith;
   @HiveField(26)
-  final int? firstDepositAmountWith;
+   int? firstDepositAmountWith;
   @HiveField(27)
-  final String? depositAmountExcludingTaxWith;
+   String? depositAmountExcludingTaxWith;
   @HiveField(28)
-  final String? registrationGstWith;
+   String? registrationGstWith;
   @HiveField(29)
-  final String? depositAmountWith;
+   String? depositAmountWith;
   @HiveField(30)
-  final String? benifitApplicable;
+   String? benifitApplicable;
   @HiveField(31)
-  final String? equipmentIncludeInBill;
+   String? equipmentIncludeInBill;
   @HiveField(32)
-  final String? registrationRefunded;
+   String? registrationRefunded;
   @HiveField(33)
-  final String? equipmentRefunded;
+   String? equipmentRefunded;
   @HiveField(34)
-  final String? gasRefunded;
+   String? gasRefunded;
   @HiveField(35)
-  final String? approvalStatus;
+   String? approvalStatus;
   @HiveField(36)
-  final DateTime? approvalDate;
+   DateTime? approvalDate;
   @HiveField(37)
-  final String? depositTaxPer;
+   String? depositTaxPer;
   @HiveField(38)
-  final dynamic interestTaxPer;
+   dynamic interestTaxPer;
   @HiveField(39)
-  final String? registrationTaxName;
+   String? registrationTaxName;
   @HiveField(40)
-  final dynamic interestTaxName;
+   dynamic interestTaxName;
   @HiveField(41)
-  final int? remainingCount;
+   int? remainingCount;
   @HiveField(42)
-  final String? propertyCategoryId;
+   String? propertyCategoryId;
 
   GetAllDepositOfflineModel({
      this.depositTypesId,

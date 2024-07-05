@@ -1,6 +1,6 @@
 // To parse this JSON data, do
 //
-//     final getGuardianTypeModel = getGuardianTypeModelFromJson(jsonString);
+//      getGuardianTypeModel = getGuardianTypeModelFromJson(jsonString);
 
 import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_guardian_type_model.g.dart';
@@ -13,9 +13,9 @@ String getGuardianTypeModelToJson(GetGuardianTypeModel data) => json.encode(data
 
 class GetGuardianTypeModel {
   @HiveField(0)
-  final String? key;
+   String? key;
   @HiveField(1)
-  final String? value;
+   String? value;
 
   GetGuardianTypeModel({
     this.key,

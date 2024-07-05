@@ -367,7 +367,9 @@ class RegistrationFormHelper {
           print("mmmLength-->${mmm.toString().length}");
            await HiveDataBase.registrationFormBox!.add(custRegSyncAdd);
           Utils.successSnackBar(msg:"Data Save Successfully",  context: context);
-          Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (_) => DashboardPage()), (r) => false);
+         // Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
         } else {
           Utils.errorSnackBar(msg:'Error !!! \nPlease Upload Previous records', context : context);
           return null;

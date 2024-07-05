@@ -29,9 +29,6 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     on<RegistrationFormSetDepositTypeValue>(_setDepositTypeValue);
     on<RegistrationFormSetModeDepositValue>(_setModeDepositValue);
     on<RegistrationFormSetChequeDateEvent>(_setChequeDate);
-    on<RegistrationFormPreviewPageEvent>(_previewPage);
-    on<RegistrationFormSaveLocalDataEvent>(_saveLocalData);
-    on<RegistrationFormLoadUpdateLocalDataEvent>(_updateLocalData);
     on<SelectIdFrontCameraCapture>(_selectIdFrontCameraCapture);
     on<SelectIdFrontGalleryCapture>(_selectIdFrontGalleryCapture);
     on<SelectIdBackCameraCapture>(_selectIdBackCameraCapture);
@@ -49,12 +46,16 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     on<SelectChqCameraCapture>(_selectChqCameraCapture);
     on<SelectChqGalleryCapture>(_selectChqGalleryCapture);
     on<SchemeTypeDetailEvent>(_selectSchemeTypeDetail);
+    on<RegistrationFormPreviewPageEvent>(_previewPage);
+    on<RegistrationFormSaveLocalDataEvent>(_saveLocalData);
+    on<RegistrationFormLoadUpdateLocalDataEvent>(_updateLocalData);
   }
   bool isUpdate = false;
   bool isPageLoader = false;
   bool isPreviewLoader = false;
   bool isSaveLoader = false;
 
+  SaveRegistrationFormModel? localData;
 
   GetChargeAreaListModel? chargeAreaValue;
   GetAllAreaModel? areaValue;
@@ -118,7 +119,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
   List<String> listOfCustBankName = [];
   List<String> paymentBankNameList = [];
 
-  SaveRegistrationFormModel saveCusRegData = SaveRegistrationFormModel();
+ /* SaveRegistrationFormModel saveCusRegData = SaveRegistrationFormModel();*/
 
   File customerConsent = File("");
   File canceledCheque = File("");
@@ -177,8 +178,10 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
 
   _pageLoad(RegistrationFormPageLoadEvent event, emit) async {
     emit(RegistrationFormPageLoadState());
-    isPageLoader = false;
-    isUpdate = false;
+     isUpdate = false;
+     isPageLoader = false;
+     isPreviewLoader = false;
+     isSaveLoader = false;
     schemeMonth = "";
     equipmentAmt = "";
     gasAmt = "";
@@ -219,6 +222,38 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     getGuardianTypeModel = GetGuardianTypeModel();
     getExistingCookingFuelModel = GetExistingCookingFuelModel();
     getSocietyAllowModel = GetSocietyAllowModel();
+   reasonRegistrationController.text = "";
+   mobileController.text = "";
+   altMobileController.text = "";
+   firstController.text = "";
+   middleController.text = "";
+   lastController.text = "";
+   guardianNameController.text = "";
+   emailIdController.text = "";
+   buildingNumberController.text = "";
+   houseNumberController.text = "";
+   colonyController.text = "";
+   streetController.text = "";
+   townController.text = "";
+   pinCodeController.text = "";
+   numberKitchenController.text = "1";
+   numberBathroomController.text = "1";
+   familyMemberController.text = "4";
+   nearestLandmarkController.text = "";
+   kyc1NumberController.text = "";
+   kyc2NumberController.text = "";
+   kyc3NumberController.text = "";
+   custBankAccNumberController.text = "";
+   custIfscCodeController.text = "";
+   custBankAddController.text = "";
+   reasonDepositStsController.text = "";
+   depositAmountController.text = "";
+   chequeNoController.text = "";
+   chequeDateController.text = "";
+   chequeAccountNoController.text = "";
+   chequeMicrNoController.text = "";
+   latController.text = "";
+   longController.text = "";
     listOfAllLabel = [];
     listOfNotInterested = [];
     listOfInitialDepositStatus = [];
@@ -293,10 +328,9 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     kycDoc2Value = listOfOwnershipProof.first;
     kycDoc3Value = listOfKycDoc.first;
     preferredBillValue = listOfEBilling.first;
-    listOfDepositOffline = dataList.where((element) =>  propertyCategoryValue!.id == element.propertyCategoryId).toList();
-  //  await fetchBackNameListApi(context: event.context);
+    listOfDepositOffline = dataList.where((element) =>
+    propertyCategoryValue!.id == element.propertyCategoryId).toList();
     await _setLocation();
-    // await _createUpdateData(context: event.context);
     _eventCompleted(emit);
   }
 
@@ -573,17 +607,6 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     }
     _eventCompleted(emit);
   }
-
-  /*fetchBackNameListApi({required BuildContext context}) async {
-    var bankNameListRes = await DashboardHelper.getBankNameListApi(context: context);
-    if (bankNameListRes != null) {
-      listOfCustBankName.clear();
-      listOfChqBankName.clear();
-      listOfCustBankName = bankNameListRes;
-      listOfChqBankName = bankNameListRes;
-    }
-  }*/
-
   _btnLocation(RegistrationFormSetLocation event, emit){
     _setLocation();
     _eventCompleted(emit);
@@ -718,8 +741,8 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
       if (await textFiledValidationCheck != null) {
         isPreviewLoader = false;
         _eventCompleted(emit);
-        saveCusRegData = textFiledValidationCheck;
-        log("saveCusRegData==>${saveCusRegData}");
+        localData = textFiledValidationCheck;
+        log("saveCusRegData==>${localData}");
         return showDialog<void>(
           context: event.context,
           builder: (BuildContext context) {
@@ -906,171 +929,88 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
       return null;
     }
   }
-
+  _updateLocalData(RegistrationFormLoadUpdateLocalDataEvent event, emit) async {
+    Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
+        RegistrationFormPage(
+            isUpdate: event.isUpdate,
+            position: event.index,
+            localData: event.localData)));
+    if(event.isUpdate == true){
+     interestValue?.key = event.localData.interested;
+     conversionPolicyValue?.key = event.localData.acceptConversionPolicy;
+     extraFittingValue?.key = event.localData.acceptExtraFittingCost;
+     societyAllowValue?.key = event.localData.societyAllowedMdpe;
+     guardianTypeValue?.key = event.localData.guardianType;
+    // propertyCategoryValue?.id = event.localData.propertyCategoryId;
+   //  propertyClassValue?.id = event.localData.propertyClassId;
+   //  allDistrictValue?.id = event.localData.districtId;
+     preferredBillValue?.key = event.localData.eBillingModel;
+     initialDepositStatusValue?.key = event.localData.initialDepositeStatus;
+     modeDepositValue?.key = event.localData.modeOfDeposite;
+     depositTypeValue?.depositTypesId = event.localData.depositeType;
+     kycDoc1Value?.key = event.localData.kycDocument1;
+     kycDoc2Value?.key = event.localData.kycDocument2;
+     kycDoc3Value?.key = event.localData.kycDocument3;
+     existingCookingFuelValue?.key = event.localData.existingCookingFuel;
+     residentStatusValue?.key = event.localData.residentStatus;
+    // areaValue?.gid = event.localData.areaId;
+     chargeAreaValue?.gid = event.localData.chargeArea;
+     firstController.text = event.localData.firstName!;
+     middleController.text = event.localData.middleName!;
+     lastController.text = event.localData.lastName!;
+     guardianNameController.text = event.localData.guardianName!;
+     emailIdController.text = event.localData.emailId!;
+     buildingNumberController.text = event.localData.buildingNumber!;
+     houseNumberController.text = event.localData.houseNumber!;
+     colonyController.text = event.localData.colonySocietyApartment!;
+     streetController.text = event.localData.streetName!;
+     townController.text = event.localData.town!;
+     pinCodeController.text = event.localData.pinCode!;
+     numberKitchenController.text = event.localData.noOfKitchen!;
+     numberBathroomController.text = event.localData.noOfBathroom!;
+     familyMemberController.text = event.localData.noOfFamilyMembers!;
+     nearestLandmarkController.text = event.localData.nearestLandmark!;
+     kyc1NumberController.text = event.localData.kycDocument1Number!;
+     kyc2NumberController.text = event.localData.kycDocument2Number!;
+     kyc3NumberController.text = event.localData.kycDocument3Number!;
+     custBankAccNumberController.text = event.localData.bankAccountNumber!;
+     custIfscCodeController.text = event.localData.bankIfscCode!;
+     custBankAddController.text = event.localData.bankAddress!;
+     depositAmountController.text = event.localData.depositTypeAmount!;
+     latController.text = event.localData.latitude!;
+     longController.text = event.localData.longitude!;
+     chequeNoController.text = event.localData.chequeNumber!;
+     chequeDateController.text = event.localData.chequeDepositDate!;
+     chequeAccountNoController.text = event.localData.chequeBankAccount!;
+     chequeMicrNoController.text = event.localData.chequeMicrAccount!;
+     custBankNameValue = event.localData.bankNameOfBank;
+     paymentBankNameValue = event.localData.payementBankName;
+   idFrontPath = File(event.localData.documentUploadsPhoto1!);
+   addBackPath = File(event.localData.backSidePhoto2!);
+   mobileController.text = event.localData.mobileNumber!;
+   addFrontPath = File(event.localData.documentUploadsPhoto2!);
+   nocBackPath = File(event.localData.backSidePhoto3!);
+   uploadCustomerPath = File(event.localData.uploadCustomerPhoto!);
+   uploadHousePath = File(event.localData.uploadHousePhoto!);
+   customerConsentPath = File(event.localData.customerConsentPhoto!);
+   ownerConsentPath = File(event.localData.ownerConsent!);
+   cancelChequePath = File(event.localData.canceledChequePhoto!);
+   chequePath = File(event.localData.chequePhoto!);
+    }
+  }
   _saveLocalData(RegistrationFormSaveLocalDataEvent event, emit) async {
     try{
       isSaveLoader = true;
       _eventCompleted(emit);
       await RegistrationFormHelper.addCustRegSyncLocalDB(
         context: event.context,
-        custRegSyncStore: saveCusRegData,
+        custRegSyncStore: localData!,
         isUpdate:isUpdate,
       );
       isSaveLoader = false;
       _eventCompleted(emit);
     } catch(e){
       log("_saveLocalData-->${e.toString()}");
-    }
-  }
-
-  _updateLocalData(RegistrationFormLoadUpdateLocalDataEvent event, emit) async {
-    try{
-      SaveRegistrationFormModel dataBox = SaveRegistrationFormModel(
-        interested: interestValue?.key,
-        acceptConversionPolicy: conversionPolicyValue?.key,
-        acceptExtraFittingCost: extraFittingValue?.key,
-        societyAllowedMdpe: societyAllowValue?.key,
-        areaId: areaValue?.gid,
-        chargeArea: chargeAreaValue?.gid,
-        mobileNumber: mobileController.text,
-        alternateMobile: altMobileController.text,
-        firstName: firstController.text,
-        middleName: middleController.text,
-        lastName: lastController.text,
-        guardianType: guardianTypeValue?.key,
-        guardianName: guardianNameController.text,
-        emailId: emailIdController.text,
-        propertyCategoryId: propertyCategoryValue?.id,
-        propertyClassId: propertyClassValue?.id,
-        buildingNumber: buildingNumberController.text,
-        houseNumber: houseNumberController.text,
-        colonySocietyApartment: colonyController.text,
-        streetName: streetController.text,
-        town: townController.text,
-        districtId: allDistrictValue?.id,
-        pinCode: pinCodeController.text,
-        residentStatus: residentStatusValue?.key,
-        noOfKitchen: numberKitchenController.text,
-        noOfBathroom: numberBathroomController.text,
-        existingCookingFuel: existingCookingFuelValue?.key,
-        noOfFamilyMembers: familyMemberController.text,
-        latitude: latController.text,
-        longitude: longController.text,
-        nearestLandmark: nearestLandmarkController.text,
-        kycDocument1: idBackPath.path,
-        kycDocument1Number: kyc1NumberController.text,
-        kycDocument2: addBackPath.path,
-        kycDocument2Number: kyc2NumberController.text,
-        kycDocument3: kycDoc3Value?.key,
-        eBillingModel: preferredBillValue?.key,
-        bankNameOfBank: "",
-        bankAccountNumber: custBankAccNumberController.text,
-        bankIfscCode: "",
-        bankAddress: custBankAddController.text,
-        initialDepositeStatus: initialDepositStatusValue?.key,
-        noInitialDepositStatusReason: "",
-        depositeType: depositTypeValue?.depositTypesId,
-        depositTypeAmount: depositAmountController.text,
-        modeDepositValue: modeDepositValue?.key,
-        chequeNumber: chequeNoController.text,
-        chequeDepositDate: chequeDateController.text,
-        payementBankName: paymentBankNameValue.toString(),
-        chequeBankAccount: "",
-        micr: chequeMicrNoController.text,
-        backSidePhoto1: idBackPath.path,
-        backSidePhoto2: addBackPath.path,
-        backSidePhoto3: nocDocPath.path,
-        documentUploadsPhoto1: idFrontPath.path,
-        documentUploadsPhoto2: addFrontPath.path,
-        documentUploadsPhoto3: nocDocPath.path,
-        uploadHousePhoto: uploadHousePath.path,
-        uploadCustomerPhoto: uploadCustomerPath.path,
-        customerConsent: customerConsent.path,
-        ownerConsent: ownerConsentPath.path,
-        canceledChequePhoto: canceledCheque.path,
-        chequePhoto: chequePath.path,
-      );
-      Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
-          RegistrationFormPage(
-              isUpdate: true,
-              position: event.index,
-              localData: dataBox)));
-    } catch(e){
-      log("_saveLocalData-->${e.toString()}");
-    }
-  }
-
-  _createUpdateData({required BuildContext context}) async {
-    SaveRegistrationFormModel dataBox = SaveRegistrationFormModel(
-      interested: interestValue!.key,
-      acceptConversionPolicy: conversionPolicyValue!.key,
-      acceptExtraFittingCost: extraFittingValue!.key,
-      societyAllowedMdpe: societyAllowValue!.key,
-      areaId: areaValue?.gid,
-      chargeArea: chargeAreaValue?.gid,
-      mobileNumber: mobileController.text,
-      alternateMobile: altMobileController.text,
-      firstName: firstController.text,
-      middleName: middleController.text,
-      lastName: lastController.text,
-      guardianType: guardianTypeValue?.key,
-      guardianName: guardianNameController.text,
-      emailId: emailIdController.text,
-      propertyCategoryId: propertyCategoryValue?.id,
-      propertyClassId: propertyClassValue?.id,
-      buildingNumber: buildingNumberController.text,
-      houseNumber: houseNumberController.text,
-      colonySocietyApartment: colonyController.text,
-      streetName: streetController.text,
-      town: townController.text,
-      districtId: allDistrictValue?.id,
-      pinCode: pinCodeController.text,
-      residentStatus: residentStatusValue?.key,
-      noOfKitchen: numberKitchenController.text,
-      noOfBathroom: numberBathroomController.text,
-      existingCookingFuel: existingCookingFuelValue?.key,
-      noOfFamilyMembers: familyMemberController.text,
-      latitude: latController.text,
-      longitude: longController.text,
-      nearestLandmark: nearestLandmarkController.text,
-      kycDocument1: idBackPath.path,
-      kycDocument1Number: kyc1NumberController.text,
-      kycDocument2: addBackPath.path,
-      kycDocument2Number: kyc2NumberController.text,
-      kycDocument3: kycDoc3Value?.key,
-      eBillingModel: preferredBillValue?.key,
-      bankNameOfBank: custBankNameValue,
-      bankAccountNumber: custBankAccNumberController.text,
-      bankIfscCode: "",
-      bankAddress: custBankAddController.text,
-      initialDepositeStatus: initialDepositStatusValue?.key,
-      noInitialDepositStatusReason: "",
-      depositeType: depositTypeValue?.depositTypesId,
-      depositTypeAmount: depositAmountController.text,
-      modeDepositValue: modeDepositValue?.key,
-      chequeNumber: chequeNoController.text,
-      chequeDepositDate: chequeDateController.text,
-      payementBankName: paymentBankNameValue.toString(),
-      chequeBankAccount: "",
-      micr: chequeMicrNoController.text,
-      backSidePhoto1: idBackPath.path,
-      backSidePhoto2: addBackPath.path,
-      backSidePhoto3: nocDocPath.path,
-      documentUploadsPhoto1: idFrontPath.path,
-      documentUploadsPhoto2: addFrontPath.path,
-      documentUploadsPhoto3: nocDocPath.path,
-      uploadHousePhoto: uploadHousePath.path,
-      uploadCustomerPhoto: uploadCustomerPath.path,
-      customerConsent: customerConsent.path,
-      ownerConsent: ownerConsentPath.path,
-      canceledChequePhoto: canceledCheque.path,
-      chequePhoto: chequePath.path,
-    );
-    var mmm = await HiveDataBase.registrationFormBox!.values.toList().length;
-    if(isUpdate == true){
-      await HiveDataBase.registrationFormBox!.putAt(mmm , dataBox);
-      Utils.successSnackBar(msg:"Data Update Successfully",  context: context);
-      Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
     }
   }
   _eventCompleted(Emitter<RegistrationFormState> emit) {

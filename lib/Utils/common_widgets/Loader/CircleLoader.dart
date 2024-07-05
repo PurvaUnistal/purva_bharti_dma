@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/app_color.dart';
 
-class CircleLoaderWidget extends StatelessWidget {
-  const CircleLoaderWidget({Key? key}) : super(key: key);
+class DotsLoaderWidget extends StatelessWidget {
+  const DotsLoaderWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double w = MediaQuery.of(context).size.width;
-    double h = MediaQuery.of(context).size.height;
-    return SizedBox(
-      width: w * 0.05,
-      height: h * 0.02,
-      child: SpinKitCircle(
-        color: AppColor.prime,
-        size: 15,
-      ),
+    double size = MediaQuery.of(context).size.width * 0.12;
+    return SpinKitDualRing(
+      color: AppColor.prime,
+      size: size,
     );
   }
 }

@@ -150,7 +150,11 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                 IconButton(
                                     onPressed: () {
                                       BlocProvider.of<RegistrationFormBloc>(context).
-                                      add(RegistrationFormLoadUpdateLocalDataEvent(context: context,index: index
+                                      add(RegistrationFormLoadUpdateLocalDataEvent(
+                                          isUpdate : true,
+                                          context: context,
+                                          index: index,
+                                        localData: data,
                                       ));
                                     },
                                     icon: Icon(

@@ -13,9 +13,9 @@ String getPropertyClassModelToJson(List<GetPropertyClassModel> data) =>
 
 class GetPropertyClassModel {
   @HiveField(0)
-  final String? name;
+   String? name;
   @HiveField(1)
-  final String? id;
+   String? id;
 
   GetPropertyClassModel({
     this.name,

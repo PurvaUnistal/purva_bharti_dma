@@ -311,10 +311,17 @@ class RegistrationFormSaveLocalDataEvent extends RegistrationFormEvent {
 
 
 class RegistrationFormLoadUpdateLocalDataEvent extends RegistrationFormEvent {
+  final bool isUpdate;
   final BuildContext context;
   final int index;
-  RegistrationFormLoadUpdateLocalDataEvent({required this.context, required this.index,});
+  final SaveRegistrationFormModel localData;
+  RegistrationFormLoadUpdateLocalDataEvent({
+    required this.isUpdate,
+    required this.context,
+    required this.index,
+    required this.localData,
+  });
   @override
-  List<Object?> get props => [context, index];
+  List<Object?> get props => [isUpdate,context, index,localData];
 }
 

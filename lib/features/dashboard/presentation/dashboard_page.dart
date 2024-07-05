@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/Loader/CircleLoader.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
+    BlocProvider.of<DashboardBloc>(context).add(DashboardPageLoadingEvent(context: context));
     super.initState();
   }
 
@@ -62,7 +64,16 @@ class _DashboardPageState extends State<DashboardPage> {
                 }
               },
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("${AppString.rel} : ${AppString.relDate}", style: Styles.rel,),
+                      Text("${AppString.rel} : ${AppString.relDate}", style: Styles.rel,),
+                    ],
+                  ),
                   BlocBuilder<InternetBloc, InternetState>(
                     builder: (context, state) {
                       if (state is ConnectedState) {
@@ -91,31 +102,36 @@ class _DashboardPageState extends State<DashboardPage> {
     ) ?? false;
   }
   _checkNetBtnWidget({required ConnectedState stateData}) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          RowBtnWidget(
-              color: stateData.isMobile ? Colors.green : Colors.red,
-              icon: Icons.signal_cellular_connected_no_internet_0_bar,
-              text: AppString.mobile),
-          RowBtnWidget(
-              color: stateData.isWifi ? Colors.green : Colors.red,
-              icon: Icons.wifi,
-              text: AppString.wifi),
-          RowBtnWidget(
-            color: stateData.isConnected ? Colors.green : Colors.red,
-            icon: Icons.sync,
-            text: AppString.update,
-            onTap: () {
-              BlocProvider.of<DashboardBloc>(context).add(SelectSyncFetchAllDataEvent(
-                context: context,
-              ));
-            },
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        RowBtnWidget(
+            color: stateData.isMobile ? Colors.green : Colors.red,
+            icon: Icons.signal_cellular_connected_no_internet_0_bar,
+            text: AppString.mobile),
+        RowBtnWidget(
+            color: stateData.isWifi ? Colors.green : Colors.red,
+            icon: Icons.wifi,
+            text: AppString.wifi),
+        BlocBuilder<DashboardBloc, DashboardState>(
+  builder: (context, state) {
+    if( state is DashboardGetAllDataState){
+      return state.isLoader ==  false ? RowBtnWidget(
+        color: stateData.isConnected ? Colors.green : Colors.red,
+        icon: Icons.sync,
+        text: AppString.update,
+        onTap: () {
+          BlocProvider.of<DashboardBloc>(context).add(SelectSyncFetchAllDataEvent(
+            context: context,
+          ));
+        },
+      ) : DotsLoaderWidget();
+    } else {
+    return const Center(child: SpinLoader());
+    }
+  },
+) ,
+      ],
     );
   }
   Widget _buildCardButton() {

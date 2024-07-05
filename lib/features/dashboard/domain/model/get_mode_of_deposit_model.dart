@@ -20,7 +20,7 @@ class GetModeOfDepositModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+     Map<String, dynamic> data = new Map<String, dynamic>();
     data['key'] = this.key;
     data['value'] = this.value;
     return data;

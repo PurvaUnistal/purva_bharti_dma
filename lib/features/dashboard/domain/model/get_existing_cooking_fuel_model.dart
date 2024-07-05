@@ -1,6 +1,6 @@
 // To parse this JSON data, do
 //
-//     final getExistingCookingFuelModel = getExistingCookingFuelModelFromJson(jsonString);
+//      getExistingCookingFuelModel = getExistingCookingFuelModelFromJson(jsonString);
 
 import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_existing_cooking_fuel_model.g.dart';
@@ -14,9 +14,9 @@ String getExistingCookingFuelModelToJson(GetExistingCookingFuelModel data) => js
 
 class GetExistingCookingFuelModel {
   @HiveField(0)
-  final String? key;
+   String? key;
   @HiveField(1)
-  final String? value;
+   String? value;
 
   GetExistingCookingFuelModel({
     this.key,

@@ -7,8 +7,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<SelectSyncFetchAllDataEvent>(_selectSyncFetchAllData);
   }
 
-  bool _isLoader = false;
-  bool get isLoader => _isLoader;
+  bool isLoader = false;
 
   String? schema;
   GetLabelModel getLabelModel = GetLabelModel();
@@ -41,7 +40,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   _pageLoadEvent(DashboardPageLoadingEvent event, emit) async {
     emit(DashboardPageLoadState());
-    _isLoader = false;
+    isLoader = false;
     listOfAllLabel = [];
     listOfNotInterested = [];
     listOfInitialDepositStatus = [];
@@ -69,7 +68,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   _selectSyncFetchAllData(SelectSyncFetchAllDataEvent event, emit) async {
-    _isLoader = true;
+    isLoader = true;
+    _eventCompleted(emit);
     await fetchLabelApi(context: event.context);
     await fetchNotInterestedApi(context: event.context);
     await fetchInitialDepositStatusApi(context: event.context);
@@ -91,7 +91,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     await fetchChargeAreaListApi(context: event.context);
     await fetchAllDepositOfflineApi(context: event.context);
     await fetchBankNameListApi(context: event.context);
-    _isLoader = false;
+    isLoader = false;
     _eventCompleted(emit);
   }
 

@@ -1,6 +1,6 @@
 // To parse this JSON data, do
 //
-//     final getChargeAreaListModel = getChargeAreaListModelFromJson(jsonString);
+//      getChargeAreaListModel = getChargeAreaListModelFromJson(jsonString);
 
 import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_charge_area_list_model.g.dart';
@@ -16,21 +16,21 @@ String getChargeAreaListModelToJson(List<GetChargeAreaListModel> data) =>
 
 class GetChargeAreaListModel {
   @HiveField(0)
-  final String? gid;
+  String? gid;
   @HiveField(1)
-  final String? chargeAreaCode;
+   String? chargeAreaCode;
   @HiveField(2)
-  final String? projectId;
+   String? projectId;
   @HiveField(3)
-  final dynamic objectid;
+   dynamic objectid;
   @HiveField(4)
-  final dynamic shapeLeng;
+   dynamic shapeLeng;
   @HiveField(5)
-  final dynamic shapeArea;
+   dynamic shapeArea;
   @HiveField(6)
-  final String? chargeAreaName;
+   String? chargeAreaName;
   @HiveField(7)
-  final dynamic billingType;
+   dynamic billingType;
 
   GetChargeAreaListModel({
     this.gid,

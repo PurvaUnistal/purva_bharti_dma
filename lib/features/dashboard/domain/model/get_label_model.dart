@@ -9,21 +9,21 @@ String getLabelModelToJson(GetLabelModel data) => json.encode(data.toJson());
 
 class GetLabelModel {
   @HiveField(0)
-  final Steps? steps;
+   Steps? steps;
   @HiveField(1)
-  final Registration? registration;
+   Registration? registration;
   @HiveField(2)
-  final Inspection? inspection;
+   Inspection? inspection;
   @HiveField(3)
-  final Photo? photo;
+   Photo? photo;
   @HiveField(4)
-  final Kyc? kyc;
+   Kyc? kyc;
   @HiveField(5)
-  final Deposit? deposit;
+   Deposit? deposit;
   @HiveField(6)
-  final Consent? consent;
+   Consent? consent;
   @HiveField(7)
-  final Lmc? lmc;
+   Lmc? lmc;
 
   GetLabelModel({
     this.steps,
@@ -63,23 +63,23 @@ class GetLabelModel {
 
 class Consent {
   @HiveField(0)
-  final String takePhoto;
+   String takePhoto;
   @HiveField(1)
-  final String custBank;
+   String custBank;
   @HiveField(2)
-  final String custAcc;
+   String custAcc;
   @HiveField(3)
-  final String custIfsc;
+   String custIfsc;
   @HiveField(4)
-  final String custBankAdd;
+   String custBankAdd;
   @HiveField(5)
-  final String cancelledPhoto;
+   String cancelledPhoto;
   @HiveField(6)
-  final String preferredBilling;
+   String preferredBilling;
   @HiveField(7)
-  final String acceptConversionPolicy;
+   String acceptConversionPolicy;
   @HiveField(8)
-  final String acceptExtraCost;
+   String acceptExtraCost;
 
   Consent({
     required this.takePhoto,
@@ -122,29 +122,29 @@ class Consent {
 
 class Deposit {
   @HiveField(0)
-  final String depositSta;
+   String depositSta;
   @HiveField(1)
-  final String modeOfDep;
+   String modeOfDep;
   @HiveField(2)
-  final String depositDate;
+   String depositDate;
   @HiveField(3)
-  final String depositType;
+   String depositType;
   @HiveField(4)
-  final String depositAmt;
+   String depositAmt;
   @HiveField(5)
-  final String chqNum;
+   String chqNum;
   @HiveField(6)
-  final String chqBank;
+   String chqBank;
   @HiveField(7)
-  final String bankAcc;
+   String bankAcc;
   @HiveField(8)
-  final String chqDate;
+   String chqDate;
   @HiveField(9)
-  final String chqPhoto;
+   String chqPhoto;
   @HiveField(10)
-  final String payStatus;
+   String payStatus;
   @HiveField(11)
-  final String reason;
+   String reason;
 
   Deposit({
     required this.depositSta,
@@ -196,27 +196,27 @@ class Deposit {
 
 class Inspection {
   @HiveField(0)
-  final String inspectMeter;
+   String inspectMeter;
   @HiveField(1)
-  final String extraPrice;
+   String extraPrice;
   @HiveField(2)
-  final String inspectRegulator;
+   String inspectRegulator;
   @HiveField(3)
-  final String inspectOtherFittings;
+   String inspectOtherFittings;
   @HiveField(4)
-  final String asPerLmcQty;
+   String asPerLmcQty;
   @HiveField(5)
-  final String customerSatisfication;
+   String customerSatisfication;
   @HiveField(6)
-  final String conversionAgreement;
+   String conversionAgreement;
   @HiveField(7)
-  final String photo;
+   String photo;
   @HiveField(8)
-  final String conversionDate;
+   String conversionDate;
   @HiveField(9)
-  final String remarks;
+   String remarks;
   @HiveField(10)
-  final String extraPipe;
+   String extraPipe;
 
 
   Inspection({
@@ -266,31 +266,31 @@ class Inspection {
 
 class Kyc {
   @HiveField(0)
-  final String uploadDoc1;
+   String uploadDoc1;
   @HiveField(1)
-  final String uploadDoc1No;
+   String uploadDoc1No;
   @HiveField(2)
-  final String uploadDoc1Front;
+   String uploadDoc1Front;
   @HiveField(3)
-  final String uploadDoc1Back;
+   String uploadDoc1Back;
   @HiveField(4)
-  final String selectDoc;
+   String selectDoc;
   @HiveField(5)
-  final String uploadDoc2;
+   String uploadDoc2;
   @HiveField(6)
-  final String uploadDoc2No;
+   String uploadDoc2No;
   @HiveField(7)
-  final String uploadDoc2Front;
+   String uploadDoc2Front;
   @HiveField(8)
-  final String uploadDoc2Back;
+   String uploadDoc2Back;
   @HiveField(9)
-  final String uploadDoc3;
+   String uploadDoc3;
   @HiveField(10)
-  final String uploadDoc3No;
+   String uploadDoc3No;
   @HiveField(11)
-  final String uploadDoc3Front;
+   String uploadDoc3Front;
   @HiveField(12)
-  final String uploadDoc3Back;
+   String uploadDoc3Back;
 
   Kyc({
     required this.uploadDoc1,
@@ -345,67 +345,67 @@ class Kyc {
 
 class Lmc {
   @HiveField(0)
-  final String feasibilityDate;
+   String feasibilityDate;
   @HiveField(1)
-  final String proposedDate;
+   String proposedDate;
   @HiveField(2)
-  final String additional;
+   String additional;
   @HiveField(3)
-  final String material;
+   String material;
   @HiveField(4)
-  final String qty;
+   String qty;
   @HiveField(5)
-  final String regulators;
+   String regulators;
   @HiveField(6)
-  final String installation;
+   String installation;
   @HiveField(7)
-  final String feasibility;
+   String feasibility;
   @HiveField(8)
-  final String workStart;
+   String workStart;
   @HiveField(9)
-  final String reasonIfDelay;
+   String reasonIfDelay;
   @HiveField(10)
-  final String reason;
+   String reason;
   @HiveField(11)
-  final String isFeasible;
+   String isFeasible;
   @HiveField(12)
-  final String followUpDate;
+   String followUpDate;
   @HiveField(13)
-  final String meterNumber;
+   String meterNumber;
   @HiveField(14)
-  final String pipe;
+   String pipe;
   @HiveField(15)
-  final String fitting;
+   String fitting;
   @HiveField(16)
-  final String meterInitialReading;
+   String meterInitialReading;
   @HiveField(17)
-  final String readingDate;
+   String readingDate;
   @HiveField(18)
-  final String meterPhoto;
+   String meterPhoto;
   @HiveField(19)
-  final String tfNumber;
+   String tfNumber;
   @HiveField(20)
-  final String latitudeTf;
+   String latitudeTf;
   @HiveField(21)
-  final String longitudeTf;
+   String longitudeTf;
   @HiveField(22)
-  final String latitudeHg;
+   String latitudeHg;
   @HiveField(23)
-  final String longitudeHg;
+   String longitudeHg;
   @HiveField(24)
-  final String workCompletedDate;
+   String workCompletedDate;
   @HiveField(25)
-  final String workCompletedImage;
+   String workCompletedImage;
   @HiveField(26)
-  final String ackDate;
+   String ackDate;
   @HiveField(27)
-  final String ackImage;
+   String ackImage;
   @HiveField(28)
-  final String conversionDate;
+   String conversionDate;
   @HiveField(29)
-  final String typeNr;
+   String typeNr;
   @HiveField(30)
-  final String isCustomerReady;
+   String isCustomerReady;
 
   Lmc({
     required this.feasibilityDate,
@@ -515,9 +515,9 @@ class Lmc {
 
 class Photo {
   @HiveField(0)
-  final String customerPhoto;
+   String customerPhoto;
   @HiveField(1)
-  final String homePhoto;
+   String homePhoto;
 
   Photo({
     required this.customerPhoto,
@@ -539,57 +539,57 @@ class Photo {
 
 class Registration {
   @HiveField(0)
-  final String registrationType;
+   String registrationType;
   @HiveField(1)
-  final String chargeArea;
+   String chargeArea;
   @HiveField(2)
-  final String area;
+   String area;
   @HiveField(3)
-  final String lastname;
+   String lastname;
   @HiveField(4)
-  final String guardian;
+   String guardian;
   @HiveField(5)
-  final String email;
+   String email;
   @HiveField(6)
-  final String propertyCategory;
+   String propertyCategory;
   @HiveField(7)
-  final String propertyClass;
+   String propertyClass;
   @HiveField(8)
-  final String house;
+   String house;
   @HiveField(9)
-  final String locality;
+   String locality;
   @HiveField(10)
-  final String town;
+   String town;
   @HiveField(11)
-  final String pincode;
+   String pincode;
   @HiveField(12)
-  final String district;
+   String district;
   @HiveField(13)
-  final String mdpe;
+   String mdpe;
   @HiveField(14)
-  final String resident;
+   String resident;
   @HiveField(15)
-  final String kitchen;
+   String kitchen;
   @HiveField(16)
-  final String bathroom;
+   String bathroom;
   @HiveField(17)
-  final String fuel;
+   String fuel;
   @HiveField(18)
-  final String family;
+   String family;
   @HiveField(19)
-  final String location;
+   String location;
   @HiveField(20)
-  final String long;
+   String long;
   @HiveField(21)
-  final String lat;
+   String lat;
   @HiveField(22)
-  final String getLoc;
+   String getLoc;
   @HiveField(23)
-  final String remarks;
+   String remarks;
   @HiveField(24)
-  final String submit;
+   String submit;
   @HiveField(25)
-  final String guardianType;
+   String guardianType;
 
   Registration({
     required this.registrationType,
@@ -683,57 +683,57 @@ class Registration {
 
 class Steps {
   @HiveField(0)
-  final String reg;
+   String reg;
   @HiveField(1)
-  final String kyc;
+   String kyc;
   @HiveField(2)
-  final String photo;
+   String photo;
   @HiveField(3)
-  final String consent;
+   String consent;
   @HiveField(4)
-  final String deposit;
+   String deposit;
   @HiveField(5)
-  final String step1;
+   String step1;
   @HiveField(6)
-  final String step2;
+   String step2;
   @HiveField(7)
-  final String step3;
+   String step3;
   @HiveField(8)
-  final String step4;
+   String step4;
   @HiveField(9)
-  final String step5;
+   String step5;
   @HiveField(10)
-  final String mobile;
+   String mobile;
   @HiveField(11)
-  final String firstname;
+   String firstname;
   @HiveField(12)
-  final String middlename;
+   String middlename;
   @HiveField(13)
-  final String lastname;
+   String lastname;
   @HiveField(14)
-  final String button;
+   String button;
   @HiveField(15)
-  final String fromDate;
+   String fromDate;
   @HiveField(16)
-  final String toDate;
+   String toDate;
   @HiveField(17)
-  final String minAmt;
+   String minAmt;
   @HiveField(18)
-  final String maxAmt;
+   String maxAmt;
   @HiveField(19)
-  final String stepsIf;
+   String stepsIf;
   @HiveField(20)
-  final String stepsIs;
+   String stepsIs;
   @HiveField(21)
-  final String then;
+   String then;
   @HiveField(22)
-  final String amount;
+   String amount;
   @HiveField(23)
-  final String back;
+   String back;
   @HiveField(24)
-  final String condition;
+   String condition;
   @HiveField(25)
-  final String type;
+   String type;
 
   Steps({
     required this.reg,

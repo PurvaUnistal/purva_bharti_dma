@@ -12,9 +12,9 @@ String getPropertyCategoryModelToJson(List<GetPropertyCategoryModel> data) =>
 
 class GetPropertyCategoryModel {
   @HiveField(0)
-  final String? name;
+   String? name;
   @HiveField(1)
-  final String? id;
+   String? id;
 
   GetPropertyCategoryModel({
     this.name,

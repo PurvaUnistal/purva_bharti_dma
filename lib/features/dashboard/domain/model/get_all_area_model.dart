@@ -1,6 +1,6 @@
 // To parse this JSON data, do
 //
-//     final getAllAreaModel = getAllAreaModelFromJson(jsonString);
+//      getAllAreaModel = getAllAreaModelFromJson(jsonString);
 
 import 'package:pbg_app/ExportFile/export_file.dart';
 part 'get_all_area_model.g.dart';
@@ -16,27 +16,27 @@ String getAllAreaModelToJson(List<GetAllAreaModel> data) =>
 
 class GetAllAreaModel {
   @HiveField(0)
-  final String? gid;
+   String? gid;
   @HiveField(1)
-  final dynamic objectid;
+   dynamic objectid;
   @HiveField(2)
-  final String? areaName;
+   String? areaName;
   @HiveField(3)
-  final dynamic shapeLeng;
+   dynamic shapeLeng;
   @HiveField(4)
-  final String? areacode;
+   String? areacode;
   @HiveField(5)
-  final dynamic cityId;
+   dynamic cityId;
   @HiveField(6)
-  final String? chargeAreaId;
+   String? chargeAreaId;
   @HiveField(7)
-  final dynamic subareacod;
+   dynamic subareacod;
   @HiveField(8)
-  final dynamic shapeLe1;
+   dynamic shapeLe1;
   @HiveField(9)
-  final dynamic shapeArea;
+   dynamic shapeArea;
   @HiveField(10)
-  final String? readyForConnection;
+   String? readyForConnection;
 
   GetAllAreaModel({
     this.gid,

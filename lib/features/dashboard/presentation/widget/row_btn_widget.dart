@@ -40,7 +40,7 @@ class CardBtnWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(8.0),
       child: Card(
         shape: Border(left: BorderSide(color: AppColor.prime, width: 15)),
         elevation: 5,
@@ -48,7 +48,7 @@ class CardBtnWidget extends StatelessWidget {
         color: Colors.white,
         child: Container(
           color: Colors.white,
-          margin: EdgeInsets.all(18),
+          margin: EdgeInsets.all(12),
           padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
           child: InkWell(
             onTap: onTap,

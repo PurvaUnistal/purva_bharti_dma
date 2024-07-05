@@ -4,7 +4,7 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 class ViewSyncRecordHelper {
 
   static Future<SendRegistrationOfflineModel?> sendData({required BuildContext context, required SaveRegistrationFormModel custRegSyncData}) async{
-  //  try{
+    try{
       Map<String, String> json =  {
         "interested": custRegSyncData.interested ?? "",
         "area_id": custRegSyncData.areaId ?? "",
@@ -90,11 +90,11 @@ class ViewSyncRecordHelper {
         keyWord12: "customer_consent", filePath12 : custRegSyncData.customerConsent == null ? "" : custRegSyncData.customerConsent!,
       );
       return SendRegistrationOfflineModel.fromJson(res);
-    /*} catch(e){
+    } catch(e){
       log("SaveCustomerCatch-->${e.toString()}");
       Utils.errorSnackBar(msg: e.toString(), context: context);
       return null;
-    }*/
+    }
   }
 
   static Future<bool> isInternetConnected() async {
