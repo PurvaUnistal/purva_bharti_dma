@@ -216,13 +216,13 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                       _verticalSpace(),
                       _chequeAccountNoWidget(stateData: stateData),
                       _chequeMICRNoWidget(stateData: stateData),
-                      _chequeImg(context: context, stateData: stateData),
+                      _chequeImg(stateData: stateData),
                       _verticalSpace(),
                     ],
                   ),
                 ],
               ],
-              _previewButton(),
+              _previewButton(stateData: stateData),
               _verticalSpace(),
             ],
           ),
@@ -1448,7 +1448,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _chequeImg({required BuildContext context, required RegistrationFormGetAllDataState stateData}) {
+  Widget _chequeImg({required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
       star: AppString.star,
       title: AppString.chqPhoto,
@@ -1472,9 +1472,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       },
     );
   }
-  Widget _previewButton() {
+  Widget _previewButton({required RegistrationFormGetAllDataState stateData}) {
     return ButtonWidget(
-      text: AppString.preview,
+      text:  stateData.isUpdate == true ? "Update" : AppString.preview,
       onPressed: () {
         if(formGlobalKey.currentState!.validate()){
           formGlobalKey.currentState?.save();

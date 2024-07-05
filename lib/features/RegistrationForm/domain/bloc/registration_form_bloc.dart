@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/message_box_one_button_pop.dart';
+import 'package:pbg_app/features/RegistrationForm/presentation/widgets/DepositOfflinePop.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/pop_widget.dart';
 
 class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormState> {
@@ -634,36 +635,8 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     } else if(depositTypeValue != null){
       return showDialog(
           context: event.context,
-          builder: (BuildContext context) => MessageBoxOneButtonPopWidget(
-            child: Column(
-              children: [
-                RowWidget(
-                  lText: "Deposit Name",
-                  rText: depositTypeValue!.depositName.toString(),
-                ),
-                RowWidget(
-                  lText: "Deposit Amount",
-                  rText: depositAmountController.text.trim().toString(),
-                ),
-                RowWidget(
-                  lText: "Scheme Month",
-                  rText: schemeMonth,
-                ),
-                RowWidget(
-                  lText: "Equipment Deposit Amount",
-                  rText: equipmentAmt,
-                ),
-                RowWidget(
-                  lText: "GAS Amount",
-                  rText: gasAmt,
-                ),
-                RowWidget(
-                  lText: "First Deposit Amount",
-                  rText: firstDeposit,
-                ),
-              ],
-            ),
-          ));
+          builder: (BuildContext context) =>DepositPop(depositTypeValue: depositTypeValue!)
+      );
     }
 
   }
