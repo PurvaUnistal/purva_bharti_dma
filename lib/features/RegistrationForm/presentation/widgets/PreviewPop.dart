@@ -12,7 +12,10 @@ class PreviewPop extends StatelessWidget {
       body: Container(
         color: AppColor.white,
         margin: EdgeInsets.all(10.0),
-        child: Stack(
+        child: BlocBuilder<RegistrationFormBloc, RegistrationFormState>(
+    builder: (context, state) {
+    if (state is RegistrationFormGetAllDataState) {
+    return Stack(
           children: [
             SingleChildScrollView(
               child: Column(
@@ -32,12 +35,12 @@ class PreviewPop extends StatelessWidget {
                   PopWidget.itemBuilder(star: AppString.star,textName: AppString.lastName, textValue: cusRegData.lastName == null  ? "" : cusRegData.lastName),
                   PopWidget.itemBuilder(star: cusRegData.interested != "Future Registration"
                       ? AppString.star : "", textName: AppString.guardianType, textValue:  cusRegData.guardianType == null ? "" : cusRegData.guardianType),
-                  PopWidget.itemBuilder(star: interestValue!.value != "Future Registration" ? AppString.star : "", textName: AppString.guardianName, textValue:  cusRegData.guardianNameController.text.isEmpty ? "" : guardianNameController.text),
-                  PopWidget.itemBuilder(textName: AppString.emailAddress, textValue:  cusRegData.emailId == null ? "" : emailIdController.text),
-                  PopWidget.itemBuilder(star: AppString.star,textName: AppString.propertyCategory, textValue:  cusRegData.propertyCategoryValue == null ? "" : propertyCategoryValue!.name),
-                  PopWidget.itemBuilder(star: AppString.star,textName: AppString.propertyClass, textValue:  cusRegData.propertyClassValue == null ? "" : propertyClassValue!.name),
-                  PopWidget.itemBuilder(textName: AppString.buildingNumber, textValue:  cusRegData.buildingNumberController == null ? "" : buildingNumberController.text),
-                  PopWidget.itemBuilder(star: AppString.star,textName: AppString.houseNumber, textValue:  cusRegData.houseNumberController == null ? "" :  houseNumberController.text),
+                  PopWidget.itemBuilder(star: cusRegData.interested != "Future Registration" ? AppString.star : "", textName: AppString.guardianName, textValue: cusRegData.guardianName == null ? "" : cusRegData.guardianName),
+                  PopWidget.itemBuilder(textName: AppString.emailAddress, textValue: cusRegData.emailId == null ? "" : cusRegData.emailId),
+                  PopWidget.itemBuilder(star: AppString.star,textName: AppString.propertyCategory, textValue: cusRegData.propertyCategoryId == null ? "" : cusRegData.propertyCategoryId),
+                  PopWidget.itemBuilder(star: AppString.star,textName: AppString.propertyClass, textValue: cusRegData.propertyClassId == null ? "" : cusRegData.propertyClassId),
+                  PopWidget.itemBuilder(textName: AppString.buildingNumber, textValue: cusRegData.buildingNumber == null ? "" : cusRegData.buildingNumber),
+                  PopWidget.itemBuilder(star: AppString.star,textName: AppString.houseNumber, textValue: cusRegData.houseNumber == null ? "" : cusRegData.houseNumber),
                   PopWidget.itemBuilder(star: AppString.star,textName: AppString.colony, textValue: cusRegData.colonySocietyApartment == null  ? "" :cusRegData.colonySocietyApartment),
                   PopWidget.itemBuilder(star: AppString.star,textName: AppString.streetName, textValue: cusRegData.streetName == null ? "" : cusRegData.streetName),
                   PopWidget.itemBuilder(textName: AppString.town, textValue: cusRegData.town == null ? "" : cusRegData.town),
@@ -89,7 +92,7 @@ class PreviewPop extends StatelessWidget {
                     ],
                   ),
                   if(cusRegData.interested != "Future Registration")...[
-                    PopWidget.itemBuilder(textName: AppString.ownershipProperty, textValue:  cusRegData.kycDoc3Value == null ? "-" : kycDoc3Value!.value),
+                    PopWidget.itemBuilder(textName: AppString.ownershipProperty, textValue: cusRegData.kycDocument3 == null ? "-" : cusRegData.kycDocument3),
                     PopWidget.divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -159,7 +162,7 @@ class PreviewPop extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    isSaveLoader == false
+                    state.isSaveLoader == false
                         ? Flexible(
                       child: ButtonWidget(
                           text: AppString.save,
@@ -179,6 +182,11 @@ class PreviewPop extends StatelessWidget {
                   ],
                 ))
           ],
+        );
+    } else {
+      return Container();
+    }
+    },
         ),
       ),
     );

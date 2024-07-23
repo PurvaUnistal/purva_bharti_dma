@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/message_box_one_button_pop.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/DepositOfflinePop.dart';
+import 'package:pbg_app/features/RegistrationForm/presentation/widgets/PreviewPop.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/pop_widget.dart';
 
 class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormState> {
@@ -719,7 +720,6 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
         return showDialog<void>(
           context: event.context,
           builder: (BuildContext context) {
-            //   return RegistrationFormPreviewPopWidget(cusRegData: saveCusRegData);
             return  Scaffold(
               body: Container(
                 color: AppColor.white,
