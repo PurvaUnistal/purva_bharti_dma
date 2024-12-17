@@ -6,7 +6,7 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
   ViewSyncRecordBloc() : super(ViewSyncRecordInitialState()) {
     on<ViewSyncRecordLoadPageEvent>(_pageLoad);
     on<ViewSyncRecordLoadUpdateLocalDataEvent>(_updateLocalData);
-    on<ViewSyncRecordDeleteLocalDataEvent>(_deleteLocalData);
+    on<DeleteLocalDataEvent>(_deleteLocalData);
     on<SyncRecordListServerDataEvent>(_sendListData);
     on<SyncRecordSingleServerDataEvent>(_sendSingleData);
   }
@@ -28,9 +28,17 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
 
 
   _updateLocalData(ViewSyncRecordLoadUpdateLocalDataEvent event, emit) async {
+      if(HiveDataBase.registrationFormBox!.values.isNotEmpty) {
+        Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
+            RegistrationFormPage(
+                position: event.index,
+                localData: event.saveRegistrationFormModel)));
+   //  return   await HiveDataBase.registrationFormBox!.putAt(event.index, event.saveRegistrationFormModel);
+      }
+    _eventCompleted(emit);
   }
 
-  _deleteLocalData(ViewSyncRecordDeleteLocalDataEvent event, emit) {
+  _deleteLocalData(DeleteLocalDataEvent event, emit) {
     return showDialog(
         context: event.context,
         builder: (BuildContext context) => MessageBoxTwoButtonPopWidget(

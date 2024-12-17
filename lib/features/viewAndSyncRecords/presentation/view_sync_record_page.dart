@@ -142,7 +142,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                 IconButton(
                                   icon: Icon(Icons.delete_forever, color: AppColor.prime,),
                                   onPressed: () {
-                                    BlocProvider.of<ViewSyncRecordBloc>(context).add(ViewSyncRecordDeleteLocalDataEvent(
+                                    BlocProvider.of<ViewSyncRecordBloc>(context).add(DeleteLocalDataEvent(
                                       index: index, context: context, mobileNo: data.mobileNumber!,
                                     ));
                                   },
@@ -150,11 +150,10 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                 IconButton(
                                     onPressed: () {
                                       BlocProvider.of<RegistrationFormBloc>(context).
-                                      add(RegistrationFormLoadUpdateLocalDataEvent(
-                                          isUpdate : true,
+                                      add(UpdateLocalDataEvent(
                                           context: context,
                                           index: index,
-                                        localData: data,
+                                        updateDate: data
                                       ));
                                     },
                                     icon: Icon(

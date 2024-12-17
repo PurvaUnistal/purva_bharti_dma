@@ -278,7 +278,7 @@ class RegistrationFormHelper {
   }
 
   static Future<dynamic> addCustRegSyncLocalDB({
-    required BuildContext context, required SaveRegistrationFormModel custRegSyncStore, required bool isUpdate,}) async {
+    required BuildContext context, required SaveRegistrationFormModel custRegSyncStore}) async {
     try {
       SaveRegistrationFormModel custRegSyncAdd = SaveRegistrationFormModel(
         dmaUserName: custRegSyncStore.dmaUserName.toString(),
@@ -356,25 +356,19 @@ class RegistrationFormHelper {
         ownerConsentText:custRegSyncStore.ownerConsentText == null ? "" : custRegSyncStore.ownerConsentText,
         reasonForHold:custRegSyncStore.reasonForHold == null ? "" : custRegSyncStore.reasonForHold,
       );
-      var mmm = await HiveDataBase.registrationFormBox!.values.toList().length;
-      if(isUpdate == true){
-        await HiveDataBase.registrationFormBox!.putAt(mmm , custRegSyncAdd);
-        Utils.successSnackBar(msg:"Data Update Successfully",  context: context);
-        Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
-      } else{
-        log("mmm-->${mmm}");
-        if (mmm <= 15) {
-          print("mmmLength-->${mmm.toString().length}");
+      int recordCount = await HiveDataBase.registrationFormBox!.length;
+        log("mmm-->${recordCount}");
+        if (recordCount <= 15) {
+          print("mmmLength-->${recordCount}");
            await HiveDataBase.registrationFormBox!.add(custRegSyncAdd);
           Utils.successSnackBar(msg:"Data Save Successfully",  context: context);
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (_) => DashboardPage()), (r) => false);
-         // Navigator.pushReplacementNamed(context, RoutesName.viewSyncRecord);
         } else {
-          Utils.errorSnackBar(msg:'Error !!! \nPlease Upload Previous records', context : context);
+          Utils.errorSnackBar(msg:'Please upload previous records first.', context : context);
           return null;
         }
-      }
+
     } catch (e) {
       Utils.errorSnackBar(msg: e.toString(), context: context);
       log("addCustRegSyncLocalDB-->${e.toString()}");

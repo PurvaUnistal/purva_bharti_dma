@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 class RegistrationFormPreviewPopWidget extends StatelessWidget {
-  final SaveRegistrationFormModel cusRegData;
+  SaveRegistrationFormModel cusRegData;
 
-  const RegistrationFormPreviewPopWidget({
+  RegistrationFormPreviewPopWidget({
     required this.cusRegData,
   });
 
@@ -237,7 +237,7 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
               text: AppString.save,
               onPressed: () {
                 BlocProvider.of<RegistrationFormBloc>(context)
-                    .add(RegistrationFormSaveLocalDataEvent(context: context));
+                    .add(RegistrationFormSaveLocalDataEvent(context: context,));
               }),
             )
             : DottedLoaderWidget(),
@@ -251,8 +251,4 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
       ],
     );
   }
-
-
-
-
 }

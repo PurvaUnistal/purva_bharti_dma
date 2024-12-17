@@ -304,24 +304,22 @@ class SchemeTypeDetailEvent extends RegistrationFormEvent {
 
 class RegistrationFormSaveLocalDataEvent extends RegistrationFormEvent {
   final BuildContext context;
-  RegistrationFormSaveLocalDataEvent({required this.context});
+  RegistrationFormSaveLocalDataEvent({required this.context,});
   @override
   List<Object?> get props => [context];
 }
 
 
-class RegistrationFormLoadUpdateLocalDataEvent extends RegistrationFormEvent {
-  final bool isUpdate;
+class UpdateLocalDataEvent extends RegistrationFormEvent {
   final BuildContext context;
   final int index;
-  final SaveRegistrationFormModel localData;
-  RegistrationFormLoadUpdateLocalDataEvent({
-    required this.isUpdate,
+  final SaveRegistrationFormModel updateDate;
+  UpdateLocalDataEvent({
     required this.context,
     required this.index,
-    required this.localData,
+    required this.updateDate,
   });
   @override
-  List<Object?> get props => [isUpdate,context, index,localData];
+  List<Object?> get props => [context, index,updateDate];
 }
 

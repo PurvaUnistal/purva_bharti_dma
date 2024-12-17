@@ -27,7 +27,7 @@ class _DashboardPageState extends State<DashboardPage> {
   ];
 
   List<Widget> navigatorView = [
-    RegistrationFormPage(isUpdate: false, position: 0, localData: null),
+    RegistrationFormPage( position: 0, localData: null),
     ViewSyncRecordPage(),
   ];
 

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/Utils/common_widgets/message_box_one_button_pop.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/DepositOfflinePop.dart';
-import 'package:pbg_app/features/RegistrationForm/presentation/widgets/PreviewPop.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/pop_widget.dart';
 
 class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormState> {
@@ -50,7 +48,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     on<SchemeTypeDetailEvent>(_selectSchemeTypeDetail);
     on<RegistrationFormPreviewPageEvent>(_previewPage);
     on<RegistrationFormSaveLocalDataEvent>(_saveLocalData);
-    on<RegistrationFormLoadUpdateLocalDataEvent>(_updateLocalData);
+    on<UpdateLocalDataEvent>(_updateLocalData);
   }
   bool isUpdate = false;
   bool isPageLoader = false;
@@ -180,14 +178,28 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
 
   _pageLoad(RegistrationFormPageLoadEvent event, emit) async {
     emit(RegistrationFormPageLoadState());
-     isUpdate = false;
-     isPageLoader = false;
-     isPreviewLoader = false;
-     isSaveLoader = false;
+    _initializeStateVariables();
+    _resetControllers();
+    _initializeFilePaths();
+    await _fetchHiveData();
+    _setDependentData();
+    await _setLocation();
+    _eventCompleted(emit);
+  }
+
+// Helper methods
+
+  void _initializeStateVariables() {
+    isUpdate = false;
+    isPageLoader = false;
+    isPreviewLoader = false;
+    isSaveLoader = false;
+
     schemeMonth = "";
     equipmentAmt = "";
     gasAmt = "";
     firstDeposit = "";
+
     chargeAreaValue = null;
     areaValue = null;
     propertyCategoryValue = null;
@@ -209,53 +221,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     paymentBankNameValue = null;
     initialDepositStatusValue = null;
     modeDepositValue = null;
-    getLabelModel = GetLabelModel();
-    getNotInterestedModel = GetNotInterestedModel();
-    getInitialDepositStatusModel = GetInitialDepositStatusModel();
-    getAcceptExtraFittingCostModel = GetAcceptExtraFittingCostModel();
-    getAcceptConversionPolicyModel = GetAcceptConversionPolicyModel();
-    getResidentStatusModel = GetResidentStatusModel();
-    getModeOfDepositModel = GetModeOfDepositModel();
-    getEBillingModel = GetEBillingModel();
-    getAllDepositOfflineModel = GetAllDepositOfflineModel();
-    getKycDocModel = GetKycDocModel();
-    getOwnershipProofModel = GetOwnershipProofModel();
-    getIdentityProofModel = GetIdentityProofModel();
-    getGuardianTypeModel = GetGuardianTypeModel();
-    getExistingCookingFuelModel = GetExistingCookingFuelModel();
-    getSocietyAllowModel = GetSocietyAllowModel();
-   reasonRegistrationController.text = "";
-   mobileController.text = "";
-   altMobileController.text = "";
-   firstController.text = "";
-   middleController.text = "";
-   lastController.text = "";
-   guardianNameController.text = "";
-   emailIdController.text = "";
-   buildingNumberController.text = "";
-   houseNumberController.text = "";
-   colonyController.text = "";
-   streetController.text = "";
-   townController.text = "";
-   pinCodeController.text = "";
-   numberKitchenController.text = "1";
-   numberBathroomController.text = "1";
-   familyMemberController.text = "4";
-   nearestLandmarkController.text = "";
-   kyc1NumberController.text = "";
-   kyc2NumberController.text = "";
-   kyc3NumberController.text = "";
-   custBankAccNumberController.text = "";
-   custIfscCodeController.text = "";
-   custBankAddController.text = "";
-   reasonDepositStsController.text = "";
-   depositAmountController.text = "";
-   chequeNoController.text = "";
-   chequeDateController.text = "";
-   chequeAccountNoController.text = "";
-   chequeMicrNoController.text = "";
-   latController.text = "";
-   longController.text = "";
+
     listOfAllLabel = [];
     listOfNotInterested = [];
     listOfInitialDepositStatus = [];
@@ -278,63 +244,107 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     listOfDepositOffline = [];
     listOfCustBankName = [];
     paymentBankNameList = [];
-    getLabelModel = GetLabelModel();
-    getNotInterestedModel = GetNotInterestedModel();
+  }
+
+  void _resetControllers() {
+    reasonRegistrationController.text = "";
+    mobileController.text = "";
+    altMobileController.text = "";
+    firstController.text = "";
+    middleController.text = "";
+    lastController.text = "";
+    guardianNameController.text = "";
+    emailIdController.text = "";
+    buildingNumberController.text = "";
+    houseNumberController.text = "";
+    colonyController.text = "";
+    streetController.text = "";
+    townController.text = "";
+    pinCodeController.text = "";
+    numberKitchenController.text = "1";
+    numberBathroomController.text = "1";
+    familyMemberController.text = "4";
+    nearestLandmarkController.text = "";
+    kyc1NumberController.text = "";
+    kyc2NumberController.text = "";
+    kyc3NumberController.text = "";
+    custBankAccNumberController.text = "";
+    custIfscCodeController.text = "";
+    custBankAddController.text = "";
+    reasonDepositStsController.text = "";
+    depositAmountController.text = "";
+    chequeNoController.text = "";
+    chequeDateController.text = "";
+    chequeAccountNoController.text = "";
+    chequeMicrNoController.text = "";
+    latController.text = "";
+    longController.text = "";
+  }
+
+  void _initializeFilePaths() {
     idBackPath = File("");
-    idFrontPath =  File("");
-    addBackPath =  File("");
-    addFrontPath =  File("");
-    nocDocPath =  File("");
-    nocFrontPath =  File("");
-    nocBackPath =  File("");
-    uploadCustomerPath =  File("");
-    uploadHousePath =  File("");
-    ownerConsentPath =  File("");
-    customerConsentPath =  File("");
-    cancelChequePath =  File("");
+    idFrontPath = File("");
+    addBackPath = File("");
+    addFrontPath = File("");
+    nocDocPath = File("");
+    nocFrontPath = File("");
+    nocBackPath = File("");
+    uploadCustomerPath = File("");
+    uploadHousePath = File("");
+    ownerConsentPath = File("");
+    customerConsentPath = File("");
+    cancelChequePath = File("");
     chequePath = File("");
     canceledCheque = File("");
     customerConsent = File("");
-    listOfAllLabel = HiveDataBase.allLabelBox!.values.toSet().toList();
-    listOfNotInterested =HiveDataBase.notInterestedBox!.values.toSet().toList();
-    listOfInitialDepositStatus =HiveDataBase.initDepositStatusBox!.values.toSet().toList();
-    listOfExtraFittingCost =HiveDataBase.acceptExtraFittingCostBox!.values.toSet().toList();
-    listOfConversionPolicy =HiveDataBase.acceptConversionPolicyBox!.values.toSet().toList();
-    listOfAllDistrict =HiveDataBase.allDistrictBox!.values.toSet().toList();
-    listOfResidentStatus =HiveDataBase.resStatusBox!.values.toSet().toList();
-    listOfModeOfDeposit =HiveDataBase.modeOfDepositBox!.values.toSet().toList();
-    listOfEBilling =HiveDataBase.eBillingBox!.values.toSet().toList();
-    listOfKycDoc = HiveDataBase.kycDocBox!.values.toSet().toList();
-    listOfOwnershipProof =HiveDataBase.ownershipProofBox!.values.toSet().toList();
-    listOfIdentityProof =HiveDataBase.idProofBox!.values.toSet().toList();
-    listOfGuardianType =HiveDataBase.guardianTypeBox!.values.toSet().toList();
-    listOfCookingFuel =HiveDataBase.cookingFuelBox!.values.toSet().toList();
-    listOfSocietyAllow =HiveDataBase.societyAllowBox!.values.toSet().toList();
-    listOfProClass =HiveDataBase.proClassBox!.values.toSet().toList();
-    listOfProCategory =HiveDataBase.proCateBox!.values.toSet().toList();
-    listOfChargeArea =HiveDataBase.chargeAreaListBox!.values.toSet().toList();
-    List<GetAllDepositOfflineModel> dataList = HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
-
-    listOfCustBankName = HiveDataBase.getAllBanksBox!.values.toSet().toList();
-    paymentBankNameList = HiveDataBase.getAllBanksBox!.values.toSet().toList();
-    initialDepositStatusValue = listOfInitialDepositStatus.first;
-    interestValue = listOfNotInterested.first;
-    conversionPolicyValue = listOfConversionPolicy.first;
-    extraFittingValue = listOfExtraFittingCost.first;
-    societyAllowValue = listOfSocietyAllow.first;
-    guardianTypeValue = listOfGuardianType.first;
-    propertyCategoryValue = listOfProCategory.first;
-    propertyClassValue = listOfProClass.first;
-    existingCookingFuelValue = listOfCookingFuel.first;
-    kycDoc1Value = listOfIdentityProof.first;
-    kycDoc2Value = listOfOwnershipProof.first;
-    kycDoc3Value = listOfKycDoc.first;
-    preferredBillValue = listOfEBilling.first;
-    listOfDepositOffline = dataList.where((element) =>
-    propertyCategoryValue!.id == element.propertyCategoryId).toList();
-    await _setLocation();
-    _eventCompleted(emit);
   }
+
+  Future<void> _fetchHiveData() async {
+    listOfAllLabel = HiveDataBase.allLabelBox?.values.toSet().toList() ?? [];
+    listOfNotInterested = HiveDataBase.notInterestedBox?.values.toSet().toList() ?? [];
+    listOfInitialDepositStatus = HiveDataBase.initDepositStatusBox?.values.toSet().toList() ?? [];
+    listOfExtraFittingCost = HiveDataBase.acceptExtraFittingCostBox?.values.toSet().toList() ?? [];
+    listOfConversionPolicy = HiveDataBase.acceptConversionPolicyBox?.values.toSet().toList() ?? [];
+    listOfAllDistrict = HiveDataBase.allDistrictBox?.values.toSet().toList() ?? [];
+    listOfResidentStatus = HiveDataBase.resStatusBox?.values.toSet().toList() ?? [];
+    listOfModeOfDeposit = HiveDataBase.modeOfDepositBox?.values.toSet().toList() ?? [];
+    listOfEBilling = HiveDataBase.eBillingBox?.values.toSet().toList() ?? [];
+    listOfKycDoc = HiveDataBase.kycDocBox?.values.toSet().toList() ?? [];
+    listOfOwnershipProof = HiveDataBase.ownershipProofBox?.values.toSet().toList() ?? [];
+    listOfIdentityProof = HiveDataBase.idProofBox?.values.toSet().toList() ?? [];
+    listOfGuardianType = HiveDataBase.guardianTypeBox?.values.toSet().toList() ?? [];
+    listOfCookingFuel = HiveDataBase.cookingFuelBox?.values.toSet().toList() ?? [];
+    listOfSocietyAllow = HiveDataBase.societyAllowBox?.values.toSet().toList() ?? [];
+    listOfProClass = HiveDataBase.proClassBox?.values.toSet().toList() ?? [];
+    listOfProCategory = HiveDataBase.proCateBox?.values.toSet().toList() ?? [];
+    listOfChargeArea = HiveDataBase.chargeAreaListBox?.values.toSet().toList() ?? [];
+    listOfCustBankName = HiveDataBase.getAllBanksBox?.values.toSet().toList() ?? [];
+    paymentBankNameList = HiveDataBase.getAllBanksBox?.values.toSet().toList() ?? [];
+  }
+
+  void _setDependentData() {
+    initialDepositStatusValue = listOfInitialDepositStatus.isNotEmpty ? listOfInitialDepositStatus.first : null;
+    interestValue = listOfNotInterested.isNotEmpty ? listOfNotInterested.first : null;
+    conversionPolicyValue = listOfConversionPolicy.isNotEmpty ? listOfConversionPolicy.first : null;
+    extraFittingValue = listOfExtraFittingCost.isNotEmpty ? listOfExtraFittingCost.first : null;
+    societyAllowValue = listOfSocietyAllow.isNotEmpty ? listOfSocietyAllow.first : null;
+    guardianTypeValue = listOfGuardianType.isNotEmpty ? listOfGuardianType.first : null;
+    propertyCategoryValue = listOfProCategory.isNotEmpty ? listOfProCategory.first : null;
+    propertyClassValue = listOfProClass.isNotEmpty ? listOfProClass.first : null;
+    existingCookingFuelValue = listOfCookingFuel.isNotEmpty ? listOfCookingFuel.first : null;
+    kycDoc1Value = listOfIdentityProof.isNotEmpty ? listOfIdentityProof.first : null;
+    kycDoc2Value = listOfOwnershipProof.isNotEmpty ? listOfOwnershipProof.first : null;
+    kycDoc3Value = listOfKycDoc.isNotEmpty ? listOfKycDoc.first : null;
+    preferredBillValue = listOfEBilling.isNotEmpty ? listOfEBilling.first : null;
+
+    if (propertyCategoryValue != null) {
+      listOfDepositOffline = HiveDataBase.allDepositOfflineBox?.values
+          .where((element) => element.propertyCategoryId == propertyCategoryValue!.id)
+          .toSet()
+          .toList() ?? [];
+    }
+  }
+
 
   _setInterestValue(RegistrationFormSetInterestValue event, emit) {
     interestValue = event.interestValue;
@@ -361,7 +371,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     areaValue = null;
     listOfAllArea = [];
     if(chargeAreaValue != null){
-      List<GetAllAreaModel>  dataList = HiveDataBase.allAreaBox!.values.toSet().toList();
+      List<GetAllAreaModel> dataList = HiveDataBase.allAreaBox?.values.toSet().toList() ?? [];
       listOfAllArea = dataList.where((element) =>  chargeAreaValue!.gid == element.chargeAreaId).toList();
     }
     _eventCompleted(emit);
@@ -383,7 +393,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     depositTypeValue = null;
     depositAmountController.clear();
     if(propertyCategoryValue != null){
-      List<GetAllDepositOfflineModel> dataList = HiveDataBase.allDepositOfflineBox!.values.toSet().toList();
+      List<GetAllDepositOfflineModel> dataList = HiveDataBase.allDepositOfflineBox?.values.toSet().toList() ?? [];
       listOfDepositOffline = dataList.where((element) =>  propertyCategoryValue!.id == element.propertyCategoryId).toList();
     }
     _eventCompleted(emit);
@@ -642,335 +652,393 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
 
   }
 
+
   _previewPage(RegistrationFormPreviewPageEvent event, emit) async {
-    try{
-      var textFiledValidationCheck = await RegistrationFormHelper.textFieldValidationCheck(
-        context: event.context,
-        registrationType: interestValue == null ? "": interestValue!.key,
-        reasonRegistration: reasonRegistrationController.text.isEmpty ? "": reasonRegistrationController.text.toString(),
-        chargeId: chargeAreaValue == null ? "": chargeAreaValue!.gid,
-        areaId: areaValue== null ? "": areaValue!.gid,
-        mobileNumber: mobileController.text.isEmpty ? "" : mobileController.text.trim().toString(),
-        altMobileNo: altMobileController.text.isEmpty ? "" : altMobileController.text.trim().toString(),
-        firstName: firstController.text.isEmpty ? "" : firstController.text.trim().toString(),
-        middleName: middleController.text.isEmpty ? "" : middleController.text.trim().toString(),
-        lastName: lastController.text.isEmpty ? "" : lastController.text.trim().toString(),
-        guardianType: guardianTypeValue == null ? "" : guardianTypeValue!.key,
-        guardianName: guardianNameController.text.isEmpty ? "" : guardianNameController.text.trim().toString(),
-        emailId: emailIdController.text.isEmpty ? "" : emailIdController.text.trim().toString(),
-        propertyCategoryId: propertyCategoryValue == null ? "" : propertyCategoryValue!.id,
-        propertyClassId: propertyClassValue == null ? "" : propertyClassValue!.id,
-        buildingNumber: buildingNumberController.text.isEmpty ? "" : buildingNumberController.text.trim().toString(),
-        houseNumber: houseNumberController.text.isEmpty ? "" : houseNumberController.text.trim().toString(),
-        colonySocietyApartment: colonyController.text.isEmpty ? "" : colonyController.text.trim().toString(),
-        streetName: streetController.text.isEmpty ? "" : streetController.text.trim().toString(),
-        town: townController.text.isEmpty ? "" : townController.text.trim().toString(),
-        districtId: allDistrictValue == null ? "" : allDistrictValue!.id,
-        pinCode: pinCodeController.text.isEmpty ? "" : pinCodeController.text.trim().toString(),
-        noOfKitchen: numberKitchenController.text.isEmpty ? "" : numberKitchenController.text.trim().toString(),
-        noOfBathroom: numberBathroomController.text.isEmpty ? "" : numberBathroomController.text.trim().toString(),
-        existingCookingFuel: existingCookingFuelValue == null ? "" : existingCookingFuelValue!.key,
-        noOfFamilyMembers: familyMemberController.text.isEmpty ? "" : familyMemberController.text.trim().toString(),
-        latitude: latController.text.isEmpty ? "" : latController.text.trim().toString(),
-        longitude: longController.text.isEmpty ? "" : longController.text.trim().toString(),
-        nearestLandmark: nearestLandmarkController.text.isEmpty ? "" : nearestLandmarkController.text.trim().toString(),
-        idProof: kycDoc1Value == null ? "" : kycDoc1Value!.key,
-        idProofNo: kyc1NumberController.text.isEmpty ? "" : kyc1NumberController.text.trim().toString(),
-        idFrontPath: idFrontPath.path.isEmpty ? File("") : idFrontPath,
-        idBackPath: idBackPath.path.isEmpty ? File("") : idBackPath,
-        addProof: kycDoc2Value == null ? "": kycDoc2Value!.key,
-        addProofNo: kyc2NumberController.text.isEmpty ? "" : kyc2NumberController.text.trim().toString(),
-        addFrontPath: addFrontPath.path.isEmpty ? File("") : addFrontPath,
-        addBackPath: addBackPath.path.isEmpty ? File("") : addBackPath,
-        ownershipProperty:kycDoc3Value == null ? "": kycDoc3Value!.key,
-        ownerConsent: ownerConsentPath.path.isEmpty ? File("") : ownerConsentPath,
-        housePath: uploadHousePath.path.isEmpty ? File("") : uploadHousePath,
-        customerPath: uploadCustomerPath.path.isEmpty ? File("") : uploadCustomerPath,
-        nocDocPath: nocDocPath.path.isEmpty ? File("") : nocDocPath,
-        acceptConversionPolicy: conversionPolicyValue == null ? "" : conversionPolicyValue!.key,
-        acceptExtraFittingCost: extraFittingValue == null ? "" : extraFittingValue!.key,
-        societyAllowedMdpe: societyAllowValue == null ? "" : societyAllowValue!.key,
-        depositStatus: initialDepositStatusValue == null ? "" : initialDepositStatusValue!.key,
-        reasonDeposit: reasonDepositStsController.text.isEmpty ? "" : reasonDepositStsController.text.trim().toString(),
-        depositType: depositTypeValue == null ? "" : depositTypeValue!.depositTypesId,
-        depositAmt: depositAmountController.text.isEmpty ? "" : depositAmountController.text.trim().toString(),
-        modeDeposit: modeDepositValue == null ? "" : modeDepositValue!.value,
-        chqNo: chequeNoController.text.isEmpty ? "" : chequeNoController.text.trim().toString(),
-        chqDate: chequeDateController.text.isEmpty ? "" : chequeDateController.text.trim().toString(),
-        chqBank: paymentBankNameValue == null ? "" : paymentBankNameValue.toString(),
-        chequeAccountNo: chequeAccountNoController.text.isEmpty ? "" : chequeAccountNoController.text.trim().toString(),
-        chequeMICRNo: chequeMicrNoController.text.isEmpty ? "" : chequeMicrNoController.text.trim().toString(),
-        chequePath: chequePath.path.isEmpty ? File("") : chequePath,
-        canceledCheque: canceledCheque.path.isEmpty ? File("") : canceledCheque,
-        bankAccountNumber: custBankAccNumberController.text.isEmpty ? "" : custBankAccNumberController.text.trim().toString(),
-        bankAddress: custBankAddController.text.isEmpty ? "" : custBankAddController.text.trim().toString(),
-        bankIfscCode: custIfscCodeController.text.isEmpty ? "": custIfscCodeController.text.trim().toString(),
-        bankNameOfBank:custBankAccNumberController.text.isEmpty ? "": custBankAccNumberController.text.trim().toString(),
-        customerConsent: customerConsent.path.isEmpty ? File("") : customerConsent,
-        eBillingModel: preferredBillValue == null ? "" : preferredBillValue!.key,
-        residentStatus: residentStatusValue == null ? "" : residentStatusValue!.key,
-      );
+    try {
+      // Perform field validation
+      var validationResult = await _performFieldValidation(event);
+      if (validationResult == null) return;
+
+      // Show loader and complete the event
       isPreviewLoader = true;
       _eventCompleted(emit);
-      if (await textFiledValidationCheck != null) {
-        isPreviewLoader = false;
-        _eventCompleted(emit);
-        localData = textFiledValidationCheck;
-        log("saveCusRegData==>${localData}");
-        return showDialog<void>(
-          context: event.context,
-          builder: (BuildContext context) {
-            return  Scaffold(
-              body: Container(
-                color: AppColor.white,
-                margin: EdgeInsets.all(10.0),
-                child: Stack(
-                  children: [
-                    SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PopWidget.header(context: context),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.registrationType, textValue: interestValue == null ? "" : interestValue!.value),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.conversionPolicy, textValue: conversionPolicyValue == null ? "" : conversionPolicyValue!.value),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.fittingCost, textValue:extraFittingValue == null ? "" : extraFittingValue!.value),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.mdpeAllow, textValue: societyAllowValue == null ? "" : societyAllowValue!.value),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.chargeArea, textValue: chargeAreaValue == null ? "" : chargeAreaValue!.chargeAreaName),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.area, textValue: areaValue == null ? "" : areaValue!.areaName),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.mobileNo, textValue: mobileController.text.isEmpty ? "" : mobileController.text),
-                          PopWidget.itemBuilder(textName: AppString.alternateMobileNo, textValue: altMobileController.text.isEmpty ? "" : altMobileController.text),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.firstName, textValue: firstController.text.isEmpty ? "" :  firstController.text),
-                          PopWidget.itemBuilder(textName: AppString.middleName, textValue: middleController.text.isEmpty ? "" : middleController.text),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.lastName, textValue: lastController.text.isEmpty ? "" : lastController.text),
-                          PopWidget.itemBuilder(star: interestValue!.value != "Future Registration"
-                              ? AppString.star : "", textName: AppString.guardianType, textValue: guardianTypeValue == null ? "" : guardianTypeValue!.value),
-                          PopWidget.itemBuilder(star: interestValue!.value != "Future Registration" ? AppString.star : "", textName: AppString.guardianName, textValue: guardianNameController.text.isEmpty ? "" : guardianNameController.text),
-                          PopWidget.itemBuilder(textName: AppString.emailAddress, textValue: emailIdController.text.isEmpty  ? "" : emailIdController.text),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.propertyCategory, textValue: propertyCategoryValue == null ? "" : propertyCategoryValue!.name),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.propertyClass, textValue: propertyClassValue == null ? "" : propertyClassValue!.name),
-                          PopWidget.itemBuilder(textName: AppString.buildingNumber, textValue: buildingNumberController.text.isEmpty ? "" : buildingNumberController.text),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.houseNumber, textValue: houseNumberController.text.isEmpty ? "" :  houseNumberController.text),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.colony, textValue: colonyController.text.isEmpty  ? "" : colonyController.text),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.streetName, textValue: streetController.text.isEmpty ? "" : streetController.text),
-                          PopWidget.itemBuilder(textName: AppString.town, textValue: townController.text.isEmpty ? "" : townController.text),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.district, textValue: allDistrictValue == null ? "" : allDistrictValue!.districtName),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.pinCode, textValue: pinCodeController.text.isEmpty ? "" : pinCodeController.text),
-                          PopWidget.itemBuilder(textName: AppString.noOfKitchen, textValue: numberKitchenController.text.isEmpty ? "" : numberKitchenController.text),
-                          PopWidget.itemBuilder(textName: AppString.noOfBathroom, textValue: numberBathroomController.text.isEmpty ? "" : numberBathroomController.text),
-                          PopWidget.itemBuilder(textName: AppString.fuel, textValue: existingCookingFuelValue == null ? "" : existingCookingFuelValue!.value ),
-                          PopWidget.itemBuilder(textName: AppString.noOfFamilyMembers, textValue: familyMemberController.text.isEmpty  ? "-" : familyMemberController.text),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.locationLat, textValue: latController.text.isEmpty ? "" : latController.text),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.locationLong, textValue: longController.text.isEmpty ? "-" : longController.text),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.idProof, textValue: kycDoc1Value == null ? "-" : kycDoc1Value!.value),
-                          PopWidget.itemBuilder(star: AppString.star,textName: AppString.idProofNo, textValue: kyc1NumberController.text.isEmpty ? "" : kyc1NumberController.text),
-                          PopWidget.divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ImageWidget(
-                                star: AppString.star,
-                                title: AppString.idProofFront,
-                                imgFile: idFrontPath.path.isEmpty ? File("") : File(idFrontPath.path),
-                                onPressed: (){},
-                              ),
-                              ImageWidget(
-                                // star: AppString.star,
-                                title: AppString.idProofBack,
-                                imgFile: idBackPath.path.isEmpty  ? File("") : File(idBackPath.path),
-                                onPressed: (){},
-                              ),
-                            ],
-                          ),
-                          PopWidget.itemBuilder(star: interestValue!.value != "Future Registration" ?AppString.star : "",textName: AppString.addProof, textValue:kycDoc2Value == null ? "-" : kycDoc2Value!.value),
-                          PopWidget.itemBuilder(star: interestValue!.value != "Future Registration" ?AppString.star : "",textName: AppString.addProofNo, textValue: kyc2NumberController.text.isEmpty  ? "" : kyc2NumberController.text),
-                          PopWidget.divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ImageWidget(
-                                star: interestValue!.value != "Future Registration" ?AppString.star : "",
-                                title: AppString.addProofFront,
-                                imgFile: addFrontPath.path.isEmpty ? File("") : File(addFrontPath.path),
-                                onPressed: (){},
-                              ),
-                              ImageWidget(
-                                title: AppString.addProofBack,
-                                imgFile: addBackPath.path.isEmpty ? File("") : File(addBackPath.path),
-                                onPressed: (){},
-                              ),
-                            ],
-                          ),
-                          if(interestValue!.value != "Future Registration")...[
-                            PopWidget.itemBuilder(textName: AppString.ownershipProperty, textValue: kycDoc3Value == null ? "-" : kycDoc3Value!.value),
-                            PopWidget.divider(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ImageWidget(
-                                  title: AppString.customerImg,
-                                  imgFile: customerConsent.path.isEmpty ? File("") : File(customerConsent.path),
-                                  onPressed: (){},
-                                ),
-                                kycDoc3Value!.value == "Rented"
-                                    ?ImageWidget(
-                                  star: AppString.star,
-                                  title: AppString.nocDoc,
-                                  imgFile: nocDocPath.path.isEmpty ? File("") : File(nocDocPath.path),
-                                  onPressed: (){},
-                                ):ImageWidget(
-                                  title: AppString.houseImg,
-                                  imgFile: uploadHousePath.path.isEmpty ? File("") : File(uploadHousePath.path),
-                                  onPressed: (){},
-                                ),
-                              ],
-                            ),
-                            PopWidget.divider(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                kycDoc3Value!.value == "Rented"
-                                    ? ImageWidget(
-                                  title: AppString.houseImg,
-                                  imgFile: uploadHousePath.path.isEmpty  ? File("") : File(uploadHousePath.path),
-                                  onPressed: (){},
-                                )
-                                    : Container(),
-                              ],
-                            ),
-                            PopWidget.itemBuilder(textName: AppString.initDepositStatus, textValue: initialDepositStatusValue == null ? "-" : initialDepositStatusValue!.value),
-                            PopWidget.itemBuilder(textName: AppString.depositType, textValue: depositTypeValue == null ? "-" : depositTypeValue!.depositTypesId),
-                            PopWidget.itemBuilder(textName: AppString.depositAmt, textValue: depositAmountController.text.isEmpty ? "-" : depositAmountController.text),
-                            PopWidget.itemBuilder(textName: AppString.modeDeposit, textValue: modeDepositValue == null ? "-" : modeDepositValue!.value),
-                            if (modeDepositValue?.value == "Cheque") ...[
-                              PopWidget.itemBuilder(textName: AppString.chqNo, textValue: chequeNoController.text.isEmpty ? "-" : chequeNoController.text),
-                              PopWidget.itemBuilder(textName: AppString.chqDate, textValue: chequeDateController.text.isEmpty ? "" : chequeDateController.text),
-                              PopWidget.itemBuilder(textName: AppString.chqBank, textValue: paymentBankNameValue == null ? "": paymentBankNameValue.toString()),
-                              PopWidget.itemBuilder(textName: AppString.chequeAccountNo, textValue: chequeAccountNoController.text.isEmpty ? "":  chequeAccountNoController.text),
-                              PopWidget.itemBuilder(textName: AppString.chequeMICRNo, textValue: chequeMicrNoController.text.isEmpty ? "": chequeMicrNoController.text),
-                              PopWidget.divider(),
-                              ImageWidget(
-                                star: AppString.star,
-                                title: AppString.chqPhoto,
-                                imgFile:chequePath.path.isEmpty ? File("" ): File(chequePath.path),
-                                onPressed: (){},
-                              ),
-                            ]
-                          ],
-                          PopWidget.divider(),
-                          SizedBox(
-                              height:MediaQuery.of(context).size.height* 0.09
-                          )
-                        ],
-                      ),
-                    ),
-                    Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            isSaveLoader == false
-                                ? Flexible(
-                              child: ButtonWidget(
-                                  text: AppString.save,
-                                  onPressed: () {
-                                    BlocProvider.of<RegistrationFormBloc>(context)
-                                        .add(RegistrationFormSaveLocalDataEvent(context: context));
-                                  }),
-                            )
-                                : DottedLoaderWidget(),
-                            Flexible(
-                              child: ButtonWidget(
-                                  text: AppString.edit,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  }),
-                            ),
-                          ],
-                        ))
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      }
-    } catch(e){
+
+      // Retrieve the local data
+      localData = validationResult;
+      log("saveCusRegData==>${localData}");
+
+      // Show preview dialog
+      await _showPreviewDialog(event.context);
+
+      // Hide loader after showing the dialog
+      isPreviewLoader = false;
+      _eventCompleted(emit);
+    } catch (e) {
       log("previewCheck-->${e.toString()}");
-      return null;
     }
   }
-  _updateLocalData(RegistrationFormLoadUpdateLocalDataEvent event, emit) async {
-    Navigator.push(event.context, MaterialPageRoute(builder: (context) =>
-        RegistrationFormPage(
-            isUpdate: event.isUpdate,
-            position: event.index,
-            localData: event.localData)));
-    if(event.isUpdate == true){
-     interestValue?.key = event.localData.interested;
-     conversionPolicyValue?.key = event.localData.acceptConversionPolicy;
-     extraFittingValue?.key = event.localData.acceptExtraFittingCost;
-     societyAllowValue?.key = event.localData.societyAllowedMdpe;
-     guardianTypeValue?.key = event.localData.guardianType;
-    // propertyCategoryValue?.id = event.localData.propertyCategoryId;
-   //  propertyClassValue?.id = event.localData.propertyClassId;
-   //  allDistrictValue?.id = event.localData.districtId;
-     preferredBillValue?.key = event.localData.eBillingModel;
-     initialDepositStatusValue?.key = event.localData.initialDepositeStatus;
-     modeDepositValue?.key = event.localData.modeOfDeposite;
-     depositTypeValue?.depositTypesId = event.localData.depositeType;
-     kycDoc1Value?.key = event.localData.kycDocument1;
-     kycDoc2Value?.key = event.localData.kycDocument2;
-     kycDoc3Value?.key = event.localData.kycDocument3;
-     existingCookingFuelValue?.key = event.localData.existingCookingFuel;
-     residentStatusValue?.key = event.localData.residentStatus;
-    // areaValue?.gid = event.localData.areaId;
-     chargeAreaValue?.gid = event.localData.chargeArea;
-     firstController.text = event.localData.firstName!;
-     middleController.text = event.localData.middleName!;
-     lastController.text = event.localData.lastName!;
-     guardianNameController.text = event.localData.guardianName!;
-     emailIdController.text = event.localData.emailId!;
-     buildingNumberController.text = event.localData.buildingNumber!;
-     houseNumberController.text = event.localData.houseNumber!;
-     colonyController.text = event.localData.colonySocietyApartment!;
-     streetController.text = event.localData.streetName!;
-     townController.text = event.localData.town!;
-     pinCodeController.text = event.localData.pinCode!;
-     numberKitchenController.text = event.localData.noOfKitchen!;
-     numberBathroomController.text = event.localData.noOfBathroom!;
-     familyMemberController.text = event.localData.noOfFamilyMembers!;
-     nearestLandmarkController.text = event.localData.nearestLandmark!;
-     kyc1NumberController.text = event.localData.kycDocument1Number!;
-     kyc2NumberController.text = event.localData.kycDocument2Number!;
-     kyc3NumberController.text = event.localData.kycDocument3Number!;
-     custBankAccNumberController.text = event.localData.bankAccountNumber!;
-     custIfscCodeController.text = event.localData.bankIfscCode!;
-     custBankAddController.text = event.localData.bankAddress!;
-     depositAmountController.text = event.localData.depositTypeAmount!;
-     latController.text = event.localData.latitude!;
-     longController.text = event.localData.longitude!;
-     chequeNoController.text = event.localData.chequeNumber!;
-     chequeDateController.text = event.localData.chequeDepositDate!;
-     chequeAccountNoController.text = event.localData.chequeBankAccount!;
-     chequeMicrNoController.text = event.localData.chequeMicrAccount!;
-     custBankNameValue = event.localData.bankNameOfBank;
-     paymentBankNameValue = event.localData.payementBankName;
-   idFrontPath = File(event.localData.documentUploadsPhoto1!);
-   addBackPath = File(event.localData.backSidePhoto2!);
-   mobileController.text = event.localData.mobileNumber!;
-   addFrontPath = File(event.localData.documentUploadsPhoto2!);
-   nocBackPath = File(event.localData.backSidePhoto3!);
-   uploadCustomerPath = File(event.localData.uploadCustomerPhoto!);
-   uploadHousePath = File(event.localData.uploadHousePhoto!);
-   customerConsentPath = File(event.localData.customerConsentPhoto!);
-   ownerConsentPath = File(event.localData.ownerConsent!);
-   cancelChequePath = File(event.localData.canceledChequePhoto!);
-   chequePath = File(event.localData.chequePhoto!);
-    }
+
+  Future _performFieldValidation(RegistrationFormPreviewPageEvent event) async {
+    return await RegistrationFormHelper.textFieldValidationCheck(
+      context: event.context,
+      registrationType: interestValue?.key ?? "",
+      reasonRegistration: reasonRegistrationController.text.trim(),
+      chargeId: chargeAreaValue?.gid ?? "",
+      areaId: areaValue?.gid ?? "",
+      mobileNumber: mobileController.text.trim(),
+      altMobileNo: altMobileController.text.trim(),
+      firstName: firstController.text.trim(),
+      middleName: middleController.text.trim(),
+      lastName: lastController.text.trim(),
+      guardianType: guardianTypeValue?.key ?? "",
+      guardianName: guardianNameController.text.trim(),
+      emailId: emailIdController.text.trim(),
+      propertyCategoryId: propertyCategoryValue?.id ?? "",
+      propertyClassId: propertyClassValue?.id ?? "",
+      buildingNumber: buildingNumberController.text.trim(),
+      houseNumber: houseNumberController.text.trim(),
+      colonySocietyApartment: colonyController.text.trim(),
+      streetName: streetController.text.trim(),
+      town: townController.text.trim(),
+      districtId: allDistrictValue?.id ?? "",
+      pinCode: pinCodeController.text.trim(),
+      noOfKitchen: numberKitchenController.text.trim(),
+      noOfBathroom: numberBathroomController.text.trim(),
+      existingCookingFuel: existingCookingFuelValue?.key ?? "",
+      noOfFamilyMembers: familyMemberController.text.trim(),
+      latitude: latController.text.trim(),
+      longitude: longController.text.trim(),
+      nearestLandmark: nearestLandmarkController.text.trim(),
+      idProof: kycDoc1Value?.key ?? "",
+      idProofNo: kyc1NumberController.text.trim(),
+      idFrontPath: idFrontPath.path.isEmpty ? File("") : idFrontPath,
+      idBackPath: idBackPath.path.isEmpty ? File("") : idBackPath,
+      addProof: kycDoc2Value?.key ?? "",
+      addProofNo: kyc2NumberController.text.trim(),
+      addFrontPath: addFrontPath.path.isEmpty ? File("") : addFrontPath,
+      addBackPath: addBackPath.path.isEmpty ? File("") : addBackPath,
+      ownershipProperty: kycDoc3Value?.key ?? "",
+      ownerConsent: ownerConsentPath.path.isEmpty ? File("") : ownerConsentPath,
+      housePath: uploadHousePath.path.isEmpty ? File("") : uploadHousePath,
+      customerPath: uploadCustomerPath.path.isEmpty ? File("") : uploadCustomerPath,
+      nocDocPath: nocDocPath.path.isEmpty ? File("") : nocDocPath,
+      acceptConversionPolicy: conversionPolicyValue?.key ?? "",
+      acceptExtraFittingCost: extraFittingValue?.key ?? "",
+      societyAllowedMdpe: societyAllowValue?.key ?? "",
+      depositStatus: initialDepositStatusValue?.key ?? "",
+      reasonDeposit: reasonDepositStsController.text.trim(),
+      depositType: depositTypeValue?.depositTypesId ?? "",
+      depositAmt: depositAmountController.text.trim(),
+      modeDeposit: modeDepositValue?.value ?? "",
+      chqNo: chequeNoController.text.trim(),
+      chqDate: chequeDateController.text.trim(),
+      chqBank: paymentBankNameValue?.toString() ?? "",
+      chequeAccountNo: chequeAccountNoController.text.trim(),
+      chequeMICRNo: chequeMicrNoController.text.trim(),
+      chequePath: chequePath.path.isEmpty ? File("") : chequePath,
+      canceledCheque: canceledCheque.path.isEmpty ? File("") : canceledCheque,
+      bankAccountNumber: custBankAccNumberController.text.trim(),
+      bankAddress: custBankAddController.text.trim(),
+      bankIfscCode: custIfscCodeController.text.trim(),
+      bankNameOfBank: custBankAccNumberController.text.trim(),
+      customerConsent: customerConsent.path.isEmpty ? File("") : customerConsent,
+      eBillingModel: preferredBillValue?.key ?? "",
+      residentStatus: residentStatusValue?.key ?? "",
+    );
   }
+
+  Future<void> _showPreviewDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Scaffold(
+          body: Container(
+            color: AppColor.white,
+
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: _buildPreviewItems(context: context),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: _buildBottomActions(context),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  List<Widget> _buildPreviewItems({required BuildContext context}) {
+    return [
+      PopWidget.header(context: context),
+      _buildPopItem(AppString.registrationType, interestValue?.value),
+      _buildPopItem(AppString.conversionPolicy, conversionPolicyValue?.value),
+      _buildPopItem(AppString.fittingCost, extraFittingValue?.value),
+      _buildPopItem(AppString.mdpeAllow, societyAllowValue?.value),
+      _buildPopItem(AppString.chargeArea, chargeAreaValue?.chargeAreaName),
+      _buildPopItem(AppString.area, areaValue?.areaName),
+      _buildPopItem(AppString.mobileNo, mobileController.text),
+      _buildPopItem(AppString.alternateMobileNo, altMobileController.text),
+      _buildPopItem(AppString.firstName, firstController.text),
+      _buildPopItem(AppString.middleName, middleController.text),
+      _buildPopItem(AppString.lastName, lastController.text),
+      _buildPopItem(AppString.lastName, lastController.text),
+      PopWidget.itemBuilder(star: interestValue!.value != "Future Registration"
+          ? AppString.star : "", textName: AppString.guardianType, textValue: guardianTypeValue == null ? "" : guardianTypeValue!.value),
+      PopWidget.itemBuilder(star: interestValue!.value != "Future Registration" ? AppString.star : "", textName: AppString.guardianName, textValue: guardianNameController.text.isEmpty ? "" : guardianNameController.text),
+      _buildPopItem(AppString.emailAddress, emailIdController.text),
+      _buildPopItem(AppString.propertyCategory, propertyCategoryValue?.name),
+      _buildPopItem(AppString.propertyClass, propertyClassValue?.name),
+      _buildPopItem(AppString.buildingNumber, buildingNumberController.text),
+      _buildPopItem(AppString.houseNumber, houseNumberController.text),
+      _buildPopItem(AppString.colony, colonyController.text),
+      _buildPopItem(AppString.streetName, streetController.text),
+      _buildPopItem(AppString.town, townController.text),
+      _buildPopItem(AppString.district, allDistrictValue?.districtName),
+      _buildPopItem(AppString.pinCode, pinCodeController.text),
+      _buildPopItem(AppString.noOfKitchen, numberKitchenController.text),
+      _buildPopItem(AppString.noOfBathroom, numberBathroomController.text),
+      _buildPopItem(AppString.fuel, existingCookingFuelValue?.value),
+      _buildPopItem(AppString.noOfFamilyMembers, familyMemberController.text),
+      _buildPopItem(AppString.locationLat, latController.text),
+      _buildPopItem(AppString.locationLong, longController.text),
+      _buildPopItem(AppString.idProof, kycDoc1Value!.value),
+      _buildPopItem(AppString.idProofNo, kyc1NumberController.text),
+      PopWidget.divider(),
+
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ImageWidget(
+            star: AppString.star,
+            title: AppString.idProofFront,
+            imgFile: idFrontPath.path.isEmpty ? File("") : File(idFrontPath.path),
+            onPressed: (){},
+          ),
+          ImageWidget(
+            // star: AppString.star,
+            title: AppString.idProofBack,
+            imgFile: idBackPath.path.isEmpty  ? File("") : File(idBackPath.path),
+            onPressed: (){},
+          ),
+        ],
+      ),
+      PopWidget.itemBuilder(
+          star: interestValue!.value != "Future Registration" ?AppString.star : "",textName: AppString.addProof, textValue:kycDoc2Value == null ? "-" : kycDoc2Value!.value),
+      PopWidget.itemBuilder(star: interestValue!.value != "Future Registration" ?AppString.star : "",textName: AppString.addProofNo, textValue: kyc2NumberController.text.isEmpty  ? "" : kyc2NumberController.text),
+      PopWidget.divider(),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ImageWidget(
+            star: interestValue!.value != "Future Registration" ?AppString.star : "",
+            title: AppString.addProofFront,
+            imgFile: addFrontPath.path.isEmpty ? File("") : File(addFrontPath.path),
+            onPressed: (){},
+          ),
+          ImageWidget(
+            title: AppString.addProofBack,
+            imgFile: addBackPath.path.isEmpty ? File("") : File(addBackPath.path),
+            onPressed: (){},
+          ),
+        ],
+      ),
+      if(interestValue!.value != "Future Registration")...[
+        PopWidget.itemBuilder(textName: AppString.ownershipProperty, textValue: kycDoc3Value == null ? "-" : kycDoc3Value!.value),
+        PopWidget.divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ImageWidget(
+              title: AppString.customerImg,
+              imgFile: customerConsent.path.isEmpty ? File("") : File(customerConsent.path),
+              onPressed: (){},
+            ),
+            kycDoc3Value!.value == "Rented"
+                ?ImageWidget(
+              star: AppString.star,
+              title: AppString.nocDoc,
+              imgFile: nocDocPath.path.isEmpty ? File("") : File(nocDocPath.path),
+              onPressed: (){},
+            ):ImageWidget(
+              title: AppString.houseImg,
+              imgFile: uploadHousePath.path.isEmpty ? File("") : File(uploadHousePath.path),
+              onPressed: (){},
+            ),
+          ],
+        ),
+      //  PopWidget.divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            kycDoc3Value!.value == "Rented"
+                ? ImageWidget(
+              title: AppString.houseImg,
+              imgFile: uploadHousePath.path.isEmpty  ? File("") : File(uploadHousePath.path),
+              onPressed: (){},
+            )
+                : Container(),
+          ],
+        ),
+        PopWidget.itemBuilder(textName: AppString.initDepositStatus, textValue: initialDepositStatusValue == null ? "-" : initialDepositStatusValue!.value),
+        PopWidget.itemBuilder(textName: AppString.depositType, textValue: depositTypeValue == null ? "-" : depositTypeValue!.depositName),
+        PopWidget.itemBuilder(textName: AppString.depositAmt, textValue: depositAmountController.text.isEmpty ? "-" : depositAmountController.text),
+        PopWidget.itemBuilder(textName: AppString.modeDeposit, textValue: modeDepositValue == null ? "-" : modeDepositValue!.value),
+        if (modeDepositValue?.value == "Cheque") ...[
+          PopWidget.itemBuilder(textName: AppString.chqNo, textValue: chequeNoController.text.isEmpty ? "-" : chequeNoController.text),
+          PopWidget.itemBuilder(textName: AppString.chqDate, textValue: chequeDateController.text.isEmpty ? "" : chequeDateController.text),
+          PopWidget.itemBuilder(textName: AppString.chqBank, textValue: paymentBankNameValue == null ? "": paymentBankNameValue.toString()),
+          PopWidget.itemBuilder(textName: AppString.chequeAccountNo, textValue: chequeAccountNoController.text.isEmpty ? "":  chequeAccountNoController.text),
+          PopWidget.itemBuilder(textName: AppString.chequeMICRNo, textValue: chequeMicrNoController.text.isEmpty ? "": chequeMicrNoController.text),
+          PopWidget.divider(),
+          ImageWidget(
+            star: AppString.star,
+            title: AppString.chqPhoto,
+            imgFile:chequePath.path.isEmpty ? File("" ): File(chequePath.path),
+            onPressed: (){},
+          ),
+        ]
+      ],
+      PopWidget.divider(),
+      SizedBox(
+          height:MediaQuery.of(context).size.height* 0.09
+      ),
+    ];
+  }
+
+  Widget _buildPopItem(String label, String? value) {
+    return PopWidget.itemBuilder(
+      star: value?.isNotEmpty ?? false ? AppString.star : "",
+      textName: label,
+      textValue: value ?? "",
+    );
+  }
+
+  Widget _buildBottomActions(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        isSaveLoader
+            ? DottedLoaderWidget()
+            : ButtonWidget(
+          text: AppString.save,
+          onPressed: () {
+            BlocProvider.of<RegistrationFormBloc>(context)
+                .add(RegistrationFormSaveLocalDataEvent(context: context));
+          },
+        ),
+        ButtonWidget(
+          text: AppString.edit,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+
+
+
+  _updateLocalData(UpdateLocalDataEvent event, emit) async {
+    try {
+      if (HiveDataBase.registrationFormBox?.values.isNotEmpty ?? false) {
+        final localData = event.updateDate;
+
+        _updateControllers(localData);
+
+        // Navigate to the registration form page
+        Navigator.push(
+          event.context,
+          MaterialPageRoute(
+            builder: (context) => RegistrationFormPage(
+              position: event.index,
+              localData: localData,
+            ),
+          ),
+        );
+      } else {
+      }
+    } catch (e) {
+
+    }
+    _eventCompleted(emit);
+  }
+  void _updateControllers(SaveRegistrationFormModel localData) {
+    interestValue?.key = localData.interested;
+    conversionPolicyValue?.key = localData.acceptConversionPolicy;
+    extraFittingValue?.key = localData.acceptExtraFittingCost;
+    societyAllowValue?.key = localData.societyAllowedMdpe;
+    guardianTypeValue?.key = localData.guardianType;
+    preferredBillValue?.key = localData.eBillingModel;
+    initialDepositStatusValue?.key = localData.initialDepositeStatus;
+    modeDepositValue?.key = localData.modeOfDeposite;
+    depositTypeValue?.depositTypesId = localData.depositeType;
+    kycDoc1Value?.key = localData.kycDocument1;
+    kycDoc2Value?.key = localData.kycDocument2;
+    kycDoc3Value?.key = localData.kycDocument3;
+    existingCookingFuelValue?.key = localData.existingCookingFuel;
+    residentStatusValue?.key = localData.residentStatus;
+    chargeAreaValue?.gid = localData.chargeArea;
+
+    // Update text controllers
+    firstController.text = localData.firstName ?? "";
+    middleController.text = localData.middleName ?? "";
+    lastController.text = localData.lastName ?? "";
+    guardianNameController.text = localData.guardianName ?? "";
+    emailIdController.text = localData.emailId ?? "";
+    buildingNumberController.text = localData.buildingNumber ?? "";
+    houseNumberController.text = localData.houseNumber ?? "";
+    colonyController.text = localData.colonySocietyApartment ?? "";
+    streetController.text = localData.streetName ?? "";
+    townController.text = localData.town ?? "";
+    pinCodeController.text = localData.pinCode ?? "";
+    numberKitchenController.text = localData.noOfKitchen ?? "";
+    numberBathroomController.text = localData.noOfBathroom ?? "";
+    familyMemberController.text = localData.noOfFamilyMembers ?? "";
+    nearestLandmarkController.text = localData.nearestLandmark ?? "";
+    kyc1NumberController.text = localData.kycDocument1Number ?? "";
+    kyc2NumberController.text = localData.kycDocument2Number ?? "";
+    kyc3NumberController.text = localData.kycDocument3Number ?? "";
+    custBankAccNumberController.text = localData.bankAccountNumber ?? "";
+    custIfscCodeController.text = localData.bankIfscCode ?? "";
+    custBankAddController.text = localData.bankAddress ?? "";
+    depositAmountController.text = localData.depositTypeAmount ?? "";
+    latController.text = localData.latitude ?? "";
+    longController.text = localData.longitude ?? "";
+    chequeNoController.text = localData.chequeNumber ?? "";
+    chequeDateController.text = localData.chequeDepositDate ?? "";
+    chequeAccountNoController.text = localData.chequeBankAccount ?? "";
+    chequeMicrNoController.text = localData.chequeMicrAccount ?? "";
+    mobileController.text = localData.mobileNumber ?? "";
+
+    // Update file paths
+    idFrontPath = File(localData.documentUploadsPhoto1 ?? "");
+    addBackPath = File(localData.backSidePhoto2 ?? "");
+    addFrontPath = File(localData.documentUploadsPhoto2 ?? "");
+    nocBackPath = File(localData.backSidePhoto3 ?? "");
+    uploadCustomerPath = File(localData.uploadCustomerPhoto ?? "");
+    uploadHousePath = File(localData.uploadHousePhoto ?? "");
+    customerConsentPath = File(localData.customerConsentPhoto ?? "");
+    ownerConsentPath = File(localData.ownerConsent ?? "");
+    cancelChequePath = File(localData.canceledChequePhoto ?? "");
+    chequePath = File(localData.chequePhoto ?? "");
+
+    custBankNameValue = localData.bankNameOfBank;
+    paymentBankNameValue = localData.payementBankName;
+  }
+
+
+
   _saveLocalData(RegistrationFormSaveLocalDataEvent event, emit) async {
     try{
       isSaveLoader = true;
@@ -978,7 +1046,6 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
       await RegistrationFormHelper.addCustRegSyncLocalDB(
         context: event.context,
         custRegSyncStore: localData!,
-        isUpdate:isUpdate,
       );
       isSaveLoader = false;
       _eventCompleted(emit);

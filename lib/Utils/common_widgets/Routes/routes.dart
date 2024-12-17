@@ -12,7 +12,7 @@ class Routes {
         return MaterialPageRoute(builder: (BuildContext context) => const DashboardPage());
       case RoutesName.customerRegistrationForm:
         return MaterialPageRoute(builder: (BuildContext context) =>  RegistrationFormPage(
-      isUpdate: false, position: 0, localData: null));
+      position: 0, localData: null));
       case RoutesName.viewSyncRecord:
         return MaterialPageRoute(builder: (BuildContext context) => const ViewSyncRecordPage());
       default:

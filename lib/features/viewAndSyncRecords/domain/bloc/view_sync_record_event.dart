@@ -14,16 +14,17 @@ class ViewSyncRecordLoadPageEvent extends ViewSyncRecordEvent {
 class ViewSyncRecordLoadUpdateLocalDataEvent extends ViewSyncRecordEvent {
   final BuildContext context;
   final int index;
-  ViewSyncRecordLoadUpdateLocalDataEvent({required this.context, required this.index,});
+  final SaveRegistrationFormModel saveRegistrationFormModel;
+  ViewSyncRecordLoadUpdateLocalDataEvent({required this.context, required this.index,required this.saveRegistrationFormModel});
   @override
-  List<Object?> get props => [context, index];
+  List<Object?> get props => [context, index, saveRegistrationFormModel];
 }
 
-class ViewSyncRecordDeleteLocalDataEvent extends ViewSyncRecordEvent {
+class DeleteLocalDataEvent extends ViewSyncRecordEvent {
   final int index;
   final BuildContext context;
    String mobileNo;
-  ViewSyncRecordDeleteLocalDataEvent({required this.index, required this.context, required this.mobileNo,});
+ DeleteLocalDataEvent({required this.index, required this.context, required this.mobileNo,});
   @override
   List<Object?> get props => [index, context,mobileNo];
 }
