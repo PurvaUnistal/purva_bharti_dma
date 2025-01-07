@@ -302,6 +302,7 @@ class SchemeTypeDetailEvent extends RegistrationFormEvent {
   List<Object?> get props => [context];
 }
 
+
 class RegistrationFormSaveLocalDataEvent extends RegistrationFormEvent {
   final BuildContext context;
   RegistrationFormSaveLocalDataEvent({required this.context,});
@@ -323,3 +324,23 @@ class UpdateLocalDataEvent extends RegistrationFormEvent {
   List<Object?> get props => [context, index,updateDate];
 }
 
+class AddFormEvent extends RegistrationFormEvent {
+  final SaveRegistrationFormModel form;
+
+  AddFormEvent({required this.form});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class UpdateFormEvent extends RegistrationFormEvent {
+  final int index;
+  final SaveRegistrationFormModel updatedForm;
+
+  UpdateFormEvent({required this.index,required this.updatedForm});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+}
