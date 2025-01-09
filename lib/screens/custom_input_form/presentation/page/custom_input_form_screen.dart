@@ -9,6 +9,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pbg_app/helper/DropDownCustom.dart';
 import 'package:pbg_app/helper/DropDownCustomDeposit.dart';
+import 'package:pbg_app/models/ChargeAreaModel.dart';
+import 'package:pbg_app/models/GetAllAreaModel.dart';
 import 'package:pbg_app/models/GetAllDistrictModel.dart';
 import 'package:pbg_app/models/GetLabelModel.dart';
 import 'package:pbg_app/models/save_customer_registration_offline_model.dart';
@@ -20,6 +22,7 @@ import 'package:pbg_app/utils/common_widgets/app_color.dart';
 import 'package:pbg_app/utils/common_widgets/app_string.dart';
 import 'package:pbg_app/utils/common_widgets/app_style.dart';
 import 'package:pbg_app/utils/common_widgets/button_widget.dart';
+import 'package:pbg_app/utils/common_widgets/drop_down_search_widget.dart';
 import 'package:pbg_app/utils/common_widgets/message_box_two_button_pop.dart';
 import 'package:pbg_app/utils/common_widgets/text_form_field_widget.dart';
 import 'package:pbg_app/utils/common_widgets/custom_app_bar.dart';
@@ -62,13 +65,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
   String _payementBankValue;
 
   //Area
-  List<DropdownMenuItem<OptionItem>> areaItems = [];
-  OptionItem areaTypeValue;
-  String _areaTypeId = '0';
+  List<GetAllAreaModel> listOfAllArea = [];
+  GetAllAreaModel areaValue = GetAllAreaModel();
+  String areaTypeId = '0';
 
   //Charge Area
-  List<DropdownMenuItem<OptionItem>> chargeAreaItems = [];
-  OptionItem chargeAreaType;
+  List<ChargeAreaModel> listOfChargeArea = [];
+  ChargeAreaModel chargeAreaValue = ChargeAreaModel();
   String chargeAreaId = '0';
 
   //getAllDistrict
@@ -568,9 +571,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
                 textButton: !widget.isUpdate ? "Preview" : "Update",
                 onPressed: () async {
                   chargeAreaId =
-                  chargeAreaType == null ? chargeAreaId : chargeAreaType.id;
-                  _areaTypeId =
-                  areaTypeValue == null ? _areaTypeId : areaTypeValue.id;
+                  chargeAreaValue == null ? chargeAreaId : chargeAreaValue.gid;
+                  areaTypeId =
+                  areaValue == null ? areaTypeId : areaValue.gid;
                   getAllDistrictId =
                   districtValue == null ? getAllDistrictId : districtValue.id;
                   modeOfDepositString = modeDepositValue == null
@@ -590,7 +593,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     acceptExtraFittingCostValueId:
                     __acceptExtraFittingCostValueId.toString(),
                     chargeAreaType: chargeAreaId.toString(),
-                    areaTypeId: _areaTypeId.toString(),
+                    areaTypeId: areaTypeId.toString(),
                     mobileNoController: mobileNoController.text.toString(),
                     firstNameController: firstNameController.text.toString(),
                     lastNameController: lastNameController.text.toString(),
@@ -691,11 +694,11 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           : Container(),
                       _buildRow(
                         leading: AppStrings.chargeAreaLabel,
-                        trailing: chargeAreaType.title.toString() ?? "-",
+                        trailing: chargeAreaValue.chargeAreaName.toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.areaLabel,
-                        trailing: areaTypeValue.title.toString() ?? "-",
+                        trailing: areaValue.areaName.toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.mobileNoLabel,
@@ -1163,8 +1166,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
       dmaUserName: dmaUserName,
       dmaUserId: dmaId,
       // remarks : reasonInterestedController.text.trim().toString() ?? "",
-      chargeArea: chargeAreaType.id.toString(),
-      areaId: areaTypeValue.id.toString(),
+      chargeArea: chargeAreaValue.gid.toString(),
+      areaId: areaValue.gid.toString(),
       mobileNumber: mobileNoController.text.trim().toString(),
       alternateMobileNo: alternateMobileNoController.text.trim().toString(),
       firstName: firstNameController.text.trim().toString(),
@@ -1349,11 +1352,11 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   Widget _chargeAreaDropDown() {
-    return ReusedDropDownOptionItem(
+   /* return ReusedDropDownOptionItem(
       star: AppStrings.star,
       textLabel: AppStrings.chargeAreaLabel,
       hint: AppStrings.chargeAreaLabel,
-      items: chargeAreaItems,
+      items: listOfChargeArea,
       value: chargeAreaType,
       onChanged: (OptionItem value) {
         setState(() {
@@ -1364,11 +1367,29 @@ class _CustomInputFormState extends State<CustomInputForm> {
           fetchArea(value.id);
         });
       },
+    );*/
+    return DropDownSearchWidget(
+      star: AppStrings.star,
+      label: AppStrings.chargeAreaLabel,
+      hint: AppStrings.chargeAreaLabel,
+      dropdownValue: chargeAreaValue.gid == null ? null :chargeAreaValue,
+      itemAsString: (alignmentData) => alignmentData.chargeAreaName,
+      items: listOfChargeArea,
+      onChanged: ( value) {
+        setState(() {
+          chargeAreaId = value.gid.toString();
+          chargeAreaValue = value;
+          areaValue = GetAllAreaModel();
+          listOfAllArea.clear();
+          fetchArea(value.gid.toString());
+          print("value==>${value.gid.toString()}");
+        });
+      },
     );
   }
 
   Widget _areaDropDown() {
-    return ReusedDropDownOptionItem(
+   /* return ReusedDropDownOptionItem(
       star: AppStrings.star,
       textLabel: AppStrings.areaLabel,
       hint: AppStrings.areaLabel,
@@ -1378,6 +1399,20 @@ class _CustomInputFormState extends State<CustomInputForm> {
         setState(() {
           _areaTypeId = value.id;
           areaTypeValue = value;
+        });
+      },
+    );*/
+    return DropDownSearchWidget(
+      star: AppStrings.star,
+      label: AppStrings.areaLabel,
+      hint: AppStrings.areaLabel,
+      dropdownValue: areaValue.gid == null ? null :areaValue,
+      itemAsString: (alignmentData) => alignmentData.areaName.toString(),
+      items: listOfAllArea,
+      onChanged: (value) {
+        setState(() {
+          areaTypeId = value.gid.toString();
+          areaValue = value;
         });
       },
     );
@@ -3301,28 +3336,17 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Future<void> fetchArea(String id) async {
     var resArea = prefs.getString(GlobalConstants.area);
-    List dataList = json.decode(resArea);
-    log("dataList--${dataList.toString()}");
-    List<DropdownMenuItem<OptionItem>> menuItems = [];
-    for (int i = 0; i < dataList.length; i++) {
-      //   if (dataList[i]['charge_area_id'] == id) {
-      menuItems.add(DropdownMenuItem(
-        value:
-        OptionItem(id: dataList[i]['gid'], title: dataList[i]['area_name']),
-        child: Text("${dataList[i]['area_name']}"),
-      ));
-      //  }
-    }
-    if (!mounted) return;
+    List listArea = json.decode(resArea);
+    List outputList = listArea.where((o) => o['charge_area_id'] == id).toList();
+    listOfAllArea = outputList.map((item) => GetAllAreaModel.fromJson(item)).toList();
+    listOfAllArea.sort((a, b) => a.areaName.compareTo(b.areaName));
     setState(() {
-      areaItems = menuItems;
       if (widget.isUpdate == true) {
         if (widget.studentModel.areaId != null) {
-          areaTypeValue = areaItems
+          areaValue = listOfAllArea
               .firstWhere(
-                  (element) => element.value.id == widget.studentModel.areaId,
-              orElse: null)
-              .value;
+                  (element) => element.gid == widget.studentModel.areaId,
+              orElse: null).gid as GetAllAreaModel;
         }
       }
     });
@@ -3330,35 +3354,25 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Future<void> fetchChargeAreaList() async {
     var resChargeAreaName = prefs.getString(GlobalConstants.chargeAreaName);
-    List dataChargeList = json.decode(resChargeAreaName);
-    log(dataChargeList.toString());
-    List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
-      dataChargeList.length,
-          (i) => DropdownMenuItem(
-        value: OptionItem(
-            id: dataChargeList[i]['gid'],
-            title: dataChargeList[i]['charge_area_name']),
-        child: Text("${dataChargeList[i]['charge_area_name']}"),
-      ),
-    );
-    if (!mounted) return;
+    List list = jsonDecode(resChargeAreaName);
+    listOfChargeArea =  list.map((item) => ChargeAreaModel.fromJson(item)).toList();
+    listOfChargeArea.sort((a, b) => a.chargeAreaName.compareTo(b.chargeAreaName));
+    print("listOfChargeArea-->${listOfChargeArea.length}");
     setState(() {
-      chargeAreaItems = menuItems;
       if (widget.isUpdate == true) {
         if (widget.studentModel.chargeArea != null) {
-          chargeAreaType = chargeAreaItems
+          chargeAreaValue = listOfChargeArea
               .firstWhere(
                   (element) =>
-              element.value.id == widget.studentModel.chargeArea,
-              orElse: null)
-              .value;
+              element.gid == widget.studentModel.chargeArea,
+              orElse: null).gid as ChargeAreaModel;
         }
       }
     });
     if (widget.isUpdate == true) {
-      await fetchArea(chargeAreaType.id);
+      await fetchArea(chargeAreaValue.gid);
     } else {
-      await fetchArea(dataChargeList[0]['gid']);
+      await fetchArea(listOfChargeArea[0].gid);
     }
   }
 
