@@ -44,51 +44,49 @@ class TextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Row(
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.06,
+      child: TextFormField(
+        autofillHints: autofillHints,
+        enabled: enabled ?? true,
+        controller: controller,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        style: AppStyle.styleN(),
+        readOnly : readOnly ?? false,
+        keyboardType: textInputType ?? TextInputType.text,
+        maxLength: maxLength,
+        validator: validator,
+        textCapitalization:textCapitalization?? TextCapitalization.words,
+        textInputAction: TextInputAction.next,
+        inputFormatters : inputFormatters,
+        cursorColor: AppColor.black,
+        decoration: InputDecoration(
+          counterText: "",
+          suffix: suffixIcon,
+          prefixIcon: prefixIcon,
+          fillColor: Colors.white,
+          hintText: hintText,
+          hintStyle: AppStyle.styleB(),
+          label: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(star ?? "", style: AppStyle.styleAlter(),),
-              Text(headingLabel ?? "", style: AppStyle.styleB(),),
+              Flexible(child: Text(star ?? "", style: AppStyle.styleAlter())),
+              Flexible(
+                child: Text(labelText ?? "", style: AppStyle.styleB()),
+              ),
             ],
           ),
+          focusedBorder: AppStyle.border(color: AppColor.black),
+          disabledBorder: AppStyle.border(color: AppColor.grey),
+          enabledBorder: AppStyle.border(color: AppColor.black),
+          border:AppStyle.border(color: AppColor.black),
+          errorBorder:AppStyle.border(color: AppColor.red),
         ),
-        _vertical(context),
-        TextFormField(
-          autofillHints: autofillHints,
-          enabled: enabled ?? true,
-          controller: controller,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          style: AppStyle.styleN(),
-          readOnly : readOnly ?? false,
-          keyboardType: textInputType ?? TextInputType.text,
-          maxLength: maxLength,
-          validator: validator,
-          textCapitalization:textCapitalization?? TextCapitalization.words,
-          textInputAction: TextInputAction.next,
-          inputFormatters : inputFormatters,
-          cursorColor: AppColor.black,
-          decoration: InputDecoration(
-            suffix: suffixIcon,
-            prefixIcon: prefixIcon,
-            hintText: hintText,
-            label: Text(labelText ?? "",style: AppStyle.styleN(),),
-            fillColor: Colors.white,
-            hintStyle: AppStyle.styleN(),
-            labelStyle: AppStyle.styleN(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            focusedBorder: AppStyle.border(color: AppColor.black),
-            disabledBorder: AppStyle.border(color: AppColor.grey),
-            enabledBorder: AppStyle.border(color: AppColor.black),
-            border:AppStyle.border(color: AppColor.black),
-            errorBorder:AppStyle.border(color: AppColor.red),
-          ),
-          onChanged: onChanged,
-          onTap: onTap,
-        ),
-      ],
+        onChanged: onChanged,
+        onTap: onTap,
+      ),
     );
   }
 

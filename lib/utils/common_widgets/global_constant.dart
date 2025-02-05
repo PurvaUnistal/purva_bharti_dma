@@ -4,7 +4,9 @@ class GlobalConstants {
   bool isLoggedIn = false;
 
  //  static String BaseUrl = 'http://142.79.231.30:8097/';
-  static String BaseUrl = 'http://pbgpl.smartgasnet.com/';
+//  static String BaseUrl = 'http://pbgpl.smartgasnet.com/';
+ // static String BaseUrl = 'https://1.7.187.32/';
+  static String BaseUrl = 'https://nmpplstations1.smartgasnet.com/';
   static String Login = BaseUrl + "api/auth";
   static String saveCustomerRegistration =
       BaseUrl + "api/saveCustomerRegistration";
@@ -24,7 +26,6 @@ class GlobalConstants {
       BaseUrl + "api/storeConsentOffline";
   static String saveSecurityDepositOffline =
       BaseUrl + "api/saveSecurityDepositOffline";
-  static String getAllDeposit = BaseUrl + "api/getAllDepositOffline";
   static String saveSecurityDeposit = BaseUrl + "api/saveSecurityDeposit";
 
   static const String Billing = "Billing";

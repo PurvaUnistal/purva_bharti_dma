@@ -8,9 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pbg_app/helper/DropDownCustom.dart';
-import 'package:pbg_app/helper/DropDownCustomDeposit.dart';
 import 'package:pbg_app/models/ChargeAreaModel.dart';
 import 'package:pbg_app/models/GetAllAreaModel.dart';
+import 'package:pbg_app/models/GetAllDepositOfflineModel.dart';
 import 'package:pbg_app/models/GetAllDistrictModel.dart';
 import 'package:pbg_app/models/GetLabelModel.dart';
 import 'package:pbg_app/models/save_customer_registration_offline_model.dart';
@@ -30,6 +30,7 @@ import 'package:pbg_app/utils/common_widgets/custom_toast.dart';
 import 'package:pbg_app/utils/common_widgets/global_constant.dart';
 import 'package:pbg_app/utils/common_widgets/open_image_source.dart';
 import 'package:pbg_app/utils/common_widgets/photo_controller.dart';
+import 'package:pbg_app/utils/dropdown_widget.dart';
 import 'package:pbg_app/utils/reused_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -41,6 +42,7 @@ class CustomInputForm extends StatefulWidget {
   final bool isUpdate;
   final int position;
   final SaveCustomerRegistrationOfflineModel studentModel;
+
   CustomInputForm({Key key, this.isUpdate, this.position, this.studentModel})
       : super(key: key);
 
@@ -74,6 +76,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
   ChargeAreaModel chargeAreaValue = ChargeAreaModel();
   String chargeAreaId = '0';
 
+  List<GetAllDepositOfflineModel> listOfDepositOffline = [];
+  GetAllDepositOfflineModel _depositTypeValue = GetAllDepositOfflineModel();
+  String _depositTypeString = '';
+
+/*  DepositItem _depositTypeValue;
+  List<DropdownMenuItem<DepositItem>> _depositTypeList = [];*/
   //getAllDistrict
   List<DropdownMenuItem<OptionItem>> getAllDistrictItems = [];
   OptionItem districtValue;
@@ -188,7 +196,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
             child: CustomAppBar(
@@ -211,13 +218,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
-        context: context,
-        builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
-            message: "Do you want to exit an App?",
-            okButtonText: "Exit",
-            onPressed: () =>  Navigator.of(context).pop(true)
-        ))
-    ) ?? false;
+            context: context,
+            builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
+                message: "Do you want to exit an App?",
+                okButtonText: "Exit",
+                onPressed: () => Navigator.of(context).pop(true)))) ??
+        false;
   }
 
   Future<Position> _getCurrentLocation() async {
@@ -239,7 +245,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-    Position position =  await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     latitudeController.text = position.latitude.toString();
     longitudeController.text = position.longitude.toString();
     return position;
@@ -255,7 +262,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   TextEditingController reasonInterestedController = TextEditingController();
   TextEditingController emailIdController = TextEditingController();
   TextEditingController colonySocietyApartmentController =
-  TextEditingController();
+      TextEditingController();
   TextEditingController streetNameController = TextEditingController();
   TextEditingController townController = TextEditingController();
   TextEditingController buildingNumberController = TextEditingController();
@@ -288,13 +295,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
   OptionItem modeDepositValue;
   String modeOfDepositString = '';
 
-  DepositItem _depositTypeValue;
-  String _depositTypeString = '';
-
   List<DropdownMenuItem<OptionItem>> dropListDepositStatusList = ([]);
   List<DropdownMenuItem<OptionItem>> dropListChoiceStatusList = ([]);
   List<DropdownMenuItem<OptionItem>> propertyCategoryList = [];
-  List<DropdownMenuItem<DepositItem>> _depositTypeList = [];
 
   List<DropdownMenuItem<OptionItem>> _kycProofDropdownItems = ([]);
   List<DropdownMenuItem<String>> _cookingFuelDropdownItems = ([]);
@@ -383,7 +386,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   _buildLayout() {
     modeOfDepositString =
-    modeDepositValue == null ? modeOfDepositString : modeDepositValue.id;
+        modeDepositValue == null ? modeOfDepositString : modeDepositValue.id;
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Form(
@@ -394,14 +397,20 @@ class _CustomInputFormState extends State<CustomInputForm> {
             children: <Widget>[
               _interestedDropDown(),
               AppStyle.vertical(context),
-              interestedId == '0' ? _reasonInterestedWidget() : Container(),
-              AppStyle.vertical(context),
+              interestedId == '0' ? Column(
+                children: [
+                  _reasonInterestedWidget(),
+                  AppStyle.vertical(context),
+                ],
+              ) : Container(),
               _chargeAreaDropDown(),
               AppStyle.vertical(context),
               _areaDropDown(),
               AppStyle.vertical(context),
               _mobileWidget(),
+              AppStyle.vertical(context),
               _alternateMobileWidget(),
+              AppStyle.vertical(context),
               _firstNameWidget(),
               AppStyle.vertical(context),
               _middleWidget(),
@@ -414,20 +423,22 @@ class _CustomInputFormState extends State<CustomInputForm> {
               AppStyle.vertical(context),
               _emailWidget(),
               AppStyle.vertical(context),
-              if(interestedId == '1')...[
+              if (interestedId == '1') ...[
                 Column(
                   children: [
                     Row(
                       children: [
                         Flexible(
-                          flex: 3,
-                          child:  _propertyCategoryDropDown(),),
+
+                          child: _propertyCategoryDropDown(),
+                        ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.02,
                         ),
                         Flexible(
-                          flex: 3,
-                          child:  _propertyClassDropDown(),)
+
+                          child: _propertyClassDropDown(),
+                        )
                       ],
                     ),
                     AppStyle.vertical(context),
@@ -448,7 +459,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
               AppStyle.vertical(context),
               _pinCodeWidget(),
               _locationWidget(),
-              if(interestedId == '0')...[
+              if (interestedId == '0') ...[
                 _kYCDoc1DropDown(),
                 AppStyle.vertical(context),
                 _kYCDoc1NoWidget(),
@@ -465,25 +476,32 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   widget2: _electricBillBackImgWidget(),
                 ),
               ],
-              if(interestedId == '1')...[
+              if (interestedId == '1') ...[
                 /*  _residentStatusDropdownWidget(),
                 AppStyle.vertical(context),*/
                 Row(
                   children: [
                     Flexible(
                       flex: 3,
-                      child: _noKitchenWidget(),),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                      child: _noKitchenWidget(),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
                     Flexible(
                       flex: 3,
-                      child: _noBathroomWidget(),),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                      child: _noBathroomWidget(),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
                     Flexible(
                       flex: 3,
-                      child: _noFamilyWidget(),),
+                      child: _noFamilyWidget(),
+                    ),
                   ],
                 ),
-                // AppStyle.vertical(context),
+                 AppStyle.vertical(context),
                 _fuelDropdownWidget(),
                 AppStyle.vertical(context),
                 _kYCDoc1DropDown(),
@@ -508,11 +526,15 @@ class _CustomInputFormState extends State<CustomInputForm> {
                   children: [
                     _rowWidget(
                       widget1: _customerImageWidget(),
-                      widget2: _kYCDocument3Value.id == '2'? _nocFrontImageWidget() : _houseNumImageWidget(),
+                      widget2: _kYCDocument3Value.id == '2'
+                          ? _nocFrontImageWidget()
+                          : _houseNumImageWidget(),
                     ),
                     AppStyle.vertical(context),
                     _rowWidget(
-                      widget1:_kYCDocument3Value.id == '1'? Container() :_houseNumImageWidget(),
+                      widget1: _kYCDocument3Value.id == '1'
+                          ? Container()
+                          : _houseNumImageWidget(),
                       widget2: Container(),
                     ),
                     AppStyle.vertical(context),
@@ -526,7 +548,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         _width(),
                         Flexible(
                           flex: 2,
-                          child: interestedId == '1' ? _mdpeDropdown() : Container(),
+                          child: interestedId == '1'
+                              ? _mdpeDropdown()
+                              : Container(),
                         ),
                       ],
                     ),
@@ -535,14 +559,25 @@ class _CustomInputFormState extends State<CustomInputForm> {
                 AppStyle.vertical(context),
                 BorderWidget(
                   children: [
-                    Text(AppStrings.securityDepositLabel,style: AppStyle.styleB(),),
+                    Text(
+                      AppStrings.securityDepositLabel,
+                      style: AppStyle.styleB(),
+                    ),
                     AppStyle.vertical(context),
                     _depositStatusDropDown(),
-                    AppStyle.vertical(context),
-                    _depositStatusId != "1" ? _reasonDepositStatusWidget() : Container(),
-                    AppStyle.vertical(context),
-                    _depositTypeDropDown(AppStrings.schemeTypeLable, AppStrings.star,),
-                    AppStyle.vertical(context),
+                    _depositStatusId != "1"
+                        ? Column(
+                          children: [
+                            _reasonDepositStatusWidget(),
+                            AppStyle.vertical(context),
+
+                          ],
+                        )
+                        : Container(),
+                    _depositTypeDropDown(
+                      AppStrings.schemeTypeLable,
+                      AppStrings.star,
+                    ),
                     _depositAmountWidget(),
                     AppStyle.vertical(context),
                     _modeDepositDropDown(),
@@ -555,56 +590,62 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           _chequeDateWidget(),
                           AppStyle.vertical(context),
                           _chequeAccountNoWidget(),
+                          AppStyle.vertical(context),
                           _payementBankNameDropDown(),
                           AppStyle.vertical(context),
                           _chequeAccountNoWidget(),
+                          AppStyle.vertical(context),
                           _chequeMICRNoWidget(),
+                          AppStyle.vertical(context),
                           _chequeImageWidget(),
                         ],
                       )
                     ]
                   ],
                 ),
-
               ],
               ButtonWidget(
                 textButton: !widget.isUpdate ? "Preview" : "Update",
                 onPressed: () async {
-                  chargeAreaId =
-                  chargeAreaValue == null ? chargeAreaId : chargeAreaValue.gid;
-                  areaTypeId =
-                  areaValue == null ? areaTypeId : areaValue.gid;
-                  getAllDistrictId =
-                  districtValue == null ? getAllDistrictId : districtValue.id;
+                  chargeAreaId = chargeAreaValue == null
+                      ? chargeAreaId
+                      : chargeAreaValue.gid;
+                  areaTypeId = areaValue == null ? areaTypeId : areaValue.gid;
+                  getAllDistrictId = districtValue == null
+                      ? getAllDistrictId
+                      : districtValue.id;
                   modeOfDepositString = modeDepositValue == null
                       ? modeOfDepositString
                       : modeDepositValue.id;
                   _depositTypeString = _depositTypeValue == null
                       ? _depositTypeString
-                      : _depositTypeValue.id;
+                      : _depositTypeValue.depositTypesId;
 
                   var textFieldValidationCheck =
-                  CustomerFormHelper.textFieldValidationCheck(
+                      CustomerFormHelper.textFieldValidationCheck(
                     isInterestedId: interestedId.toString(),
-                    reasonNotInterested: reasonInterestedController.text.trim().toString(),
+                    reasonNotInterested:
+                        reasonInterestedController.text.trim().toString(),
                     titleLocation: latitudeController.text.trim().toString(),
                     acceptConversionPolicyValueId:
-                    __acceptConversionPolicyValueId.toString(),
+                        __acceptConversionPolicyValueId.toString(),
                     acceptExtraFittingCostValueId:
-                    __acceptExtraFittingCostValueId.toString(),
+                        __acceptExtraFittingCostValueId.toString(),
                     chargeAreaType: chargeAreaId.toString(),
                     areaTypeId: areaTypeId.toString(),
                     mobileNoController: mobileNoController.text.toString(),
                     firstNameController: firstNameController.text.toString(),
                     lastNameController: lastNameController.text.toString(),
                     guardianNameController:
-                    guardianNameController.text.toString(),
+                        guardianNameController.text.toString(),
                     propertyTypeId: propertyCategoryValue.toString(),
                     propertyClassId: propertyClassValue.toString(),
-                    buildingNumberController: buildingNumberController.text.toString(),
-                    houseNumberController: houseNumberController.text.toString(),
+                    buildingNumberController:
+                        buildingNumberController.text.toString(),
+                    houseNumberController:
+                        houseNumberController.text.toString(),
                     colonySocietyApartmentController:
-                    colonySocietyApartmentController.text.toString(),
+                        colonySocietyApartmentController.text.toString(),
                     streetNameController: streetNameController.text.toString(),
                     townController: townController.text.toString(),
                     district: getAllDistrictId.toString(),
@@ -612,17 +653,20 @@ class _CustomInputFormState extends State<CustomInputForm> {
                     noOfKitchen: kitchenController.text.toString(),
                     noOfBathroom: bathroomController.text.toString(),
                     cookInFuelValue: cookInFuelValue.toString(),
-                    noOfFamilyMembers: familyMemController.text.trim().toString(),
+                    noOfFamilyMembers:
+                        familyMemController.text.trim().toString(),
                     selectIdentification: _kYCDoc1Value.id.toString(),
-                    identificationProofNo: kYCDoc1NoController.text.trim().toString(),
+                    identificationProofNo:
+                        kYCDoc1NoController.text.trim().toString(),
                     idFrontImage: frontImageFile.toString(),
                     idBackImage: backImageFile.toString(),
                     selectAddressProof: _kYCDoc2Value.id.toString(),
-                    addressProofNumber: kYCDoc2NoController.text.trim().toString(),
+                    addressProofNumber:
+                        kYCDoc2NoController.text.trim().toString(),
                     addressProofFront: electricBillFrontImgFile.toString(),
-                    selectOwnershipType:_kYCDocument3Value.id.toString(),
+                    selectOwnershipType: _kYCDocument3Value.id.toString(),
                     customerConsentImage: customerConsentImageFile.toString(),
-                    nocImage:nocFrontImgFile.toString(),
+                    nocImage: nocFrontImgFile.toString(),
                     modeOfDeposit: modeOfDepositString.toString(),
                     depositType: _depositTypeString.toString(),
                     chequeNo: chqNOController.text.trim().toString(),
@@ -653,8 +697,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
     return showCupertinoDialog(
         context: context,
         builder: (
-            context,
-            ) {
+          context,
+        ) {
           return Container(
               height: 200,
               color: Colors.white,
@@ -680,21 +724,22 @@ class _CustomInputFormState extends State<CustomInputForm> {
                       ),
                       interestedId == '1'
                           ? _buildRow(
-                        leading: AppStrings.mdpeAllowLabel,
-                        trailing: _mdpeValue ?? "-",
-                      )
+                              leading: AppStrings.mdpeAllowLabel,
+                              trailing: _mdpeValue ?? "-",
+                            )
                           : Container(),
                       interestedId == '0'
                           ? _buildRow(
-                        leading: AppStrings.reasonInterestedLabel,
-                        trailing:
-                        reasonInterestedController.text.toString() ??
-                            "-",
-                      )
+                              leading: AppStrings.reasonInterestedLabel,
+                              trailing:
+                                  reasonInterestedController.text.toString() ??
+                                      "-",
+                            )
                           : Container(),
                       _buildRow(
                         leading: AppStrings.chargeAreaLabel,
-                        trailing: chargeAreaValue.chargeAreaName.toString() ?? "-",
+                        trailing:
+                            chargeAreaValue.chargeAreaName.toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.areaLabel,
@@ -703,74 +748,80 @@ class _CustomInputFormState extends State<CustomInputForm> {
                       _buildRow(
                         leading: AppStrings.mobileNoLabel,
                         trailing:
-                        mobileNoController.text.trim().toString() ?? "-",
+                            mobileNoController.text.trim().toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.alternateMobileNoLabel,
-                        trailing:
-                        alternateMobileNoController.text.trim().toString() ?? "-",
+                        trailing: alternateMobileNoController.text
+                                .trim()
+                                .toString() ??
+                            "-",
                       ),
                       _buildRow(
                         leading: AppStrings.firstNameLabel,
                         trailing:
-                        firstNameController.text.trim().toString() ?? "-",
+                            firstNameController.text.trim().toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.middleNameLabel,
                         trailing:
-                        middleNameController.text.trim().toString() ?? "-",
+                            middleNameController.text.trim().toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.lastNameLabel,
                         trailing:
-                        lastNameController.text.trim().toString() ?? "-",
+                            lastNameController.text.trim().toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.guardianTypeLabel,
                         trailing: guardianTypeValue.toString() ?? "-",
                       ),
                       _buildRow(
-                        leading: interestedId == "1" ? AppStrings.guardianNameS : AppStrings.guardianNameNot,
+                        leading: interestedId == "1"
+                            ? AppStrings.guardianNameS
+                            : AppStrings.guardianNameNot,
                         trailing:
-                        guardianNameController.text.trim().toString() ?? "-",
+                            guardianNameController.text.trim().toString() ??
+                                "-",
                       ),
                       _buildRow(
                         leading: AppStrings.emailAddressLabel,
-                        trailing: emailIdController.text.trim().toString() ?? "-",
+                        trailing:
+                            emailIdController.text.trim().toString() ?? "-",
                       ),
-                      if(interestedId == '1')...[
+                      if (interestedId == '1') ...[
                         _buildRow(
                           leading: AppStrings.propertyCategoryLabel,
                           trailing:
-                          propertyCategoryValue.title.toString() ?? "-",
-                        ),_buildRow(
+                              propertyCategoryValue.title.toString() ?? "-",
+                        ),
+                        _buildRow(
                           leading: AppStrings.propertyClassLabel,
-                          trailing:
-                          propertyClassValue.title.toString() ?? "-",
+                          trailing: propertyClassValue.title.toString() ?? "-",
                         )
                       ],
                       _buildRow(
                         leading: AppStrings.buildingNumberLabel,
                         trailing:
-                        buildingNumberController.text.trim().toString() ??
-                            "-",
+                            buildingNumberController.text.trim().toString() ??
+                                "-",
                       ),
                       _buildRow(
                         leading: AppStrings.houseNumberLabel,
                         trailing:
-                        houseNumberController.text.trim().toString() ?? "-",
+                            houseNumberController.text.trim().toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.apartmentLabel,
                         trailing: colonySocietyApartmentController.text
-                            .trim()
-                            .toString() ??
+                                .trim()
+                                .toString() ??
                             "-",
                       ),
                       _buildRow(
                         leading: AppStrings.streetNameLabel,
                         trailing:
-                        streetNameController.text.trim().toString() ?? "-",
+                            streetNameController.text.trim().toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.townLabel,
@@ -782,19 +833,20 @@ class _CustomInputFormState extends State<CustomInputForm> {
                       ),
                       _buildRow(
                         leading: AppStrings.pinCodeLabel,
-                        trailing: pinCodeController.text.trim().toString() ?? "-",
+                        trailing:
+                            pinCodeController.text.trim().toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.latitudeLabel,
                         trailing:
-                        latitudeController.text.trim().toString() ?? "-",
+                            latitudeController.text.trim().toString() ?? "-",
                       ),
                       _buildRow(
                         leading: AppStrings.longitudeLabel,
                         trailing:
-                        longitudeController.text.trim().toString() ?? "-",
+                            longitudeController.text.trim().toString() ?? "-",
                       ),
-                      if(interestedId == '0')...[
+                      if (interestedId == '0') ...[
                         _buildCardWidget(
                             text: AppStrings.identificationProofLabel),
                         _buildRow(
@@ -804,34 +856,38 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         _buildRow(
                           leading: AppStrings.kycDoc1No,
                           trailing:
-                          kYCDoc1NoController.text.trim().toString() ?? "-",
+                              kYCDoc1NoController.text.trim().toString() ?? "-",
                         ),
                         _imageColumn(
                           leadingImg: CardImageWidget(
                             imgString: AppStrings.idFrontImgSide,
-                            children: frontImageFile != null && frontImageFile.isNotEmpty
+                            children: frontImageFile != null &&
+                                    frontImageFile.isNotEmpty
                                 ? frontImageFile.split('.').last == "pdf"
-                                ? _pdfImageWidget(frontImageFile)
-                                : ImageCircle(
-                              fileImage1:
-                              File(frontImageFile.toString()),
-                              pathImage: frontImageFile.toString(),
-                            )
-                                : _localBorderImg(),),
+                                    ? _pdfImageWidget(frontImageFile)
+                                    : ImageCircle(
+                                        fileImage1:
+                                            File(frontImageFile.toString()),
+                                        pathImage: frontImageFile.toString(),
+                                      )
+                                : _localBorderImg(),
+                          ),
                           trailingImg: CardImageWidget(
                             imgString: AppStrings.idBackImgSide,
-                            children: backImageFile != null && backImageFile.isNotEmpty
+                            children: backImageFile != null &&
+                                    backImageFile.isNotEmpty
                                 ? backImageFile.split('.').last == "pdf"
-                                ? _pdfImageWidget(backImageFile)
-                                : ImageCircle(
-                              fileImage1:
-                              File(backImageFile.toString()),
-                              pathImage: backImageFile.toString(),
-                            )
+                                    ? _pdfImageWidget(backImageFile)
+                                    : ImageCircle(
+                                        fileImage1:
+                                            File(backImageFile.toString()),
+                                        pathImage: backImageFile.toString(),
+                                      )
                                 : _localBorderImg(),
                           ),
                         ),
-                        _buildCardWidget(text: AppStrings.ownershipProofHeading),
+                        _buildCardWidget(
+                            text: AppStrings.ownershipProofHeading),
                         _buildRow(
                           leading: AppStrings.kycDoc2No,
                           trailing: _kYCDoc2Value.title.toString() ?? "-",
@@ -844,33 +900,37 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           leadingImg: CardImageWidget(
                             imgString: AppStrings.electricBillFrontImgLabel,
                             children: electricBillFrontImgFile != null &&
-                                electricBillFrontImgFile.isNotEmpty
+                                    electricBillFrontImgFile.isNotEmpty
                                 ? electricBillFrontImgFile.split('.').last ==
-                                "pdf"
-                                ? _pdfImageWidget(electricBillFrontImgFile)
-                                : ImageCircle(fileImage1: File(electricBillFrontImgFile.toString()),
-                              pathImage:
-                              electricBillFrontImgFile.toString(),
-                            ) : _localBorderImg(),
+                                        "pdf"
+                                    ? _pdfImageWidget(electricBillFrontImgFile)
+                                    : ImageCircle(
+                                        fileImage1: File(
+                                            electricBillFrontImgFile
+                                                .toString()),
+                                        pathImage:
+                                            electricBillFrontImgFile.toString(),
+                                      )
+                                : _localBorderImg(),
                           ),
-                          trailingImg:CardImageWidget(
+                          trailingImg: CardImageWidget(
                             imgString: AppStrings.electricBillBackImgLabel,
-                            children:  electricBillBackImgFile != null &&
-                                electricBillBackImgFile.isNotEmpty
+                            children: electricBillBackImgFile != null &&
+                                    electricBillBackImgFile.isNotEmpty
                                 ? electricBillBackImgFile.split('.').last ==
-                                "pdf"
-                                ? _pdfImageWidget(electricBillBackImgFile)
-                                : ImageCircle(
-                              fileImage1: File(
-                                  electricBillBackImgFile.toString()),
-                              pathImage:
-                              electricBillBackImgFile.toString(),
-                            )
+                                        "pdf"
+                                    ? _pdfImageWidget(electricBillBackImgFile)
+                                    : ImageCircle(
+                                        fileImage1: File(
+                                            electricBillBackImgFile.toString()),
+                                        pathImage:
+                                            electricBillBackImgFile.toString(),
+                                      )
                                 : _localBorderImg(),
                           ),
                         ),
                       ],
-                      if(interestedId == '1')...[
+                      if (interestedId == '1') ...[
                         _buildRow(
                           leading: AppStrings.residentStatusLabel,
                           trailing: _residentStatusValue.toString() ?? "-",
@@ -878,13 +938,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         _buildRow(
                           leading: AppStrings.noOfKitchenLabel,
                           trailing:
-                          kitchenController.text.trim().toString() ?? "-",
+                              kitchenController.text.trim().toString() ?? "-",
                         ),
                         _buildRow(
                           leading: AppStrings.noOfBathroomLabel,
                           trailing:
-                          bathroomController.text.trim().toString() ??
-                              "-",
+                              bathroomController.text.trim().toString() ?? "-",
                         ),
                         _buildRow(
                           leading: AppStrings.existingCookingFuelLabel,
@@ -893,8 +952,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         _buildRow(
                           leading: AppStrings.noOfFamilyMembersLabel,
                           trailing:
-                          familyMemController.text.trim().toString() ??
-                              "-",
+                              familyMemController.text.trim().toString() ?? "-",
                         ),
                         _buildCardWidget(
                             text: AppStrings.identificationProofLabel),
@@ -905,34 +963,38 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         _buildRow(
                           leading: AppStrings.kycDoc1No,
                           trailing:
-                          kYCDoc1NoController.text.trim().toString() ?? "-",
+                              kYCDoc1NoController.text.trim().toString() ?? "-",
                         ),
                         _imageColumn(
                           leadingImg: CardImageWidget(
                             imgString: AppStrings.idFrontImgSide,
-                            children: frontImageFile != null && frontImageFile.isNotEmpty
+                            children: frontImageFile != null &&
+                                    frontImageFile.isNotEmpty
                                 ? frontImageFile.split('.').last == "pdf"
-                                ? _pdfImageWidget(frontImageFile)
-                                : ImageCircle(
-                              fileImage1:
-                              File(frontImageFile.toString()),
-                              pathImage: frontImageFile.toString(),
-                            )
-                                : _localBorderImg(),),
+                                    ? _pdfImageWidget(frontImageFile)
+                                    : ImageCircle(
+                                        fileImage1:
+                                            File(frontImageFile.toString()),
+                                        pathImage: frontImageFile.toString(),
+                                      )
+                                : _localBorderImg(),
+                          ),
                           trailingImg: CardImageWidget(
                             imgString: AppStrings.idBackImgSide,
-                            children: backImageFile != null && backImageFile.isNotEmpty
+                            children: backImageFile != null &&
+                                    backImageFile.isNotEmpty
                                 ? backImageFile.split('.').last == "pdf"
-                                ? _pdfImageWidget(backImageFile)
-                                : ImageCircle(
-                              fileImage1:
-                              File(backImageFile.toString()),
-                              pathImage: backImageFile.toString(),
-                            )
+                                    ? _pdfImageWidget(backImageFile)
+                                    : ImageCircle(
+                                        fileImage1:
+                                            File(backImageFile.toString()),
+                                        pathImage: backImageFile.toString(),
+                                      )
                                 : _localBorderImg(),
                           ),
                         ),
-                        _buildCardWidget(text: AppStrings.ownershipProofHeading),
+                        _buildCardWidget(
+                            text: AppStrings.ownershipProofHeading),
                         _buildRow(
                           leading: AppStrings.kycDoc2No,
                           trailing: _kYCDoc2Value.title.toString() ?? "-",
@@ -945,28 +1007,32 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           leadingImg: CardImageWidget(
                             imgString: AppStrings.electricBillFrontImgLabel,
                             children: electricBillFrontImgFile != null &&
-                                electricBillFrontImgFile.isNotEmpty
+                                    electricBillFrontImgFile.isNotEmpty
                                 ? electricBillFrontImgFile.split('.').last ==
-                                "pdf"
-                                ? _pdfImageWidget(electricBillFrontImgFile)
-                                : ImageCircle(fileImage1: File(electricBillFrontImgFile.toString()),
-                              pathImage:
-                              electricBillFrontImgFile.toString(),
-                            ) : _localBorderImg(),
+                                        "pdf"
+                                    ? _pdfImageWidget(electricBillFrontImgFile)
+                                    : ImageCircle(
+                                        fileImage1: File(
+                                            electricBillFrontImgFile
+                                                .toString()),
+                                        pathImage:
+                                            electricBillFrontImgFile.toString(),
+                                      )
+                                : _localBorderImg(),
                           ),
-                          trailingImg:CardImageWidget(
+                          trailingImg: CardImageWidget(
                             imgString: AppStrings.electricBillBackImgLabel,
-                            children:  electricBillBackImgFile != null &&
-                                electricBillBackImgFile.isNotEmpty
+                            children: electricBillBackImgFile != null &&
+                                    electricBillBackImgFile.isNotEmpty
                                 ? electricBillBackImgFile.split('.').last ==
-                                "pdf"
-                                ? _pdfImageWidget(electricBillBackImgFile)
-                                : ImageCircle(
-                              fileImage1: File(
-                                  electricBillBackImgFile.toString()),
-                              pathImage:
-                              electricBillBackImgFile.toString(),
-                            )
+                                        "pdf"
+                                    ? _pdfImageWidget(electricBillBackImgFile)
+                                    : ImageCircle(
+                                        fileImage1: File(
+                                            electricBillBackImgFile.toString()),
+                                        pathImage:
+                                            electricBillBackImgFile.toString(),
+                                      )
                                 : _localBorderImg(),
                           ),
                         ),
@@ -975,65 +1041,72 @@ class _CustomInputFormState extends State<CustomInputForm> {
                           leading: AppStrings.kYCDoc3,
                           trailing: _kYCDocument3Value.title.toString() ?? "-",
                         ),
-
                         _imageColumn(
-                            leadingImg: CardImageWidget(
-                              imgString: AppStrings.customerImgLabel,
-                              children: uploadCustomerImgFile != null &&
-                                  uploadCustomerImgFile.isNotEmpty
-                                  ? uploadCustomerImgFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(uploadCustomerImgFile)
-                                  : ImageCircle(
-                                fileImage1: File(
-                                    uploadCustomerImgFile.toString()),
-                                pathImage:
-                                uploadCustomerImgFile.toString(),
-                              )
-                                  : _localBorderImg(),
-                            ),
-                            trailingImg: _kYCDocument3Value.id == '2'? CardImageWidget(
-                              imgString: AppStrings.nocDoc,
-                              children:nocFrontImgFile != null &&
-                                  nocFrontImgFile.isNotEmpty
-                                  ? nocFrontImgFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(nocFrontImgFile)
-                                  : ImageCircle(
-                                fileImage1:
-                                File(nocFrontImgFile.toString()),
-                                pathImage: nocFrontImgFile.toString(),
-                              )
-                                  : _localBorderImg(),
-                            ):CardImageWidget(
-                              imgString: AppStrings.houseImgLabel,
-                              children: uploadHouseImgFile != null &&
-                                  uploadHouseImgFile.isNotEmpty
-                                  ? uploadHouseImgFile.split('.').last == "pdf"
-                                  ? _pdfImageWidget(uploadHouseImgFile)
-                                  : ImageCircle(
-                                  fileImage1:
-                                  File(uploadHouseImgFile.toString()),
-                                  pathImage:
-                                  uploadHouseImgFile.toString())
-                                  : _localBorderImg(),
-                            ),
-                        ),
-                        _imageColumn(
-                          leadingImg:_kYCDocument3Value.id == '1'? Container() :CardImageWidget(
-                            imgString: AppStrings.houseImgLabel,
-                            children: uploadHouseImgFile != null &&
-                                uploadHouseImgFile.isNotEmpty
-                                ? uploadHouseImgFile.split('.').last == "pdf"
-                                ? _pdfImageWidget(uploadHouseImgFile)
-                                : ImageCircle(
-                                fileImage1:
-                                File(uploadHouseImgFile.toString()),
-                                pathImage:
-                                uploadHouseImgFile.toString())
+                          leadingImg: CardImageWidget(
+                            imgString: AppStrings.customerImgLabel,
+                            children: uploadCustomerImgFile != null &&
+                                    uploadCustomerImgFile.isNotEmpty
+                                ? uploadCustomerImgFile.split('.').last == "pdf"
+                                    ? _pdfImageWidget(uploadCustomerImgFile)
+                                    : ImageCircle(
+                                        fileImage1: File(
+                                            uploadCustomerImgFile.toString()),
+                                        pathImage:
+                                            uploadCustomerImgFile.toString(),
+                                      )
                                 : _localBorderImg(),
                           ),
-                          trailingImg: Container()
+                          trailingImg: _kYCDocument3Value.id == '2'
+                              ? CardImageWidget(
+                                  imgString: AppStrings.nocDoc,
+                                  children: nocFrontImgFile != null &&
+                                          nocFrontImgFile.isNotEmpty
+                                      ? nocFrontImgFile.split('.').last == "pdf"
+                                          ? _pdfImageWidget(nocFrontImgFile)
+                                          : ImageCircle(
+                                              fileImage1: File(
+                                                  nocFrontImgFile.toString()),
+                                              pathImage:
+                                                  nocFrontImgFile.toString(),
+                                            )
+                                      : _localBorderImg(),
+                                )
+                              : CardImageWidget(
+                                  imgString: AppStrings.houseImgLabel,
+                                  children: uploadHouseImgFile != null &&
+                                          uploadHouseImgFile.isNotEmpty
+                                      ? uploadHouseImgFile.split('.').last ==
+                                              "pdf"
+                                          ? _pdfImageWidget(uploadHouseImgFile)
+                                          : ImageCircle(
+                                              fileImage1: File(
+                                                  uploadHouseImgFile
+                                                      .toString()),
+                                              pathImage:
+                                                  uploadHouseImgFile.toString())
+                                      : _localBorderImg(),
+                                ),
                         ),
-
+                        _imageColumn(
+                            leadingImg: _kYCDocument3Value.id == '1'
+                                ? Container()
+                                : CardImageWidget(
+                                    imgString: AppStrings.houseImgLabel,
+                                    children: uploadHouseImgFile != null &&
+                                            uploadHouseImgFile.isNotEmpty
+                                        ? uploadHouseImgFile.split('.').last ==
+                                                "pdf"
+                                            ? _pdfImageWidget(
+                                                uploadHouseImgFile)
+                                            : ImageCircle(
+                                                fileImage1: File(
+                                                    uploadHouseImgFile
+                                                        .toString()),
+                                                pathImage: uploadHouseImgFile
+                                                    .toString())
+                                        : _localBorderImg(),
+                                  ),
+                            trailingImg: Container()),
                         Divider(),
                         _buildCardWidget(text: AppStrings.securityDepositLabel),
                         _buildRow(
@@ -1042,12 +1115,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         ),
                         _depositStatusId != "1"
                             ? _buildRow(
-                          leading: AppStrings.reasonDepositLabel,
-                          trailing: reasonDepositStatusController.text
-                              .trim()
-                              .toString() ??
-                              "-",
-                        )
+                                leading: AppStrings.reasonDepositLabel,
+                                trailing: reasonDepositStatusController.text
+                                        .trim()
+                                        .toString() ??
+                                    "-",
+                              )
                             : Container(),
                         _buildRow(
                           leading: AppStrings.schemeTypeLable,
@@ -1056,8 +1129,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
                         _buildRow(
                           leading: AppStrings.depositAmountControllerLabel,
                           trailing:
-                          depositAmountController.text.trim().toString() ??
-                              "-",
+                              depositAmountController.text.trim().toString() ??
+                                  "-",
                         ),
                         _buildRow(
                           leading: AppStrings.modeOfDepositLabel,
@@ -1069,12 +1142,14 @@ class _CustomInputFormState extends State<CustomInputForm> {
                               _buildRow(
                                 leading: AppStrings.chqNoLabel,
                                 trailing:
-                                chqNOController.text.trim().toString() ?? "-",
+                                    chqNOController.text.trim().toString() ??
+                                        "-",
                               ),
                               _buildRow(
                                 leading: AppStrings.depositDateLabel,
-                                trailing:
-                                chequeDateController.text.trim().toString() ??
+                                trailing: chequeDateController.text
+                                        .trim()
+                                        .toString() ??
                                     "-",
                               ),
                               _buildRow(
@@ -1084,13 +1159,14 @@ class _CustomInputFormState extends State<CustomInputForm> {
                               _buildRow(
                                 leading: AppStrings.chequeAccountNoLabel,
                                 trailing:
-                                chequeAccountNoController.text.toString() ??
-                                    "-",
+                                    chequeAccountNoController.text.toString() ??
+                                        "-",
                               ),
                               _buildRow(
                                 leading: AppStrings.chequeMICRNoLabel,
                                 trailing:
-                                chequeMICRNoController.text.toString() ?? "-",
+                                    chequeMICRNoController.text.toString() ??
+                                        "-",
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -1098,19 +1174,23 @@ class _CustomInputFormState extends State<CustomInputForm> {
                                   children: [
                                     // _imageNameWidget(imageName: AppStrings.chqPhotoLabel),
                                     chqPhotoFile != null &&
-                                        chqPhotoFile.isNotEmpty
+                                            chqPhotoFile.isNotEmpty
                                         ? chqPhotoFile.split('.').last == "pdf"
-                                        ? _pdfImageWidget(chqPhotoFile)
-                                        : ImageCircle(
-                                      fileImage1:
-                                      File(chqPhotoFile.toString()),
-                                      pathImage:
-                                      chqPhotoFile.toString(),
-                                    )
+                                            ? _pdfImageWidget(chqPhotoFile)
+                                            : ImageCircle(
+                                                fileImage1: File(
+                                                    chqPhotoFile.toString()),
+                                                pathImage:
+                                                    chqPhotoFile.toString(),
+                                              )
                                         : _localBorderImg(),
-                                    Text(AppStrings.chqPhotoLabel,style:TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 12, color: Colors.black,decoration: TextDecoration.none,))
+                                    Text(AppStrings.chqPhotoLabel,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                          decoration: TextDecoration.none,
+                                        ))
                                   ],
                                 ),
                               ),
@@ -1160,7 +1240,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Future<void> storeRecords() async {
     SaveCustomerRegistrationOfflineModel data =
-    SaveCustomerRegistrationOfflineModel(
+        SaveCustomerRegistrationOfflineModel(
       interested: interestedId.toString(),
       schema: schema,
       dmaUserName: dmaUserName,
@@ -1177,7 +1257,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       guardianName: guardianNameController.text.trim().toString(),
       houseNumber: houseNumberController.text.trim().toString(),
       colonySocietyApartment:
-      colonySocietyApartmentController.text.trim().toString(),
+          colonySocietyApartmentController.text.trim().toString(),
       streetName: streetNameController.text.trim().toString(),
       buildingNumber: buildingNumberController.text.trim().toString(),
       town: townController.text.trim().toString(),
@@ -1216,26 +1296,26 @@ class _CustomInputFormState extends State<CustomInputForm> {
       reasonForHold: landmarkController.text.trim().toString() ?? "",
       billingModel: billingModeId.toString(),
       nameOfBank:
-      _customerBankValue != null ? _customerBankValue.toString() : "",
+          _customerBankValue != null ? _customerBankValue.toString() : "",
       bankAccountNumber: customerAccountNum.text.trim().toString(),
       bankIfscCode: customerIFSCController.text.trim().toString() ?? "",
       bankAddress: customerBankAddController.text.trim().toString(),
       acceptConversionPolicy: __acceptConversionPolicyValueId.toString(),
       acceptExtraFittingCost: __acceptExtraFittingCostValueId.toString(),
       initialDepositeStatus:
-      interestedId == '1' ? _depositStatusId.toString() : "",
+          interestedId == '1' ? _depositStatusId.toString() : "",
       depositeType: interestedId == '1' ? _depositTypeString : "",
       initialAmount: interestedId == '1'
           ? depositAmountController.text.trim().toString()
           : "",
       modeOfDeposite: interestedId == '1' ? modeDepositValue.id.toString() : "",
       chequeNumber:
-      interestedId == '1' ? chqNOController.text.trim().toString() : "",
+          interestedId == '1' ? chqNOController.text.trim().toString() : "",
       initialDepositeDate: interestedId == '1'
           ? chequeDateController.text.trim().toString()
           : "",
       payementBankName:
-      _payementBankValue != null ? _payementBankValue.toString() : "",
+          _payementBankValue != null ? _payementBankValue.toString() : "",
       chequeBankAccount: chequeAccountNoController.text.trim().toString() ?? "",
       micr: chequeMICRNoController.text.trim().toString() ?? "",
     );
@@ -1265,10 +1345,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _interestedDropDown() {
     return ReusedDropDownOptionItem(
       star: AppStrings.star,
-      textLabel: AppStrings.interestedLabel,
+      labelText: AppStrings.interestedLabel,
       hint: AppStrings.interestedLabel,
       items: interestedListItems,
-      //  value: interestedValue,
       value: interestedValue,
       onChanged: (OptionItem value) {
         setState(() {
@@ -1290,11 +1369,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
     );
   }
 
-
   Widget _conversionPolicyDropDown() {
     return ReusedDropDownOptionItem(
       star: AppStrings.star,
-      textLabel: AppStrings.conversionPolicyLabel,
+      labelText: AppStrings.conversionPolicyLabel,
       hint: AppStrings.conversionPolicyLabel,
       items: _acceptConversionPolicyList,
       value: __acceptConversionPolicyValue,
@@ -1310,7 +1388,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _fittingCostDropDown() {
     return ReusedDropDownOptionItem(
       star: AppStrings.star,
-      textLabel: AppStrings.fittingCostLabel,
+      labelText: AppStrings.fittingCostLabel,
       hint: AppStrings.fittingCostLabel,
       items: _acceptExtraFittingCostList,
       value: acceptExtraFittingCostValue,
@@ -1325,7 +1403,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _mdpeDropdown() {
     return ReusedDropDownString(
-      textLabel: AppStrings.mdpeAllowLabel,
+      labelText: AppStrings.mdpeAllowLabel,
       hint: AppStrings.mdpeAllowLabel,
       items: _mdpeDropdownItems,
       value: _mdpeValue,
@@ -1338,7 +1416,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _reasonInterestedWidget() {
     return TextFieldWidget(
       enabled: true,
-      headingLabel: AppStrings.reasonInterestedLabel,
+      labelText: AppStrings.reasonInterestedLabel,
       textInputType: TextInputType.text,
       controller: reasonInterestedController,
       hintText: AppStrings.reasonInterestedLabel,
@@ -1352,30 +1430,14 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   Widget _chargeAreaDropDown() {
-   /* return ReusedDropDownOptionItem(
-      star: AppStrings.star,
-      textLabel: AppStrings.chargeAreaLabel,
-      hint: AppStrings.chargeAreaLabel,
-      items: listOfChargeArea,
-      value: chargeAreaType,
-      onChanged: (OptionItem value) {
-        setState(() {
-          chargeAreaId = value.id;
-          chargeAreaType = value;
-          areaTypeValue = null;
-          areaItems.clear();
-          fetchArea(value.id);
-        });
-      },
-    );*/
     return DropDownSearchWidget(
       star: AppStrings.star,
-      label: AppStrings.chargeAreaLabel,
+      labelText: AppStrings.chargeAreaLabel,
       hint: AppStrings.chargeAreaLabel,
-      dropdownValue: chargeAreaValue.gid == null ? null :chargeAreaValue,
+      dropdownValue: chargeAreaValue.gid == null ? null : chargeAreaValue,
       itemAsString: (alignmentData) => alignmentData.chargeAreaName,
       items: listOfChargeArea,
-      onChanged: ( value) {
+      onChanged: (value) {
         setState(() {
           chargeAreaId = value.gid.toString();
           chargeAreaValue = value;
@@ -1389,24 +1451,11 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   Widget _areaDropDown() {
-   /* return ReusedDropDownOptionItem(
-      star: AppStrings.star,
-      textLabel: AppStrings.areaLabel,
-      hint: AppStrings.areaLabel,
-      items: areaItems,
-      value: areaTypeValue,
-      onChanged: (OptionItem value) {
-        setState(() {
-          _areaTypeId = value.id;
-          areaTypeValue = value;
-        });
-      },
-    );*/
     return DropDownSearchWidget(
       star: AppStrings.star,
-      label: AppStrings.areaLabel,
+      labelText: AppStrings.areaLabel,
       hint: AppStrings.areaLabel,
-      dropdownValue: areaValue.gid == null ? null :areaValue,
+      dropdownValue: areaValue.gid == null ? null : areaValue,
       itemAsString: (alignmentData) => alignmentData.areaName.toString(),
       items: listOfAllArea,
       onChanged: (value) {
@@ -1421,7 +1470,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _mobileWidget() {
     return TextFieldWidget(
         star: AppStrings.star,
-        headingLabel: AppStrings.mobileNoLabel,
+        labelText: AppStrings.mobileNoLabel,
         hintText: AppStrings.mobileNoLabel,
         controller: mobileNoController,
         textInputType: TextInputType.number,
@@ -1444,20 +1493,19 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _alternateMobileWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.alternateMobileNoLabel,
+      labelText: AppStrings.alternateMobileNoLabel,
       hintText: AppStrings.alternateMobileNoLabel,
       controller: alternateMobileNoController,
       textInputType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
       maxLength: 10,
-
     );
   }
 
   Widget _firstNameWidget() {
     return TextFieldWidget(
       star: AppStrings.star,
-      headingLabel: AppStrings.firstNameLabel,
+      labelText: AppStrings.firstNameLabel,
       hintText: AppStrings.firstNameLabel,
       controller: firstNameController,
       textInputType: TextInputType.text,
@@ -1482,7 +1530,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _middleWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.middleNameLabel,
+      labelText: AppStrings.middleNameLabel,
       hintText: AppStrings.middleNameLabel,
       controller: middleNameController,
       textInputType: TextInputType.text,
@@ -1499,7 +1547,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _lastNameWidget() {
     return TextFieldWidget(
       star: AppStrings.star,
-      headingLabel: AppStrings.lastNameLabel,
+      labelText: AppStrings.lastNameLabel,
       hintText: AppStrings.lastNameLabel,
       controller: lastNameController,
       textInputType: TextInputType.text,
@@ -1520,8 +1568,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _guardianTypeDropDown() {
     return ReusedDropDownString(
-      star:interestedId == "1" ? AppStrings.star : "",
-      textLabel: AppStrings.guardianTypeLabel,
+      star: interestedId == "1" ? AppStrings.star : "",
+      labelText: AppStrings.guardianTypeLabel,
       onChanged: (String value) {
         setState(() => guardianTypeValue = value);
       },
@@ -1533,14 +1581,16 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _guardianNameWidget() {
     return TextFieldWidget(
-      star:interestedId == "1"? AppStrings.star : "",
-      headingLabel:AppStrings.guardianNameNot,
-      hintText: interestedId == "1" ? AppStrings.guardianNameS : AppStrings.guardianNameNot,
+      star: interestedId == "1" ? AppStrings.star : "",
+      labelText: AppStrings.guardianNameNot,
+      hintText: interestedId == "1"
+          ? AppStrings.guardianNameS
+          : AppStrings.guardianNameNot,
       controller: guardianNameController,
       textInputType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))],
       validator: (value) {
-        if(interestedId == "1"){
+        if (interestedId == "1") {
           if (value != guardianNameController.text.trim()) {
             return AppStrings.blankSpace;
           } else if (value.isEmpty) {
@@ -1554,7 +1604,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         }
       },
       onChanged: (v) {
-        if(interestedId == "1"){
+        if (interestedId == "1") {
           formGlobalKey.currentState.validate();
         }
       },
@@ -1562,29 +1612,29 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   Widget _emailWidget() {
-     final RegExp emailValid = RegExp(
+    final RegExp emailValid = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     return TextFieldWidget(
-      headingLabel: AppStrings.emailAddressLabel,
+      labelText: AppStrings.emailAddressLabel,
       hintText: "demo@gmail.com",
       controller: emailIdController,
       textCapitalization: TextCapitalization.none,
       textInputType: TextInputType.emailAddress,
-       inputFormatters: [
+      inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
       ],
       validator: (value) {
-        if(emailIdController.text.isNotEmpty){
-          if (value != emailIdController.text.trim() ) {
+        if (emailIdController.text.isNotEmpty) {
+          if (value != emailIdController.text.trim()) {
             return AppStrings.blankSpace;
-          } else if(!emailValid.hasMatch(value)){
+          } else if (!emailValid.hasMatch(value)) {
             return "Enter Invalid format";
           }
           return null;
         }
-        },
+      },
       onChanged: (v) {
-        if(emailIdController.text.isNotEmpty){
+        if (emailIdController.text.isNotEmpty) {
           formGlobalKey.currentState.validate();
         }
       },
@@ -1594,7 +1644,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _propertyCategoryDropDown() {
     return ReusedDropDownOptionItem(
       star: AppStrings.star,
-      textLabel: AppStrings.propertyCategoryLabel,
+      labelText: AppStrings.propertyCategoryLabel,
       onChanged: (OptionItem value) {
         setState(() {
           propertyCategoryValue = value;
@@ -1609,7 +1659,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _propertyClassDropDown() {
     return ReusedDropDownOptionItem(
       star: AppStrings.star,
-      textLabel: AppStrings.propertyClassLabel,
+      labelText: AppStrings.propertyClassLabel,
       onChanged: (OptionItem value) {
         setState(() {
           propertyClassValue = value;
@@ -1625,7 +1675,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
     return TextFieldWidget(
       star: AppStrings.star,
       enabled: false,
-      headingLabel: AppStrings.depositAmountControllerLabel,
+      labelText: AppStrings.depositAmountControllerLabel,
       hintText: AppStrings.depositAmountControllerLabel,
       controller: depositAmountController,
       textInputType: TextInputType.number,
@@ -1638,107 +1688,82 @@ class _CustomInputFormState extends State<CustomInputForm> {
     );
   }
 
-  Widget _depositTypeDropDown(String headingLabel,star) {
+  Widget _depositTypeDropDown(String labelText, star) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
           flex: 4,
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Row(
-                  children: [
-                    Text(star ?? "", style: AppStyle.styleAlter(),),
-                    Text(headingLabel ?? "", style: AppStyle.styleB(),),
-                  ],
-                ),
-              ),
-              DropdownButtonFormField<DepositItem>(
-                style:  AppStyle.styleN(),
-                isExpanded: true,
-                isDense: false,
-
-                iconEnabledColor:  AppColor.black,
-                decoration: InputDecoration(
-                  focusedBorder: AppStyle.border(color: AppColor.black),
-                  disabledBorder: AppStyle.border(color: AppColor.grey),
-                  enabledBorder: AppStyle.border(color: AppColor.black),
-                  border: AppStyle.border(color: AppColor.black),
-                  errorBorder:AppStyle.border(color: AppColor.red),
-                  //label: Text(AppStrings.depositType),
-                  hintText: AppStrings.schemeType,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                ),
-                items: _depositTypeList,
-                value: _depositTypeValue,
-                hint: Text(
-                    AppStrings.schemeTypeLable,
-                    style:  AppStyle.styleN()),
-                onChanged: (DepositItem value) {
-                  setState(() {
-                    _depositTypeValue = value;
-                    _depositTypeString = _depositTypeValue.id.toString();
-                    _schemeMonth = value.schememonth;
-                    log("_schemeMonth-->" + _schemeMonth.toString());
-                    if (_schemeMonth > 0) {
-                      _depositTypeValue = value;
-                      depositAmountController.text = value.firstamount.toString();
-                      log(depositAmountController.text.toString());
-                      log("_isDepositId-->" + _depositTypeString.toString());
-                    } else {
-                      _depositTypeValue = value;
-                      depositAmountController.text = value.amount.toString();
-                      log(depositAmountController.text.toString());
-                      log("_isDepositId-->" + _depositTypeString.toString());
-                    }
-                    AppStrings.depositName = value.title;
-                    AppStrings.depositAmountController = value.amount.toString();
-                    gasDepositAmountController = value.gas_amount;
-                    schemeId = value.id;
-                    AppStrings.schemeType = value.scheme_type.toString();
-                    AppStrings.schemeCode = value.scheme_code.toString();
-                    AppStrings.depositAmount = value.deposit_amount.toString();
-                    AppStrings.equipmentDepositAmount =
-                        value.equipment_deposit_amount.toString();
-                    AppStrings.interestAmount = value.interest_amount.toString();
-                    AppStrings.registrationGST =
-                        value.registration_gst.toString();
-                    AppStrings.interestTaxAmt = value.interest_tax_amt.toString();
-                    AppStrings.totalAmount = value.totalAmount.toString();
-                    AppStrings.nextCycleAmount = value.nextCycleAmount.toString();
-                    AppStrings.registrationTaxName =
-                        value.registration_tax_name.toString();
-                    depositTotalAmount = value.total_amount;
-                    AppStrings.interestTaxAmt = value.interest_tax_amt.toString();
-                    AppStrings.regTax = value.reg_tax.toString();
-                    AppStrings.msgSchemeDetail = "Deposit Name = " +
-                        AppStrings.depositName +
-                        "\nDeposit Amount = " +
-                        AppStrings.depositAmountController.toString() +
-                        "\nSchemeMonth = " +
-                        _schemeMonth.toString() +
-                        "\nEquipment Deposit Amount = " +
-                        AppStrings.equipmentDepositAmount +
-                        "\nGAS Amount = " +
-                        gasDepositAmountController.toString() +
-                        "\nFirst Deposit Amount = " +
-                        value.firstamount.toString();
-                  });
-                },
-              ),
-            ],
+          child: DropdownWidget<GetAllDepositOfflineModel>(
+            items: listOfDepositOffline,
+            dropdownValue: _depositTypeValue.depositTypesId == null
+                ? null
+                : _depositTypeValue,
+            hint: AppStrings.schemeTypeLable,
+            onChanged: (value) {
+              setState(() {
+                _depositTypeValue = value;
+                _depositTypeString =
+                    _depositTypeValue.depositTypesId.toString();
+                _schemeMonth = value.schemeMonth;
+                log("_schemeMonth-->" + _schemeMonth.toString());
+                if (_schemeMonth > 0) {
+                  _depositTypeValue = value;
+                  depositAmountController.text =
+                      value.firstDepositAmount.toString();
+                  log(depositAmountController.text.toString());
+                  log("_isDepositId-->" + _depositTypeString.toString());
+                } else {
+                  _depositTypeValue = value;
+                  depositAmountController.text =
+                      value.depositAmount.toString();
+                  log(depositAmountController.text.toString());
+                  log("_isDepositId-->" + _depositTypeString.toString());
+                }
+                AppStrings.depositName = value.depositName;
+                AppStrings.depositAmountController =
+                    value.depositAmount.toString();
+                gasDepositAmountController = value.gasDepositAmount;
+                schemeId = value.depositTypesId;
+                AppStrings.schemeType = value.schemeType.toString();
+                AppStrings.schemeCode = value.schemeCode.toString();
+                AppStrings.depositAmount = value.depositAmount.toString();
+                AppStrings.equipmentDepositAmount =
+                    value.equipmentDepositAmount.toString();
+                AppStrings.interestAmount = value.interestAmount.toString();
+                AppStrings.registrationGST =
+                    value.registrationGst.toString();
+                AppStrings.interestTaxAmt = value.interestTax.toString();
+                AppStrings.totalAmount = value.totalAmount.toString();
+                AppStrings.nextCycleAmount =
+                    value.nextCycleAmount.toString();
+                AppStrings.registrationTaxName =
+                    value.registrationTaxName.toString();
+                depositTotalAmount = int.parse(value.depositAmount);
+                AppStrings.interestTaxAmt = value.interestAmount.toString();
+                AppStrings.regTax = value.registrationGst.toString();
+                AppStrings.msgSchemeDetail = "Deposit Name = " +
+                    AppStrings.depositName +
+                    "\nDeposit Amount = " +
+                    AppStrings.depositAmountController.toString() +
+                    "\nSchemeMonth = " +
+                    _schemeMonth.toString() +
+                    "\nEquipment Deposit Amount = " +
+                    AppStrings.equipmentDepositAmount +
+                    "\nGAS Amount = " +
+                    gasDepositAmountController.toString() +
+                    "\nFirst Deposit Amount = " +
+                    value.firstDepositAmount.toString();
+              });
+            },
           ),
         ),
-
         Flexible(
           flex: 2,
           child: ButtonWidget(
               textButton: "Detail",
               onPressed: () {
-                _showdepositAmountControllerDialog(
-                    AppStrings.msgSchemeDetail);
+                _showdepositAmountControllerDialog(AppStrings.msgSchemeDetail);
               }),
         )
       ],
@@ -1781,7 +1806,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _houseNumberWidget() {
     return TextFieldWidget(
       star: AppStrings.star,
-      headingLabel: AppStrings.houseNumberLabel,
+      labelText: AppStrings.houseNumberLabel,
       hintText: AppStrings.houseNumberLabel,
       controller: houseNumberController,
       textInputType: TextInputType.text,
@@ -1801,7 +1826,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _buildingNumberWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.buildingNumberLabel,
+      labelText: AppStrings.buildingNumberLabel,
       hintText: AppStrings.buildingNumberLabel,
       controller: buildingNumberController,
       textInputType: TextInputType.text,
@@ -1822,7 +1847,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _apartmentWidget() {
     return TextFieldWidget(
       star: AppStrings.star,
-      headingLabel: AppStrings.addressLabel,
+      labelText: AppStrings.addressLabel,
       hintText: AppStrings.addressLabel,
       controller: colonySocietyApartmentController,
       textInputType: TextInputType.text,
@@ -1843,7 +1868,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _streetNameWidget() {
     return TextFieldWidget(
       star: AppStrings.star,
-      headingLabel: AppStrings.streetNameLabel,
+      labelText: AppStrings.streetNameLabel,
       hintText: AppStrings.streetNameLabel,
       controller: streetNameController,
       textInputType: TextInputType.text,
@@ -1863,7 +1888,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _townWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.townLabel,
+      labelText: AppStrings.townLabel,
       hintText: AppStrings.townLabel,
       controller: townController,
       textInputType: TextInputType.name,
@@ -1892,7 +1917,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _districtWidget() {
     return ReusedDropDownOptionItem(
       star: AppStrings.star,
-      textLabel: AppStrings.districtLabel,
+      labelText: AppStrings.districtLabel,
       items: getAllDistrictItems,
       value: districtValue,
       hint: AppStrings.districtLabel,
@@ -1908,7 +1933,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _pinCodeWidget() {
     return TextFieldWidget(
         star: AppStrings.star,
-        headingLabel: AppStrings.pinCodeLabel,
+        labelText: AppStrings.pinCodeLabel,
         hintText: AppStrings.pinCodeLabel,
         controller: pinCodeController,
         textInputType: TextInputType.number,
@@ -1930,31 +1955,28 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _noKitchenWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.noOfKitchenLabel,
+      labelText: AppStrings.noOfKitchenLabel,
       hintText: AppStrings.noOfKitchenLabel,
       controller: kitchenController,
       textInputType: TextInputType.number,
-      maxLength: 2,
     );
   }
 
   Widget _noBathroomWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.noOfBathroomLabel,
+      labelText: AppStrings.noOfBathroomLabel,
       hintText: AppStrings.noOfBathroomLabel,
       controller: bathroomController,
       textInputType: TextInputType.number,
-      maxLength: 2,
     );
   }
 
   Widget _noFamilyWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.noOfFamilyMembersLabel,
+      labelText: AppStrings.noOfFamilyMembersLabel,
       hintText: AppStrings.noOfFamilyMembersLabel,
       controller: familyMemController,
       textInputType: TextInputType.number,
-      maxLength: 2,
     );
   }
 
@@ -1984,7 +2006,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
             flex: 3,
             child: TextFieldWidget(
               enabled: false,
-              headingLabel: AppStrings.locationLat,
+              labelText: AppStrings.locationLat,
               hintText: AppStrings.locationLat,
               controller: latitudeController,
             )),
@@ -1993,7 +2015,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
           flex: 3,
           child: TextFieldWidget(
             enabled: false,
-            headingLabel: AppStrings.locationLong,
+            labelText: AppStrings.locationLong,
             hintText: AppStrings.locationLong,
             controller: longitudeController,
           ),
@@ -2004,7 +2026,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _landmarkWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.landmarkLabel,
+      labelText: AppStrings.landmarkLabel,
       hintText: AppStrings.landmarkLabel,
       controller: landmarkController,
       textInputType: TextInputType.text,
@@ -2019,7 +2041,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _fuelDropdownWidget() {
     return ReusedDropDownString(
-      textLabel: AppStrings.existingCookingFuelLabel,
+      labelText: AppStrings.existingCookingFuelLabel,
       onChanged: (String value) {
         setState(() => cookInFuelValue = value);
       },
@@ -2031,7 +2053,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   _residentStatusDropdownWidget() {
     return ReusedDropDownString(
-      textLabel: AppStrings.residentStatusLabel,
+      labelText: AppStrings.residentStatusLabel,
       items: _residentDropdownItems,
       value: _residentStatusValue,
       hint: AppStrings.residentStatusLabel,
@@ -2044,7 +2066,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   _kYCDoc1DropDown() {
     return ReusedDropDownOptionItem(
       star: AppStrings.star,
-      textLabel: AppStrings.kycDoc1,
+      labelText: AppStrings.kycDoc1,
       hint: AppStrings.kycDoc1,
       items: _kYCDoc1List,
       value: _kYCDoc1Value,
@@ -2060,7 +2082,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
     return TextFieldWidget(
         star: AppStrings.star,
         maxLength: 20,
-        headingLabel: AppStrings.chequeAccountNoLabel,
+        labelText: AppStrings.chequeAccountNoLabel,
         hintText: AppStrings.chequeAccountNoLabel,
         controller: chequeAccountNoController,
         textInputType: TextInputType.text,
@@ -2082,7 +2104,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _chequeMICRNoWidget() {
     return TextFieldWidget(
         star: AppStrings.star,
-        headingLabel: AppStrings.chequeMICRNoLabel,
+        labelText: AppStrings.chequeMICRNoLabel,
         hintText: AppStrings.chequeMICRNoLabel,
         maxLength: 9,
         controller: chequeMICRNoController,
@@ -2106,13 +2128,15 @@ class _CustomInputFormState extends State<CustomInputForm> {
     return CardImageWidget(
       star: AppStrings.star,
       imgString: AppStrings.customerConsentImgLabel,
-      children:InkWell(
-          onTap: () => _openCustomerConsentImgSource(context,),
+      children: InkWell(
+          onTap: () => _openCustomerConsentImgSource(
+                context,
+              ),
           child: customerConsentImageFile != null &&
-              customerConsentImageFile.isNotEmpty
+                  customerConsentImageFile.isNotEmpty
               ? customerConsentImageFile.split('.').last == "pdf"
-              ? _pdfImageWidget(customerConsentImageFile)
-              : _fileImage(fileImage: File(customerConsentImageFile))
+                  ? _pdfImageWidget(customerConsentImageFile)
+                  : _fileImage(fileImage: File(customerConsentImageFile))
               : _localBorderImg()),
     );
   }
@@ -2123,26 +2147,25 @@ class _CustomInputFormState extends State<CustomInputForm> {
       imgString: AppStrings.idFrontImgSide,
       children: InkWell(
           onTap: () => _openFrontImageSource(
-            context,
-          ),
+                context,
+              ),
           child: frontImageFile != null && frontImageFile.isNotEmpty
               ? frontImageFile.split('.').last == "pdf"
-              ? _pdfImageWidget(frontImageFile)
-              : _fileImage(fileImage: File(frontImageFile))
+                  ? _pdfImageWidget(frontImageFile)
+                  : _fileImage(fileImage: File(frontImageFile))
               : _localBorderImg()),
     );
   }
 
   Widget _backImageWidget() {
     return CardImageWidget(
-
       imgString: AppStrings.idBackImgSide,
-      children:InkWell(
+      children: InkWell(
           onTap: () => _openBackImageSource(context),
           child: backImageFile != null && backImageFile.isNotEmpty
               ? backImageFile.split('.').last == "pdf"
-              ? _pdfImageWidget(backImageFile)
-              : _fileImage(fileImage: File(backImageFile))
+                  ? _pdfImageWidget(backImageFile)
+                  : _fileImage(fileImage: File(backImageFile))
               : _localBorderImg()),
     );
   }
@@ -2151,13 +2174,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
     return CardImageWidget(
       star: interestedId == "1" ? AppStrings.star : "",
       imgString: AppStrings.electricBillFrontImgLabel,
-      children:InkWell(
+      children: InkWell(
           onTap: () => _openEleBillFrontSource(context),
           child: electricBillFrontImgFile != null &&
-              electricBillFrontImgFile.isNotEmpty
+                  electricBillFrontImgFile.isNotEmpty
               ? electricBillFrontImgFile.split('.').last == "pdf"
-              ? _pdfImageWidget(electricBillFrontImgFile)
-              : _fileImage(fileImage: File(electricBillFrontImgFile))
+                  ? _pdfImageWidget(electricBillFrontImgFile)
+                  : _fileImage(fileImage: File(electricBillFrontImgFile))
               : _localBorderImg()),
     );
   }
@@ -2165,13 +2188,13 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _electricBillBackImgWidget() {
     return CardImageWidget(
       imgString: AppStrings.electricBillBackImgLabel,
-      children:InkWell(
+      children: InkWell(
           onTap: () => _openEleBackSource(context),
           child: electricBillBackImgFile != null &&
-              electricBillBackImgFile.isNotEmpty
+                  electricBillBackImgFile.isNotEmpty
               ? electricBillBackImgFile.split('.').last == "pdf"
-              ? _pdfImageWidget(electricBillBackImgFile)
-              : _fileImage(fileImage: File(electricBillBackImgFile))
+                  ? _pdfImageWidget(electricBillBackImgFile)
+                  : _fileImage(fileImage: File(electricBillBackImgFile))
               : _localBorderImg()),
     );
   }
@@ -2180,12 +2203,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
     return CardImageWidget(
       star: AppStrings.star,
       imgString: AppStrings.nocDoc,
-      children:InkWell(
+      children: InkWell(
           onTap: () => _openNocFrontImgSource(context),
           child: nocFrontImgFile != null && nocFrontImgFile.isNotEmpty
               ? nocFrontImgFile.split('.').last == "pdf"
-              ? _pdfImageWidget(nocFrontImgFile)
-              : _fileImage(fileImage: File(nocFrontImgFile))
+                  ? _pdfImageWidget(nocFrontImgFile)
+                  : _fileImage(fileImage: File(nocFrontImgFile))
               : _localBorderImg()),
     );
   }
@@ -2193,12 +2216,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _nocBackImageWidget() {
     return CardImageWidget(
       imgString: AppStrings.nocBackImgLabel,
-      children:InkWell(
+      children: InkWell(
           onTap: () => _openNocBackImgSource(context),
           child: nocBackImgFile != null && nocBackImgFile.isNotEmpty
               ? nocBackImgFile.split('.').last == "pdf"
-              ? _pdfImageWidget(nocBackImgFile)
-              : _fileImage(fileImage: File(nocBackImgFile))
+                  ? _pdfImageWidget(nocBackImgFile)
+                  : _fileImage(fileImage: File(nocBackImgFile))
               : _localBorderImg()),
     );
   }
@@ -2206,37 +2229,33 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _customerImageWidget() {
     return CardImageWidget(
       imgString: AppStrings.customerImgLabel,
-      children:InkWell(
+      children: InkWell(
           onTap: () => _openCustomerImgSource(context),
-          child: uploadCustomerImgFile != null &&
-              uploadCustomerImgFile.isNotEmpty
-              ? uploadCustomerImgFile.split('.').last == "pdf"
-              ? _pdfImageWidget(uploadCustomerImgFile)
-              : _fileImage(fileImage: File(uploadCustomerImgFile))
-              : _localBorderImg()),
+          child:
+              uploadCustomerImgFile != null && uploadCustomerImgFile.isNotEmpty
+                  ? uploadCustomerImgFile.split('.').last == "pdf"
+                      ? _pdfImageWidget(uploadCustomerImgFile)
+                      : _fileImage(fileImage: File(uploadCustomerImgFile))
+                  : _localBorderImg()),
     );
   }
 
   Widget _rowWidget({Widget widget1, Widget widget2}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-            child: widget1),
-        Flexible(
-            child: widget2)],
+      children: [Flexible(child: widget1), Flexible(child: widget2)],
     );
   }
 
   Widget _houseNumImageWidget() {
     return CardImageWidget(
       imgString: AppStrings.houseImgLabel,
-      children:InkWell(
+      children: InkWell(
           onTap: () => _openHouseImgSource(context),
           child: uploadHouseImgFile != null && uploadHouseImgFile.isNotEmpty
               ? uploadHouseImgFile.split('.').last == "pdf"
-              ? _pdfImageWidget(uploadHouseImgFile)
-              : _fileImage(fileImage: File(uploadHouseImgFile))
+                  ? _pdfImageWidget(uploadHouseImgFile)
+                  : _fileImage(fileImage: File(uploadHouseImgFile))
               : _localBorderImg()),
     );
   }
@@ -2244,28 +2263,28 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _consentImageWidget() {
     return CardImageWidget(
       imgString: AppStrings.consentPhotoLabel,
-      children:InkWell(
+      children: InkWell(
           onTap: () => _openOwnerConsentImgSource(context),
-          child: ownerConsentImageFile != null &&
-              ownerConsentImageFile.isNotEmpty
-              ? ownerConsentImageFile.split('.').last == "pdf"
-              ? _pdfImageWidget(ownerConsentImageFile)
-              : _fileImage(fileImage: File(ownerConsentImageFile))
-              : _localBorderImg()),
+          child:
+              ownerConsentImageFile != null && ownerConsentImageFile.isNotEmpty
+                  ? ownerConsentImageFile.split('.').last == "pdf"
+                      ? _pdfImageWidget(ownerConsentImageFile)
+                      : _fileImage(fileImage: File(ownerConsentImageFile))
+                  : _localBorderImg()),
     );
   }
 
   Widget _cancelChqImageWidget() {
     return CardImageWidget(
       imgString: AppStrings.chqCancelledPhotoLabel,
-      children:InkWell(
+      children: InkWell(
           onTap: () => _openChqCancelledImgSource(context),
-          child: chqCancelledPhotoFile != null &&
-              chqCancelledPhotoFile.isNotEmpty
-              ? chqCancelledPhotoFile.split('.').last == "pdf"
-              ? _pdfImageWidget(chqCancelledPhotoFile)
-              : _fileImage(fileImage: File(chqCancelledPhotoFile))
-              : _localBorderImg()),
+          child:
+              chqCancelledPhotoFile != null && chqCancelledPhotoFile.isNotEmpty
+                  ? chqCancelledPhotoFile.split('.').last == "pdf"
+                      ? _pdfImageWidget(chqCancelledPhotoFile)
+                      : _fileImage(fileImage: File(chqCancelledPhotoFile))
+                  : _localBorderImg()),
     );
   }
 
@@ -2273,19 +2292,19 @@ class _CustomInputFormState extends State<CustomInputForm> {
     return CardImageWidget(
       star: AppStrings.star,
       imgString: AppStrings.chqPhotoLabel,
-      children:InkWell(
+      children: InkWell(
           onTap: () => _openChqImgSource(context),
           child: chqPhotoFile != null && chqPhotoFile.isNotEmpty
               ? chqPhotoFile.split('.').last == "pdf"
-              ? _pdfImageWidget(chqPhotoFile)
-              : _fileImage(fileImage: File(chqPhotoFile))
+                  ? _pdfImageWidget(chqPhotoFile)
+                  : _fileImage(fileImage: File(chqPhotoFile))
               : _localBorderImg()),
     );
   }
 
   Widget _nocDocNumberController() {
     return TextFieldWidget(
-      headingLabel: AppStrings.nocDocNumber,
+      labelText: AppStrings.nocDocNumber,
       hintText: AppStrings.nocDocNumber,
       controller: kYCDoc3NoController,
       textInputType: TextInputType.text,
@@ -2302,7 +2321,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _kYCDoc1NoWidget() {
     return TextFieldWidget(
       star: AppStrings.star,
-      headingLabel: AppStrings.kycDoc1No,
+      labelText: AppStrings.kycDoc1No,
       hintText: AppStrings.kycDoc1No,
       controller: kYCDoc1NoController,
       textInputType: TextInputType.text,
@@ -2321,7 +2340,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _kYCDoc2NoWidget() {
     return TextFieldWidget(
       star: interestedId == "1" ? AppStrings.star : "",
-      headingLabel: AppStrings.kycDoc2No,
+      labelText: AppStrings.kycDoc2No,
       hintText: AppStrings.kycDoc2No,
       controller: kYCDoc2NoController,
       textInputType: TextInputType.text,
@@ -2338,7 +2357,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _kYCDoc2DropDown() {
     return ReusedDropDownOptionItem(
       star: interestedId == "1" ? AppStrings.star : "",
-      textLabel: AppStrings.kycDoc2,
+      labelText: AppStrings.kycDoc2,
       hint: AppStrings.kycDoc2,
       items: _kYCDoc2List,
       value: _kYCDoc2Value,
@@ -2354,8 +2373,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _kYCDoc3DropDown() {
     return ReusedDropDownOptionItem(
-      star:AppStrings.star,
-      textLabel: AppStrings.kYCDoc3,
+      star: AppStrings.star,
+      labelText: AppStrings.kYCDoc3,
       hint: AppStrings.kYCDoc3,
       items: _kycProofDropdownItems,
       value: _kYCDocument3Value,
@@ -2370,7 +2389,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _billModeDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel: AppStrings.billingModeLabel,
+      labelText: AppStrings.billingModeLabel,
       hint: AppStrings.billingModeLabel,
       items: billingModeList,
       value: billingModeValue,
@@ -2385,12 +2404,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _customerBankDropDown() {
     return ReusedDropDownString(
-      textLabel: AppStrings.customerBankNameLabel,
+      labelText: AppStrings.customerBankNameLabel,
       hint: AppStrings.customerBankNameLabel,
       items: _customerBankNameList != null
           ? _customerBankNameList.map((String item) {
-        return DropdownMenuItem<String>(value: item, child: Text(item));
-      }).toList()
+              return DropdownMenuItem<String>(value: item, child: Text(item));
+            }).toList()
           : [],
       value: _customerBankValue,
       onChanged: (value) {
@@ -2404,7 +2423,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _customerBackNoWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.customerAccountNoLabel,
+      labelText: AppStrings.customerAccountNoLabel,
       hintText: AppStrings.customerAccountNoLabel,
       controller: customerAccountNum,
       textInputType: TextInputType.text,
@@ -2427,7 +2446,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _customerIFSCCodeWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.customerIfscCodeLabel,
+      labelText: AppStrings.customerIfscCodeLabel,
       hintText: AppStrings.customerIfscCodeLabel,
       controller: customerIFSCController,
       textInputType: TextInputType.text,
@@ -2450,7 +2469,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _customerBankAddWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.customerBankAddLabel,
+      labelText: AppStrings.customerBankAddLabel,
       hintText: AppStrings.customerBankAddLabel,
       controller: customerBankAddController,
       textInputType: TextInputType.text,
@@ -2470,7 +2489,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _depositStatusDropDown() {
     return ReusedDropDownOptionItem(
-      textLabel: AppStrings.initialDepositStatusLabel,
+      labelText: AppStrings.initialDepositStatusLabel,
       hint: AppStrings.initialDepositStatusLabel,
       items: dropListDepositStatusList,
       value: depositStatusValue,
@@ -2488,7 +2507,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _reasonDepositStatusWidget() {
     return TextFieldWidget(
-      headingLabel: AppStrings.reasonDepositLabel,
+      labelText: AppStrings.reasonDepositLabel,
       hintText: AppStrings.reasonDepositLabel,
       controller: reasonDepositStatusController,
       textInputType: TextInputType.text,
@@ -2503,8 +2522,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _modeDepositDropDown() {
     return ReusedDropDownOptionItem(
-        star:AppStrings.star,
-        textLabel: AppStrings.modeOfDepositLabel,
+        star: AppStrings.star,
+        labelText: AppStrings.modeOfDepositLabel,
         hint: AppStrings.modeOfDepositLabel,
         items: modeOfDepositList,
         value: modeDepositValue,
@@ -2536,8 +2555,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _chqNoWidget() {
     return TextFieldWidget(
-        star:AppStrings.star,
-        headingLabel: AppStrings.chqNoLabel,
+        star: AppStrings.star,
+        labelText: AppStrings.chqNoLabel,
         hintText: AppStrings.chqNoLabel,
         controller: chqNOController,
         maxLength: 6,
@@ -2559,9 +2578,12 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _chequeDateWidget() {
     return TextFieldWidget(
-      star:AppStrings.star,
-      headingLabel: AppStrings.depositDateLabel,
-      prefixIcon: Icon(Icons.calendar_today, color: AppColor.appColor1,),
+      star: AppStrings.star,
+      labelText: AppStrings.depositDateLabel,
+      prefixIcon: Icon(
+        Icons.calendar_today,
+        color: AppColor.appColor1,
+      ),
       hintText: AppStrings.depositDateLabel,
       controller: chequeDateController,
       readOnly: true,
@@ -2571,6 +2593,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   DateTime selectedDate = DateTime.now();
+
   Future _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -2587,8 +2610,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
 
   Widget _payementBankNameDropDown() {
     return ReusedDropDownString(
-      star:AppStrings.star,
-      textLabel: AppStrings.payementBankNameLabel,
+      star: AppStrings.star,
+      labelText: AppStrings.payementBankNameLabel,
       hint: AppStrings.payementBankNameLabel,
       items: _payementBankNameList.map((String item) {
         return DropdownMenuItem<String>(
@@ -2620,13 +2643,14 @@ class _CustomInputFormState extends State<CustomInputForm> {
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 5),
-          child: Text(
-              text,
+          child: Text(text,
               textAlign: TextAlign.center,
-              style:TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 12, color: Colors.black,decoration: TextDecoration.none,)
-          ),
+                fontSize: 12,
+                color: Colors.black,
+                decoration: TextDecoration.none,
+              )),
         ),
       ),
     );
@@ -2635,13 +2659,17 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Widget _localBorderImg() {
     return CircleAvatar(
         radius: 41,
-        backgroundColor:AppColor.appColor1,
+        backgroundColor: AppColor.appColor1,
         child: CircleAvatar(
           radius: 40,
           backgroundColor: AppColor.white,
-          child: Image.asset(AppIcon.imageCaptureIcon,fit :BoxFit.cover,width: 60,height: 60,),
-        )
-    );
+          child: Image.asset(
+            AppIcon.imageCaptureIcon,
+            fit: BoxFit.cover,
+            width: 60,
+            height: 60,
+          ),
+        ));
   }
 
   /////////////////////////////  image 1 ///////////////////////////////////////
@@ -3254,13 +3282,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Flexible(
-                  child: Text(
-                      leading.toUpperCase(), style: AppStyle.styleB()
-                  )),
-              Flexible(
-                  child: Text(trailing, style: AppStyle.styleN()
-                  )
-              )
+                  child: Text(leading.toUpperCase(), style: AppStyle.styleB())),
+              Flexible(child: Text(trailing, style: AppStyle.styleN()))
             ],
           ),
         ),
@@ -3288,15 +3311,15 @@ class _CustomInputFormState extends State<CustomInputForm> {
   }
 
   GetLabelModel getLabelModel;
+
   fetchLabel() {
     var resAllDistrict = prefs.getString(GlobalConstants.AllLEBELS);
     getLabelModel = GetLabelModel.fromJson(jsonDecode(resAllDistrict));
     return GetLabelModel.fromJson(jsonDecode(resAllDistrict));
   }
 
-
-
   List<GetAllDistrictModel> getAllDistrictModel;
+
   Future<List<GetAllDistrictModel>> fetchDistrictTest() async {
     final res = prefs.getString(SPrefsKey.getAllDistrict);
     if (res != null) {
@@ -3311,7 +3334,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
     List dataChargeList = json.decode(resAllDistrict);
     List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
       dataChargeList.length,
-          (i) => DropdownMenuItem(
+      (i) => DropdownMenuItem(
         value: OptionItem(
             id: dataChargeList[i]['id'],
             title: dataChargeList[i]['district_name']),
@@ -3326,8 +3349,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
           districtValue = getAllDistrictItems
               .firstWhere(
                   (element) =>
-              element.value.id == widget.studentModel.districtId,
-              orElse: null)
+                      element.value.id == widget.studentModel.districtId,
+                  orElse: null)
               .value;
         }
       }
@@ -3338,15 +3361,15 @@ class _CustomInputFormState extends State<CustomInputForm> {
     var resArea = prefs.getString(GlobalConstants.area);
     List listArea = json.decode(resArea);
     List outputList = listArea.where((o) => o['charge_area_id'] == id).toList();
-    listOfAllArea = outputList.map((item) => GetAllAreaModel.fromJson(item)).toList();
+    listOfAllArea =
+        outputList.map((item) => GetAllAreaModel.fromJson(item)).toList();
     listOfAllArea.sort((a, b) => a.areaName.compareTo(b.areaName));
     setState(() {
       if (widget.isUpdate == true) {
         if (widget.studentModel.areaId != null) {
-          areaValue = listOfAllArea
-              .firstWhere(
-                  (element) => element.gid == widget.studentModel.areaId,
-              orElse: null).gid as GetAllAreaModel;
+          areaValue = listOfAllArea.firstWhere(
+              (element) => element.gid == widget.studentModel.areaId,
+              orElse: null);
         }
       }
     });
@@ -3355,17 +3378,17 @@ class _CustomInputFormState extends State<CustomInputForm> {
   Future<void> fetchChargeAreaList() async {
     var resChargeAreaName = prefs.getString(GlobalConstants.chargeAreaName);
     List list = jsonDecode(resChargeAreaName);
-    listOfChargeArea =  list.map((item) => ChargeAreaModel.fromJson(item)).toList();
-    listOfChargeArea.sort((a, b) => a.chargeAreaName.compareTo(b.chargeAreaName));
+    listOfChargeArea =
+        list.map((item) => ChargeAreaModel.fromJson(item)).toList();
+    listOfChargeArea
+        .sort((a, b) => a.chargeAreaName.compareTo(b.chargeAreaName));
     print("listOfChargeArea-->${listOfChargeArea.length}");
     setState(() {
       if (widget.isUpdate == true) {
         if (widget.studentModel.chargeArea != null) {
-          chargeAreaValue = listOfChargeArea
-              .firstWhere(
-                  (element) =>
-              element.gid == widget.studentModel.chargeArea,
-              orElse: null).gid as ChargeAreaModel;
+          chargeAreaValue = listOfChargeArea.firstWhere(
+              (element) => element.gid == widget.studentModel.chargeArea,
+              orElse: null);
         }
       }
     });
@@ -3395,43 +3418,14 @@ class _CustomInputFormState extends State<CustomInputForm> {
           interestedValue = interestedListItems
               .firstWhere(
                   (element) =>
-              element.value.id == widget.studentModel.interested,
-              orElse: null)
+                      element.value.id == widget.studentModel.interested,
+                  orElse: null)
               .value;
           interestedId = interestedValue.id;
         }
       }
     });
   }
-
-  /*Future<void> interestedList() async {
-    var resInterested = prefs.getString(GlobalConstants.Interested);
-    final map = json.decode(resInterested);
-    //  final dataInterestedList = map.values.toList();
-    log("dataInterestedList.toString()");
-    log(map.toString());
-    List<DropdownMenuItem<OptionItem>> menuItems = List.generate(
-      map.length,
-      (i) => DropdownMenuItem(
-        value: OptionItem(id: map[i].toString(), title: map[i]),
-        child: Text("${map[i]}"),
-      ),
-    );
-    if (!mounted) return;
-    setState(() {
-      interestedListItems = menuItems;
-      if (widget.isUpdate == true) {
-        if (widget.studentModel.interested != null) {
-          interestedValue = interestedListItems
-              .firstWhere(
-                  (element) =>
-                      element.value.id == widget.studentModel.interested,
-                  orElse: null)
-              .value;
-        }
-      }
-    });
-  }*/
 
   Future<void> _getSocietyAllow() async {
     var resSociatyAllow = prefs.getString(GlobalConstants.sociaty_allow);
@@ -3495,7 +3489,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
     ));
     menuItems = List.generate(
       dataList.length,
-          (i) => DropdownMenuItem(
+      (i) => DropdownMenuItem(
         value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
         child: Text("${dataList[i]['name']}"),
       ),
@@ -3509,9 +3503,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
           propertyCategoryValue = propertyCategoryList
               .firstWhere(
                   (element) =>
-              element.value.id ==
-                  widget.studentModel.propertyCategoryId,
-              orElse: null)
+                      element.value.id ==
+                      widget.studentModel.propertyCategoryId,
+                  orElse: null)
               .value;
         }
       }
@@ -3524,7 +3518,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
     List<DropdownMenuItem<OptionItem>> menuItems = [];
     menuItems = List.generate(
       dataList.length,
-          (i) => DropdownMenuItem(
+      (i) => DropdownMenuItem(
         value: OptionItem(id: dataList[i]['id'], title: dataList[i]['name']),
         child: Text("${dataList[i]['name']}"),
       ),
@@ -3538,8 +3532,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
           propertyClassValue = propertyClassList
               .firstWhere(
                   (element) =>
-              element.value.id == widget.studentModel.propertyClassId,
-              orElse: null)
+                      element.value.id == widget.studentModel.propertyClassId,
+                  orElse: null)
               .value;
         }
       }
@@ -3560,7 +3554,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
       if (widget.studentModel.kycDocument1 != null) {
         _kYCDoc1Value = _kYCDoc1List
             .firstWhere((element) =>
-        element.value.id == widget.studentModel.kycDocument1)
+                element.value.id == widget.studentModel.kycDocument1)
             .value;
       }
     }
@@ -3597,8 +3591,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
         _kYCDocument3Value = _kycProofDropdownItems
             .firstWhere(
                 (element) =>
-            element.value.id == widget.studentModel.kycDocument3,
-            orElse: null)
+                    element.value.id == widget.studentModel.kycDocument3,
+                orElse: null)
             .value;
       }
     }
@@ -3615,7 +3609,7 @@ class _CustomInputFormState extends State<CustomInputForm> {
         if (widget.studentModel.interested == "1") {
           if (widget.studentModel.nameOfBank != null) {
             _customerBankValue = _customerBankNameList.firstWhere(
-                    (element) => element == widget.studentModel.nameOfBank,
+                (element) => element == widget.studentModel.nameOfBank,
                 orElse: null);
           }
         }
@@ -3650,8 +3644,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
           billingModeValue = billingModeList
               .firstWhere(
                   (element) =>
-              element.value.id == widget.studentModel.billingModel,
-              orElse: null)
+                      element.value.id == widget.studentModel.billingModel,
+                  orElse: null)
               .value;
         }
       }
@@ -3674,9 +3668,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
         __acceptConversionPolicyValue = _acceptConversionPolicyList
             .firstWhere(
                 (element) =>
-            element.value.id ==
-                widget.studentModel.acceptConversionPolicy,
-            orElse: null)
+                    element.value.id ==
+                    widget.studentModel.acceptConversionPolicy,
+                orElse: null)
             .value;
       }
     }
@@ -3699,9 +3693,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
         acceptExtraFittingCostValue = _acceptExtraFittingCostList
             .firstWhere(
                 (element) =>
-            element.value.id ==
-                widget.studentModel.acceptExtraFittingCost,
-            orElse: null)
+                    element.value.id ==
+                    widget.studentModel.acceptExtraFittingCost,
+                orElse: null)
             .value;
       }
     }
@@ -3724,8 +3718,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
             modeDepositValue = modeOfDepositList
                 .firstWhere(
                     (element) =>
-                element.value.id == widget.studentModel.modeOfDeposite,
-                orElse: null)
+                        element.value.id == widget.studentModel.modeOfDeposite,
+                    orElse: null)
                 .value;
           }
         }
@@ -3753,9 +3747,9 @@ class _CustomInputFormState extends State<CustomInputForm> {
             depositStatusValue = dropListDepositStatusList
                 .firstWhere(
                     (element) =>
-                element.value.id ==
-                    widget.studentModel.initialDepositeStatus,
-                orElse: null)
+                        element.value.id ==
+                        widget.studentModel.initialDepositeStatus,
+                    orElse: null)
                 .value;
           }
         }
@@ -3763,9 +3757,11 @@ class _CustomInputFormState extends State<CustomInputForm> {
     });
   }
 
-  Future<void> _getAllDepositScheme() async {
+  /* Future<void> _getAllDepositScheme() async {
     var resSchemeType = prefs.getString(GlobalConstants.SchemeType);
-    List dataList = json.decode(resSchemeType);
+    List outputList = json.decode(resSchemeType);
+    List dataList = outputList.where((o) => o['property_category_id'] == propertyCategoryValue).toList();
+
     log("dataList-->${dataList}");
     List<DropdownMenuItem<DepositItem>> menuItems = [];
     List<DropdownMenuItem<DepositItem>> menuItems2 = [];
@@ -3800,8 +3796,8 @@ class _CustomInputFormState extends State<CustomInputForm> {
             value: DepositItem(
                 id: dataList[i]['deposit_types_id'] ?? "",
                 title: dataList[i]['deposit_name'] ?? "",
-                /*firstamount: dataList[i]['firstDepositAmount'] ?? "",
-            amount: dataList[i]['totalAmount'] ?? "",*/
+                */ /*firstamount: dataList[i]['firstDepositAmount'] ?? "",
+            amount: dataList[i]['totalAmount'] ?? "",*/ /*
                 firstamount: dataList[i]['firstDepositAmountWith'] ?? "",
                 amount: dataList[i]['firstDepositAmountWith'] ?? "",
                 schememonth: dataList[i]['scheme_month'] ?? "",
@@ -3826,34 +3822,6 @@ class _CustomInputFormState extends State<CustomInputForm> {
         }
       }
     }
-
-    /* menuItems2 = List.generate(
-      dataList.length,
-      (i) => DropdownMenuItem(
-        value: DepositItem(
-            id: dataList[i]['deposit_types_id'],
-            title: dataList[i]['deposit_name'],
-            */ /*firstamount: dataList[i]['firstDepositAmount'],
-            amount: dataList[i]['totalAmount'],*/
-    /*
-            firstamount: dataList[i]['firstDepositAmountWith'],
-            amount: dataList[i]['amountfield'],
-            schememonth: dataList[i]['scheme_month'],
-            gas_amount: dataList[i]['gas_deposit_amount'],
-            scheme_type: dataList[i]['scheme_type'],
-            scheme_code: dataList[i]['scheme_code'],
-            deposit_amount: dataList[i]['deposit_amount'],
-            equipment_deposit_amount: dataList[i]['equipment_deposit_amount'],
-            interest_amount: dataList[i]['interest_amount'],
-            registration_gst: dataList[i]['registration_gst'],
-            totalAmount: dataList[i]['totalAmount'],
-            nextCycleAmount: dataList[i]['nextCycleAmount'],
-            registration_tax_name: dataList[i]['registration_tax_name'],
-            interest_tax_amt: dataList[i]['interest_tax_amt'],
-            reg_tax: dataList[i]['reg_tax']),
-        child: Text("${dataList[i]['deposit_name']}"),
-      ),
-    );*/
     menuItems.addAll(menuItems2);
     log("menuItems2-->${menuItems2}");
     log("menuItems-->${menuItems}");
@@ -3877,6 +3845,37 @@ class _CustomInputFormState extends State<CustomInputForm> {
       }
     });
     return;
+  }
+*/
+  Future<void> _getAllDepositScheme() async {
+    var resSchemeType = prefs.getString(GlobalConstants.SchemeType);
+    List list = json.decode(resSchemeType);
+    List outputList = list
+        .where((o) => o['property_category_id'] == propertyCategoryValue.id)
+        .toList();
+    listOfDepositOffline = outputList
+        .map((item) => GetAllDepositOfflineModel.fromJson(item))
+        .toList();
+    listOfDepositOffline.sort((a, b) => a.depositName.compareTo(b.depositName));
+    print("listOfDepositOffline-->${listOfDepositOffline.length}");
+    setState(() {
+      if (widget.isUpdate == true) {
+        if (widget.studentModel.chargeArea != null) {
+          if (widget.studentModel.interested == "1") {
+            if (widget.studentModel.depositeType != null) {
+              _depositTypeValue = listOfDepositOffline.firstWhere(
+                  (element) =>
+                      element.depositTypesId ==
+                      widget.studentModel.depositeType,
+                  orElse: null);
+              //  depositAmountController.text = _depositCategoryType.amount.toString();
+              log("asdfghjgfedwsqawegtfhj" +
+                  _depositTypeValue.depositAmount.toString());
+            }
+          }
+        }
+      }
+    });
   }
 
   ConnectivityResult connectionStatus = ConnectivityResult.none;
@@ -3923,8 +3922,10 @@ class _CustomInputFormState extends State<CustomInputForm> {
     );
   }
 
-  _width(){
-    print(MediaQuery.of(context).size.width * 0.03,);
+  _width() {
+    print(
+      MediaQuery.of(context).size.width * 0.03,
+    );
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.03,
     );

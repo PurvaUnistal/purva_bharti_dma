@@ -192,4 +192,10 @@ class GetAllDepositOfflineModel {
         "interest_tax_name": interestTaxName,
         "remainingCount": remainingCount,
       };
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return depositName.toString();
+  }
 }

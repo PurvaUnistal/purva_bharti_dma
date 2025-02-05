@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/models/save_customer_registration_model.dart';
 import 'package:pbg_app/screens/custom_input_form/presentation/page/custom_input_form_screen.dart';
+import 'package:pbg_app/utils/Loaded/DottedLoader.dart';
 import 'package:pbg_app/utils/common_widgets/spin_loader.dart';
 import '../ExportFile/export_file.dart';
 import '../HiveDataStore/customer_reg_data_store.dart';
@@ -442,13 +443,13 @@ class _SaveCustomerRegistrationPageState
                   _buildBox(
                       color: _wifiData ? Colors.green : Colors.red,
                       textTitle: "WI-FI"),
-                  _buildBox(
+                  isLoading == false ? _buildBox(
                     color: _bothTypeData ? Colors.green : Colors.red,
-                    textTitle: isLoading ? "Loading" : "Submit",
+                    textTitle: "Submit",
                     onTap: () async {
                       fetchCustomerDataList();
                     },
-                  ),
+                  ) :  DottedLoaderWidget(),
                 ],
               ),
               SizedBox(
