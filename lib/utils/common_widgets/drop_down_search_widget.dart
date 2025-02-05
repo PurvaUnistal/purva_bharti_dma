@@ -2,15 +2,13 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'app_color.dart';
 import 'app_style.dart';
-import 'button_widget.dart';
-import 'common_style.dart';
 
 class DropDownSearchWidget extends StatelessWidget {
   final List<dynamic> items;
   final ValueChanged<dynamic> onChanged;
   final DropdownSearchItemAsString<dynamic> itemAsString;
   final String hint;
-  final String label;
+  final String labelText;
   final String star;
   final dynamic dropdownValue;
   final DropdownSearchOnFind<String> asyncItems;
@@ -21,7 +19,7 @@ class DropDownSearchWidget extends StatelessWidget {
     this.itemAsString,
     this.hint,
     this.star,
-    this.label,
+    this.labelText,
     this.dropdownValue,
     this.asyncItems,
   });
@@ -42,27 +40,20 @@ class DropDownSearchWidget extends StatelessWidget {
             enabledBorder: AppStyle.border(color: AppColor.black),
             border: AppStyle.border(color: AppColor.black),
             errorBorder: AppStyle.border(color: AppColor.red),
-            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            label: Padding(
-              padding: const EdgeInsets.only(left: 2.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                      child: Text(
-                    star ?? "",
-                    style: AppStyle.styleAlter(),
-                  )),
-                  Flexible(
-                    child: Text(label ?? "", style: AppStyle.styleN()),
-                  ),
-                ],
-              ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            label: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(child: Text(star ?? "", style: AppStyle.styleAlter())),
+                Flexible(
+                  child: Text(labelText ?? "", style: AppStyle.styleB()),
+                ),
+              ],
             ),
             hintText: hint,
-            hintStyle: AppStyle.styleN()),
+            hintStyle: AppStyle.styleB()),
         searchBoxDecoration: InputDecoration(
             filled: true,
             fillColor: AppColor.white,
@@ -72,31 +63,24 @@ class DropDownSearchWidget extends StatelessWidget {
             enabledBorder: AppStyle.border(color: AppColor.black),
             border: AppStyle.border(color: AppColor.black),
             errorBorder: AppStyle.border(color: AppColor.red),
-            label: Padding(
-              padding: const EdgeInsets.only(left: 2.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                      child: Text(
-                        star ?? "",
-                        style: AppStyle.styleAlter(),
-                      )),
-                  Flexible(
-                    child: Text(label ?? "", style: AppStyle.styleN()),
-                  ),
-                ],
-              ),
-            ),
             hintText: hint,
-            hintStyle: AppStyle.styleN()),
+            hintStyle: AppStyle.styleB(),
+            label: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(child: Text(star ?? "", style: AppStyle.styleAlter())),
+                Flexible(
+                  child: Text(labelText ?? "", style: AppStyle.styleB()),
+                ),
+              ],
+            )),
         items: items,
         itemAsString: itemAsString,
-
         onChanged: onChanged,
         selectedItem: dropdownValue,
+
         dropdownButtonBuilder: (_) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: const Icon(
@@ -105,11 +89,10 @@ class DropDownSearchWidget extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-
         popupShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
+            topLeft: Radius.circular(5),
+            topRight: Radius.circular(5),
           ),
         ),
       ),

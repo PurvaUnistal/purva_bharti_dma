@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pbg_app/utils/common_widgets/button_widget.dart';
-import 'package:pbg_app/utils/common_widgets/custom_app_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:pbg_app/utils/common_widgets/dotted_loader_widget.dart';
 import 'package:pbg_app/utils/common_widgets/message_box_two_button_pop.dart';
@@ -238,6 +236,9 @@ class LoginPage extends State<LoginScreen> {
         log("Login API---> $jwt");
         log("Login role--->" + lgd.user.role);
         if ((lgd.status == 200) && (lgd.user.role == 'dma')) {
+          setState(() {
+            _showProgress = false;
+          });
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setBool(GlobalConstants.isUserLogIn, true);
           prefs.setString(GlobalConstants.username, username);
@@ -262,15 +263,22 @@ class LoginPage extends State<LoginScreen> {
           );
           // }
         } else if (lgd.status == 401) {
+          setState(() {
+            _showProgress = false;
+          });
           CustomToast.showToast('Incorrect Username and Password');
         } else {
+          setState(() {
+            _showProgress = false;
+          });
           CustomToast.showToast('Incorrect Username and Password');
         }
       } catch (e) {
-        LoginError lgd = new LoginError.fromJson(json.decode(jwt));
-        if (lgd.status == 401)
-          displayDialog(context, 'Unauthorised',
-              "No account was found matching that username and password");
+        setState(() {
+          _showProgress = false;
+        });
+        print("--------------------${e.toString()}");
+
       }
     }
   }

@@ -5,7 +5,6 @@ import 'package:pbg_app/screens/BookingRegistrationForm/domain/bloc/booking_regi
 import 'package:pbg_app/screens/BookingRegistrationForm/domain/bloc/booking_registration_form_state.dart';
 import 'package:pbg_app/screens/BookingRegistrationForm/presentation/widget/app_string.dart';
 import 'package:pbg_app/screens/BookingRegistrationForm/presentation/widget/center_loader_widget.dart';
-import 'package:pbg_app/screens/BookingRegistrationForm/presentation/widget/searchTextFieldWidget/presentation/widgets/search_text_field.dart';
 import 'package:pbg_app/screens/BookingRegistrationForm/presentation/widget/text_field_widget.dart';
 import 'package:pbg_app/screens/Registration.dart';
 import 'package:pbg_app/utils/common_widgets/custom_app_bar.dart';
