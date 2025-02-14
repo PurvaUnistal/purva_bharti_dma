@@ -5,16 +5,21 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RoutesName.splash:
-        return MaterialPageRoute(builder: (BuildContext context) => SplashView());
+        return MaterialPageRoute(
+            builder: (BuildContext context) => SplashView());
       case RoutesName.login:
-        return MaterialPageRoute(builder: (BuildContext context) => const LoginView());
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const LoginView());
       case RoutesName.dashboard:
-        return MaterialPageRoute(builder: (BuildContext context) => const DashboardPage());
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const DashboardPage());
       case RoutesName.customerRegistrationForm:
-        return MaterialPageRoute(builder: (BuildContext context) =>  RegistrationFormPage(
-      position: 0, localData: null));
+        return MaterialPageRoute(
+            builder: (BuildContext context) => RegistrationFormPage(
+                isUpdate: false,localData: SaveRegistrationFormModel(),index: 0,));
       case RoutesName.viewSyncRecord:
-        return MaterialPageRoute(builder: (BuildContext context) => const ViewSyncRecordPage());
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const ViewSyncRecordPage());
       default:
         return MaterialPageRoute(builder: (_) {
           return const Scaffold(

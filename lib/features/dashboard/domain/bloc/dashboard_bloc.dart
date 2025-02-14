@@ -7,11 +7,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<SelectSyncFetchAllDataEvent>(_selectSyncFetchAllData);
   }
 
+  bool isPageLoader = false;
   bool isLoader = false;
+  bool isConnective = false;
 
-  String? schema;
+
+
+  String schema = "";
   GetLabelModel getLabelModel = GetLabelModel();
-
 
   List<GetLabelModel> listOfAllLabel = [];
   List<GetNotInterestedModel> listOfNotInterested = [];
@@ -36,11 +39,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   List<String> listOfCustBankName = [];
   List<String> listOChqBankName = [];
 
-
-
   _pageLoadEvent(DashboardPageLoadingEvent event, emit) async {
     emit(DashboardPageLoadState());
+    isPageLoader = false;
     isLoader = false;
+    isConnective = false;
     listOfAllLabel = [];
     listOfNotInterested = [];
     listOfInitialDepositStatus = [];
@@ -66,6 +69,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     getLabelModel = GetLabelModel();
     _eventCompleted(emit);
   }
+
 
   _selectSyncFetchAllData(SelectSyncFetchAllDataEvent event, emit) async {
     isLoader = true;
@@ -119,34 +123,40 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   fetchInitialDepositStatusApi({required BuildContext context}) async {
     if (await DashboardHelper.isInternetConnected()) {
-      var res = await DashboardHelper.getInitialDepositStatusApi(context: context);
+      var res =
+          await DashboardHelper.getInitialDepositStatusApi(context: context);
       if (res != null) {
         listOfInitialDepositStatus = res;
       }
     } else {
-      listOfInitialDepositStatus = HiveDataBase.initDepositStatusBox!.values.toList();
+      listOfInitialDepositStatus =
+          HiveDataBase.initDepositStatusBox!.values.toList();
     }
   }
 
   fetchAcceptExtraFittingCostApi({required BuildContext context}) async {
     if (await DashboardHelper.isInternetConnected()) {
-      var res = await DashboardHelper.getAcceptExtraFittingCostApi(context: context);
+      var res =
+          await DashboardHelper.getAcceptExtraFittingCostApi(context: context);
       if (res != null) {
         listOfExtraFittingCost = res;
       }
     } else {
-      listOfExtraFittingCost = HiveDataBase.acceptExtraFittingCostBox!.values.toList();
+      listOfExtraFittingCost =
+          HiveDataBase.acceptExtraFittingCostBox!.values.toList();
     }
   }
 
   fetchAcceptConversionPolicyApi({required BuildContext context}) async {
     if (await DashboardHelper.isInternetConnected()) {
-      var res = await DashboardHelper.getAcceptConversionPolicyApi(context: context);
+      var res =
+          await DashboardHelper.getAcceptConversionPolicyApi(context: context);
       if (res != null) {
         listOfConversionPolicy = res;
       }
     } else {
-      listOfConversionPolicy = HiveDataBase.acceptConversionPolicyBox!.values.toList();
+      listOfConversionPolicy =
+          HiveDataBase.acceptConversionPolicyBox!.values.toList();
     }
   }
 
@@ -240,7 +250,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   fetchExistingCookingFuelApi({required BuildContext context}) async {
     if (await DashboardHelper.isInternetConnected()) {
-      var res = await DashboardHelper.getExistingCookingFuelApi(context: context);
+      var res =
+          await DashboardHelper.getExistingCookingFuelApi(context: context);
       if (res != null) {
         listOfCookingFuel = res;
       }
@@ -323,13 +334,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  _eventCompleted(Emitter<DashboardState> emit) {
+  _eventCompleted(emit) {
     emit(DashboardGetAllDataState(
       isLoader: isLoader,
       schema: schema,
+      isPageLoader: isPageLoader,
     ));
   }
+  }
 
-
-
-}

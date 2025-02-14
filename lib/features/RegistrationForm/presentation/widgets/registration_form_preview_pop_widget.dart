@@ -3,9 +3,11 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 
 class RegistrationFormPreviewPopWidget extends StatelessWidget {
   SaveRegistrationFormModel cusRegData;
+  BuildContext context;
 
   RegistrationFormPreviewPopWidget({
     required this.cusRegData,
+    required this.context,
   });
 
   @override
@@ -25,7 +27,7 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _header(context: context),
-                        _itemBuilder(star: AppString.star,textName: AppString.registrationType, textValue: cusRegData.interested == null ? "" : cusRegData.interested),
+                        _itemBuilder(star: AppString.star,textName: AppString.registrationType, textValue: cusRegData.registrationType == null ? "" : cusRegData.registrationType),
                         _itemBuilder(star: AppString.star,textName: AppString.conversionPolicy, textValue: cusRegData.acceptConversionPolicy == null ? "" : cusRegData.acceptConversionPolicy),
                         _itemBuilder(star: AppString.star,textName: AppString.fittingCost, textValue:cusRegData.acceptExtraFittingCost == null ? "" : cusRegData.acceptExtraFittingCost),
                         _itemBuilder(star: AppString.star,textName: AppString.mdpeAllow, textValue: cusRegData.societyAllowedMdpe == null ? "" :cusRegData.societyAllowedMdpe),
@@ -36,8 +38,8 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                         _itemBuilder(star: AppString.star,textName: AppString.firstName, textValue: cusRegData.firstName == null ? "" : cusRegData.firstName),
                         _itemBuilder(textName: AppString.middleName, textValue: cusRegData.middleName == null ? "" : cusRegData.middleName),
                         _itemBuilder(star: AppString.star,textName: AppString.lastName, textValue: cusRegData.lastName == null ? "" : cusRegData.lastName),
-                        _itemBuilder(star:cusRegData.interested != "Future Registration" ? AppString.star : "",textName: AppString.guardianType, textValue: cusRegData.guardianType == null ? "" : cusRegData.guardianType),
-                        _itemBuilder(star:cusRegData.interested != "Future Registration" ? AppString.star : "",textName: AppString.guardianName, textValue: cusRegData.guardianName == null ? "" : cusRegData.guardianName),
+                        _itemBuilder(star:cusRegData.registrationType != "Future Registration" ? AppString.star : "",textName: AppString.guardianType, textValue: cusRegData.guardianType == null ? "" : cusRegData.guardianType),
+                        _itemBuilder(star:cusRegData.registrationType != "Future Registration" ? AppString.star : "",textName: AppString.guardianName, textValue: cusRegData.guardianName == null ? "" : cusRegData.guardianName),
                         _itemBuilder(textName: AppString.emailAddress, textValue: cusRegData.emailId == null ? "" : cusRegData.emailId),
                         _itemBuilder(star: AppString.star,textName: AppString.propertyCategory, textValue: cusRegData.propertyCategoryId == null ? "" : cusRegData.propertyCategoryId),
                         _itemBuilder(star: AppString.star,textName: AppString.propertyClass, textValue: cusRegData.propertyClassId == null ? "" : cusRegData.propertyClassId),
@@ -63,37 +65,37 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                             ImageWidget(
                               star: AppString.star,
                               title: AppString.idProofFront,
-                              imgFile: cusRegData.documentUploadsPhoto1 == null ? File("") : File(cusRegData.documentUploadsPhoto1!),
+                              imgFile: cusRegData.idFrontPath1 == null ? File("") : File(cusRegData.idFrontPath1!),
                               onPressed: (){},
                             ),
                             ImageWidget(
                               // star: AppString.star,
                               title: AppString.idProofBack,
-                              imgFile: cusRegData.backSidePhoto1 == null ? File("") : File(cusRegData.backSidePhoto1!),
+                              imgFile: cusRegData.idBackPath1 == null ? File("") : File(cusRegData.idBackPath1!),
                               onPressed: (){},
                             ),
                           ],
                         ),
-                        _itemBuilder(star:cusRegData.interested != "Future Registration" ?AppString.star : "",textName: AppString.addProof, textValue: cusRegData.kycDocument2 == null ? "-" : cusRegData.kycDocument2),
-                        _itemBuilder(star: cusRegData.interested != "Future Registration" ?AppString.star : "",textName: AppString.addProofNo, textValue: cusRegData.kycDocument2Number == null ? "" : cusRegData.kycDocument2Number),
+                        _itemBuilder(star:cusRegData.registrationType != "Future Registration" ?AppString.star : "",textName: AppString.addProof, textValue: cusRegData.kycDocument2 == null ? "-" : cusRegData.kycDocument2),
+                        _itemBuilder(star: cusRegData.registrationType != "Future Registration" ?AppString.star : "",textName: AppString.addProofNo, textValue: cusRegData.kycDocument2Number == null ? "" : cusRegData.kycDocument2Number),
                         _divider(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ImageWidget(
-                              star: cusRegData.interested != "Future Registration" ?AppString.star : "",
+                              star: cusRegData.registrationType != "Future Registration" ?AppString.star : "",
                               title: AppString.addProofFront,
-                              imgFile: cusRegData.documentUploadsPhoto2 == null ? File("") :File( cusRegData.documentUploadsPhoto2!),
+                              imgFile: cusRegData.addFrontPath2 == null ? File("") :File( cusRegData.addFrontPath2!),
                               onPressed: (){},
                             ),
                             ImageWidget(
                               title: AppString.addProofBack,
-                              imgFile:  cusRegData.backSidePhoto2 == null  ? File("") : File(cusRegData.backSidePhoto2!),
+                              imgFile:  cusRegData.addBackPath2 == null  ? File("") : File(cusRegData.addBackPath2!),
                               onPressed: (){},
                             ),
                           ],
                         ),
-                        if(cusRegData.interested != "Future Registration")...[
+                        if(cusRegData.registrationType != "Future Registration")...[
                           _itemBuilder(textName: AppString.ownershipProperty, textValue: cusRegData.kycDocument3 == null ? "-" : cusRegData.kycDocument3),
                           _divider(),
                           Row(
@@ -108,7 +110,7 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                                   ?ImageWidget(
                                 star: AppString.star,
                                 title: AppString.nocDoc,
-                                imgFile: cusRegData.documentUploadsPhoto3 == null ? File("") : File(cusRegData.documentUploadsPhoto3!),
+                                imgFile: cusRegData.nocFrontPath3 == null ? File("") : File(cusRegData.nocFrontPath3!),
                                 onPressed: (){},
                               ):ImageWidget(
                                 title: AppString.houseImg,
@@ -131,15 +133,15 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                             ],
                           ),
                           _itemBuilder(textName: AppString.initDepositStatus, textValue: cusRegData.initialDepositeStatus == null ? "-" : cusRegData.initialDepositeStatus),
-                          _itemBuilder(textName: AppString.depositType, textValue: cusRegData.depositeType == null ? "-" : cusRegData.depositeType),
-                          _itemBuilder(textName: AppString.depositAmt, textValue: cusRegData.depositTypeAmount == null ? "-" : cusRegData.depositTypeAmount),
+                          _itemBuilder(textName: AppString.schemeType, textValue: cusRegData.schemeType == null ? "-" : cusRegData.schemeType),
+                          _itemBuilder(textName: AppString.schemeAmt, textValue: cusRegData.schemeTypeAmount == null ? "-" : cusRegData.schemeTypeAmount),
                           _itemBuilder(textName: AppString.modeDeposit, textValue: cusRegData.modeDepositValue == null ? "-" : cusRegData.modeDepositValue),
                           if (cusRegData.modeOfDeposite == "Cheque") ...[
                             _itemBuilder(textName: AppString.chqNo, textValue: cusRegData.chequeNumber == null ? "-" :  cusRegData.chequeNumber),
                             _itemBuilder(textName: AppString.chqDate, textValue: cusRegData.chequeDepositDate == null ? "" :cusRegData.chequeDepositDate),
                             _itemBuilder(textName: AppString.chqBank, textValue: cusRegData.payementBankName == null ? "": cusRegData.payementBankName),
                             _itemBuilder(textName: AppString.chequeAccountNo, textValue:cusRegData.chequeBankAccount== null ? "":  cusRegData.chequeBankAccount),
-                            _itemBuilder(textName: AppString.chequeMICRNo, textValue: cusRegData.micr== null ? "": cusRegData.micr),
+                            _itemBuilder(textName: AppString.chequeMICRNo, textValue: cusRegData.chequeMicrAccount== null ? "": cusRegData.chequeMicrAccount),
                             _divider(),
                             ImageWidget(
                               star: AppString.star,

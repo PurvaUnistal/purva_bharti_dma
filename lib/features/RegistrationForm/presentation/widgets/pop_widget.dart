@@ -24,7 +24,7 @@ class PopWidget{
       children: [
         divider(),
         Padding(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,7 +40,7 @@ class PopWidget{
                 ],
               ),
               ),
-              Flexible(child: Text(textValue ?? "-",
+              Flexible(child: Text(textValue ?? "-",style: Styles.label1,
               )),
             ],
           ),

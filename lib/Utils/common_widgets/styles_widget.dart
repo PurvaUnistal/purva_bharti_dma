@@ -4,7 +4,7 @@ import 'package:pbg_app/Utils/common_widgets/app_color.dart';
 
 class Styles {
   static TextStyle rel = TextStyle(
-      color: AppColor.prime,
+      color: AppColor.white,
       fontWeight: FontWeight.w800, fontSize: 8
   );
 
@@ -45,11 +45,20 @@ class Styles {
       fontWeight: FontWeight.bold,
       fontSize: 15, color: Colors.red
   );
-
+  static TextStyle header = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 15, color: Colors.white
+  );
   static TextStyle table = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 15,
       color:AppColor.red
+  );
+
+  static TextStyle label1 = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 12,
+      color:AppColor.black
   );
 
   static TextStyle labels = TextStyle(
@@ -57,7 +66,6 @@ class Styles {
       fontSize: 12,
       color:AppColor.prime
   );
-
   static TextStyle texts = TextStyle(
       fontWeight: FontWeight.normal,
       fontSize: 12,

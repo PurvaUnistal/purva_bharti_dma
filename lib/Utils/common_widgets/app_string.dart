@@ -1,6 +1,6 @@
 class AppString{
-  static String rel = "Release";
-  static String relDate = "02-07-2024";
+  static String version = "Version : DMA-1 - 14/02/2025";
+  static String companyName = "© Unistal Systems Pvt. Ltd.";
   static String appName = "Purba Bharati  DMA";
   static String companyNameDesc = "Unistal Private Ltd.";
   static String appLogo = "assets/images/pbg_logo.png";
@@ -9,7 +9,7 @@ class AppString{
   static String customerRegistrationForm = "Customer Registration Form ";
   static String mobile = "Mobile";
   static String wifi = "WI-FI";
-  static String update = "Update";
+  static String refresh = "Refresh";
   static String upload = "Upload";
 
 
@@ -84,8 +84,8 @@ class AppString{
   static String mdpeAllow = 'Society Allow MDPE';
   static String initDepositStatus = 'Initial Deposit Status';
   static String reasonDeposit = 'Reason Deposit Status';
-  static String depositType = 'Scheme Type';
-  static String depositAmt = 'Deposit Amount';
+  static String schemeType = 'Scheme Type';
+  static String schemeAmt = 'Deposit Amount';
   static String modeDeposit = 'Mode Of Deposit';
   static String chqNo = 'Cheque Number';
   static String chqBank = 'Cheque Bank Name';

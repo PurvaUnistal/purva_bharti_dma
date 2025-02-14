@@ -3,8 +3,8 @@ import 'package:pbg_app/Utils/common_widgets/message_box_one_button_pop.dart';
 import 'package:pbg_app/features/Dashboard/domain/model/get_all_deposit_offline_model.dart';
 
 class DepositPop extends StatelessWidget {
- final GetAllDepositOfflineModel depositTypeValue;
-  const DepositPop({super.key, required this.depositTypeValue});
+ final GetAllDepositOfflineModel schemeTypeValue;
+  const DepositPop({super.key, required this.schemeTypeValue});
 
   @override
   Widget build(BuildContext context) {
@@ -13,27 +13,27 @@ class DepositPop extends StatelessWidget {
         children: [
           RowWidget(
             lText: "Deposit Name",
-            rText: depositTypeValue.depositName ?? ""
+            rText: schemeTypeValue.depositName ?? ""
           ),
           RowWidget(
             lText: "Deposit Amount",
-            rText: depositTypeValue.depositAmount ?? ""
+            rText: schemeTypeValue.depositAmount ?? ""
           ),
           RowWidget(
             lText: "Scheme Month",
-            rText: depositTypeValue.schemeMonth.toString()
+            rText: schemeTypeValue.schemeMonth.toString()
           ),
           RowWidget(
             lText: "Equipment Deposit Amount",
-            rText: depositTypeValue.equipmentDepositAmount.toString()
+            rText: schemeTypeValue.equipmentDepositAmount.toString()
           ),
           RowWidget(
             lText: "GAS Amount",
-            rText: depositTypeValue.gasDepositAmount.toString()
+            rText: schemeTypeValue.gasDepositAmount.toString()
           ),
           RowWidget(
             lText: "First Deposit Amount",
-            rText: depositTypeValue.firstDepositAmount.toString(),
+            rText: schemeTypeValue.firstDepositAmount.toString(),
           ),
         ],
       ),

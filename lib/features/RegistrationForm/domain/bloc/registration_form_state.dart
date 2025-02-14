@@ -27,7 +27,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final bool isPageLoader;
   final bool isUpdate;
   final GetLabelModel labelModel;
-  GetNotInterestedModel? interestValue;
+  GetNotInterestedModel? registrationTypeValue;
   final List<GetNotInterestedModel> getNotInterestedList;
   GetAcceptConversionPolicyModel? conversionPolicyValue;
   final List<GetAcceptConversionPolicyModel> conversionPolicyList;
@@ -104,7 +104,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final TextEditingController custIfscCodeController;
   final TextEditingController custBankAddController;
   final TextEditingController reasonDepositStsController;
-  final TextEditingController depositAmountController;
+  final TextEditingController schemeAmountController;
   final TextEditingController latitudeController;
   final TextEditingController longitudeController;
   final TextEditingController chequeNoController;
@@ -135,7 +135,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     required this.isPageLoader,
     required this.isUpdate,
     required this.labelModel,
-    required this.interestValue,
+    required this.registrationTypeValue,
     required this.getNotInterestedList,
     required this.conversionPolicyValue,
     required this.conversionPolicyList,
@@ -210,7 +210,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     required this.custIfscCodeController,
     required this.custBankAddController,
     required this.reasonDepositStsController,
-    required this.depositAmountController,
+    required this.schemeAmountController,
     required this.allDistrictValue,
     required this.latitudeController,
     required this.longitudeController,
@@ -246,7 +246,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     isPageLoader,
     isUpdate,
     labelModel,
-    interestValue,
+    registrationTypeValue,
     getNotInterestedList,
     conversionPolicyValue,
     conversionPolicyList,
@@ -316,7 +316,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     custIfscCodeController,
     custBankAddController,
     reasonDepositStsController,
-    depositAmountController,
+    schemeAmountController,
     allDistrictValue,
     getAllDistrictModel,
     latitudeController,

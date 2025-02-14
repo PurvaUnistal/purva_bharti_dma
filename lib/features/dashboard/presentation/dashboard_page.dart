@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/Loader/CircleLoader.dart';
+import 'package:pbg_app/Utils/common_widgets/background_widget.dart';
+import 'package:pbg_app/features/internet/bloc/internet_bloc.dart';
+import 'package:pbg_app/features/internet/bloc/internet_event.dart';
+import 'package:pbg_app/features/internet/bloc/internet_state.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -27,7 +31,7 @@ class _DashboardPageState extends State<DashboardPage> {
   ];
 
   List<Widget> navigatorView = [
-    RegistrationFormPage( position: 0, localData: null),
+    RegistrationFormPage(index: 0,localData: SaveRegistrationFormModel(),isUpdate: false,),
     ViewSyncRecordPage(),
   ];
 
@@ -53,27 +57,21 @@ class _DashboardPageState extends State<DashboardPage> {
               ],
             ),
           ),
-          body:  SafeArea(
+          body: BackgroundWidget(
             child: BlocListener<InternetBloc, InternetState>(
               listener: (context, state) {
-                // TODO: implement listener}
                 if (state is ConnectedState) {
-                  state.isConnected
-                      ? Utils.successSnackBar(msg: state.msg,context: context)
-                      : Utils.errorSnackBar(msg:state.msg,context: context);
+                  if (state.isConnected) {
+                    Utils.successSnackBar(msg: state.msg, context: context);
+                  } else {
+                    SizedBox.shrink();
+                  }
                 }
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("${AppString.rel} : ${AppString.relDate}", style: Styles.rel,),
-                      Text("${AppString.rel} : ${AppString.relDate}", style: Styles.rel,),
-                    ],
-                  ),
                   BlocBuilder<InternetBloc, InternetState>(
                     builder: (context, state) {
                       if (state is ConnectedState) {
@@ -114,23 +112,23 @@ class _DashboardPageState extends State<DashboardPage> {
             icon: Icons.wifi,
             text: AppString.wifi),
         BlocBuilder<DashboardBloc, DashboardState>(
-  builder: (context, state) {
-    if( state is DashboardGetAllDataState){
-      return state.isLoader ==  false ? RowBtnWidget(
-        color: stateData.isConnected ? Colors.green : Colors.red,
-        icon: Icons.sync,
-        text: AppString.update,
-        onTap: () {
-          BlocProvider.of<DashboardBloc>(context).add(SelectSyncFetchAllDataEvent(
-            context: context,
-          ));
-        },
-      ) : DotsLoaderWidget();
-    } else {
-    return const Center(child: SpinLoader());
-    }
-  },
-) ,
+          builder: (context, state) {
+            if( state is DashboardGetAllDataState){
+              return state.isLoader ==  false ? RowBtnWidget(
+                color: stateData.isConnected ? Colors.green : Colors.red,
+                icon: Icons.refresh,
+                text: AppString.refresh,
+                onTap: () {
+                  BlocProvider.of<DashboardBloc>(context).add(SelectSyncFetchAllDataEvent(
+                    context: context,
+                  ));
+                },
+              ) : DotsLoaderWidget();
+            } else {
+              return const Center(child: SpinLoader());
+            }
+          },
+        ) ,
       ],
     );
   }

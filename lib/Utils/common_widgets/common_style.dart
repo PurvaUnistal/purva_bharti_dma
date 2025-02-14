@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+import 'app_color.dart';
+import 'styles_widget.dart';
+
+class CommonStyle {
+
+  static OutlineInputBorder border = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(5.0),
+    borderSide: BorderSide(
+        color: AppColor.prime, style: BorderStyle.solid, width: 0.80),
+  );
+
+  static OutlineInputBorder borderGrey = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(5.0),
+    borderSide: BorderSide(
+        color: AppColor.grey, style: BorderStyle.solid, width: 0.80),
+  );
+
+  static OutlineInputBorder borderRed = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(5.0),
+    borderSide: BorderSide(
+        color: AppColor.red, style: BorderStyle.solid, width: 0.80),
+  );
+
+  static Widget vertical({required BuildContext context}) {
+    return SizedBox(
+      height: MediaQuery
+          .of(context)
+          .size
+          .height * 0.016,
+    );
+  }
+
+  static Widget widthSpace({required BuildContext context}) {
+    return SizedBox(
+      width: MediaQuery
+          .of(context)
+          .size
+          .width * 0.016,
+    );
+  }
+
+  static Widget col({required Widget child, required BuildContext context}) {
+    return Column(
+      children: [
+        CommonStyle.vertical(context: context),
+        child,
+      ],
+    );
+  }
+
+  /////////////////////////Data Table
+
+  static DataColumn dataColumn({required String label}) {
+    return DataColumn(
+        label: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            label,
+            style: Styles.table,
+            textAlign: TextAlign.center,
+          ),
+        ));
+  }
+
+  static DataCell dataCell({required String label}) {
+    return DataCell(Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+      ),
+    ));
+  }
+
+  static DataCell dataCellG({required String label}) {
+    return DataCell(Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Text(label, style: Styles.title,),
+    ));
+  }
+}

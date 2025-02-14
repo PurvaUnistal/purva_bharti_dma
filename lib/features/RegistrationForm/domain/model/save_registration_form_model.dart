@@ -3,7 +3,7 @@ part 'save_registration_form_model.g.dart';
 
 @HiveType(typeId: HiveTypeId.RegistrationFormId)
 
-class SaveRegistrationFormModel{
+class SaveRegistrationFormModel extends HiveObject{
   @HiveField(0)
   String? areaId;
   @HiveField(1)
@@ -69,17 +69,17 @@ class SaveRegistrationFormModel{
   @HiveField(31)
   String? kycDocument3;
   @HiveField(32)
-  String? backSidePhoto1;
+  String? idBackPath1;
   @HiveField(33)
-  String? backSidePhoto2;
+  String? addBackPath2;
   @HiveField(34)
-  String? backSidePhoto3;
+  String? nocBackPath3;
   @HiveField(35)
-  String? documentUploadsPhoto1;
+  String? idFrontPath1;
   @HiveField(36)
-  String? documentUploadsPhoto2;
+  String? addFrontPath2;
   @HiveField(37)
-  String? documentUploadsPhoto3;
+  String? nocFrontPath3;
   @HiveField(38)
   String? uploadCustomerPhoto;
   @HiveField(39)
@@ -105,9 +105,9 @@ class SaveRegistrationFormModel{
   @HiveField(49)
   String? modeOfDeposite;
   @HiveField(50)
-  String? depositeType;
+  String? schemeType;
   @HiveField(51)
-  String? depositTypeAmount;
+  String? schemeTypeAmount;
   @HiveField(52)
   String? payementBankName;
   @HiveField(53)
@@ -115,7 +115,7 @@ class SaveRegistrationFormModel{
   @HiveField(54)
   String? chequeNumber;
   @HiveField(55)
-  String? interested;
+  String? registrationType;
   @HiveField(56)
   String? districtId;
   @HiveField(57)
@@ -145,13 +145,13 @@ class SaveRegistrationFormModel{
   @HiveField(69)
   String? nearestLandmark;
   @HiveField(70)
-  String? micr;
-  @HiveField(71)
   String? customerConsent;
-  @HiveField(72)
+  @HiveField(71)
   String? alternateMobile;
-  @HiveField(73)
+  @HiveField(72)
   String? housePhoto;
+  @HiveField(73)
+  String? reasonRegistration;
 
   SaveRegistrationFormModel({
     this.areaId,
@@ -166,12 +166,12 @@ class SaveRegistrationFormModel{
     this.mobileNumber,
     this.schema,
     this.emailId,
-    this.backSidePhoto1,
-    this.backSidePhoto2,
-    this.backSidePhoto3,
-    this.documentUploadsPhoto1,
-    this.documentUploadsPhoto2,
-    this.documentUploadsPhoto3,
+    this.idBackPath1,
+    this.addBackPath2,
+    this.nocBackPath3,
+    this.idFrontPath1,
+    this.addFrontPath2,
+    this.nocFrontPath3,
     this.canceledChequePhoto,
     this.customerConsentPhoto,
     this.bankAccountNumber,
@@ -179,7 +179,7 @@ class SaveRegistrationFormModel{
     this.bankIfscCode,
     this.chequeBankAccount,
     this.chequeNumber,
-    this.depositeType,
+    this.schemeType,
     this.districtId,
     this.dmaUserId,
     this.dmaUserName,
@@ -187,9 +187,9 @@ class SaveRegistrationFormModel{
     this.guardianName,
     this.guardianType,
     this.houseNumber,
-    this.depositTypeAmount,
+    this.schemeTypeAmount,
     this.initialDepositeStatus,
-    this.interested,
+    this.registrationType,
     this.kycDocument1,
     this.kycDocument1Number,
     this.kycDocument2,
@@ -224,10 +224,10 @@ class SaveRegistrationFormModel{
     this.ownerConsentText,
     this.isDepositCheq = false,
     this.nearestLandmark,
-    this.micr,
     this.customerConsent,
     this.alternateMobile,
     this.housePhoto,
+    this.reasonRegistration,
   });
 }
 

@@ -11,6 +11,7 @@ class DashboardPageLoadingEvent extends DashboardEvent {
   List<Object?> get props => [context];
 }
 
+
 class SelectSyncFetchAllDataEvent extends DashboardEvent {
   final BuildContext context;
   SelectSyncFetchAllDataEvent({required this.context});

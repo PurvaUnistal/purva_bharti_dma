@@ -24,7 +24,8 @@ class DropdownWidget<T> extends StatelessWidget {
     return DropdownButtonFormField<T>(
         borderRadius: BorderRadius.circular(5),
         decoration: InputDecoration(
-          fillColor: AppColor.black,
+          fillColor: AppColor.white,
+          filled: true,
           // labelText: label,
           isDense: false,
           contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),

@@ -22,7 +22,7 @@ class PreviewPop extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PopWidget.header(context: context),
-                  PopWidget.itemBuilder(star: AppString.star,textName: AppString.registrationType, textValue: cusRegData.interested == null ? "" : cusRegData.interested!),
+                  PopWidget.itemBuilder(star: AppString.star,textName: AppString.registrationType, textValue: cusRegData.registrationType == null ? "" : cusRegData.registrationType!),
                   PopWidget.itemBuilder(star: AppString.star,textName: AppString.conversionPolicy, textValue:  cusRegData.acceptConversionPolicy == null ? "" : cusRegData.acceptConversionPolicy!),
                   PopWidget.itemBuilder(star: AppString.star,textName: AppString.fittingCost, textValue: cusRegData.acceptExtraFittingCost == null ? "" : cusRegData.acceptExtraFittingCost),
                   PopWidget.itemBuilder(star: AppString.star,textName: AppString.mdpeAllow, textValue:  cusRegData.societyAllowedMdpe == null ? "" : cusRegData.societyAllowedMdpe),
@@ -33,9 +33,9 @@ class PreviewPop extends StatelessWidget {
                   PopWidget.itemBuilder(star: AppString.star,textName: AppString.firstName, textValue:  cusRegData.firstName == null ? "" :  cusRegData.firstName),
                   PopWidget.itemBuilder(textName: AppString.middleName, textValue:  cusRegData.middleName == null ? "" : cusRegData.middleName),
                   PopWidget.itemBuilder(star: AppString.star,textName: AppString.lastName, textValue: cusRegData.lastName == null  ? "" : cusRegData.lastName),
-                  PopWidget.itemBuilder(star: cusRegData.interested != "Future Registration"
+                  PopWidget.itemBuilder(star: cusRegData.registrationType != "Future Registration"
                       ? AppString.star : "", textName: AppString.guardianType, textValue:  cusRegData.guardianType == null ? "" : cusRegData.guardianType),
-                  PopWidget.itemBuilder(star: cusRegData.interested != "Future Registration" ? AppString.star : "", textName: AppString.guardianName, textValue: cusRegData.guardianName == null ? "" : cusRegData.guardianName),
+                  PopWidget.itemBuilder(star: cusRegData.registrationType != "Future Registration" ? AppString.star : "", textName: AppString.guardianName, textValue: cusRegData.guardianName == null ? "" : cusRegData.guardianName),
                   PopWidget.itemBuilder(textName: AppString.emailAddress, textValue: cusRegData.emailId == null ? "" : cusRegData.emailId),
                   PopWidget.itemBuilder(star: AppString.star,textName: AppString.propertyCategory, textValue: cusRegData.propertyCategoryId == null ? "" : cusRegData.propertyCategoryId),
                   PopWidget.itemBuilder(star: AppString.star,textName: AppString.propertyClass, textValue: cusRegData.propertyClassId == null ? "" : cusRegData.propertyClassId),
@@ -61,37 +61,37 @@ class PreviewPop extends StatelessWidget {
                       ImageWidget(
                         star: AppString.star,
                         title: AppString.idProofFront,
-                        imgFile: cusRegData.documentUploadsPhoto1 == null ? File("") : File(cusRegData.documentUploadsPhoto1!),
+                        imgFile: cusRegData.idFrontPath1 == null ? File("") : File(cusRegData.idFrontPath1!),
                         onPressed: (){},
                       ),
                       ImageWidget(
                         // star: AppString.star,
                         title: AppString.idProofBack,
-                        imgFile: cusRegData.backSidePhoto1 == null  ? File("") : File(cusRegData.backSidePhoto1!),
+                        imgFile: cusRegData.idBackPath1 == null  ? File("") : File(cusRegData.idBackPath1!),
                         onPressed: (){},
                       ),
                     ],
                   ),
-                  PopWidget.itemBuilder(star: cusRegData.interested != "Future Registration" ?AppString.star : "",textName: AppString.addProof, textValue: cusRegData.kycDocument2 == null ? "-" : cusRegData.kycDocument2),
-                  PopWidget.itemBuilder(star: cusRegData.interested != "Future Registration" ?AppString.star : "",textName: AppString.addProofNo, textValue: cusRegData.kycDocument2Number == null  ? "" : cusRegData.kycDocument2Number),
+                  PopWidget.itemBuilder(star: cusRegData.registrationType != "Future Registration" ?AppString.star : "",textName: AppString.addProof, textValue: cusRegData.kycDocument2 == null ? "-" : cusRegData.kycDocument2),
+                  PopWidget.itemBuilder(star: cusRegData.registrationType != "Future Registration" ?AppString.star : "",textName: AppString.addProofNo, textValue: cusRegData.kycDocument2Number == null  ? "" : cusRegData.kycDocument2Number),
                   PopWidget.divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ImageWidget(
-                        star: cusRegData.interested != "Future Registration" ? AppString.star : "",
+                        star: cusRegData.registrationType != "Future Registration" ? AppString.star : "",
                         title: AppString.addProofFront,
-                        imgFile: cusRegData.backSidePhoto2 == null ? File("") : File(cusRegData.backSidePhoto2!),
+                        imgFile: cusRegData.addFrontPath2 == null ? File("") : File(cusRegData.addFrontPath2!),
                         onPressed: (){},
                       ),
                       ImageWidget(
                         title: AppString.addProofBack,
-                        imgFile: cusRegData.documentUploadsPhoto2 ==null ? File("") : File(cusRegData.documentUploadsPhoto2!),
+                        imgFile: cusRegData.addBackPath2 ==null ? File("") : File(cusRegData.addBackPath2!),
                         onPressed: (){},
                       ),
                     ],
                   ),
-                  if(cusRegData.interested != "Future Registration")...[
+                  if(cusRegData.registrationType != "Future Registration")...[
                     PopWidget.itemBuilder(textName: AppString.ownershipProperty, textValue: cusRegData.kycDocument3 == null ? "-" : cusRegData.kycDocument3),
                     PopWidget.divider(),
                     Row(
@@ -106,7 +106,7 @@ class PreviewPop extends StatelessWidget {
                             ?ImageWidget(
                           star: AppString.star,
                           title: AppString.nocDoc,
-                          imgFile: cusRegData.documentUploadsPhoto3 == null ? File("") : File(cusRegData.documentUploadsPhoto3!),
+                          imgFile: cusRegData.nocFrontPath3 == null ? File("") : File(cusRegData.nocFrontPath3!),
                           onPressed: (){},
                         ):ImageWidget(
                           title: AppString.houseImg,
@@ -129,8 +129,8 @@ class PreviewPop extends StatelessWidget {
                       ],
                     ),
                     PopWidget.itemBuilder(textName: AppString.initDepositStatus, textValue: cusRegData.initialDepositeStatus == null ? "-" : cusRegData.initialDepositeStatus),
-                    PopWidget.itemBuilder(textName: AppString.depositType, textValue: cusRegData.depositeType == null ? "-" : cusRegData.depositeType),
-                    PopWidget.itemBuilder(textName: AppString.depositAmt, textValue: cusRegData.depositTypeAmount == null ? "-" : cusRegData.depositTypeAmount),
+                    PopWidget.itemBuilder(textName: AppString.schemeType, textValue: cusRegData.schemeType == null ? "-" : cusRegData.schemeType),
+                    PopWidget.itemBuilder(textName: AppString.schemeAmt, textValue: cusRegData.schemeTypeAmount == null ? "-" : cusRegData.schemeTypeAmount),
                     PopWidget.itemBuilder(textName: AppString.modeDeposit, textValue: cusRegData.modeDepositValue == null ? "-" : cusRegData.modeDepositValue),
                     if (cusRegData.modeDepositValue == "Cheque") ...[
                       PopWidget.itemBuilder(textName: AppString.chqNo, textValue: cusRegData.chequeNumber == null ? "-" : cusRegData.chequeNumber),

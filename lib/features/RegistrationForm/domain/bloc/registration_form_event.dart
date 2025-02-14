@@ -11,11 +11,11 @@ class RegistrationFormPageLoadEvent extends RegistrationFormEvent {
 }
 
 class RegistrationFormSetInterestValue extends RegistrationFormEvent {
-  final GetNotInterestedModel interestValue;
-  RegistrationFormSetInterestValue({required this.interestValue});
+  final GetNotInterestedModel registrationTypeValue;
+  RegistrationFormSetInterestValue({required this.registrationTypeValue});
   @override
   // TODO: implement props
-  List<Object?> get props => [interestValue];
+  List<Object?> get props => [registrationTypeValue];
 }
 
 class RegistrationFormSetConversionPolicyValue extends RegistrationFormEvent {
@@ -163,11 +163,11 @@ class RegistrationFormSetInitialDepositStatusValue extends RegistrationFormEvent
 }
 
 class RegistrationFormSetDepositTypeValue extends RegistrationFormEvent {
-  final dynamic depositTypeValue;
-  RegistrationFormSetDepositTypeValue({required this.depositTypeValue});
+  final dynamic schemeTypeValue;
+  RegistrationFormSetDepositTypeValue({required this.schemeTypeValue});
   @override
   // TODO: implement props
-  List<Object?> get props => [depositTypeValue];
+  List<Object?> get props => [schemeTypeValue];
 }
 
 class RegistrationFormSetModeDepositValue extends RegistrationFormEvent {
@@ -314,14 +314,16 @@ class RegistrationFormSaveLocalDataEvent extends RegistrationFormEvent {
 class UpdateLocalDataEvent extends RegistrationFormEvent {
   final BuildContext context;
   final int index;
+  final bool isUpdate;
   final SaveRegistrationFormModel updateDate;
   UpdateLocalDataEvent({
     required this.context,
     required this.index,
+    required this.isUpdate,
     required this.updateDate,
   });
   @override
-  List<Object?> get props => [context, index,updateDate];
+  List<Object?> get props => [context, index,isUpdate,updateDate];
 }
 
 class AddFormEvent extends RegistrationFormEvent {
@@ -331,7 +333,7 @@ class AddFormEvent extends RegistrationFormEvent {
 
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [form];
 }
 
 class UpdateFormEvent extends RegistrationFormEvent {
@@ -342,5 +344,5 @@ class UpdateFormEvent extends RegistrationFormEvent {
 
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [index,updatedForm];
 }

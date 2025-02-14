@@ -6,7 +6,7 @@ class ViewSyncRecordHelper {
   static Future<SendRegistrationOfflineModel?> sendData({required BuildContext context, required SaveRegistrationFormModel custRegSyncData}) async{
     try{
       Map<String, String> json =  {
-        "interested": custRegSyncData.interested ?? "",
+        "interested": custRegSyncData.registrationType ?? "",
         "area_id": custRegSyncData.areaId ?? "",
         "mobile_number":custRegSyncData.mobileNumber ?? "",
         "alternateMobile": custRegSyncData.alternateMobile ?? "",
@@ -51,8 +51,8 @@ class ViewSyncRecordHelper {
         "initial_deposite_status": custRegSyncData.initialDepositeStatus ?? "0",
         "reason_for_hold": custRegSyncData.nearestLandmark ?? "",
         "mode_of_deposite": custRegSyncData.modeOfDeposite ?? "",
-        "deposite_type": custRegSyncData.depositeType ?? "",
-        "initial_amount": custRegSyncData.depositTypeAmount ?? "",
+        "deposite_type": custRegSyncData.schemeType ?? "",
+        "initial_amount": custRegSyncData.schemeTypeAmount ?? "",
         "initial_deposite_date": custRegSyncData.chequeDepositDate ?? "",
         "payement_bank_name": custRegSyncData.payementBankName ?? "",
         "cheque_bank_account": custRegSyncData.chequeBankAccount ?? "",
@@ -60,7 +60,7 @@ class ViewSyncRecordHelper {
         "district_id": custRegSyncData.districtId ?? "",
         "accept_conversion_policy": custRegSyncData.acceptConversionPolicy ?? "",
         "accept_extra_fitting_cost": custRegSyncData.acceptExtraFittingCost ?? "",
-        "micr": custRegSyncData.micr ?? "",
+        "micr": custRegSyncData.chequeMicrAccount ?? "",
         "building_number": custRegSyncData.buildingNumber ?? "",
       };
       log("requestBody-->${json}");
@@ -76,12 +76,12 @@ class ViewSyncRecordHelper {
         endPoint: AppUrl.saveCustomerRegistrationOffline,
         body: json,
         context: context,
-        keyWord1: "backside1", filePath1: custRegSyncData.backSidePhoto1 == null ? "" : custRegSyncData.backSidePhoto1!,
-        keyWord2: "backside2", filePath2: custRegSyncData.backSidePhoto2 == null ? "" : custRegSyncData.backSidePhoto2!,
-        keyWord3: "backside3", filePath3: custRegSyncData.backSidePhoto3 == null ? "" : custRegSyncData.backSidePhoto3!,
-        keyWord4: "document_uploads_1", filePath4: custRegSyncData.documentUploadsPhoto1 == null ? "" : custRegSyncData.documentUploadsPhoto1!,
-        keyWord5: "document_uploads_2", filePath5: custRegSyncData.documentUploadsPhoto2 == null ? "" : custRegSyncData.documentUploadsPhoto2!,
-        keyWord6: "document_uploads_3", filePath6: custRegSyncData.documentUploadsPhoto3 == null ? "" : custRegSyncData.documentUploadsPhoto3!,
+        keyWord1: "backside1", filePath1: custRegSyncData.idBackPath1 == null ? "" : custRegSyncData.idBackPath1!,
+        keyWord2: "backside2", filePath2: custRegSyncData.addBackPath2 == null ? "" : custRegSyncData.addBackPath2!,
+        keyWord3: "backside3", filePath3: custRegSyncData.nocBackPath3 == null ? "" : custRegSyncData.nocBackPath3!,
+        keyWord4: "document_uploads_1", filePath4: custRegSyncData.idFrontPath1 == null ? "" : custRegSyncData.idFrontPath1!,
+        keyWord5: "document_uploads_2", filePath5: custRegSyncData.addFrontPath2 == null ? "" : custRegSyncData.addFrontPath2!,
+        keyWord6: "document_uploads_3", filePath6: custRegSyncData.nocFrontPath3 == null ? "" : custRegSyncData.nocFrontPath3!,
         keyWord7: "upload_customer_photo", filePath7: custRegSyncData.uploadCustomerPhoto == null ? "" : custRegSyncData.uploadCustomerPhoto!,
         keyWord8: "upload_house_photo", filePath8: custRegSyncData.uploadHousePhoto == null ? "" : custRegSyncData.uploadHousePhoto!,
         keyWord9: "canceled_cheque", filePath9: custRegSyncData.canceledChequePhoto == null ? "" : custRegSyncData.canceledChequePhoto!,

@@ -71,9 +71,6 @@ export 'package:pbg_app/features/dashboard/presentation/widget/logout_widget.dar
 export 'package:pbg_app/features/dashboard/presentation/widget/row_btn_widget.dart';
 export 'package:pbg_app/features/RegistrationForm/presentation/widgets/registration_form_preview_pop_widget.dart';
 /////////////////////////////////////////////////////////////////////////////
-export 'package:pbg_app/features/internet/bloc/internet_bloc.dart';
-export 'package:pbg_app/features/internet/bloc/internet_event.dart';
-export 'package:pbg_app/features/internet/bloc/internet_state.dart';
 export 'package:pbg_app/features/Login/domain/bloc/login_bloc.dart';
 export 'package:pbg_app/features/Login/domain/bloc/login_event.dart';
 export 'package:pbg_app/features/Login/domain/bloc/login_state.dart';

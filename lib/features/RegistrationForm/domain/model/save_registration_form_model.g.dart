@@ -30,12 +30,12 @@ class SaveRegistrationFormModelAdapter
       mobileNumber: fields[1] as String?,
       schema: fields[23] as String?,
       emailId: fields[7] as String?,
-      backSidePhoto1: fields[32] as String?,
-      backSidePhoto2: fields[33] as String?,
-      backSidePhoto3: fields[34] as String?,
-      documentUploadsPhoto1: fields[35] as String?,
-      documentUploadsPhoto2: fields[36] as String?,
-      documentUploadsPhoto3: fields[37] as String?,
+      idBackPath1: fields[32] as String?,
+      addBackPath2: fields[33] as String?,
+      nocBackPath3: fields[34] as String?,
+      idFrontPath1: fields[35] as String?,
+      addFrontPath2: fields[36] as String?,
+      nocFrontPath3: fields[37] as String?,
       canceledChequePhoto: fields[40] as String?,
       customerConsentPhoto: fields[42] as String?,
       bankAccountNumber: fields[44] as String?,
@@ -43,7 +43,7 @@ class SaveRegistrationFormModelAdapter
       bankIfscCode: fields[45] as String?,
       chequeBankAccount: fields[53] as String?,
       chequeNumber: fields[54] as String?,
-      depositeType: fields[50] as String?,
+      schemeType: fields[50] as String?,
       districtId: fields[56] as String?,
       dmaUserId: fields[25] as String?,
       dmaUserName: fields[24] as String?,
@@ -51,9 +51,9 @@ class SaveRegistrationFormModelAdapter
       guardianName: fields[6] as String?,
       guardianType: fields[5] as String?,
       houseNumber: fields[10] as String?,
-      depositTypeAmount: fields[51] as String?,
+      schemeTypeAmount: fields[51] as String?,
       initialDepositeStatus: fields[47] as String?,
-      interested: fields[55] as String?,
+      registrationType: fields[55] as String?,
       kycDocument1: fields[27] as String?,
       kycDocument1Number: fields[28] as String?,
       kycDocument2: fields[29] as String?,
@@ -88,10 +88,10 @@ class SaveRegistrationFormModelAdapter
       ownerConsentText: fields[67] as String?,
       isDepositCheq: fields[68] as bool?,
       nearestLandmark: fields[69] as String?,
-      micr: fields[70] as String?,
-      customerConsent: fields[71] as String?,
-      alternateMobile: fields[72] as String?,
-      housePhoto: fields[73] as String?,
+      customerConsent: fields[70] as String?,
+      alternateMobile: fields[71] as String?,
+      housePhoto: fields[72] as String?,
+      reasonRegistration: fields[73] as String?,
     );
   }
 
@@ -164,17 +164,17 @@ class SaveRegistrationFormModelAdapter
       ..writeByte(31)
       ..write(obj.kycDocument3)
       ..writeByte(32)
-      ..write(obj.backSidePhoto1)
+      ..write(obj.idBackPath1)
       ..writeByte(33)
-      ..write(obj.backSidePhoto2)
+      ..write(obj.addBackPath2)
       ..writeByte(34)
-      ..write(obj.backSidePhoto3)
+      ..write(obj.nocBackPath3)
       ..writeByte(35)
-      ..write(obj.documentUploadsPhoto1)
+      ..write(obj.idFrontPath1)
       ..writeByte(36)
-      ..write(obj.documentUploadsPhoto2)
+      ..write(obj.addFrontPath2)
       ..writeByte(37)
-      ..write(obj.documentUploadsPhoto3)
+      ..write(obj.nocFrontPath3)
       ..writeByte(38)
       ..write(obj.uploadCustomerPhoto)
       ..writeByte(39)
@@ -200,9 +200,9 @@ class SaveRegistrationFormModelAdapter
       ..writeByte(49)
       ..write(obj.modeOfDeposite)
       ..writeByte(50)
-      ..write(obj.depositeType)
+      ..write(obj.schemeType)
       ..writeByte(51)
-      ..write(obj.depositTypeAmount)
+      ..write(obj.schemeTypeAmount)
       ..writeByte(52)
       ..write(obj.payementBankName)
       ..writeByte(53)
@@ -210,7 +210,7 @@ class SaveRegistrationFormModelAdapter
       ..writeByte(54)
       ..write(obj.chequeNumber)
       ..writeByte(55)
-      ..write(obj.interested)
+      ..write(obj.registrationType)
       ..writeByte(56)
       ..write(obj.districtId)
       ..writeByte(57)
@@ -240,13 +240,13 @@ class SaveRegistrationFormModelAdapter
       ..writeByte(69)
       ..write(obj.nearestLandmark)
       ..writeByte(70)
-      ..write(obj.micr)
-      ..writeByte(71)
       ..write(obj.customerConsent)
-      ..writeByte(72)
+      ..writeByte(71)
       ..write(obj.alternateMobile)
+      ..writeByte(72)
+      ..write(obj.housePhoto)
       ..writeByte(73)
-      ..write(obj.housePhoto);
+      ..write(obj.reasonRegistration);
   }
 
   @override

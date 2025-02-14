@@ -88,6 +88,41 @@ class ConnectivityHelper {
     return true;
   }
 
+
+  static startListening({required StreamSubscription<ConnectivityResult> subscription}) {
+    subscription.cancel();
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.mobile) {
+        print("Switched to Mobile Data");
+      } else if (result == ConnectivityResult.wifi) {
+        print("Switched to Wi-Fi");
+      } else {
+        print("No Internet Connection");
+      }
+    });
+  }
+
+
+
+  static Future<bool> checkInternetConnection() async {
+    final ConnectivityResult result = await Connectivity().checkConnectivity();
+    try {
+    if (result == ConnectivityResult.mobile) {
+     return true;
+    } else if (result == ConnectivityResult.wifi) {
+      return true;
+    } else if (result == ConnectivityResult.ethernet) {
+      return true;
+    } else if (result == ConnectivityResult.vpn) {
+      return true;
+    } else {
+      return false;
+    }
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
+
   static Future<bool> checkInterNetConnect() async {
     try {
       final result = await InternetAddress.lookup('google.com');
