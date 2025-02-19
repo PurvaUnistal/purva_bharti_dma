@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 import 'features/internet/bloc/internet_bloc.dart';
@@ -9,7 +10,18 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  void initState() {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

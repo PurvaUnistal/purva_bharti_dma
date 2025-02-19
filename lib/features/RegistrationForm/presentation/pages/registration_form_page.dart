@@ -198,22 +198,12 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _uploadCustomerImg(context: context, stateData: stateData),
-                    stateData.kycDoc3Value?.value == "Rented"
-                        ? _nocDocImg(context: context, stateData: stateData)
-                        : _uploadHouseImg(
-                            context: context, stateData: stateData),
+                    _uploadHouseImg(context: context, stateData: stateData),
+                    if (stateData.kycDoc3Value?.value == "Rented")
+                      _nocDocImg(context: context, stateData: stateData),
                   ],
                 ),
-                _verticalSpace(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    stateData.kycDoc3Value?.value == "Rented"
-                        ? _uploadHouseImg(
-                            context: context, stateData: stateData)
-                        : Container(),
-                  ],
-                ),
+
                 _verticalSpace(),
                 Row(
                   children: [

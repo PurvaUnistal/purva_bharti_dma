@@ -131,8 +131,8 @@ class PreviewPop extends StatelessWidget {
                     PopWidget.itemBuilder(textName: AppString.initDepositStatus, textValue: cusRegData.initialDepositeStatus == null ? "-" : cusRegData.initialDepositeStatus),
                     PopWidget.itemBuilder(textName: AppString.schemeType, textValue: cusRegData.schemeType == null ? "-" : cusRegData.schemeType),
                     PopWidget.itemBuilder(textName: AppString.schemeAmt, textValue: cusRegData.schemeTypeAmount == null ? "-" : cusRegData.schemeTypeAmount),
-                    PopWidget.itemBuilder(textName: AppString.modeDeposit, textValue: cusRegData.modeDepositValue == null ? "-" : cusRegData.modeDepositValue),
-                    if (cusRegData.modeDepositValue == "Cheque") ...[
+                    PopWidget.itemBuilder(textName: AppString.modeDeposit, textValue: cusRegData.modeOfDeposite == null ? "-" : cusRegData.modeOfDeposite),
+                    if (cusRegData.modeOfDeposite == "Cheque") ...[
                       PopWidget.itemBuilder(textName: AppString.chqNo, textValue: cusRegData.chequeNumber == null ? "-" : cusRegData.chequeNumber),
                       PopWidget.itemBuilder(textName: AppString.chqDate, textValue: cusRegData.chequeDepositDate == null ? "" : cusRegData.chequeDepositDate),
                       PopWidget.itemBuilder(textName: AppString.chqBank, textValue: cusRegData.payementBankName == null ? "": cusRegData.payementBankName),

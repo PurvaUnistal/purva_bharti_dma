@@ -138,7 +138,8 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
           dataState.listOfRegistrationForm?.length == 0
               ? SizedBox(
                   height: MediaQuery.of(context).size.height * 0.7,
-                  child: Center(child: Text("No Data Found",style: Styles.labels)))
+                  child: Center(
+                      child: Text("No Data Found", style: Styles.labels)))
               : ListView.builder(
                   itemCount: dataState.listOfRegistrationForm?.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
@@ -155,7 +156,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Record : $index"),
+                                Text("Record : ${index+1}"),
                                 Row(
                                   children: [
                                     dataState.isSingleServerLoader == false
@@ -229,15 +230,30 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
           dataState.isGrpServerLoader == false
               ? Container()
               : Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SpinLoader(),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
-                      Text("Please wait",style: Styles.labels,),
-                    ],
+                  child: PhysicalModel(
+                    elevation: 21,
+                    borderRadius: BorderRadius.circular(20),
+                    color: AppColor.white,
+                    shadowColor: AppColor.prime,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 21),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SpinLoader(),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          Text(
+                            "Please wait",
+                            style: Styles.labels,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 )
         ],

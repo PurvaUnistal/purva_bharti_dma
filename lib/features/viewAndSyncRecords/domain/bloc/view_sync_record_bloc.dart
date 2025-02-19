@@ -54,36 +54,31 @@ class ViewSyncRecordBloc extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> 
   }
 
   _sendListData(SyncRecordListServerDataEvent event, emit) async {
-    try {
-      if (HiveDataBase.registrationFormBox!.values.isNotEmpty) {
-        List<SaveRegistrationFormModel> listOfLocalHive = HiveDataBase.registrationFormBox!.values.toList();
-        isGrpServerLoader = true;
-        _eventCompleted(emit);
-        int index = 0;
-        while (index < listOfLocalHive.length) {
-          var res = await ViewSyncRecordHelper.sendData(
-            context: event.context,
-            custRegSyncData: listOfLocalHive[index],
-          );
+    try{
+      if(HiveDataBase.registrationFormBox!.values.isNotEmpty){
+        List<SaveRegistrationFormModel> listOfLocalHive =  await HiveDataBase.registrationFormBox!.values.toList();
+        for (int i = 0; i < listOfLocalHive.length; i++) {
+          isGrpServerLoader = true;
+          _eventCompleted(emit);
+          var res = await ViewSyncRecordHelper.sendData(context: event.context, custRegSyncData: listOfRegistrationForm[i]);
           if (res != null) {
-            await Utils.successSnackBar(msg: res.message![0].message!, context: event.context);
-            await HiveDataBase.registrationFormBox!.deleteAt(index);
-            if (HiveDataBase.registrationFormBox!.isEmpty) {
-              break;
+            isGrpServerLoader = false;
+            _eventCompleted(emit);
+            if(HiveDataBase.registrationFormBox!.values.length == 1){
+              await HiveDataBase.registrationFormBox!.clear();
+              Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecord);
+              _eventCompleted(emit);
+            } else{
+              await Utils.successSnackBar(msg: res.message![0].message!, context: event.context);
+              await HiveDataBase.registrationFormBox!.deleteAt(i);
+              _eventCompleted(emit);
             }
-          } else {
-            index++;
           }
         }
-        isGrpServerLoader = false;
-        _eventCompleted(emit);
-        if (HiveDataBase.registrationFormBox!.isEmpty) {
-          Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecord);
-        }
       }
-    } catch (e) {
+    } catch(e){
       isGrpServerLoader = false;
-      log("_sendListData Error: ${e.toString()}");
+      log("_saveServerData-->${e.toString()}");
       Utils.errorSnackBar(msg: e.toString(), context: event.context);
     }
   }

@@ -5,12 +5,13 @@ import 'styles_widget.dart';
 
 class BackgroundWidget extends StatelessWidget {
   final Widget child;
+
   const BackgroundWidget({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor : AppColor.white,
+      backgroundColor: AppColor.white,
       body: Stack(
         children: [
           child,
@@ -19,7 +20,12 @@ class BackgroundWidget extends StatelessWidget {
               left: 0,
               right: 0,
               child: Container(
-                  decoration: BoxDecoration(color: AppColor.prime),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: <Color>[AppColor.prime1, AppColor.prime]),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

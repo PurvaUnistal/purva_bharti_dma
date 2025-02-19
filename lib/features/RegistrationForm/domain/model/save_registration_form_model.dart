@@ -129,28 +129,24 @@ class SaveRegistrationFormModel extends HiveObject{
   @HiveField(61)
   String? chequeMicrAccount;
   @HiveField(62)
-  String? modeDepositValue;
-  @HiveField(63)
   String? buildingNumber;
-  @HiveField(64)
+  @HiveField(63)
   String? chargeArea;
-  @HiveField(65)
+  @HiveField(64)
   String? eBillingModel;
-  @HiveField(66)
+  @HiveField(65)
   String? streetName;
-  @HiveField(67)
+  @HiveField(66)
   String? ownerConsentText;
-  @HiveField(68)
-  bool? isDepositCheq;
-  @HiveField(69)
+  @HiveField(67)
   String? nearestLandmark;
-  @HiveField(70)
+  @HiveField(68)
   String? customerConsent;
-  @HiveField(71)
+  @HiveField(69)
   String? alternateMobile;
-  @HiveField(72)
+  @HiveField(70)
   String? housePhoto;
-  @HiveField(73)
+  @HiveField(71)
   String? reasonRegistration;
 
   SaveRegistrationFormModel({
@@ -216,13 +212,11 @@ class SaveRegistrationFormModel extends HiveObject{
     this.acceptConversionPolicy,
     this.acceptExtraFittingCost,
     this.chequeMicrAccount,
-    this.modeDepositValue,
     this.buildingNumber,
     this.chargeArea,
     this.eBillingModel,
     this.streetName,
     this.ownerConsentText,
-    this.isDepositCheq = false,
     this.nearestLandmark,
     this.customerConsent,
     this.alternateMobile,

@@ -22,7 +22,6 @@ class PopWidget{
   static Widget itemBuilder({String? star, String? textName, String? textValue}) {
     return Column(
       children: [
-        divider(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
@@ -45,6 +44,7 @@ class PopWidget{
             ],
           ),
         ),
+        divider(),
 
       ],
     );

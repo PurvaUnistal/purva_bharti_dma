@@ -80,25 +80,23 @@ class SaveRegistrationFormModelAdapter
       acceptConversionPolicy: fields[59] as String?,
       acceptExtraFittingCost: fields[60] as String?,
       chequeMicrAccount: fields[61] as String?,
-      modeDepositValue: fields[62] as String?,
-      buildingNumber: fields[63] as String?,
-      chargeArea: fields[64] as String?,
-      eBillingModel: fields[65] as String?,
-      streetName: fields[66] as String?,
-      ownerConsentText: fields[67] as String?,
-      isDepositCheq: fields[68] as bool?,
-      nearestLandmark: fields[69] as String?,
-      customerConsent: fields[70] as String?,
-      alternateMobile: fields[71] as String?,
-      housePhoto: fields[72] as String?,
-      reasonRegistration: fields[73] as String?,
+      buildingNumber: fields[62] as String?,
+      chargeArea: fields[63] as String?,
+      eBillingModel: fields[64] as String?,
+      streetName: fields[65] as String?,
+      ownerConsentText: fields[66] as String?,
+      nearestLandmark: fields[67] as String?,
+      customerConsent: fields[68] as String?,
+      alternateMobile: fields[69] as String?,
+      housePhoto: fields[70] as String?,
+      reasonRegistration: fields[71] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, SaveRegistrationFormModel obj) {
     writer
-      ..writeByte(74)
+      ..writeByte(72)
       ..writeByte(0)
       ..write(obj.areaId)
       ..writeByte(1)
@@ -224,28 +222,24 @@ class SaveRegistrationFormModelAdapter
       ..writeByte(61)
       ..write(obj.chequeMicrAccount)
       ..writeByte(62)
-      ..write(obj.modeDepositValue)
-      ..writeByte(63)
       ..write(obj.buildingNumber)
-      ..writeByte(64)
+      ..writeByte(63)
       ..write(obj.chargeArea)
-      ..writeByte(65)
+      ..writeByte(64)
       ..write(obj.eBillingModel)
-      ..writeByte(66)
+      ..writeByte(65)
       ..write(obj.streetName)
-      ..writeByte(67)
+      ..writeByte(66)
       ..write(obj.ownerConsentText)
-      ..writeByte(68)
-      ..write(obj.isDepositCheq)
-      ..writeByte(69)
+      ..writeByte(67)
       ..write(obj.nearestLandmark)
-      ..writeByte(70)
+      ..writeByte(68)
       ..write(obj.customerConsent)
-      ..writeByte(71)
+      ..writeByte(69)
       ..write(obj.alternateMobile)
-      ..writeByte(72)
+      ..writeByte(70)
       ..write(obj.housePhoto)
-      ..writeByte(73)
+      ..writeByte(71)
       ..write(obj.reasonRegistration);
   }
 

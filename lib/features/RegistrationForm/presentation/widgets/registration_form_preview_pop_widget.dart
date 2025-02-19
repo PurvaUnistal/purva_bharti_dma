@@ -135,7 +135,7 @@ class RegistrationFormPreviewPopWidget extends StatelessWidget {
                           _itemBuilder(textName: AppString.initDepositStatus, textValue: cusRegData.initialDepositeStatus == null ? "-" : cusRegData.initialDepositeStatus),
                           _itemBuilder(textName: AppString.schemeType, textValue: cusRegData.schemeType == null ? "-" : cusRegData.schemeType),
                           _itemBuilder(textName: AppString.schemeAmt, textValue: cusRegData.schemeTypeAmount == null ? "-" : cusRegData.schemeTypeAmount),
-                          _itemBuilder(textName: AppString.modeDeposit, textValue: cusRegData.modeDepositValue == null ? "-" : cusRegData.modeDepositValue),
+                          _itemBuilder(textName: AppString.modeDeposit, textValue: cusRegData.modeOfDeposite == null ? "-" : cusRegData.modeOfDeposite),
                           if (cusRegData.modeOfDeposite == "Cheque") ...[
                             _itemBuilder(textName: AppString.chqNo, textValue: cusRegData.chequeNumber == null ? "-" :  cusRegData.chequeNumber),
                             _itemBuilder(textName: AppString.chqDate, textValue: cusRegData.chequeDepositDate == null ? "" :cusRegData.chequeDepositDate),

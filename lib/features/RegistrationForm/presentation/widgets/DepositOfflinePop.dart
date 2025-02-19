@@ -13,7 +13,7 @@ class DepositPop extends StatelessWidget {
         children: [
           RowWidget(
             lText: "Deposit Name",
-            rText: schemeTypeValue.depositName ?? ""
+            rText: schemeTypeValue.depositName.toString(),
           ),
           RowWidget(
             lText: "Deposit Amount",
@@ -29,11 +29,11 @@ class DepositPop extends StatelessWidget {
           ),
           RowWidget(
             lText: "GAS Amount",
-            rText: schemeTypeValue.gasDepositAmount.toString()
+            rText: schemeTypeValue.equipmentDepositAmount.toString()
           ),
           RowWidget(
             lText: "First Deposit Amount",
-            rText: schemeTypeValue.firstDepositAmount.toString(),
+            rText: schemeTypeValue.firstDepositAmountWith.toString(),
           ),
         ],
       ),

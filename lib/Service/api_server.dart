@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiServer {
   static Future<dynamic> getData(
@@ -75,145 +76,62 @@ class ApiServer {
   }
 
   static Future<dynamic> postDataWithFile({
-    required var endPoint, required var body,
-    required BuildContext context,
-    required String filePath1, required String keyWord1,
-    required String filePath2, required String keyWord2,
-    required String filePath3, required String keyWord3,
-    required String filePath4, required String keyWord4,
-    required String filePath5, required String keyWord5,
-    required String filePath6, required String keyWord6,
-    required String filePath7, required String keyWord7,
-    required String filePath8, required String keyWord8,
-    required String filePath9, required String keyWord9,
-    required String filePath10, required String keyWord10,
-    required String filePath11, required String keyWord11,
-    required String filePath12, required String keyWord12,
-
+    var urlEndPoint,
+    var body,
+    required  List<ImageRequestObject> imageRequestObject,
+    required BuildContext context
   }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String token = pref.getString(PrefsValue.token) ?? "";
     try {
-      if (await ConnectivityHelper.allConnectivityCheck(context: context) ==
-          false) {
+      if(await ConnectivityHelper.allConnectivityCheck(context: context) == false){
         return null;
       }
-      String token = await SharedPref.getString(key: PrefsValue.token) ?? "";
-      Map<String, String> headers = {
-      //  "Authorization": token,
-        "Content-Type": "multipart/form-data"
-      };
-      var request = MultipartRequest("POST", Uri.parse(endPoint));
-      if(filePath1.isNotEmpty){
-        File f = new File(filePath1);
-        lookupMimeType(filePath1, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile = await MultipartFile.fromPath(keyWord1, filePath1,
-            contentType: MediaType("image", filePath1.split('.').last));
-        request.files.add(uploadFile);
-      }
+      Map<String, String> headers = {"Authorization": token};
+      var request = MultipartRequest("POST", Uri.parse(urlEndPoint));
 
-      if(filePath2.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath2, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile1 = await MultipartFile.fromPath(keyWord2, filePath2,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]))
-        ;
-        request.files.add(uploadFile1);
-      }
-
-      if(filePath3.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath3, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile2 = await MultipartFile.fromPath(keyWord3, filePath3,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile2);
-      }
-
-      if(filePath4.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath4, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile3 = await MultipartFile.fromPath(keyWord4, filePath4,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile3);
-      }
-
-      if(filePath5.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath5, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile4 = await MultipartFile.fromPath(keyWord5, filePath5,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile4);
-      }
-
-      if(filePath6.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath6, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile5 = await MultipartFile.fromPath(keyWord6, filePath6,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile5);
-      }
-      if(filePath7.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath7, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile6 = await MultipartFile.fromPath(keyWord7, filePath7,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile6);
-      }
-
-      if(filePath8.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath8, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile7 = await MultipartFile.fromPath(keyWord8, filePath8,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile7);
-      }
-
-      if(filePath9.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath9, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile8 = await MultipartFile.fromPath(keyWord9, filePath9,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile8);
-      }
-
-      if(filePath10.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath10, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile9 = await MultipartFile.fromPath(keyWord10, filePath10,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile9);
-      }
-
-      if(filePath11.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath11, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile11 = await MultipartFile.fromPath(keyWord11, filePath11,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile11);
-      }
-
-      if(filePath12.isNotEmpty){
-        final mimeTypeData = lookupMimeType(filePath12, headerBytes: [0xFF, 0xD8])!.split('/');
-        var uploadFile12 = await MultipartFile.fromPath(keyWord12, filePath12,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        request.files.add(uploadFile12);
+      for(int i=0; i< imageRequestObject.length ; i++) {
+        var element = imageRequestObject[i];
+        if (element.path!.isNotEmpty && !element.path!.startsWith("http")) {
+          final mimeTypeData = lookupMimeType(element.path!, headerBytes: [0xFF, 0xD8])!.split('/');
+          var file = await MultipartFile.fromPath(element.key!, element.path!, contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+          request.files.add(file);
+        } else {
+          body[element.key] = element.path;
+        }
       }
       request.fields.addAll(body);
       request.headers.addAll(headers);
       var response = await request.send();
-      var responseData = await response.stream.bytesToString();
-      if(response.statusCode == 200){
-        var result = json.decode(responseData);
+      var responseData = await response.stream.toBytes();
+      var result = json.decode(String.fromCharCodes(responseData));
+      if (response.statusCode == 200) {
         log("result-->${result.toString()}");
         return result;
-      } else if(response.statusCode == 415){
-        var result = json.decode(responseData);
-        log(result.toString());
+      } else if (response.statusCode == 401) {
+        log("result-->${result.toString()}");
         return result;
-      } else if(response.statusCode == 400){
-        var result = json.decode(responseData);
-        log(result.toString());
+      } else if (response.statusCode == 415) {
+        Utils.errorSnackBar(msg: result['data'].toString(), context:context);
+        log(result['data'].toString());
+        return null;
+      } else if (response.statusCode == 400) {
         return result;
-      }else if(response.statusCode == 500){
-        var result = json.decode(responseData);
-        log(result.toString());
-        return result;
-      }else {
+      } else {
         return null;
       }
-    }catch(e){
-      log("MultipartFile-->${e.toString()}");
+    } catch (e) {
+      log("postDataWithFile-->${e.toString()}");
       return null;
     }
   }
+
 }
 
+class ImageRequestObject {
+  String? key;
+  String? path;
+
+  ImageRequestObject(this.key, this.path);
+}
 

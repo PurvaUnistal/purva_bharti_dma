@@ -816,6 +816,13 @@ class RegistrationFormBloc
       context: context,
       builder: (BuildContext context) {
         return Scaffold(
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(50),
+            child: AppBarWidget(
+              boolLeading: true,
+              title: "Customer Detail",
+            ),
+          ),
           body: Container(
             color: AppColor.white,
             child: Stack(
@@ -828,8 +835,8 @@ class RegistrationFormBloc
                 ),
                 Positioned(
                   bottom: 0,
-                  left: 0,
-                  right: 0,
+                  left: 8,
+                  right: 8,
                   child: _buildBottomActions(context),
                 ),
               ],
@@ -842,7 +849,6 @@ class RegistrationFormBloc
 
   List<Widget> _buildPreviewItems({required BuildContext context}) {
     return [
-      PopWidget.header(context: context),
       _buildPopItem(AppString.registrationType, registrationTypeValue.value),
       registrationTypeValue.key == "0"
           ? PopWidget.itemBuilder(
@@ -900,7 +906,6 @@ class RegistrationFormBloc
       _buildPopItem(AppString.locationLong, longController.text),
       _buildPopItem(AppString.idProof, kycDoc1Value.value),
       _buildPopItem(AppString.idProofNo, kyc1NumberController.text),
-      PopWidget.divider(),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -919,6 +924,7 @@ class RegistrationFormBloc
           ),
         ],
       ),
+      PopWidget.divider(),
       PopWidget.itemBuilder(
           star: registrationTypeValue.value != "Future Registration"
               ? AppString.star
@@ -933,7 +939,6 @@ class RegistrationFormBloc
           textValue: kyc2NumberController.text.isEmpty
               ? ""
               : kyc2NumberController.text),
-      PopWidget.divider(),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -954,54 +959,41 @@ class RegistrationFormBloc
           ),
         ],
       ),
+      PopWidget.divider(),
       if (registrationTypeValue.key != "0") ...[
         PopWidget.itemBuilder(
             textName: AppString.ownershipProperty,
             textValue: kycDoc3Value.key == null ? "-" : kycDoc3Value.value),
-        PopWidget.divider(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ImageWidget(
               title: AppString.customerImg,
-              imgFile: customerConsent.path.isEmpty
+              imgFile: uploadCustomerPath.path.isEmpty
                   ? File("")
-                  : File(customerConsent.path),
+                  : File(uploadCustomerPath.path),
               onPressed: () {},
             ),
-            kycDoc3Value.value == "Rented"
-                ? ImageWidget(
-                    star: AppString.star,
-                    title: AppString.nocDoc,
-                    imgFile: nocDocPath.path.isEmpty
-                        ? File("")
-                        : File(nocDocPath.path),
-                    onPressed: () {},
-                  )
-                : ImageWidget(
-                    title: AppString.houseImg,
-                    imgFile: uploadHousePath.path.isEmpty
-                        ? File("")
-                        : File(uploadHousePath.path),
-                    onPressed: () {},
-                  ),
+            if (kycDoc3Value.value == "Rented")
+              ImageWidget(
+                star: AppString.star,
+                title: AppString.nocDoc,
+                imgFile: nocDocPath.path.isEmpty
+                    ? File("")
+                    : File(nocDocPath.path),
+                onPressed: () {},
+              ),
+            ImageWidget(
+              title: AppString.houseImg,
+              imgFile: uploadHousePath.path.isEmpty
+                  ? File("")
+                  : File(uploadHousePath.path),
+              onPressed: () {},
+            ),
           ],
         ),
-        //  PopWidget.divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            kycDoc3Value.value == "Rented"
-                ? ImageWidget(
-                    title: AppString.houseImg,
-                    imgFile: uploadHousePath.path.isEmpty
-                        ? File("")
-                        : File(uploadHousePath.path),
-                    onPressed: () {},
-                  )
-                : Container(),
-          ],
-        ),
+
+        PopWidget.divider(),
         PopWidget.itemBuilder(
             textName: AppString.initDepositStatus,
             textValue: initialDepositStatusValue.key == null
@@ -1047,7 +1039,7 @@ class RegistrationFormBloc
               textValue: chequeMicrNoController.text.isEmpty
                   ? ""
                   : chequeMicrNoController.text),
-          PopWidget.divider(),
+
           ImageWidget(
             star: AppString.star,
             title: AppString.chqPhoto,
@@ -1056,7 +1048,7 @@ class RegistrationFormBloc
           ),
         ]
       ],
-      PopWidget.divider(),
+
       SizedBox(height: MediaQuery.of(context).size.height * 0.09),
     ];
   }
@@ -1136,9 +1128,9 @@ class RegistrationFormBloc
         : GetAllDistrictModel();
     initialDepositStatusValue = listOfInitialDepositStatus
         .firstWhere((e) => e.key == localData[i].initialDepositeStatus);
-    modeDepositValue = localData[i].modeDepositValue != ""
+    modeDepositValue = localData[i].modeOfDeposite != ""
         ? listOfModeOfDeposit
-            .firstWhere((e) => e.key == localData[i].modeDepositValue)
+            .firstWhere((e) => e.key == localData[i].modeOfDeposite)
         : GetModeOfDepositModel();
     schemeTypeValue = localData[i].schemeType != ""
         ? listOfDepositOffline

@@ -25,7 +25,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: boolLeading ?? false,
-      systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: AppColor.prime),
+    /*  systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: AppColor.prime),*/
       iconTheme: IconThemeData(color: AppColor.white),
      // backgroundColor: AppColor.prime,
       flexibleSpace: Container(
@@ -33,12 +33,13 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              colors: <Color>[AppColor.prime,AppColor.prime1]),
+              colors: <Color>[AppColor.prime1,AppColor.prime]),
         ),
       ),
 
       elevation: 0,
       leading: leading,
+      centerTitle: true,
       title: Text(
         title ?? "",
         style: Styles.login,

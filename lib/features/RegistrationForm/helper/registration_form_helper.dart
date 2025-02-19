@@ -4,69 +4,69 @@ import 'package:flutter/material.dart';
 class RegistrationFormHelper {
   static Future<dynamic> textFieldValidationCheck({
     required BuildContext context,
-    String? registrationType,
-    String? reasonRegistration,
-    String? chargeId,
-    String? areaId,
-    String? mobileNumber,
-    String? altMobileNo,
-    String? firstName,
-    String? middleName,
-    String? lastName,
-    String? guardianType,
-    String? guardianName,
-    String? emailId,
-    String? propertyCategoryId,
-    String? propertyClassId,
-    String? buildingNumber,
-    String? houseNumber,
-    String? colonySocietyApartment,
-    String? streetName,
-    String? town,
-    String? districtId,
-    String? nearestLandmark,
-    String? pinCode,
-    String? latitude,
-    String? longitude,
-    String? residentStatus,
-    String? noOfKitchen,
-    String? noOfBathroom,
-    String? existingCookingFuel,
-    String? noOfFamilyMembers,
-    String? idProof,
-    String? idProofNo,
-    File? idFrontPath,
-    File? idBackPath,
-    String? addProof,
-    String? addProofNo,
-    File? addFrontPath,
-    File? addBackPath,
-    String? ownershipProperty,
-    File? ownerConsent,
-    File? customerConsent,
-    String? eBillingModel,
-    String? bankNameOfBank,
-    String? bankAccountNumber,
-    String? bankIfscCode,
-    String? bankAddress,
-    File? nocDocPath,
-    File? customerPath,
-    File? housePath,
-    String? acceptConversionPolicy,
-    String? acceptExtraFittingCost,
-    String? societyAllowedMdpe,
-    String? depositStatus,
-    String? reasonDeposit,
-    String? schemeType,
-    String? depositAmt,
-    String? modeDepositValue,
-    String? chqNo,
-    String? chqDate,
-    String? chqBank,
-    String? chequeAccountNo,
-    String? chequeMICRNo,
-    File? chequePath,
-    File? canceledCheque,
+    required String registrationType,
+    required String reasonRegistration,
+    required String chargeId,
+    required String areaId,
+    required String mobileNumber,
+    required String altMobileNo,
+    required String firstName,
+    required String middleName,
+    required String lastName,
+    required String guardianType,
+    required String guardianName,
+    required String emailId,
+    required String propertyCategoryId,
+    required String propertyClassId,
+    required String buildingNumber,
+    required String houseNumber,
+    required String colonySocietyApartment,
+    required String streetName,
+    required String town,
+    required String districtId,
+    required String nearestLandmark,
+    required String pinCode,
+    required String latitude,
+    required String longitude,
+    required String residentStatus,
+    required String noOfKitchen,
+    required String noOfBathroom,
+    required String existingCookingFuel,
+    required String noOfFamilyMembers,
+    required String idProof,
+    required String idProofNo,
+    required File idFrontPath,
+    required File idBackPath,
+    required String addProof,
+    required String addProofNo,
+    required File addFrontPath,
+    required File addBackPath,
+    required String ownershipProperty,
+    required File ownerConsent,
+    required File customerConsent,
+    required String eBillingModel,
+    required String bankNameOfBank,
+    required String bankAccountNumber,
+    required String bankIfscCode,
+    required String bankAddress,
+    required File nocDocPath,
+    required File customerPath,
+    required File housePath,
+    required String acceptConversionPolicy,
+    required String acceptExtraFittingCost,
+    required String societyAllowedMdpe,
+    required String depositStatus,
+    required String reasonDeposit,
+    required String schemeType,
+    required String depositAmt,
+    required String modeDepositValue,
+    required String chqNo,
+    required String chqDate,
+    required String chqBank,
+    required String chequeAccountNo,
+    required String chequeMICRNo,
+    required File chequePath,
+    required File canceledCheque,
   }) async {
     try {
       if (registrationType == "") {
@@ -81,15 +81,15 @@ class RegistrationFormHelper {
         Utils.errorSnackBar(
             msg: 'The Area field is required.', context: context);
         return null;
-      } else if (mobileNumber!.isEmpty) {
+      } else if (mobileNumber.isEmpty) {
         Utils.errorSnackBar(
             msg: "THe Mobile Number field is required.", context: context);
         return null;
-      } else if (firstName!.isEmpty) {
+      } else if (firstName.isEmpty) {
         Utils.errorSnackBar(
             msg: "The First Name field is required.", context: context);
         return null;
-      } else if (lastName!.isEmpty) {
+      } else if (lastName.isEmpty) {
         Utils.errorSnackBar(
             msg: "The Last Name field is required.", context: context);
         return null;
@@ -98,7 +98,7 @@ class RegistrationFormHelper {
           Utils.errorSnackBar(
               msg: "The Guardian Type field is required.", context: context);
           return null;
-        } else if (guardianName!.isEmpty) {
+        } else if (guardianName.isEmpty) {
           Utils.errorSnackBar(
               msg: "The Guardian Name field is required.", context: context);
           return null;
@@ -114,16 +114,16 @@ class RegistrationFormHelper {
           return null;
         }
       }
-      if (houseNumber!.isEmpty) {
+      if (houseNumber.isEmpty) {
         Utils.errorSnackBar(
             msg: "The House Number field is required.", context: context);
         return null;
-      } else if (colonySocietyApartment!.isEmpty) {
+      } else if (colonySocietyApartment.isEmpty) {
         Utils.errorSnackBar(
             msg: "The Colony/Society/Apartment field is required.",
             context: context);
         return null;
-      } else if (streetName!.isEmpty) {
+      } else if (streetName.isEmpty) {
         Utils.errorSnackBar(
             msg: "The Lane/Street Name field is required.", context: context);
         return null;
@@ -131,15 +131,15 @@ class RegistrationFormHelper {
         Utils.errorSnackBar(
             msg: "The District field is required.", context: context);
         return null;
-      } else if (pinCode!.isEmpty) {
+      } else if (pinCode.isEmpty) {
         Utils.errorSnackBar(
             msg: "The Pin Code field is required. ", context: context);
         return null;
-      } else if (noOfKitchen!.isEmpty) {
+      } else if (noOfKitchen.isEmpty) {
         Utils.errorSnackBar(
             msg: "The No. of Kitchen field is required.", context: context);
         return null;
-      } else if (noOfBathroom!.isEmpty) {
+      } else if (noOfBathroom.isEmpty) {
         Utils.errorSnackBar(
             msg: "The No. of Bathroom field is required.", context: context);
         return null;
@@ -147,7 +147,7 @@ class RegistrationFormHelper {
         Utils.errorSnackBar(
             msg: "The Cooking Fuel field is required.", context: context);
         return null;
-      } else if (noOfFamilyMembers!.isEmpty) {
+      } else if (noOfFamilyMembers.isEmpty) {
         Utils.errorSnackBar(
             msg: "The No. of Family Members field is required.",
             context: context);
@@ -157,12 +157,12 @@ class RegistrationFormHelper {
             msg: "The KYC(Identification Proof) field is required.",
             context: context);
         return null;
-      } else if (idProofNo!.isEmpty) {
+      } else if (idProofNo.isEmpty) {
         Utils.errorSnackBar(
             msg: "The KYC(Identification Proof)Number field is required.",
             context: context);
         return null;
-      } else if (idFrontPath!.path.isEmpty) {
+      } else if (idFrontPath.path.isEmpty) {
         Utils.errorSnackBar(
             msg: "The Id Proof Front Image field is required.",
             context: context);
@@ -173,12 +173,12 @@ class RegistrationFormHelper {
               msg: "The KYC (Address Proof) field is required.",
               context: context);
           return null;
-        } else if (addProofNo!.isEmpty) {
+        } else if (addProofNo.isEmpty) {
           Utils.errorSnackBar(
               msg: "The KYC (Address Proof)Number field is required.",
               context: context);
           return null;
-        } else if (addFrontPath!.path.isEmpty) {
+        } else if (addFrontPath.path.isEmpty) {
           Utils.errorSnackBar(
               msg: "The Address Proof Front Image field is required.",
               context: context);
@@ -189,7 +189,7 @@ class RegistrationFormHelper {
               context: context);
           return null;
         } else if (ownershipProperty == "Rented") {
-          if (nocDocPath!.path.isEmpty) {
+          if (nocDocPath.path.isEmpty) {
             Utils.errorSnackBar(
                 msg: "The NOC Document field is required.", context: context);
             return null;
@@ -223,39 +223,39 @@ class RegistrationFormHelper {
               msg: "The Mode Of Deposit field is required.", context: context);
           return null;
         } else if (modeDepositValue == "1") {
-          if (chqNo!.isEmpty) {
+          if (chqNo.isEmpty) {
             Utils.errorSnackBar(
                 msg: "The Cheque Number field is required.", context: context);
             return null;
-          } else if (chqDate!.isEmpty) {
+          } else if (chqDate.isEmpty) {
             Utils.errorSnackBar(
                 msg: "The Cheque date field is required.", context: context);
             return null;
-          } else if (chqBank!.isEmpty || chqBank == "") {
+          } else if (chqBank.isEmpty || chqBank == "") {
             Utils.errorSnackBar(
                 msg: "The Cheque Bank Name field is required.",
                 context: context);
             return null;
-          } else if (chequeAccountNo!.isEmpty) {
+          } else if (chequeAccountNo.isEmpty) {
             Utils.errorSnackBar(
                 msg: "The Cheque Bank Account Number field is required.",
                 context: context);
             return null;
-          } else if (chequeMICRNo!.isEmpty) {
+          } else if (chequeMICRNo.isEmpty) {
             Utils.errorSnackBar(
                 msg: "The Cheque MICR Code field is required.",
                 context: context);
             return null;
-          } else if (chequePath!.path.isEmpty) {
+          } else if (chequePath.path.isEmpty) {
             Utils.errorSnackBar(
                 msg: "The Cheque Image field is required.", context: context);
             return null;
           }
         }
       }
-      String schema = await SharedPref.getString(key: PrefsValue.schema);
-      String dmaUserId = await SharedPref.getString(key: PrefsValue.userId);
-      String dmaUserName = await SharedPref.getString(key: PrefsValue.userName);
+       String schema = await SharedPref.getString(key: PrefsValue.schema);
+       String dmaUserId = await SharedPref.getString(key: PrefsValue.userId);
+       String dmaUserName = await SharedPref.getString(key: PrefsValue.userName);
       SaveRegistrationFormModel custRegSyncStore = SaveRegistrationFormModel(
         schema: schema,
         dmaUserId: dmaUserId,
@@ -305,25 +305,25 @@ class RegistrationFormHelper {
         noInitialDepositStatusReason: reasonDeposit,
         schemeType: schemeType,
         schemeTypeAmount: depositAmt,
-        modeDepositValue: modeDepositValue,
+        modeOfDeposite: modeDepositValue,
         chequeNumber: chqNo,
         chequeDepositDate: chqDate,
         payementBankName: chqBank,
         chequeBankAccount: chequeAccountNo,
         chequeMicrAccount: chequeMICRNo,
-        idBackPath1: idBackPath?.path ?? "",
-        addBackPath2: addBackPath?.path ?? "",
-        nocBackPath3: nocDocPath?.path ?? "",
+        idBackPath1: idBackPath.path,
+        addBackPath2: addBackPath.path,
+        nocBackPath3: nocDocPath.path,
         idFrontPath1: idFrontPath.path,
-        addFrontPath2: addFrontPath?.path ?? "",
-        nocFrontPath3: nocDocPath?.path ?? "",
-        uploadHousePhoto: housePath?.path ?? "",
-        uploadCustomerPhoto: customerPath?.path ?? "",
-        customerConsent: customerConsent?.path ?? "",
-        ownerConsent: ownerConsent?.path ?? "",
-        canceledChequePhoto: canceledCheque?.path ?? "",
-        chequePhoto: chequePath?.path ?? "",
-        reasonRegistration: reasonRegistration ?? "",
+        addFrontPath2: addFrontPath.path,
+        nocFrontPath3: nocDocPath.path,
+        uploadHousePhoto: housePath.path,
+        uploadCustomerPhoto: customerPath.path,
+        customerConsent: customerConsent.path,
+        ownerConsent: ownerConsent.path,
+        canceledChequePhoto: canceledCheque.path,
+        chequePhoto: chequePath.path,
+        reasonRegistration: reasonRegistration,
       );
       return custRegSyncStore;
     } catch (e) {
@@ -389,18 +389,16 @@ class RegistrationFormHelper {
         initialDepositeStatus: _getString(custRegSyncStore.initialDepositeStatus),
         schemeType: _getString(custRegSyncStore.schemeType),
         schemeTypeAmount: _getString(custRegSyncStore.schemeTypeAmount),
-        modeDepositValue: _getString(custRegSyncStore.modeDepositValue),
+        modeOfDeposite: _getString(custRegSyncStore.modeOfDeposite),
         chequeNumber: _getString(custRegSyncStore.chequeNumber),
 
         chequeDepositDate: _getString(custRegSyncStore.chequeDepositDate),
         payementBankName: _getString(custRegSyncStore.payementBankName),
         chequeBankAccount: _getString(custRegSyncStore.chequeBankAccount),
         noInitialDepositStatusReason: _getString(custRegSyncStore.noInitialDepositStatusReason),
-        isDepositCheq: false,
         alternateMobile: _getString(custRegSyncStore.alternateMobile),
         chequeMicrAccount: _getString(custRegSyncStore.chequeMicrAccount),
         housePhoto: _getString(custRegSyncStore.housePhoto),
-        modeOfDeposite: _getString(custRegSyncStore.modeOfDeposite),
         ownerConsentText: _getString(custRegSyncStore.ownerConsentText),
         reasonForHold: _getString(custRegSyncStore.reasonForHold,),
         idFrontPath1: _getString(custRegSyncStore.idFrontPath1),
@@ -425,6 +423,7 @@ class RegistrationFormHelper {
         Utils.successSnackBar(msg: 'Record Updated Successfully', context: context);
       } else {
         if (recordCount <= 15) {
+          log("custRegSyncAdd${custRegSyncAdd}");
           await hiveBox.add(custRegSyncAdd);
           Utils.successSnackBar(msg: "Data Saved Successfully", context: context);
         } else {

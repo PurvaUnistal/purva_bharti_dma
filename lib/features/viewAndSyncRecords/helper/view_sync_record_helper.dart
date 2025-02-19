@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 class ViewSyncRecordHelper {
-
-  static Future<SendRegistrationOfflineModel?> sendData({required BuildContext context, required SaveRegistrationFormModel custRegSyncData}) async{
-    try{
-      Map<String, String> json =  {
+  static Future<SendRegistrationOfflineModel?> sendData(
+      {required BuildContext context,
+      required SaveRegistrationFormModel custRegSyncData}) async {
+    try {
+      Map<String, String> json = {
         "interested": custRegSyncData.registrationType ?? "",
         "area_id": custRegSyncData.areaId ?? "",
-        "mobile_number":custRegSyncData.mobileNumber ?? "",
+        "mobile_number": custRegSyncData.mobileNumber ?? "",
         "alternateMobile": custRegSyncData.alternateMobile ?? "",
         "first_name": custRegSyncData.firstName ?? "",
         "middle_name": custRegSyncData.middleName ?? "",
@@ -26,7 +27,7 @@ class ViewSyncRecordHelper {
         "town": custRegSyncData.town ?? "",
         "pin_code": custRegSyncData.pinCode ?? "",
         "society_allowed_mdpe": custRegSyncData.societyAllowedMdpe ?? "",
-       // "resident_status": custRegSyncData.residentStatus ?? "",
+        // "resident_status": custRegSyncData.residentStatus ?? "",
         "resident_status": "Owner",
         "no_of_bathroom": custRegSyncData.noOfBathroom ?? "",
         "no_of_kitchen": custRegSyncData.noOfKitchen ?? "",
@@ -58,12 +59,13 @@ class ViewSyncRecordHelper {
         "cheque_bank_account": custRegSyncData.chequeBankAccount ?? "",
         "cheque_number": custRegSyncData.chequeNumber ?? "",
         "district_id": custRegSyncData.districtId ?? "",
-        "accept_conversion_policy": custRegSyncData.acceptConversionPolicy ?? "",
-        "accept_extra_fitting_cost": custRegSyncData.acceptExtraFittingCost ?? "",
+        "accept_conversion_policy":
+            custRegSyncData.acceptConversionPolicy ?? "",
+        "accept_extra_fitting_cost":
+            custRegSyncData.acceptExtraFittingCost ?? "",
         "micr": custRegSyncData.chequeMicrAccount ?? "",
         "building_number": custRegSyncData.buildingNumber ?? "",
       };
-      log("requestBody-->${json}");
       if (json['interested'] == "0") {
         json.remove("initial_deposite_status");
         json.remove("deposite_type");
@@ -71,26 +73,75 @@ class ViewSyncRecordHelper {
         json.remove("accept_conversion_policy");
         json.remove("accept_extra_fitting_cost");
       }
-      print("json-->${json}");
+      print("requestBody-->${json}");
       var res = await ApiServer.postDataWithFile(
-        endPoint: AppUrl.saveCustomerRegistrationOffline,
-        body: json,
-        context: context,
-        keyWord1: "backside1", filePath1: custRegSyncData.idBackPath1 == null ? "" : custRegSyncData.idBackPath1!,
-        keyWord2: "backside2", filePath2: custRegSyncData.addBackPath2 == null ? "" : custRegSyncData.addBackPath2!,
-        keyWord3: "backside3", filePath3: custRegSyncData.nocBackPath3 == null ? "" : custRegSyncData.nocBackPath3!,
-        keyWord4: "document_uploads_1", filePath4: custRegSyncData.idFrontPath1 == null ? "" : custRegSyncData.idFrontPath1!,
-        keyWord5: "document_uploads_2", filePath5: custRegSyncData.addFrontPath2 == null ? "" : custRegSyncData.addFrontPath2!,
-        keyWord6: "document_uploads_3", filePath6: custRegSyncData.nocFrontPath3 == null ? "" : custRegSyncData.nocFrontPath3!,
-        keyWord7: "upload_customer_photo", filePath7: custRegSyncData.uploadCustomerPhoto == null ? "" : custRegSyncData.uploadCustomerPhoto!,
-        keyWord8: "upload_house_photo", filePath8: custRegSyncData.uploadHousePhoto == null ? "" : custRegSyncData.uploadHousePhoto!,
-        keyWord9: "canceled_cheque", filePath9: custRegSyncData.canceledChequePhoto == null ? "" : custRegSyncData.canceledChequePhoto!,
-        keyWord10: "cheque_photo", filePath10: custRegSyncData.chequePhoto == null ? "" : custRegSyncData.chequePhoto!,
-        keyWord11: "owner_consent", filePath11: custRegSyncData.ownerConsent == null ? "" : custRegSyncData.ownerConsent!,
-        keyWord12: "customer_consent", filePath12 : custRegSyncData.customerConsent == null ? "" : custRegSyncData.customerConsent!,
-      );
+          urlEndPoint: AppUrl.saveCustomerRegistrationOffline,
+          body: json,
+          context: context,
+          imageRequestObject: [
+            ImageRequestObject(
+                "backside1",
+                custRegSyncData.idBackPath1 == null
+                    ? ""
+                    : custRegSyncData.idBackPath1),
+            ImageRequestObject(
+                "backside2",
+                custRegSyncData.addBackPath2 == null
+                    ? ""
+                    : custRegSyncData.addBackPath2),
+            ImageRequestObject(
+                "backside3",
+                custRegSyncData.nocBackPath3 == null
+                    ? ""
+                    : custRegSyncData.nocBackPath3),
+            ImageRequestObject(
+                "document_uploads_1",
+                custRegSyncData.idFrontPath1 == null
+                    ? ""
+                    : custRegSyncData.idFrontPath1),
+            ImageRequestObject(
+                "document_uploads_2",
+                custRegSyncData.addFrontPath2 == null
+                    ? ""
+                    : custRegSyncData.addFrontPath2),
+            ImageRequestObject(
+                "document_uploads_3",
+                custRegSyncData.nocFrontPath3 == null
+                    ? ""
+                    : custRegSyncData.nocFrontPath3),
+            ImageRequestObject(
+                "upload_customer_photo",
+                custRegSyncData.uploadCustomerPhoto == null
+                    ? ""
+                    : custRegSyncData.uploadCustomerPhoto),
+            ImageRequestObject(
+                "upload_house_photo",
+                custRegSyncData.uploadHousePhoto == null
+                    ? ""
+                    : custRegSyncData.uploadHousePhoto),
+            ImageRequestObject(
+                "canceled_cheque",
+                custRegSyncData.canceledChequePhoto == null
+                    ? ""
+                    : custRegSyncData.canceledChequePhoto),
+            ImageRequestObject(
+                "cheque_photo",
+                custRegSyncData.chequePhoto == null
+                    ? ""
+                    : custRegSyncData.chequePhoto),
+            ImageRequestObject(
+                "owner_consent",
+                custRegSyncData.ownerConsent == null
+                    ? ""
+                    : custRegSyncData.ownerConsent),
+            ImageRequestObject(
+                "customer_consent",
+                custRegSyncData.customerConsent == null
+                    ? ""
+                    : custRegSyncData.customerConsent),
+          ]);
       return SendRegistrationOfflineModel.fromJson(res);
-    } catch(e){
+    } catch (e) {
       log("SaveCustomerCatch-->${e.toString()}");
       Utils.errorSnackBar(msg: e.toString(), context: context);
       return null;
