@@ -1,11 +1,22 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:intl/intl.dart';
+import 'package:pbg_app/Service/Apis.dart';
+import 'package:pbg_app/Service/api_server_dio.dart';
+import 'package:pbg_app/Utils/Utils.dart';
+import 'package:pbg_app/features/RegistrationForm/domain/model/save_registration_form_model.dart';
+import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/send_registration_offline_model.dart';
 
 class ViewSyncRecordHelper {
   static Future<SendRegistrationOfflineModel?> sendData(
       {required BuildContext context,
       required SaveRegistrationFormModel custRegSyncData}) async {
     try {
+      var inputFormat = DateFormat('dd-MM-yyyy');
+      var date1 = inputFormat.parse(custRegSyncData.chequeDepositDate.toString().replaceAll("00:00:00.000", ""));
+      print("date1date1-->${date1.toString().replaceAll("00:00:00.000", "")}");
       Map<String, String> json = {
         "interested": custRegSyncData.registrationType ?? "",
         "area_id": custRegSyncData.areaId ?? "",
@@ -54,7 +65,7 @@ class ViewSyncRecordHelper {
         "mode_of_deposite": custRegSyncData.modeOfDeposite ?? "",
         "deposite_type": custRegSyncData.schemeType ?? "",
         "initial_amount": custRegSyncData.schemeTypeAmount ?? "",
-        "initial_deposite_date": custRegSyncData.chequeDepositDate ?? "",
+        "initial_deposite_date": date1.toString().replaceAll("00:00:00.000", ""),
         "payement_bank_name": custRegSyncData.payementBankName ?? "",
         "cheque_bank_account": custRegSyncData.chequeBankAccount ?? "",
         "cheque_number": custRegSyncData.chequeNumber ?? "",
@@ -74,7 +85,7 @@ class ViewSyncRecordHelper {
         json.remove("accept_extra_fitting_cost");
       }
       print("requestBody-->${json}");
-      var res = await ApiServer.postDataWithFile(
+      var res = await ApiHelperDio.postDataWithFile(
           urlEndPoint: AppUrl.saveCustomerRegistrationOffline,
           body: json,
           context: context,
@@ -140,12 +151,15 @@ class ViewSyncRecordHelper {
                     ? ""
                     : custRegSyncData.customerConsent),
           ]);
-      return SendRegistrationOfflineModel.fromJson(res);
+      if (res != null) {
+        return SendRegistrationOfflineModel.fromJson(res);
+      }
     } catch (e) {
       log("SaveCustomerCatch-->${e.toString()}");
       Utils.errorSnackBar(msg: e.toString(), context: context);
       return null;
     }
+    return null;
   }
 
   static Future<bool> isInternetConnected() async {

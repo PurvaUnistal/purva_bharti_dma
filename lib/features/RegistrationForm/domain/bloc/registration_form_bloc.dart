@@ -29,7 +29,7 @@ class RegistrationFormBloc
     on<RegistrationFormSetPaymentBankNameValue>(_setPaymentBankNameValue);
     on<RegistrationFormSetInitialDepositStatusValue>(
         _setInitialDepositStatusValue);
-    on<RegistrationFormSetDepositTypeValue>(_setDepositTypeValue);
+    on<RegistrationFormSchemeTypeValue>(_setSchemeTypeValue);
     on<RegistrationFormSetModeDepositValue>(_setModeDepositValue);
     on<RegistrationFormSetChequeDateEvent>(_setChequeDate);
     on<SelectIdFrontCameraCapture>(_selectIdFrontCameraCapture);
@@ -290,7 +290,7 @@ class RegistrationFormBloc
     reasonDepositStsController.text = "";
     schemeAmountController.text = "";
     chequeNoController.text = "";
-    chequeDateController.text = "";
+    chequeDateController.text = DateFormat('dd-MM-yyyy').format(DateTime.now());
     chequeAccountNoController.text = "";
     chequeMicrNoController.text = "";
     latController.text = "";
@@ -514,22 +514,26 @@ class RegistrationFormBloc
     _eventCompleted(emit);
   }
 
-  _setDepositTypeValue(RegistrationFormSetDepositTypeValue event, emit) {
+  _setSchemeTypeValue(RegistrationFormSchemeTypeValue event, emit) {
+    schemeAmountController.text = "";
     schemeTypeValue = event.schemeTypeValue;
-    schemeMonth = "";
-    equipmentAmt = "";
-    gasAmt = "";
-    firstDeposit = "";
-    schemeAmountController.clear();
-    if (schemeTypeValue.depositTypesId != null) {
+    if(schemeTypeValue.depositTypesId != null){
       schemeAmountController.text =
           schemeTypeValue.firstDepositAmountWith.toString();
-      schemeMonth = schemeTypeValue.schemeMonth.toString();
-      equipmentAmt = schemeTypeValue.equipmentDepositAmount.toString();
-      gasAmt = schemeTypeValue.gasDepositAmount.toString();
-      firstDeposit = schemeTypeValue.firstDepositAmountWith.toString();
     }
     _eventCompleted(emit);
+  }
+
+  _selectSchemeTypeDetail(SchemeTypeDetailEvent event, emit) {
+    if (schemeTypeValue.depositTypesId == null) {
+      return Utils.errorSnackBar(
+          msg: "The New Scheme Type field is requirement", context: event.context);
+    } else if (schemeTypeValue.depositTypesId != null) {
+      return showDialog(
+          context: event.context,
+          builder: (BuildContext context) =>
+              DepositPop(schemeTypeValue: schemeTypeValue));
+    }
   }
 
   _setModeDepositValue(RegistrationFormSetModeDepositValue event, emit) {
@@ -705,23 +709,12 @@ class RegistrationFormBloc
         firstDate: DateTime(1950),
         lastDate: DateTime.now());
     if (dateTime != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
       chequeDateController.text = formattedDate.toString();
       _eventCompleted(emit);
     }
   }
 
-  _selectSchemeTypeDetail(SchemeTypeDetailEvent event, emit) {
-    if (schemeTypeValue.depositTypesId == null) {
-      return Utils.errorSnackBar(
-          msg: " This scheme type id is requirement", context: event.context);
-    } else if (schemeTypeValue.depositTypesId != null) {
-      return showDialog(
-          context: event.context,
-          builder: (BuildContext context) =>
-              DepositPop(schemeTypeValue: schemeTypeValue));
-    }
-  }
 
   Future _performFieldValidation(RegistrationFormPreviewPageEvent event) async {
     return await RegistrationFormHelper.textFieldValidationCheck(

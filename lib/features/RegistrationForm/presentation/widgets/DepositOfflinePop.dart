@@ -12,24 +12,24 @@ class DepositPop extends StatelessWidget {
       child: Column(
         children: [
           RowWidget(
-            lText: "Deposit Name",
-            rText: schemeTypeValue.depositName.toString(),
+              lText: "Deposit Name",
+              rText: schemeTypeValue.depositName ?? ""
           ),
           RowWidget(
             lText: "Deposit Amount",
-            rText: schemeTypeValue.depositAmount ?? ""
+            rText: schemeTypeValue.firstDepositAmountWith.toString(),
           ),
           RowWidget(
-            lText: "Scheme Month",
-            rText: schemeTypeValue.schemeMonth.toString()
+              lText: "Scheme Month",
+              rText: schemeTypeValue.schemeMonth.toString()
           ),
           RowWidget(
-            lText: "Equipment Deposit Amount",
-            rText: schemeTypeValue.equipmentDepositAmount.toString()
+              lText: "Equipment Deposit Amount",
+              rText: schemeTypeValue.equipmentDepositAmount.toString()
           ),
           RowWidget(
-            lText: "GAS Amount",
-            rText: schemeTypeValue.equipmentDepositAmount.toString()
+              lText: "GAS Amount",
+              rText: schemeTypeValue.gasDepositAmount.toString()
           ),
           RowWidget(
             lText: "First Deposit Amount",

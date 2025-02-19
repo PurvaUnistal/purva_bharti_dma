@@ -148,6 +148,8 @@ class SaveRegistrationFormModel extends HiveObject{
   String? housePhoto;
   @HiveField(71)
   String? reasonRegistration;
+  @HiveField(72)
+  bool? isSingleServerLoader;
 
   SaveRegistrationFormModel({
     this.areaId,
@@ -222,6 +224,7 @@ class SaveRegistrationFormModel extends HiveObject{
     this.alternateMobile,
     this.housePhoto,
     this.reasonRegistration,
+    this.isSingleServerLoader = false,
   });
 }
 

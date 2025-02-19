@@ -162,9 +162,9 @@ class RegistrationFormSetInitialDepositStatusValue extends RegistrationFormEvent
   List<Object?> get props => [initialDepositStatusValue];
 }
 
-class RegistrationFormSetDepositTypeValue extends RegistrationFormEvent {
-  final dynamic schemeTypeValue;
-  RegistrationFormSetDepositTypeValue({required this.schemeTypeValue});
+class RegistrationFormSchemeTypeValue extends RegistrationFormEvent {
+  final GetAllDepositOfflineModel schemeTypeValue;
+  RegistrationFormSchemeTypeValue({required this.schemeTypeValue});
   @override
   // TODO: implement props
   List<Object?> get props => [schemeTypeValue];

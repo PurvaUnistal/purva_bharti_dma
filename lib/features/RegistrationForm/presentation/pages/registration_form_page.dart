@@ -237,7 +237,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                       children: [
                         Flexible(
                             flex: 6,
-                            child: _depositTypeDropdown(stateData: stateData)),
+                            child: _schemeTypeDropdown(stateData: stateData)),
                         _widthSpace(),
                         Flexible(
                             flex: 3,
@@ -1302,7 +1302,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
         : Container();
   }
 
-  Widget _depositTypeDropdown(
+  Widget _schemeTypeDropdown(
       {required RegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetAllDepositOfflineModel>(
       star: AppString.star,
@@ -1315,7 +1315,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       onChanged: (val) {
         log("depositTypeValue-->${stateData.depositOfflineValue?.depositName}");
         BlocProvider.of<RegistrationFormBloc>(context)
-            .add(RegistrationFormSetDepositTypeValue(schemeTypeValue: val));
+            .add(RegistrationFormSchemeTypeValue(schemeTypeValue: val!));
       },
     );
   }

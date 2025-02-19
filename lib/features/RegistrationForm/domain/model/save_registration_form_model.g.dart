@@ -90,13 +90,14 @@ class SaveRegistrationFormModelAdapter
       alternateMobile: fields[69] as String?,
       housePhoto: fields[70] as String?,
       reasonRegistration: fields[71] as String?,
+      isSingleServerLoader: fields[72] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, SaveRegistrationFormModel obj) {
     writer
-      ..writeByte(72)
+      ..writeByte(73)
       ..writeByte(0)
       ..write(obj.areaId)
       ..writeByte(1)
@@ -240,7 +241,9 @@ class SaveRegistrationFormModelAdapter
       ..writeByte(70)
       ..write(obj.housePhoto)
       ..writeByte(71)
-      ..write(obj.reasonRegistration);
+      ..write(obj.reasonRegistration)
+      ..writeByte(72)
+      ..write(obj.isSingleServerLoader);
   }
 
   @override

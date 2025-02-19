@@ -159,7 +159,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                 Text("Record : ${index+1}"),
                                 Row(
                                   children: [
-                                    dataState.isSingleServerLoader == false
+                                    data.isSingleServerLoader == false
                                         ? IconButton(
                                             icon: Icon(
                                               Icons.sync,
