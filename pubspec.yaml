@@ -3,7 +3,7 @@ description: A new Flutter application.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.2+8
+version: 1.0.2+10
 
 environment:
   sdk: ^3.5.3
@@ -32,6 +32,8 @@ dependencies:
   flutter_spinkit: ^5.2.0
   dotted_border: ^2.1.0
   dropdown_search: ^5.0.0
+  url_launcher: ^6.3.1
+  package_info_plus: ^8.1.2
 
 
 dev_dependencies:

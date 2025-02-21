@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
@@ -61,6 +62,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             await SharedPref.setString(key:  PrefsValue.userRole, value: res.user!.role.toString());
             await SharedPref.setString(key:  PrefsValue.userName, value: res.user!.name.toString());
             await SharedPref.setString(key:  PrefsValue.userId, value: res.user!.id.toString());
+          PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          String appVersion = packageInfo.version;
+          await SharedPref.setString(key: PrefsValue.appVersion,value: appVersion);
             Navigator.pushReplacementNamed(event.context, RoutesName.dashboard);
         } else {
           isPageLoader = false;

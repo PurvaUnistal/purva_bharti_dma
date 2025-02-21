@@ -9,4 +9,5 @@ class PrefsValue {
   static String gaId = "gaId";
   static String cookies = "cookies";
   static String getAllBanks = "getAllBanks";
+  static String appVersion = "appVersion";
 }

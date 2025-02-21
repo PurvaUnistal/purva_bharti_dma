@@ -11,8 +11,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   bool isLoader = false;
   bool isConnective = false;
 
-
-
   String schema = "";
   GetLabelModel getLabelModel = GetLabelModel();
 
@@ -70,31 +68,33 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _eventCompleted(emit);
   }
 
-
   _selectSyncFetchAllData(SelectSyncFetchAllDataEvent event, emit) async {
     isLoader = true;
     _eventCompleted(emit);
-    await fetchLabelApi(context: event.context);
-    await fetchNotInterestedApi(context: event.context);
-    await fetchInitialDepositStatusApi(context: event.context);
-    await fetchAcceptExtraFittingCostApi(context: event.context);
-    await fetchAcceptConversionPolicyApi(context: event.context);
-    await fetchAllDistrictModelApi(context: event.context);
-    await fetchResidentStatusApi(context: event.context);
-    await fetchModeOfDepositApi(context: event.context);
-    await fetchEBillingApi(context: event.context);
-    await fetchKycDocApi(context: event.context);
-    await fetchOwnershipProofApi(context: event.context);
-    await fetchIdentityProofApi(context: event.context);
-    await fetchGuardianTypeApi(context: event.context);
-    await fetchExistingCookingFuelApi(context: event.context);
-    await fetchSocietyAllowApi(context: event.context);
-    await fetchPropertyClassApi(context: event.context);
-    await fetchPropertyCategoryApi(context: event.context);
-    await fetchAllAreaApi(context: event.context);
-    await fetchChargeAreaListApi(context: event.context);
-    await fetchAllDepositOfflineApi(context: event.context);
-    await fetchBankNameListApi(context: event.context);
+    await Future.wait(<Future>[
+      fetchLabelApi(context: event.context),
+      fetchNotInterestedApi(context: event.context),
+      fetchInitialDepositStatusApi(context: event.context),
+      fetchAcceptExtraFittingCostApi(context: event.context),
+      fetchAcceptConversionPolicyApi(context: event.context),
+      fetchAllDistrictModelApi(context: event.context),
+      fetchResidentStatusApi(context: event.context),
+      fetchModeOfDepositApi(context: event.context),
+      fetchEBillingApi(context: event.context),
+      fetchKycDocApi(context: event.context),
+      fetchOwnershipProofApi(context: event.context),
+      fetchIdentityProofApi(context: event.context),
+      fetchGuardianTypeApi(context: event.context),
+      fetchExistingCookingFuelApi(context: event.context),
+      fetchSocietyAllowApi(context: event.context),
+      fetchPropertyClassApi(context: event.context),
+      fetchPropertyCategoryApi(context: event.context),
+      fetchAllAreaApi(context: event.context),
+      fetchChargeAreaListApi(context: event.context),
+      fetchAllDepositOfflineApi(context: event.context),
+      fetchBankNameListApi(context: event.context),
+    ]);
+
     isLoader = false;
     _eventCompleted(emit);
   }
@@ -341,5 +341,4 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       isPageLoader: isPageLoader,
     ));
   }
-  }
-
+}

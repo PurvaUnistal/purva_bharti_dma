@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
 class SplashView extends StatefulWidget {
@@ -32,26 +33,34 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
     curve: Curves.fastOutSlowIn,
   );
 
-  Future<void> toLogin() async {
-    String email = await SharedPref.getString(key: PrefsValue.emailVal);
-    String password = await SharedPref.getString(key: PrefsValue.passwordVal);
-    Timer(
-      const Duration(seconds: 2),
-      () async {
-        if (email.isNotEmpty || password.isNotEmpty) {
-          Navigator.pushReplacementNamed(
-            context,
-            RoutesName.dashboard,
-          );
-        } else {
-          Navigator.pushReplacementNamed(
-            context,
-            RoutesName.login,
-          );
-        }
-      },
-    );
-  }
+    Future<void> toLogin() async {
+      String email = await SharedPref.getString(key: PrefsValue.emailVal);
+      String password = await SharedPref.getString(key: PrefsValue.passwordVal);
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String newVersion = packageInfo.version;
+      String oldVersion = await SharedPref.getString(key: PrefsValue.appVersion);
+      print("newVersion--${newVersion}");
+      print("oldVersion--${oldVersion}");
+      Timer(
+        const Duration(seconds: 3),
+            () async {
+          if(oldVersion == newVersion){
+            if (email.isNotEmpty || password.isNotEmpty) {
+              Navigator.pushReplacementNamed(
+                context,
+                RoutesName.dashboard,
+              );
+            }
+          } else {
+            Navigator.pushReplacementNamed(
+              context,
+              RoutesName.login,
+            );
+          }
+        },
+      );
+    }
+
 
   @override
   Widget build(BuildContext context) {
