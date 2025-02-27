@@ -88,8 +88,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               _registrationTypeDropdown(stateData: stateData),
               _reasonRegistrationController(stateData: stateData),
               _chargeAreaDropdown(stateData: stateData),
+              _verticalSpace(),
               _areaDropdown(stateData: stateData),
+              _verticalSpace(),
               _mobileNumberWidget(stateData: stateData),
+              _verticalSpace(),
               _altMobileNumberWidget(stateData: stateData),
               _firstNameWidget(stateData: stateData),
               _middleNameWidget(stateData: stateData),
@@ -380,8 +383,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _chargeAreaDropdown(
       {required RegistrationFormGetAllDataState stateData}) {
-    return ColumnWidget(
-      child: DropDownSearchWidget(
+    return DropDownSearchWidget(
         star: AppString.star,
         label: stateData.labelModel.registration == null
             ? AppString.chargeArea
@@ -398,13 +400,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
           BlocProvider.of<RegistrationFormBloc>(context)
               .add(RegistrationFormSetChargeAreaValue(chargeAreaValue: val));
         },
-      ),
     );
   }
 
   Widget _areaDropdown({required RegistrationFormGetAllDataState stateData}) {
-    return ColumnWidget(
-      child: DropDownSearchWidget(
+    return DropDownSearchWidget(
         star: AppString.star,
         label: stateData.labelModel.registration == null
             ? AppString.area
@@ -420,14 +420,12 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
           BlocProvider.of<RegistrationFormBloc>(context)
               .add(RegistrationFormSetAreaValue(areaValue: val));
         },
-      ),
     );
   }
 
   Widget _mobileNumberWidget(
       {required RegistrationFormGetAllDataState stateData}) {
-    return ColumnWidget(
-      child: TextFieldWidget(
+    return TextFieldWidget(
           star: AppString.star,
           hintText: stateData.labelModel.steps == null
               ? AppString.mobileNo
@@ -451,7 +449,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
           },
           onChanged: (v) {
             formGlobalKey.currentState?.validate();
-          }),
+          }
     );
   }
 

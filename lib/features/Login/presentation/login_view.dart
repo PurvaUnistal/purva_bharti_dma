@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/background_widget.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -27,16 +28,18 @@ class _LoginViewState extends State<LoginView> {
         boolLeading: false,
       ),
       body: SafeArea(
-        child: BlocBuilder<LoginBloc, LoginState>(
-          builder: (context, state) {
-            if (state is LoginFetchDataState) {
-              return Center(
-                child: _buildLayout(dataState: state),
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
+        child: BackgroundWidget(
+          child: BlocBuilder<LoginBloc, LoginState>(
+            builder: (context, state) {
+              if (state is LoginFetchDataState) {
+                return Center(
+                  child: _buildLayout(dataState: state),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
         ),
       ),
     );
