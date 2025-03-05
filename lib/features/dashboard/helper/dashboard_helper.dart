@@ -479,13 +479,10 @@ class DashboardHelper {
     await Permission.locationAlways.request();
     final androidInfo = await DeviceInfoPlugin().androidInfo;
     if (Platform.isAndroid) {
-      if (androidInfo.version.sdkInt <= 32) {
-        Position   position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        Position   position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high,forceAndroidLocationManager: true
+        );
         log('latitude : ${position.latitude} longitude : ${position.longitude}');
         return position;
-      }  else {
-
-      }
     }
     return null;
   }

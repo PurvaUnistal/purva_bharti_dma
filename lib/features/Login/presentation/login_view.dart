@@ -59,6 +59,8 @@ class _LoginViewState extends State<LoginView> {
               child: Container(
                 height:h * 0.6,
                 child: Card(
+                  elevation: 8,
+                  shadowColor: AppColor.prime,
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: Column(

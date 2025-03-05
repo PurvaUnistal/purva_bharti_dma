@@ -24,6 +24,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: AppColor.prime));
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (BuildContext context) => InternetBloc()),
