@@ -1,5 +1,5 @@
 class AppString{
-  static String version = "Version : DMA-2-05/03/2025";
+  static String version = "Version : DMA-1, 06/03/2025";
   static String companyName = "© Unistal Systems Pvt. Ltd.";
   static String appName = "Purba Bharati  DMA";
   static String companyNameDesc = "Unistal Private Ltd.";
