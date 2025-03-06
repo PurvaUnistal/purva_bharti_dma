@@ -10,7 +10,7 @@ import android.content.IntentSender.SendIntentException
 import android.util.Log
 
 class MainActivity: FlutterActivity(){
-    private val METHOD_CHANNEL = "pbgpl/pbg_app"
+    private val METHOD_CHANNEL = "pbgpl/dma"
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         val appUpdateManager = AppUpdateManagerFactory.create(this)
@@ -24,13 +24,8 @@ class MainActivity: FlutterActivity(){
                     appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
                         try {
                             Log.i("NumberGenerated", "Function has generated Enter.-------------------------");
-                            if (appUpdateInfo.updateAvailability() === UpdateAvailability.UPDATE_AVAILABLE) {
-                                Log.i("NumberGenerated", "Function has generated Done.-------------------------");
-                                response.success("success");
-                            }else{
-                                Log.i("NumberGenerated", "Function has generated Fauil.-------------------------");
-                                response.success("fail");
-                            }
+
+
                         } catch (e: SendIntentException) {
                             Log.i("NumberGenerated", "Function has generated SendIntentException.-------------------------");
                             Log.e("in_app_update", "Could not start update flow", e)
