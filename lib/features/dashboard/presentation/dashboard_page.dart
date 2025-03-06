@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/HiveDatabase/app_update_message_widget.dart';
@@ -17,74 +19,50 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-
   @override
   void initState() {
-    _checkForUpdate();
+    callMethodeChannel();
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
-    BlocProvider.of<DashboardBloc>(context).add(DashboardPageLoadingEvent(context: context));
+    BlocProvider.of<DashboardBloc>(context)
+        .add(DashboardPageLoadingEvent(context: context));
     super.initState();
   }
 
-  List<IconData> icons = [
-    Icons.picture_in_picture, Icons.receipt
-  ];
+  List<IconData> icons = [Icons.picture_in_picture, Icons.receipt];
 
   List<String> iconText = [
-    'Customer Registration Form', 'View and Sync Records'
+    'Customer Registration Form',
+    'View and Sync Records'
   ];
 
   List<Widget> navigatorView = [
-    RegistrationFormPage(index: 0,localData: SaveRegistrationFormModel(),isUpdate: false,),
+    RegistrationFormPage(
+      index: 0,
+      localData: SaveRegistrationFormModel(),
+      isUpdate: false,
+    ),
     ViewSyncRecordPage(),
   ];
 
+  static const MethodChannel platform = MethodChannel('pbgpl/dma');
 
-  Future<void> _checkForUpdate() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String oldVersion = await SharedPref.getString(key: PrefsValue.appVersion);
-    String currentVersion = packageInfo.version;
-    print("oldVersion-->${oldVersion}");
-    print("currentVersion-->${currentVersion}");
-    if (_isVersionOutdated(oldVersion,currentVersion)) {
-     return showDialog(
-       context: context,
-       barrierDismissible: false,
-       builder: (context) {
-         return  AppUpdateMessage.showAlertDialog(context: context,onPressed: _openAppStoreLink,);
-       },
-     );
-    }
-  }
-
-  bool _isVersionOutdated(String currentVersion, String latestVersion) {
-    List<int> current = currentVersion.split('.').map(int.parse).toList();
-    List<int> latest = latestVersion.split('.').map(int.parse).toList();
-
-    for (int i = 0; i < latest.length; i++) {
-      if (current.length <= i || current[i] < latest[i]) {
-        return true;
-      } else if (current[i] > latest[i]) {
-        return false;
+  callMethodeChannel() async {
+    try {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String applicationId = packageInfo.packageName.toString();
+      String androidPlayStoreUrl =
+          "https://play.google.com/store/apps/details?id=${applicationId}&hl=en&gl=US";
+      if (Platform.isAndroid) {
+        final dynamic result = await platform.invokeMethod('getAppUpdate');
+        if (kDebugMode) {
+          print("Upadet Mesagae ============== $result");
+        }
+        if (result.toString() == "success") {
+          AppUpdateMessage.showAlertDialog(
+              context: context, url: androidPlayStoreUrl);
+        }
       }
-    }
-    return false;
-  }
-
-
-
-  void _openAppStoreLink() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String applicationId = packageInfo.packageName.toString();
-    print("applicationId-->${applicationId}");
-    String androidPlayStoreUrl =
-        "https://play.google.com/store/apps/details?id=${applicationId}&hl=en&gl=US";
-    String url =androidPlayStoreUrl;
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+    } on PlatformException catch (_) {}
   }
 
   @override
@@ -100,7 +78,9 @@ class _DashboardPageState extends State<DashboardPage> {
               actions: [
                 IconButton(
                     onPressed: () async {
-                      showModalBottomSheet(context: context, builder: (context) => const LogoutWidget());
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) => const LogoutWidget());
                     },
                     icon: Icon(
                       Icons.logout,
@@ -137,20 +117,20 @@ class _DashboardPageState extends State<DashboardPage> {
                 ],
               ),
             ),
-          )
-      ),
+          )),
     );
   }
+
   Future<bool> _onWillPop() async {
     return (await showDialog(
-        context: context,
-        builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
-            message: "Do you want to exit an App?",
-            okButtonText: "Exit",
-            onPressed: () =>  Navigator.of(context).pop(true)
-        ))
-    ) ?? false;
+            context: context,
+            builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
+                message: "Do you want to exit an App?",
+                okButtonText: "Exit",
+                onPressed: () => Navigator.of(context).pop(true)))) ??
+        false;
   }
+
   _checkNetBtnWidget({required ConnectedState stateData}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -165,25 +145,29 @@ class _DashboardPageState extends State<DashboardPage> {
             text: AppString.wifi),
         BlocBuilder<DashboardBloc, DashboardState>(
           builder: (context, state) {
-            if( state is DashboardGetAllDataState){
-              return state.isLoader ==  false ? RowBtnWidget(
-                color: stateData.isConnected ? Colors.green : Colors.red,
-                icon: Icons.refresh,
-                text: AppString.refresh,
-                onTap: () {
-                  BlocProvider.of<DashboardBloc>(context).add(SelectSyncFetchAllDataEvent(
-                    context: context,
-                  ));
-                },
-              ) : DotsLoaderWidget();
+            if (state is DashboardGetAllDataState) {
+              return state.isLoader == false
+                  ? RowBtnWidget(
+                      color: stateData.isConnected ? Colors.green : Colors.red,
+                      icon: Icons.refresh,
+                      text: AppString.refresh,
+                      onTap: () {
+                        BlocProvider.of<DashboardBloc>(context)
+                            .add(SelectSyncFetchAllDataEvent(
+                          context: context,
+                        ));
+                      },
+                    )
+                  : DotsLoaderWidget();
             } else {
               return const Center(child: SpinLoader());
             }
           },
-        ) ,
+        ),
       ],
     );
   }
+
   Widget _buildCardButton() {
     return Flexible(
       child: ListView.builder(
@@ -197,7 +181,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         builder: (context) => navigatorView[index]));
               },
               text: iconText[index],
-              icon:icons[index]);
+              icon: icons[index]);
         },
       ),
     );
