@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/DepositOfflinePop.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/pop_widget.dart';
@@ -59,6 +60,7 @@ class RegistrationFormBloc
   bool isPageLoader = false;
   bool isPreviewLoader = false;
   bool isSaveLoader = false;
+  bool isLocationLoader = false;
 
   SaveRegistrationFormModel localData = SaveRegistrationFormModel();
 
@@ -199,7 +201,7 @@ class RegistrationFormBloc
     _initializeFilePaths();
     await _fetchHiveData();
     _setDependentData();
-    await _setLocation();
+    await _setLocation(context: event.context);
     _eventCompleted(emit);
   }
 
@@ -210,6 +212,7 @@ class RegistrationFormBloc
     isPageLoader = false;
     isPreviewLoader = false;
     isSaveLoader = false;
+    isLocationLoader = false;
 
     schemeMonth = "";
     equipmentAmt = "";
@@ -517,7 +520,7 @@ class RegistrationFormBloc
   _setSchemeTypeValue(RegistrationFormSchemeTypeValue event, emit) {
     schemeAmountController.text = "";
     schemeTypeValue = event.schemeTypeValue;
-    if(schemeTypeValue.depositTypesId != null){
+    if (schemeTypeValue.depositTypesId != null) {
       schemeAmountController.text =
           schemeTypeValue.firstDepositAmountWith.toString();
     }
@@ -527,7 +530,8 @@ class RegistrationFormBloc
   _selectSchemeTypeDetail(SchemeTypeDetailEvent event, emit) {
     if (schemeTypeValue.depositTypesId == null) {
       return Utils.errorSnackBar(
-          msg: "The New Scheme Type field is requirement", context: event.context);
+          msg: "The New Scheme Type field is requirement",
+          context: event.context);
     } else if (schemeTypeValue.depositTypesId != null) {
       return showDialog(
           context: event.context,
@@ -688,18 +692,34 @@ class RegistrationFormBloc
     _eventCompleted(emit);
   }
 
-  _btnLocation(RegistrationFormSetLocation event, emit) {
-    _setLocation();
+  _btnLocation(RegistrationFormSetLocation event, emit) async {
+    isLocationLoader = true;
+    _eventCompleted(emit);
+    await _setLocation(context: event.context);
+    isLocationLoader = false;
     _eventCompleted(emit);
   }
 
-  _setLocation() async {
-    var getLocation = await DashboardHelper.getCurrentLocation();
-    latController =
-        TextEditingController(text: getLocation?.latitude.toString());
-    longController =
-        TextEditingController(text: getLocation?.longitude.toString());
-    return getLocation;
+  _setLocation({required BuildContext context}) async {
+    var status = await Permission.location.status;
+    if (status.isDenied) {
+      status = await Permission.location.request();
+    }
+    if (status.isPermanentlyDenied) {
+      await openAppSettings();
+    }
+
+    if (await Permission.location.isGranted) {
+      var getLocation = await DashboardHelper.getCurrentLocation();
+      latController =
+          TextEditingController(text: getLocation?.latitude.toString());
+      longController =
+          TextEditingController(text: getLocation?.longitude.toString());
+      return getLocation;
+    } else {
+      Utils.errorSnackBar(
+          msg:  "Location permission denied", context: context);
+    }
   }
 
   _setChequeDate(RegistrationFormSetChequeDateEvent event, emit) async {
@@ -714,7 +734,6 @@ class RegistrationFormBloc
       _eventCompleted(emit);
     }
   }
-
 
   Future _performFieldValidation(RegistrationFormPreviewPageEvent event) async {
     return await RegistrationFormHelper.textFieldValidationCheck(
@@ -971,9 +990,8 @@ class RegistrationFormBloc
               ImageWidget(
                 star: AppString.star,
                 title: AppString.nocDoc,
-                imgFile: nocDocPath.path.isEmpty
-                    ? File("")
-                    : File(nocDocPath.path),
+                imgFile:
+                    nocDocPath.path.isEmpty ? File("") : File(nocDocPath.path),
                 onPressed: () {},
               ),
             ImageWidget(
@@ -985,7 +1003,6 @@ class RegistrationFormBloc
             ),
           ],
         ),
-
         PopWidget.divider(),
         PopWidget.itemBuilder(
             textName: AppString.initDepositStatus,
@@ -1032,7 +1049,6 @@ class RegistrationFormBloc
               textValue: chequeMicrNoController.text.isEmpty
                   ? ""
                   : chequeMicrNoController.text),
-
           ImageWidget(
             star: AppString.star,
             title: AppString.chqPhoto,
@@ -1041,7 +1057,6 @@ class RegistrationFormBloc
           ),
         ]
       ],
-
       SizedBox(height: MediaQuery.of(context).size.height * 0.09),
     ];
   }
@@ -1233,6 +1248,7 @@ class RegistrationFormBloc
   _eventCompleted(Emitter<RegistrationFormState> emit) {
     emit(RegistrationFormGetAllDataState(
       isPageLoader: isPageLoader,
+      isLocationLoader: isLocationLoader,
       isUpdate: isUpdate,
       labelModel: getLabelModel,
       registrationTypeValue: registrationTypeValue,

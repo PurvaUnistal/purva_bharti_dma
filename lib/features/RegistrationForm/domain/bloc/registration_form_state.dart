@@ -9,7 +9,7 @@ class RegistrationFormInitialState extends RegistrationFormState {
   List<Object> get props => [];
 }
 
-class RegistrationFormPageLoadState extends RegistrationFormInitialState {
+class RegistrationFormPageLoadState extends RegistrationFormState {
   @override
   List<Object> get props => [];
 }
@@ -25,59 +25,60 @@ class RegistrationFormGetLabelState extends RegistrationFormState {
 
 class RegistrationFormGetAllDataState extends RegistrationFormState {
   final bool isPageLoader;
+  final bool isLocationLoader;
   final bool isUpdate;
   final GetLabelModel labelModel;
-  GetNotInterestedModel? registrationTypeValue;
+  final GetNotInterestedModel? registrationTypeValue;
   final List<GetNotInterestedModel> getNotInterestedList;
-  GetAcceptConversionPolicyModel? conversionPolicyValue;
+  final GetAcceptConversionPolicyModel? conversionPolicyValue;
   final List<GetAcceptConversionPolicyModel> conversionPolicyList;
-  GetAcceptExtraFittingCostModel? extraFittingValue;
+  final GetAcceptExtraFittingCostModel? extraFittingValue;
   final List<GetAcceptExtraFittingCostModel> extraFittingCostList;
-  GetSocietyAllowModel? societyAllowValue;
+  final GetSocietyAllowModel? societyAllowValue;
   final List<GetSocietyAllowModel> societyAllowList;
-  GetGuardianTypeModel? guardianTypeValue;
-  List<GetGuardianTypeModel> getGuardianTypeList;
-  GetPropertyCategoryModel? propertyCategoryValue;
-  GetPropertyClassModel? propertyClassValue;
+  final GetGuardianTypeModel? guardianTypeValue;
+  final List<GetGuardianTypeModel> getGuardianTypeList;
+  final GetPropertyCategoryModel? propertyCategoryValue;
+  final GetPropertyClassModel? propertyClassValue;
   final GetNotInterestedModel getNotInterestedModel;
   final GetAcceptConversionPolicyModel getAcceptConversionPolicyModel;
   final GetAcceptExtraFittingCostModel getAcceptExtraFittingCostModel;
   final GetSocietyAllowModel getSocietyAllowModel;
-  GetAllDistrictModel? allDistrictValue;
+  final GetAllDistrictModel? allDistrictValue;
   final List<GetAllDistrictModel> getAllDistrictModel;
-  GetEBillingModel? eBillingValue;
+  final GetEBillingModel? eBillingValue;
   final List<GetEBillingModel> eBillingList;
   final GetEBillingModel getEBillingModel;
-  GetInitialDepositStatusModel? initialDepositStatusValue;
+  final GetInitialDepositStatusModel? initialDepositStatusValue;
   final List initialDepositStatusList;
   final GetInitialDepositStatusModel getInitialDepositStatusModel;
-  GetModeOfDepositModel? modeDepositValue;
+  final GetModeOfDepositModel? modeDepositValue;
   final List modeDepositList;
   final GetModeOfDepositModel getModeOfDepositModel;
-  GetAllDepositOfflineModel? depositOfflineValue;
+  final GetAllDepositOfflineModel? depositOfflineValue;
   final List<GetAllDepositOfflineModel> getAllDepositOfflineList;
   final GetAllDepositOfflineModel getAllDepositOfflineModel;
-  GetIdentityProofModel? identityProofValue;
+  final GetIdentityProofModel? identityProofValue;
   final List identityProofList;
   final GetIdentityProofModel getIdentityProofModel;
-  GetOwnershipProofModel? ownershipProofValue;
+  final GetOwnershipProofModel? ownershipProofValue;
   final List<GetOwnershipProofModel> ownershipProofList;
   final GetOwnershipProofModel getOwnershipProofModel;
-  GetKycDocModel? kycDoc3Value;
+  final GetKycDocModel? kycDoc3Value;
   final List<GetKycDocModel> kycDocList;
   final GetKycDocModel getKycDocModel;
   final GetGuardianTypeModel getGuardianTypeModel;
-  GetExistingCookingFuelModel? existingCookingFuelValue;
+  final GetExistingCookingFuelModel? existingCookingFuelValue;
   final List<GetExistingCookingFuelModel> existingCookingFuelList;
   final GetExistingCookingFuelModel getExistingCookingFuelModel;
   final GetResidentStatusModel getResidentStatusModel;
   final List<GetResidentStatusModel> getResidentStatusList;
-  GetResidentStatusModel? residentStatusValue;
+  final GetResidentStatusModel? residentStatusValue;
   final List<GetPropertyClassModel> getPropertyClassModel;
   final List<GetPropertyCategoryModel> getPropertyCategoryModel;
-  GetAllAreaModel? areaValue;
+  final GetAllAreaModel? areaValue;
   final List<GetAllAreaModel> getAllAreaModel;
-  GetChargeAreaListModel? chargeAreaValue;
+  final GetChargeAreaListModel? chargeAreaValue;
   final List<GetChargeAreaListModel> getChargeAreaListModel;
   final TextEditingController reasonRegistrationController;
   final TextEditingController mobileController;
@@ -115,24 +116,25 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final String? paymentBankNameValue;
   final List<String> custBankNameList;
   final List<String> paymentBankNameList;
-  File idFrontFilePath;
-  File idBackFilePath;
-  File eleBillFrontPath;
-  File eleBillBackPath;
-  File nocDocPath;
-  File nocFrontPath;
-  File nocBackPath;
-  File uploadCustomerPath;
-  File uploadHousePath;
-  File customerConsentPath;
-  File ownerConsentPath;
-  File cancelChequePath;
-  File chequePath;
+  final File idFrontFilePath;
+  final File idBackFilePath;
+  final File eleBillFrontPath;
+  final File eleBillBackPath;
+  final File nocDocPath;
+  final File nocFrontPath;
+  final File nocBackPath;
+  final File uploadCustomerPath;
+  final File uploadHousePath;
+  final File customerConsentPath;
+  final File ownerConsentPath;
+  final File cancelChequePath;
+  final File chequePath;
   final bool isPreviewLoader;
   final bool isSaveLoader;
 
   RegistrationFormGetAllDataState({
     required this.isPageLoader,
+    required this.isLocationLoader,
     required this.isUpdate,
     required this.labelModel,
     required this.registrationTypeValue,
@@ -244,6 +246,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   // TODO: implement props
   List<Object?> get props => [
     isPageLoader,
+    isLocationLoader,
     isUpdate,
     labelModel,
     registrationTypeValue,

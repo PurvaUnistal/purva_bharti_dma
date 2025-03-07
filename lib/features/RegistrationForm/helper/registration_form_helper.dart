@@ -135,6 +135,12 @@ class RegistrationFormHelper {
         Utils.errorSnackBar(
             msg: "The Pin Code field is required. ", context: context);
         return null;
+      } else if (latitude.isEmpty && longitude.isEmpty) {
+        Utils.errorSnackBar(
+            msg:
+                "Location access denied. Please enable location services and grant location permissions in app settings to proceed.",
+            context: context);
+        return null;
       } else if (noOfKitchen.isEmpty) {
         Utils.errorSnackBar(
             msg: "The No. of Kitchen field is required.", context: context);
@@ -253,9 +259,9 @@ class RegistrationFormHelper {
           }
         }
       }
-       String schema = await SharedPref.getString(key: PrefsValue.schema);
-       String dmaUserId = await SharedPref.getString(key: PrefsValue.userId);
-       String dmaUserName = await SharedPref.getString(key: PrefsValue.userName);
+      String schema = await SharedPref.getString(key: PrefsValue.schema);
+      String dmaUserId = await SharedPref.getString(key: PrefsValue.userId);
+      String dmaUserName = await SharedPref.getString(key: PrefsValue.userName);
       SaveRegistrationFormModel custRegSyncStore = SaveRegistrationFormModel(
         schema: schema,
         dmaUserId: dmaUserId,
@@ -346,8 +352,10 @@ class RegistrationFormHelper {
         dmaUserId: _getString(custRegSyncStore.dmaUserId),
         schema: _getString(custRegSyncStore.schema),
         registrationType: _getString(custRegSyncStore.registrationType),
-        acceptConversionPolicy: _getString(custRegSyncStore.acceptConversionPolicy),
-        acceptExtraFittingCost: _getString(custRegSyncStore.acceptExtraFittingCost),
+        acceptConversionPolicy:
+            _getString(custRegSyncStore.acceptConversionPolicy),
+        acceptExtraFittingCost:
+            _getString(custRegSyncStore.acceptExtraFittingCost),
         societyAllowedMdpe: _getString(custRegSyncStore.societyAllowedMdpe),
         chargeArea: _getString(custRegSyncStore.chargeArea),
         areaId: _getString(custRegSyncStore.areaId),
@@ -362,7 +370,8 @@ class RegistrationFormHelper {
         propertyClassId: _getString(custRegSyncStore.propertyClassId),
         buildingNumber: _getString(custRegSyncStore.buildingNumber),
         houseNumber: _getString(custRegSyncStore.houseNumber),
-        colonySocietyApartment: _getString(custRegSyncStore.colonySocietyApartment),
+        colonySocietyApartment:
+            _getString(custRegSyncStore.colonySocietyApartment),
         streetName: _getString(custRegSyncStore.streetName),
         town: _getString(custRegSyncStore.town),
         districtId: _getString(custRegSyncStore.districtId),
@@ -386,21 +395,24 @@ class RegistrationFormHelper {
         bankAccountNumber: _getString(custRegSyncStore.bankAccountNumber),
         bankIfscCode: _getString(custRegSyncStore.bankIfscCode),
         bankAddress: _getString(custRegSyncStore.bankAddress),
-        initialDepositeStatus: _getString(custRegSyncStore.initialDepositeStatus),
+        initialDepositeStatus:
+            _getString(custRegSyncStore.initialDepositeStatus),
         schemeType: _getString(custRegSyncStore.schemeType),
         schemeTypeAmount: _getString(custRegSyncStore.schemeTypeAmount),
         modeOfDeposite: _getString(custRegSyncStore.modeOfDeposite),
         chequeNumber: _getString(custRegSyncStore.chequeNumber),
-
         chequeDepositDate: _getString(custRegSyncStore.chequeDepositDate),
         payementBankName: _getString(custRegSyncStore.payementBankName),
         chequeBankAccount: _getString(custRegSyncStore.chequeBankAccount),
-        noInitialDepositStatusReason: _getString(custRegSyncStore.noInitialDepositStatusReason),
+        noInitialDepositStatusReason:
+            _getString(custRegSyncStore.noInitialDepositStatusReason),
         alternateMobile: _getString(custRegSyncStore.alternateMobile),
         chequeMicrAccount: _getString(custRegSyncStore.chequeMicrAccount),
         housePhoto: _getString(custRegSyncStore.housePhoto),
         ownerConsentText: _getString(custRegSyncStore.ownerConsentText),
-        reasonForHold: _getString(custRegSyncStore.reasonForHold,),
+        reasonForHold: _getString(
+          custRegSyncStore.reasonForHold,
+        ),
         idFrontPath1: _getString(custRegSyncStore.idFrontPath1),
         idBackPath1: _getString(custRegSyncStore.idBackPath1),
         addFrontPath2: _getString(custRegSyncStore.addFrontPath2),
@@ -420,14 +432,17 @@ class RegistrationFormHelper {
       int recordCount = await hiveBox!.length;
       if (isUpdate) {
         await hiveBox.putAt(index, custRegSyncAdd);
-        Utils.successSnackBar(msg: 'Record Updated Successfully', context: context);
+        Utils.successSnackBar(
+            msg: 'Record Updated Successfully', context: context);
       } else {
         if (recordCount <= 15) {
           log("custRegSyncAdd${custRegSyncAdd}");
           await hiveBox.add(custRegSyncAdd);
-          Utils.successSnackBar(msg: "Data Saved Successfully", context: context);
+          Utils.successSnackBar(
+              msg: "Data Saved Successfully", context: context);
         } else {
-          Utils.errorSnackBar(msg: 'Please upload previous records first.', context: context);
+          Utils.errorSnackBar(
+              msg: 'Please upload previous records first.', context: context);
         }
       }
     } catch (e) {
@@ -435,7 +450,6 @@ class RegistrationFormHelper {
       log("addCustRegSyncLocalDB Error: ${e.toString()}");
     }
   }
-
 
   static Future<bool> isInternetConnected() async {
     bool isConnect = false;

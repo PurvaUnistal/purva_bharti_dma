@@ -10,9 +10,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.getLabel, context: context);
       if (res != null) {
         GetLabelModel response = GetLabelModel.fromJson(jsonDecode(res));
-        if (response
-            .toJson()
-            .isNotEmpty) {
+        if (response.toJson().isNotEmpty) {
           if (await HiveDataBase.allLabelBox!.isOpen) {
             await HiveDataBase.allLabelBox!.clear();
             HiveDataBase.allLabelBox!.add(response);
@@ -35,7 +33,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.notInterested, context: context);
       if (res != null) {
         List<GetNotInterestedModel> response =
-        GetNotInterestedModel.mapToList(jsonDecode(res));
+            GetNotInterestedModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.notInterestedBox!.isOpen) {
             await HiveDataBase.notInterestedBox!.clear();
@@ -59,7 +57,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.initialDepositStatus, context: context);
       if (res != null) {
         List<GetInitialDepositStatusModel> response =
-        GetInitialDepositStatusModel.mapToList(jsonDecode(res));
+            GetInitialDepositStatusModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.initDepositStatusBox!.isOpen) {
             await HiveDataBase.initDepositStatusBox!.clear();
@@ -77,13 +75,13 @@ class DashboardHelper {
   }
 
   static Future<List<GetAcceptExtraFittingCostModel>?>
-  getAcceptExtraFittingCostApi({required BuildContext context}) async {
+      getAcceptExtraFittingCostApi({required BuildContext context}) async {
     try {
       var res = await ApiServer.getData(
           urlEndPoint: AppUrl.acceptExtraFittingCost, context: context);
       if (res != null) {
         List<GetAcceptExtraFittingCostModel> response =
-        GetAcceptExtraFittingCostModel.mapToList(jsonDecode(res));
+            GetAcceptExtraFittingCostModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.acceptExtraFittingCostBox!.isOpen) {
             await HiveDataBase.acceptExtraFittingCostBox!.clear();
@@ -101,13 +99,13 @@ class DashboardHelper {
   }
 
   static Future<List<GetAcceptConversionPolicyModel>?>
-  getAcceptConversionPolicyApi({required BuildContext context}) async {
+      getAcceptConversionPolicyApi({required BuildContext context}) async {
     try {
       var res = await ApiServer.getData(
           urlEndPoint: AppUrl.acceptConversionPolicy, context: context);
       if (res != null) {
         List<GetAcceptConversionPolicyModel> response =
-        GetAcceptConversionPolicyModel.mapToList(jsonDecode(res));
+            GetAcceptConversionPolicyModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.acceptConversionPolicyBox!.isOpen) {
             await HiveDataBase.acceptConversionPolicyBox!.clear();
@@ -155,7 +153,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.residentStatus, context: context);
       if (res != null) {
         List<GetResidentStatusModel> response =
-        GetResidentStatusModel.mapToList(jsonDecode(res));
+            GetResidentStatusModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.resStatusBox!.isOpen) {
             await HiveDataBase.resStatusBox!.clear();
@@ -179,7 +177,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.modeOfDeposit, context: context);
       if (res != null) {
         List<GetModeOfDepositModel> response =
-        GetModeOfDepositModel.mapToList(jsonDecode(res));
+            GetModeOfDepositModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.modeOfDepositBox!.isOpen) {
             await HiveDataBase.modeOfDepositBox!.clear();
@@ -205,7 +203,7 @@ class DashboardHelper {
       );
       if (res != null) {
         List<GetEBillingModel> response =
-        GetEBillingModel.mapToList(jsonDecode(res));
+            GetEBillingModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.eBillingBox!.isOpen) {
             await HiveDataBase.eBillingBox!.clear();
@@ -226,11 +224,11 @@ class DashboardHelper {
       {required BuildContext context}) async {
     try {
       var res =
-      await ApiServer.getData(urlEndPoint: AppUrl.kycDoc, context: context);
+          await ApiServer.getData(urlEndPoint: AppUrl.kycDoc, context: context);
       log("resKycDoc-->${res}");
       if (res != null) {
         List<GetKycDocModel> response =
-        GetKycDocModel.mapToList(jsonDecode(res));
+            GetKycDocModel.mapToList(jsonDecode(res));
         log("responseKycDoc-->${response}");
         if (response.isNotEmpty) {
           if (await HiveDataBase.kycDocBox!.isOpen) {
@@ -255,7 +253,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.ownershipProof, context: context);
       if (res != null) {
         List<GetOwnershipProofModel> response =
-        GetOwnershipProofModel.mapToList(jsonDecode(res));
+            GetOwnershipProofModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.ownershipProofBox!.isOpen) {
             await HiveDataBase.ownershipProofBox!.clear();
@@ -279,7 +277,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.identityProof, context: context);
       if (res != null) {
         List<GetIdentityProofModel> response =
-        GetIdentityProofModel.mapToList(jsonDecode(res));
+            GetIdentityProofModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.idProofBox!.isOpen) {
             await HiveDataBase.idProofBox!.clear();
@@ -303,7 +301,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.guardianType, context: context);
       if (res != null) {
         List<GetGuardianTypeModel> response =
-        GetGuardianTypeModel.mapToList(jsonDecode(res));
+            GetGuardianTypeModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.guardianTypeBox!.isOpen) {
             await HiveDataBase.guardianTypeBox!.clear();
@@ -327,7 +325,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.existingCookingFuel, context: context);
       if (res != null) {
         List<GetExistingCookingFuelModel> response =
-        GetExistingCookingFuelModel.mapToList(jsonDecode(res));
+            GetExistingCookingFuelModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.cookingFuelBox!.isOpen) {
             await HiveDataBase.cookingFuelBox!.clear();
@@ -351,7 +349,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.societyAllow, context: context);
       if (res != null) {
         List<GetSocietyAllowModel> response =
-        GetSocietyAllowModel.mapToList(jsonDecode(res));
+            GetSocietyAllowModel.mapToList(jsonDecode(res));
         if (response.isNotEmpty) {
           if (await HiveDataBase.societyAllowBox!.isOpen) {
             await HiveDataBase.societyAllowBox!.clear();
@@ -376,7 +374,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.getPropertyClass + schema, context: context);
       if (res != null) {
         List<GetPropertyClassModel> response =
-        getPropertyClassModelFromJson(res);
+            getPropertyClassModelFromJson(res);
         if (response.isNotEmpty) {
           if (await HiveDataBase.proClassBox!.isOpen) {
             await HiveDataBase.proClassBox!.clear();
@@ -401,7 +399,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.getPropertyCategory + schema, context: context);
       if (res != null) {
         List<GetPropertyCategoryModel> response =
-        getPropertyCategoryModelFromJson(res);
+            getPropertyCategoryModelFromJson(res);
         if (response.isNotEmpty) {
           if (await HiveDataBase.proCateBox!.isOpen) {
             await HiveDataBase.proCateBox!.clear();
@@ -450,7 +448,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.getChargeAreaList + schema, context: context);
       if (res != null) {
         List<GetChargeAreaListModel> response =
-        getChargeAreaListModelFromJson(res);
+            getChargeAreaListModelFromJson(res);
         if (response.isNotEmpty) {
           if (await HiveDataBase.chargeAreaListBox!.isOpen) {
             await HiveDataBase.chargeAreaListBox!.clear();
@@ -475,7 +473,7 @@ class DashboardHelper {
           urlEndPoint: AppUrl.getAllDepositOffline + schema, context: context);
       if (res != null) {
         List<GetAllDepositOfflineModel> response =
-        getAllDepositOfflineModelFromJson(res);
+            getAllDepositOfflineModelFromJson(res);
         if (response.isNotEmpty) {
           if (await HiveDataBase.allDepositOfflineBox!.isOpen) {
             await HiveDataBase.allDepositOfflineBox!.clear();
@@ -539,54 +537,31 @@ class DashboardHelper {
     return files;
   }
 
-
   static Future<Position?> getCurrentLocation() async {
-  // Request permissions
-  await Geolocator.requestPermission();
-  await Permission.locationAlways.request();
+    await Geolocator.requestPermission();
+    await Permission.locationAlways.request();
+    if (Platform.isAndroid) {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+          forceAndroidLocationManager: true,
+          locationSettings: LocationSettings(
 
-  // Check permission status
-  PermissionStatus permissionStatus = await Permission.locationAlways.status;
-  if (!permissionStatus.isGranted) {
-  log('Location permission not granted');
-  return null;
+          ));
+      log('latitude : ${position.latitude} longitude : ${position.longitude}');
+      return position;
+    }
+    return null;
   }
-
-  try {
-  // Get current position
-  if (Platform.isAndroid) {
-  Position position = await Geolocator.getCurrentPosition(
-  desiredAccuracy: LocationAccuracy.high,
-  forceAndroidLocationManager: true,
-  );
-  log('latitude: ${position.latitude}, longitude: ${position.longitude}');
-  return position;
-  } else if (Platform.isIOS) {
-  // For iOS, you can use a different method if needed
-  Position position = await Geolocator.getCurrentPosition(
-  desiredAccuracy: LocationAccuracy.high,
-  );
-  log('latitude: ${position.latitude}, longitude: ${position.longitude}');
-  return position;
-  }
-  } catch (e) {
-  log('Error while fetching location: $e');
-  return null;
-  }
-  return null;
-  }
-
-
 
   static Future<bool> isInternetConnected() async {
-  bool isConnect = false;
-  try {
-  final result = await InternetAddress.lookup('google.com');
-  if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-  isConnect = true;
-  }
-  } on SocketException catch (_) {}
+    bool isConnect = false;
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        isConnect = true;
+      }
+    } on SocketException catch (_) {}
 
-  return isConnect;
+    return isConnect;
   }
 }

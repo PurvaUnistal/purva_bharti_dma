@@ -129,13 +129,25 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               _nearestLandmarkWidget(stateData: stateData),
               _pinCodeWidget(stateData: stateData),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Flexible(flex: 3, child: _latWidget(stateData: stateData)),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.02,
-                  ),
-                  Flexible(flex: 3, child: _longWidget(stateData: stateData)),
+                  stateData.isLocationLoader == false
+                      ? Flexible(
+                        child: Row(
+                            children: [
+                              Flexible(
+                                  flex: 3,
+                                  child: _latWidget(stateData: stateData)),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.02,
+                              ),
+                              Flexible(
+                                  flex: 3,
+                                  child: _longWidget(stateData: stateData)),
+                            ],
+                          ),
+                      )
+                      : DottedLoaderWidget(),
                   IconButton(
                     icon:
                         Icon(Icons.location_on_outlined, color: AppColor.prime),
@@ -206,7 +218,6 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                       _nocDocImg(context: context, stateData: stateData),
                   ],
                 ),
-
                 _verticalSpace(),
                 Row(
                   children: [
@@ -221,9 +232,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                             stateData: stateData)),
                     _widthSpace(),
                     Flexible(
-                            flex: 3,
-                            child: _societyAllowDropdown(stateData: stateData))
-
+                        flex: 3,
+                        child: _societyAllowDropdown(stateData: stateData))
                   ],
                 ),
                 BorderWidget(
@@ -371,7 +381,6 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
         dropdownValue: stateData.societyAllowValue?.key == null
             ? null
             : stateData.societyAllowValue,
-
         items: stateData.societyAllowList,
         onChanged: (val) {
           BlocProvider.of<RegistrationFormBloc>(context).add(
@@ -384,73 +393,72 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _chargeAreaDropdown(
       {required RegistrationFormGetAllDataState stateData}) {
     return DropDownSearchWidget(
-        star: AppString.star,
-        label: stateData.labelModel.registration == null
-            ? AppString.chargeArea
-            : stateData.labelModel.registration!.chargeArea,
-        hint: stateData.labelModel.registration == null
-            ? AppString.chargeArea
-            : stateData.labelModel.registration!.chargeArea,
-        dropdownValue: stateData.chargeAreaValue?.gid == null
-            ? null
-            : stateData.chargeAreaValue,
-        itemAsString: (alignmentData) => alignmentData.chargeAreaName.toString(),
-        items: stateData.getChargeAreaListModel,
-        onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context)
-              .add(RegistrationFormSetChargeAreaValue(chargeAreaValue: val));
-        },
+      star: AppString.star,
+      label: stateData.labelModel.registration == null
+          ? AppString.chargeArea
+          : stateData.labelModel.registration!.chargeArea,
+      hint: stateData.labelModel.registration == null
+          ? AppString.chargeArea
+          : stateData.labelModel.registration!.chargeArea,
+      dropdownValue: stateData.chargeAreaValue?.gid == null
+          ? null
+          : stateData.chargeAreaValue,
+      itemAsString: (alignmentData) => alignmentData.chargeAreaName.toString(),
+      items: stateData.getChargeAreaListModel,
+      onChanged: (val) {
+        BlocProvider.of<RegistrationFormBloc>(context)
+            .add(RegistrationFormSetChargeAreaValue(chargeAreaValue: val));
+      },
     );
   }
 
   Widget _areaDropdown({required RegistrationFormGetAllDataState stateData}) {
     return DropDownSearchWidget(
-        star: AppString.star,
-        label: stateData.labelModel.registration == null
-            ? AppString.area
-            : stateData.labelModel.registration!.area,
-        hint: stateData.labelModel.registration == null
-            ? AppString.area
-            : stateData.labelModel.registration!.area,
-        dropdownValue:
-            stateData.areaValue?.gid == null ? null : stateData.areaValue,
-        itemAsString: (alignmentData) => alignmentData.areaName.toString(),
-        items: stateData.getAllAreaModel,
-        onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context)
-              .add(RegistrationFormSetAreaValue(areaValue: val));
-        },
+      star: AppString.star,
+      label: stateData.labelModel.registration == null
+          ? AppString.area
+          : stateData.labelModel.registration!.area,
+      hint: stateData.labelModel.registration == null
+          ? AppString.area
+          : stateData.labelModel.registration!.area,
+      dropdownValue:
+          stateData.areaValue?.gid == null ? null : stateData.areaValue,
+      itemAsString: (alignmentData) => alignmentData.areaName.toString(),
+      items: stateData.getAllAreaModel,
+      onChanged: (val) {
+        BlocProvider.of<RegistrationFormBloc>(context)
+            .add(RegistrationFormSetAreaValue(areaValue: val));
+      },
     );
   }
 
   Widget _mobileNumberWidget(
       {required RegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-          star: AppString.star,
-          hintText: stateData.labelModel.steps == null
-              ? AppString.mobileNo
-              : stateData.labelModel.steps!.mobile,
-          label: stateData.labelModel.steps == null
-              ? AppString.mobileNo
-              : stateData.labelModel.steps!.mobile,
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
-          maxLength: 10,
-          controller: stateData.mobileController,
-          validator: (String? value) {
-            if (value != stateData.mobileController.text.trim()) {
-              return "Blank space";
-            } else if (value!.isEmpty) {
-              return "Please enter Mobile Number";
-            } else if (value.length <= 9) {
-              return 'Mobile Number must be of 10 digit';
-            }
-            return null;
-          },
-          onChanged: (v) {
-            formGlobalKey.currentState?.validate();
+        star: AppString.star,
+        hintText: stateData.labelModel.steps == null
+            ? AppString.mobileNo
+            : stateData.labelModel.steps!.mobile,
+        label: stateData.labelModel.steps == null
+            ? AppString.mobileNo
+            : stateData.labelModel.steps!.mobile,
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
+        maxLength: 10,
+        controller: stateData.mobileController,
+        validator: (String? value) {
+          if (value != stateData.mobileController.text.trim()) {
+            return "Blank space";
+          } else if (value!.isEmpty) {
+            return "Please enter Mobile Number";
+          } else if (value.length <= 9) {
+            return 'Mobile Number must be of 10 digit';
           }
-    );
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        });
   }
 
   Widget _altMobileNumberWidget(
@@ -1850,7 +1858,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _verticalSpace() {
     return SizedBox(
-      height: MediaQuery.of(context).size.height *0.009,
+      height: MediaQuery.of(context).size.height * 0.009,
     );
   }
 
