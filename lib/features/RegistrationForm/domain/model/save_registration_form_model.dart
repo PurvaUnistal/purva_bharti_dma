@@ -3,7 +3,7 @@ part 'save_registration_form_model.g.dart';
 
 @HiveType(typeId: HiveTypeId.RegistrationFormId)
 
-class SaveRegistrationFormModel extends HiveObject{
+class SaveRegistrationFormModel extends HiveObject implements Equatable{
   @HiveField(0)
   String? areaId;
   @HiveField(1)
@@ -148,8 +148,7 @@ class SaveRegistrationFormModel extends HiveObject{
   String? housePhoto;
   @HiveField(71)
   String? reasonRegistration;
-  @HiveField(72)
-  bool? isSingleServerLoader;
+  bool isSingleServerLoader = false;
 
   SaveRegistrationFormModel({
     this.areaId,
@@ -226,5 +225,11 @@ class SaveRegistrationFormModel extends HiveObject{
     this.reasonRegistration,
     this.isSingleServerLoader = false,
   });
+
+  @override
+  List<Object?> get props => [isSingleServerLoader];
+
+  @override
+  bool? get stringify => true;
 }
 

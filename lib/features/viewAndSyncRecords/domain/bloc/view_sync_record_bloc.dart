@@ -12,7 +12,6 @@ class ViewSyncRecordBloc
   }
 
   bool isGrpServerLoader = false;
-  bool isSingleServerLoader = false;
   bool isDeleteLoader = false;
   bool isConnective = false;
 
@@ -55,71 +54,61 @@ class ViewSyncRecordBloc
 
   _sendListData(SyncRecordListServerDataEvent event, emit) async {
     try {
-      if (HiveDataBase.registrationFormBox!.values.isNotEmpty) {
-        List<SaveRegistrationFormModel> listOfLocalHive =
-        HiveDataBase.registrationFormBox!.values.toList();
-        bool hasChanges = false;
+      if (listOfRegistrationForm.isNotEmpty) {
         isGrpServerLoader = true;
         _eventCompleted(emit);
-
-        for (int i = listOfLocalHive.length - 1; i >= 0; i--) {
-          var res = await ViewSyncRecordHelper.sendData(context: event.context, custRegSyncData: listOfLocalHive[i]);
+        bool hasChanges = false;
+        for (int i = listOfRegistrationForm.length - 1; i >= 0; i--) {
+          var res = await ViewSyncRecordHelper.sendData(
+              context: event.context, custRegSyncData: listOfRegistrationForm[i]);
 
           if (res != null) {
             hasChanges = true;
             await HiveDataBase.registrationFormBox!.deleteAt(i);
-            await Utils.successSnackBar(
-                msg: res.message![0].message!, context: event.context);
           }
         }
-        isGrpServerLoader = false;
-        if (hasChanges)
+        if (hasChanges) {
+          listOfRegistrationForm =
+              await HiveDataBase.registrationFormBox!.values.toList();
+          isGrpServerLoader = false;
           _eventCompleted(emit);
-
-        if (HiveDataBase.registrationFormBox!.isEmpty) {
-          Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecord);
+          await Utils.successSnackBar(
+              msg: "The group list successfully send.", context: event.context);
         }
+      } else {
+        await Utils.successSnackBar(
+            msg: "The list is empty.", context: event.context);
       }
     } catch (e) {
+      log("Error while sending group data-->${e.toString()}");
       isGrpServerLoader = false;
-      log("_saveServerData-->${e.toString()}");
+      _eventCompleted(emit);
       Utils.errorSnackBar(msg: e.toString(), context: event.context);
     }
   }
 
-
   _sendSingleData(SyncRecordSingleServerDataEvent event, emit) async {
-    List<SaveRegistrationFormModel> listOfLocalHive =
-    await HiveDataBase.registrationFormBox!.values.toList();
-    if (HiveDataBase.registrationFormBox!.values.isNotEmpty) {
-      try {
-        listOfLocalHive[event.index].isSingleServerLoader = true;
-        isSingleServerLoader  = listOfLocalHive[event.index].isSingleServerLoader!;
-        _eventCompleted(emit);
-        var res = await ViewSyncRecordHelper.sendData(
-            context: event.context,
-            custRegSyncData: listOfLocalHive[event.index]);
-        if (res != null) {
-          listOfLocalHive[event.index].isSingleServerLoader = false;
-          isSingleServerLoader  = listOfLocalHive[event.index].isSingleServerLoader!;
-          _eventCompleted(emit);
-          log("Data Length P ============== ${HiveDataBase.registrationFormBox!.values.length}");
-          await Utils.successSnackBar(
-              msg: res.message![0].message!, context: event.context);
-          await HiveDataBase.registrationFormBox!.deleteAt(event.index);
-          Navigator.pushReplacementNamed(
-              event.context, RoutesName.viewSyncRecord);
-          _eventCompleted(emit);
-        }
-      } catch (e) {
-        listOfLocalHive[event.index].isSingleServerLoader = false;
-        isSingleServerLoader  = listOfLocalHive[event.index].isSingleServerLoader!;
-        log("_sendSingleData-->${e.toString()}");
-        Utils.errorSnackBar(msg: e.toString(), context: event.context);
+    SaveRegistrationFormModel saveRegistrationFormModel = listOfRegistrationForm[event.index];
+    try {
+      saveRegistrationFormModel.isSingleServerLoader = true;
+      _eventCompleted(emit);
+      var res = await ViewSyncRecordHelper.sendData(
+          context: event.context,
+          custRegSyncData: saveRegistrationFormModel);
+
+      if(res != null) {
+        await Utils.successSnackBar(msg: res.message![0].message!, context: event.context);
+        await HiveDataBase.registrationFormBox!.deleteAt(event.index);
+        listOfRegistrationForm = await HiveDataBase.registrationFormBox!.values.toList();
+      } else {
+        throw Exception("Unable to send data");
       }
-    } else {
-      listOfLocalHive[event.index].isSingleServerLoader = false;
-      isSingleServerLoader  = listOfLocalHive[event.index].isSingleServerLoader!;
+
+    } catch(e) {
+      log("Error while sending single data-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: event.context);
+    } finally {
+      saveRegistrationFormModel.isSingleServerLoader = false;
       _eventCompleted(emit);
     }
   }
@@ -144,9 +133,9 @@ class ViewSyncRecordBloc
   }
 
   _eventCompleted(Emitter<ViewSyncRecordState> emit) {
+    emit(ViewSyncRecordPageLoadState());
     emit(ViewSyncRecordDataState(
       isGrpServerLoader: isGrpServerLoader,
-      isSingleServerLoader: isSingleServerLoader,
       isConnective: isConnective,
       isDeleteLoader: isDeleteLoader,
       listOfRegistrationForm: listOfRegistrationForm,

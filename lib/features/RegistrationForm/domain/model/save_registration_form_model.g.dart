@@ -90,7 +90,7 @@ class SaveRegistrationFormModelAdapter
       alternateMobile: fields[69] as String?,
       housePhoto: fields[70] as String?,
       reasonRegistration: fields[71] as String?,
-      isSingleServerLoader: fields[72] as bool?,
+      isSingleServerLoader: fields[72] as bool,
     );
   }
 

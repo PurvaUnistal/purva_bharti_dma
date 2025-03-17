@@ -159,8 +159,8 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                 Text("Record : ${index + 1}"),
                                 Row(
                                   children: [
-                                    dataState.isSingleServerLoader == false
-                                        ? IconButton(
+                                    data?.isSingleServerLoader == false
+                                        ? dataState.isGrpServerLoader == true ? Container() :IconButton(
                                             icon: Icon(Icons.sync,
                                                 color: AppColor.prime),
                                             onPressed: () {
