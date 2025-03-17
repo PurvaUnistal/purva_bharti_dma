@@ -143,7 +143,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
               : ListView.builder(
                   itemCount: dataState.listOfRegistrationForm?.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
-                    var data = dataState.listOfRegistrationForm![index];
+                    var data = dataState.listOfRegistrationForm?[index];
                     return Card(
                       color: AppColor.white,
                       shape: RoundedRectangleBorder(
@@ -156,60 +156,25 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Record : ${index+1}"),
+                                Text("Record : ${index + 1}"),
                                 Row(
                                   children: [
-                                    data.isSingleServerLoader == false
+                                    dataState.isSingleServerLoader == false
                                         ? IconButton(
-                                            icon: Icon(
-                                              Icons.sync,
-                                              color: AppColor.prime,
-                                            ),
+                                            icon: Icon(Icons.sync,
+                                                color: AppColor.prime),
                                             onPressed: () {
                                               BlocProvider.of<
                                                           ViewSyncRecordBloc>(
                                                       context)
-                                                  .add(
-                                                      SyncRecordSingleServerDataEvent(
-                                                          context: context,
-                                                          index: index));
-                                              print(
-                                                  "SyncRecordSingleServerDataEvent-->${index}");
+                                                  .add(SyncRecordSingleServerDataEvent(
+                                                      context: context,
+                                                      index: index));
                                             },
                                           )
                                         : DottedLoaderWidget(),
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.delete_forever,
-                                        color: AppColor.prime,
-                                      ),
-                                      onPressed: () {
-                                        BlocProvider.of<ViewSyncRecordBloc>(
-                                                context)
-                                            .add(DeleteLocalDataEvent(
-                                          index: index,
-                                          context: context,
-                                          mobileNo: data.mobileNumber!,
-                                        ));
-                                      },
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RegistrationFormPage(
-                                                      isUpdate: true,
-                                                      localData: data,
-                                                      index: index),
-                                            ),
-                                          );
-                                        },
-                                        icon: Icon(
-                                          Icons.edit,
-                                          color: AppColor.prime,
-                                        )),
+                                    _deleteButton(data, index),
+                                    _editButton(data, index),
                                   ],
                                 )
                               ],
@@ -217,11 +182,12 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                             Divider(),
                             _row(
                                 leading: "Mobile Number : ",
-                                training: data.mobileNumber ?? ""),
+                                training: data?.mobileNumber ?? ""),
                             Divider(),
                             _row(
                                 leading: "Name : ",
-                                training: "${data.firstName} ${data.lastName}"),
+                                training:
+                                    "${data?.firstName} ${data?.lastName}"),
                           ],
                         ),
                       ),
@@ -258,6 +224,34 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                 )
         ],
       ),
+    );
+  }
+
+  Widget _deleteButton(data, int index) {
+    return IconButton(
+      icon: Icon(Icons.delete_forever, color: AppColor.prime),
+      onPressed: () {
+        BlocProvider.of<ViewSyncRecordBloc>(context).add(DeleteLocalDataEvent(
+          index: index,
+          context: context,
+          mobileNo: data.mobileNumber!,
+        ));
+      },
+    );
+  }
+
+  Widget _editButton(data, int index) {
+    return IconButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RegistrationFormPage(
+                isUpdate: true, localData: data, index: index),
+          ),
+        );
+      },
+      icon: Icon(Icons.edit, color: AppColor.prime),
     );
   }
 }

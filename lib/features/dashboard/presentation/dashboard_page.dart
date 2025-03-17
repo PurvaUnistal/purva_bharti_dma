@@ -9,7 +9,6 @@ import 'package:pbg_app/Utils/common_widgets/background_widget.dart';
 import 'package:pbg_app/features/internet/bloc/internet_bloc.dart';
 import 'package:pbg_app/features/internet/bloc/internet_event.dart';
 import 'package:pbg_app/features/internet/bloc/internet_state.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);

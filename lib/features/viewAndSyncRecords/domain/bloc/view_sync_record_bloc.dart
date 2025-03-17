@@ -12,6 +12,7 @@ class ViewSyncRecordBloc
   }
 
   bool isGrpServerLoader = false;
+  bool isSingleServerLoader = false;
   bool isDeleteLoader = false;
   bool isConnective = false;
 
@@ -56,28 +57,27 @@ class ViewSyncRecordBloc
     try {
       if (HiveDataBase.registrationFormBox!.values.isNotEmpty) {
         List<SaveRegistrationFormModel> listOfLocalHive =
-            await HiveDataBase.registrationFormBox!.values.toList();
-        for (int i = 0; i < listOfLocalHive.length; i++) {
-          isGrpServerLoader = true;
-          _eventCompleted(emit);
-          var res = await ViewSyncRecordHelper.sendData(
-              context: event.context,
-              custRegSyncData: listOfRegistrationForm[i]);
+        HiveDataBase.registrationFormBox!.values.toList();
+        bool hasChanges = false;
+        isGrpServerLoader = true;
+        _eventCompleted(emit);
+
+        for (int i = listOfLocalHive.length - 1; i >= 0; i--) {
+          var res = await ViewSyncRecordHelper.sendData(context: event.context, custRegSyncData: listOfLocalHive[i]);
+
           if (res != null) {
-            isGrpServerLoader = false;
-            _eventCompleted(emit);
-            if (HiveDataBase.registrationFormBox!.values.length == 1) {
-              await HiveDataBase.registrationFormBox!.clear();
-              Navigator.pushReplacementNamed(
-                  event.context, RoutesName.viewSyncRecord);
-              _eventCompleted(emit);
-            } else {
-              await Utils.successSnackBar(
-                  msg: res.message![0].message!, context: event.context);
-              await HiveDataBase.registrationFormBox!.deleteAt(i);
-              _eventCompleted(emit);
-            }
+            hasChanges = true;
+            await HiveDataBase.registrationFormBox!.deleteAt(i);
+            await Utils.successSnackBar(
+                msg: res.message![0].message!, context: event.context);
           }
+        }
+        isGrpServerLoader = false;
+        if (hasChanges)
+          _eventCompleted(emit);
+
+        if (HiveDataBase.registrationFormBox!.isEmpty) {
+          Navigator.pushReplacementNamed(event.context, RoutesName.viewSyncRecord);
         }
       }
     } catch (e) {
@@ -87,18 +87,21 @@ class ViewSyncRecordBloc
     }
   }
 
+
   _sendSingleData(SyncRecordSingleServerDataEvent event, emit) async {
     List<SaveRegistrationFormModel> listOfLocalHive =
-        await HiveDataBase.registrationFormBox!.values.toList();
+    await HiveDataBase.registrationFormBox!.values.toList();
     if (HiveDataBase.registrationFormBox!.values.isNotEmpty) {
       try {
         listOfLocalHive[event.index].isSingleServerLoader = true;
+        isSingleServerLoader  = listOfLocalHive[event.index].isSingleServerLoader!;
         _eventCompleted(emit);
         var res = await ViewSyncRecordHelper.sendData(
             context: event.context,
             custRegSyncData: listOfLocalHive[event.index]);
         if (res != null) {
           listOfLocalHive[event.index].isSingleServerLoader = false;
+          isSingleServerLoader  = listOfLocalHive[event.index].isSingleServerLoader!;
           _eventCompleted(emit);
           log("Data Length P ============== ${HiveDataBase.registrationFormBox!.values.length}");
           await Utils.successSnackBar(
@@ -110,14 +113,18 @@ class ViewSyncRecordBloc
         }
       } catch (e) {
         listOfLocalHive[event.index].isSingleServerLoader = false;
+        isSingleServerLoader  = listOfLocalHive[event.index].isSingleServerLoader!;
         log("_sendSingleData-->${e.toString()}");
         Utils.errorSnackBar(msg: e.toString(), context: event.context);
       }
     } else {
       listOfLocalHive[event.index].isSingleServerLoader = false;
+      isSingleServerLoader  = listOfLocalHive[event.index].isSingleServerLoader!;
       _eventCompleted(emit);
     }
   }
+
+
 
   Future<void> clearCache() async {
     Directory path = Directory("/data/user/0/com.unistal.igl_dma_app/cache/");
@@ -139,6 +146,7 @@ class ViewSyncRecordBloc
   _eventCompleted(Emitter<ViewSyncRecordState> emit) {
     emit(ViewSyncRecordDataState(
       isGrpServerLoader: isGrpServerLoader,
+      isSingleServerLoader: isSingleServerLoader,
       isConnective: isConnective,
       isDeleteLoader: isDeleteLoader,
       listOfRegistrationForm: listOfRegistrationForm,

@@ -15,6 +15,7 @@ class ViewSyncRecordPageLoadState extends ViewSyncRecordState {
 
 class ViewSyncRecordDataState extends ViewSyncRecordState {
   final bool isGrpServerLoader;
+  final bool isSingleServerLoader;
   final bool isConnective;
   final bool isDeleteLoader;
   final List<SaveRegistrationFormModel>? listOfRegistrationForm;
@@ -22,6 +23,7 @@ class ViewSyncRecordDataState extends ViewSyncRecordState {
 
   ViewSyncRecordDataState({
     required this.isGrpServerLoader,
+    required this.isSingleServerLoader,
     required this.isConnective,
     required this.isDeleteLoader,
     required this.listOfRegistrationForm,
@@ -31,6 +33,7 @@ class ViewSyncRecordDataState extends ViewSyncRecordState {
   @override
   List<Object?> get props => [
     isGrpServerLoader,
+    isSingleServerLoader,
     isConnective,
     isDeleteLoader,
     listOfRegistrationForm,
