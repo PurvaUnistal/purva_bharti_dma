@@ -451,15 +451,4 @@ class RegistrationFormHelper {
     }
   }
 
-  static Future<bool> isInternetConnected() async {
-    bool isConnect = false;
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        isConnect = true;
-      }
-    } on SocketException catch (_) {}
-
-    return isConnect;
-  }
 }

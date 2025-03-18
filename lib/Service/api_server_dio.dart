@@ -14,7 +14,7 @@ class ApiHelperDio {
     required BuildContext context,
   }) async {
     try {
-      if (!await ConnectivityHelper.allConnectivityCheck(context: context)) {
+      if (!await ConnectivityHelper.checkInternetConnect(context: context)) {
         return null;
       }
       final url = Uri.parse("${AppUrl.baseUrl}$urlEndPoint");
@@ -49,7 +49,7 @@ class ApiHelperDio {
     formData,
   }) async {
     try {
-      if (!await ConnectivityHelper.allConnectivityCheck(context: context)) {
+      if (!await ConnectivityHelper.checkInternetConnect(context: context)) {
         return null;
       }
 
@@ -86,13 +86,12 @@ class ApiHelperDio {
     required BuildContext context,
   }) async {
     try {
-      if (!await ConnectivityHelper.allConnectivityCheck(context: context)) {
+      if (!await ConnectivityHelper.checkInternetConnect(context: context)) {
         return null;
       }
 
       final formData = FormData.fromMap(body);
 
-      // Process image files
       for (var element in imageRequestObject) {
         if (element.path!.isNotEmpty && !element.path!.startsWith("http")) {
           final mimeTypeData = lookupMimeType(element.path!, headerBytes: [0xFF, 0xD8])?.split('/');
@@ -121,7 +120,7 @@ class ApiHelperDio {
       }
       return response.data;
     } on DioException catch (error) {
-      debugPrint("Dio Error --> ${error.message}");
+      debugPrint("Dio Error message --> ${error.message}");
       final statusCode = error.response?.statusCode;
       final errorMessage = error.response?.data?.toString() ?? "Unknown Error";
       await _handleError(statusCode, errorMessage, context);

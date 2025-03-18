@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pbg_app/Service/Apis.dart';
 import 'package:pbg_app/Service/api_server_dio.dart';
 import 'package:pbg_app/Utils/Utils.dart';
+import 'package:pbg_app/Utils/common_widgets/InternetConnectivity/connectivity_helper.dart';
 import 'package:pbg_app/features/RegistrationForm/domain/model/save_registration_form_model.dart';
 import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/send_registration_offline_model.dart';
 
@@ -14,9 +14,11 @@ class ViewSyncRecordHelper {
       {required BuildContext context,
       required SaveRegistrationFormModel custRegSyncData}) async {
     try {
+      if (!await ConnectivityHelper.checkInternetConnect(context: context)) {
+        return null;
+      }
       var inputFormat = DateFormat('dd-MM-yyyy');
       var date1 = inputFormat.parse(custRegSyncData.chequeDepositDate.toString().replaceAll("00:00:00.000", ""));
-      print("date1date1-->${date1.toString().replaceAll("00:00:00.000", "")}");
       Map<String, String> json = {
         "interested": custRegSyncData.registrationType ?? "",
         "area_id": custRegSyncData.areaId ?? "",
@@ -153,6 +155,8 @@ class ViewSyncRecordHelper {
           ]);
       if (res != null) {
         return SendRegistrationOfflineModel.fromJson(res);
+      }else{
+        print("no response");
       }
     } catch (e) {
       log("SaveCustomerCatch-->${e.toString()}");

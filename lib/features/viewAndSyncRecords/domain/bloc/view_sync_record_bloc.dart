@@ -23,7 +23,7 @@ class ViewSyncRecordBloc
     isDeleteLoader = false;
     listOfRegistrationForm = [];
     isConnective =
-        await ConnectivityHelper.allConnectivityCheck(context: event.context);
+        await ConnectivityHelper.checkInternetConnect(context: event.context);
     listOfRegistrationForm =
         await HiveDataBase.registrationFormBox!.values.toList();
     _eventCompleted(emit);
@@ -52,6 +52,10 @@ class ViewSyncRecordBloc
 
   _sendListData(SyncRecordListServerDataEvent event, emit) async {
     try {
+      if (!await ConnectivityHelper.checkInternetConnect(context: event.context)) {
+        return null;
+      }
+
       if (listOfRegistrationForm.isNotEmpty) {
         isGrpServerLoader = true;
         _eventCompleted(emit);
@@ -63,15 +67,19 @@ class ViewSyncRecordBloc
           if (res != null) {
             hasChanges = true;
             await HiveDataBase.registrationFormBox!.deleteAt(i);
+            listOfRegistrationForm =
+            await HiveDataBase.registrationFormBox!.values.toList();
+          }else{
+            isGrpServerLoader = false;
+            _eventCompleted(emit);
           }
         }
         if (hasChanges) {
           listOfRegistrationForm =
-              await HiveDataBase.registrationFormBox!.values.toList();
+          await HiveDataBase.registrationFormBox!.values.toList();
           isGrpServerLoader = false;
           _eventCompleted(emit);
-          await Utils.successSnackBar(
-              msg: "The group list successfully send.", context: event.context);
+          await Utils.successSnackBar(msg: "The group list successfully sent.", context: event.context);
         }
       } else {
         await Utils.successSnackBar(
@@ -84,6 +92,7 @@ class ViewSyncRecordBloc
       Utils.errorSnackBar(msg: e.toString(), context: event.context);
     }
   }
+
 
   _sendSingleData(SyncRecordSingleServerDataEvent event, emit) async {
     SaveRegistrationFormModel saveRegistrationFormModel = listOfRegistrationForm[event.index];

@@ -6,7 +6,7 @@ class ApiServer {
   static Future<dynamic> getData(
       {var urlEndPoint, required BuildContext context}) async {
     try {
-      if (await ConnectivityHelper.allConnectivityCheck(context: context) ==
+      if (await ConnectivityHelper.checkInternetConnect(context: context) ==
           false) {
         return null;
       }
@@ -46,7 +46,7 @@ class ApiServer {
 
   static Future<dynamic> postData({required String urlEndPoint, var body, required BuildContext context}) async {
     try {
-      if (await ConnectivityHelper.allConnectivityCheck(context: context) ==
+      if (await ConnectivityHelper.checkInternetConnect(context: context) ==
           false) {
         return null;
       }
@@ -84,7 +84,7 @@ class ApiServer {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String token = pref.getString(PrefsValue.token) ?? "";
     try {
-      if(await ConnectivityHelper.allConnectivityCheck(context: context) == false){
+      if(await ConnectivityHelper.checkInternetConnect(context: context) == false){
         return null;
       }
       Map<String, String> headers = {"Authorization": token};
