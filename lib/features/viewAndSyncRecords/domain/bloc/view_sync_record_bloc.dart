@@ -5,7 +5,6 @@ class ViewSyncRecordBloc
     extends Bloc<ViewSyncRecordEvent, ViewSyncRecordState> {
   ViewSyncRecordBloc() : super(ViewSyncRecordInitialState()) {
     on<ViewSyncRecordLoadPageEvent>(_pageLoad);
-    on<ViewSyncRecordLoadUpdateLocalDataEvent>(_updateLocalData);
     on<DeleteLocalDataEvent>(_deleteLocalData);
     on<SyncRecordListServerDataEvent>(_sendListData);
     on<SyncRecordSingleServerDataEvent>(_sendSingleData);
@@ -30,7 +29,6 @@ class ViewSyncRecordBloc
     _eventCompleted(emit);
   }
 
-  _updateLocalData(ViewSyncRecordLoadUpdateLocalDataEvent event, emit) async {}
 
   _deleteLocalData(DeleteLocalDataEvent event, emit) {
     return showDialog(

@@ -12,19 +12,7 @@ class ViewSyncRecordLoadPageEvent extends ViewSyncRecordEvent {
   List<Object?> get props => [context];
 }
 
-class ViewSyncRecordLoadUpdateLocalDataEvent extends ViewSyncRecordEvent {
-  final BuildContext context;
-  final int index;
-  final SaveRegistrationFormModel saveRegistrationFormModel;
 
-  ViewSyncRecordLoadUpdateLocalDataEvent(
-      {required this.context,
-      required this.index,
-      required this.saveRegistrationFormModel});
-
-  @override
-  List<Object?> get props => [context, index, saveRegistrationFormModel];
-}
 
 class DeleteLocalDataEvent extends ViewSyncRecordEvent {
   final int index;

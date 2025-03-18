@@ -1,9 +1,9 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
+
 part 'save_registration_form_model.g.dart';
 
 @HiveType(typeId: HiveTypeId.RegistrationFormId)
-
-class SaveRegistrationFormModel extends HiveObject implements Equatable{
+class SaveRegistrationFormModel extends HiveObject implements Equatable {
   @HiveField(0)
   String? areaId;
   @HiveField(1)
@@ -227,9 +227,82 @@ class SaveRegistrationFormModel extends HiveObject implements Equatable{
   });
 
   @override
-  List<Object?> get props => [isSingleServerLoader];
+  List<Object?> get props => [
+        areaId,
+        chequePhoto,
+        noOfFamilyMembers,
+        propertyClassId,
+        noOfBathroom,
+        noOfKitchen,
+        firstName,
+        middleName,
+        lastName,
+        mobileNumber,
+        schema,
+        emailId,
+        idBackPath1,
+        addBackPath2,
+        nocBackPath3,
+        idFrontPath1,
+        addFrontPath2,
+        nocFrontPath3,
+        canceledChequePhoto,
+        customerConsentPhoto,
+        bankAccountNumber,
+        bankAddress,
+        bankIfscCode,
+        chequeBankAccount,
+        chequeNumber,
+        schemeType,
+        districtId,
+        dmaUserId,
+        dmaUserName,
+        existingCookingFuel,
+        guardianName,
+        guardianType,
+        houseNumber,
+        schemeTypeAmount,
+        initialDepositeStatus,
+        registrationType,
+        kycDocument1,
+        kycDocument1Number,
+        kycDocument2,
+        kycDocument2Number,
+        kycDocument3,
+        longitude,
+        latitude,
+        colonySocietyApartment,
+        modeOfDeposite,
+        bankNameOfBank,
+        ownerConsent,
+        payementBankName,
+        pinCode,
+        propertyCategoryId,
+        reasonForHold,
+        noInitialDepositStatusReason,
+        residentStatus,
+        societyAllowedMdpe,
+        town,
+        uploadCustomerPhoto,
+        uploadHousePhoto,
+        chequeDepositDate,
+        kycDocument3Number,
+        acceptConversionPolicy,
+        acceptExtraFittingCost,
+        chequeMicrAccount,
+        buildingNumber,
+        chargeArea,
+        eBillingModel,
+        streetName,
+        ownerConsentText,
+        nearestLandmark,
+        customerConsent,
+        alternateMobile,
+        housePhoto,
+        reasonRegistration,
+        isSingleServerLoader
+      ];
 
   @override
   bool? get stringify => true;
 }
-
