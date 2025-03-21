@@ -39,8 +39,7 @@ class ViewSyncRecordBloc
               onPressed: () async {
                 if (HiveDataBase.registrationFormBox!.values.isNotEmpty) {
                   Navigator.pop(event.context);
-                  Navigator.pushReplacementNamed(
-                      context, RoutesName.viewSyncRecord);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ViewSyncRecordPage()));
                   log("Data Length P ============== ${HiveDataBase.registrationFormBox!.values.length}");
                   return HiveDataBase.registrationFormBox
                       ?.deleteAt(event.index);

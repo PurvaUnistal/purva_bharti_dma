@@ -18,13 +18,43 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+
+  static const MethodChannel platform = MethodChannel('pbgpl/dma');
   @override
   void initState() {
-    callMethodeChannel();
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
     BlocProvider.of<DashboardBloc>(context)
         .add(DashboardPageLoadingEvent(context: context));
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      callMethodeChannel();
+    });
+  }
+
+  callMethodeChannel()  async {
+    try {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String applicationId = packageInfo.packageName;
+      String androidPlayStoreUrl =
+          "https://play.google.com/store/apps/details?id=$applicationId&hl=en&gl=US";
+      final dynamic result = await platform.invokeMethod('getAppUpdate');
+      if (Platform.isAndroid) {
+        if (kDebugMode) {
+          print("Upgrade Message ============== $result");
+        }
+        if (result.toString() == "success") {
+          try {
+            AppUpdateMessage.showAlertDialog(
+                context: context, url: androidPlayStoreUrl, isLater: false);
+          } catch (e) {
+            AppUpdateMessage.showAlertDialog(
+                context: context, url: androidPlayStoreUrl);
+          }
+        }
+      }
+    } on PlatformException catch (e) {
+      return false;
+    }
   }
 
   List<IconData> icons = [Icons.picture_in_picture, Icons.receipt];
@@ -43,38 +73,19 @@ class _DashboardPageState extends State<DashboardPage> {
     ViewSyncRecordPage(),
   ];
 
-  static const MethodChannel platform = MethodChannel('pbgpl/dma');
 
-  callMethodeChannel() async {
-    try {
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      print("packageInfo-->$packageInfo");
-      String applicationId = packageInfo.packageName.toString();
-      String androidPlayStoreUrl =
-          "https://play.google.com/store/apps/details?id=${applicationId}&hl=en&gl=US";
-      if (Platform.isAndroid) {
-        final dynamic result = await platform.invokeMethod('getAppUpdate');
-        if (kDebugMode) {
-          print("Upadet Mesagae ============== $result");
-        }
-        if (result.toString() == "success") {
-          AppUpdateMessage.showAlertDialog(
-              context: context, url: androidPlayStoreUrl);
-        }
-      }
-    } on PlatformException catch (_) {}
-  }
 
   @override
   Widget build(BuildContext context) {
+  //  callMethodeChannel();
     return WillPopScope(
-      onWillPop: _onWillPop,
+      onWillPop: () => _onWillPop(),
       child: Scaffold(
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
             child: AppBarWidget(
               boolLeading: false,
-              title: RoutesName.dashboard,
+              title: "Dashboard",
               actions: [
                 IconButton(
                     onPressed: () async {
@@ -122,6 +133,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Future<bool> _onWillPop() async {
+    return false;
     return (await showDialog(
             context: context,
             builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(

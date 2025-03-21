@@ -50,7 +50,6 @@ export 'package:pbg_app/features/viewAndSyncRecords/domain/Model/send_registrati
 /////////////////////////////////////////////////////////////////////////////
 export 'package:pbg_app/Utils/common_widgets/Loader/SpinLoader.dart';
 export 'package:pbg_app/Utils/common_widgets/dropdown_widget.dart';
-export 'package:pbg_app/Utils/common_widgets/Routes/routes_name.dart';
 export 'package:pbg_app/Utils/common_widgets/SharedPerfs/prefs_value.dart';
 export 'package:pbg_app/Utils/common_widgets/SharedPerfs/shared_pref.dart';
 export 'package:pbg_app/Utils/common_widgets/common_session_dialog_box.dart';
@@ -60,7 +59,6 @@ export 'package:pbg_app/Utils/common_widgets/app_bar_widget.dart';
 export 'package:pbg_app/Utils/common_widgets/app_color.dart';
 export 'package:pbg_app/Utils/common_widgets/app_string.dart';
 export 'package:pbg_app/Utils/common_widgets/button_widget.dart';
-export 'package:pbg_app/Utils/common_widgets/Routes/routes.dart';
 export 'package:pbg_app/Utils/common_widgets/text_form_widget.dart';
 export 'package:pbg_app/Utils/common_widgets/message_box_two_button_pop.dart';
 export 'package:pbg_app/Utils/common_widgets/styles_widget.dart';

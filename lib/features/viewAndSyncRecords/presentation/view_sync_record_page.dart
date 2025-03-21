@@ -23,46 +23,49 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
-        child: AppBarWidget(
-          boolLeading: true,
-          title: RoutesName.viewSyncRecord,
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: AppBarWidget(
+            boolLeading: true,
+            title: "View Sync Record",
+          ),
         ),
-      ),
-      body: BackgroundWidget(
-        child: BlocListener<InternetBloc, InternetState>(
-          listener: (context, state) {
-            if (state is ConnectedState) {
-              if (state.isConnected) {
-                Utils.successSnackBar(msg: state.msg, context: context);
-              } else {
-                Utils.errorSnackBar(msg: state.msg, context: context);
+        body: BackgroundWidget(
+          child: BlocListener<InternetBloc, InternetState>(
+            listener: (context, state) {
+              if (state is ConnectedState) {
+                if (state.isConnected) {
+                  Utils.successSnackBar(msg: state.msg, context: context);
+                } else {
+                  Utils.errorSnackBar(msg: state.msg, context: context);
+                }
               }
-            }
-          },
-          child: Column(
-            children: [
-              BlocBuilder<InternetBloc, InternetState>(
-                builder: (context, state) {
-                  if (state is ConnectedState) {
-                    return _checkNetBtnWidget(dataState: state);
-                  } else {
-                    return const Center(child: SpinLoader());
-                  }
-                },
-              ),
-              BlocBuilder<ViewSyncRecordBloc, ViewSyncRecordState>(
-                builder: (context, state) {
-                  if (state is ViewSyncRecordDataState) {
-                    return _listData(dataState: state);
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                },
-              ),
-            ],
+            },
+            child: Column(
+              children: [
+                BlocBuilder<InternetBloc, InternetState>(
+                  builder: (context, state) {
+                    if (state is ConnectedState) {
+                      return _checkNetBtnWidget(dataState: state);
+                    } else {
+                      return const Center(child: SpinLoader());
+                    }
+                  },
+                ),
+                BlocBuilder<ViewSyncRecordBloc, ViewSyncRecordState>(
+                  builder: (context, state) {
+                    if (state is ViewSyncRecordDataState) {
+                      return _listData(dataState: state);
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

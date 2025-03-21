@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     super.initState();
   }
-
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: AppColor.prime));
@@ -34,7 +34,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (BuildContext context) => ViewSyncRecordBloc()),
       ],
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         title: AppString.appName,
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: Colors.green.shade800,
           hintColor: Colors.green.shade800,
@@ -42,10 +44,8 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor:  Colors.green.shade800),
         ),
-        initialRoute: RoutesName.splash,
-        onGenerateRoute: Routes.generateRoute,
-       /* home: MainScreen(),*/
-        debugShowCheckedModeBanner: false,
+        home: SplashView(),
+
       ),
     );
   }

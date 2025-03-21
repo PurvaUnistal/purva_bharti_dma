@@ -10,4 +10,5 @@ class PrefsValue {
   static String cookies = "cookies";
   static String getAllBanks = "getAllBanks";
   static String appVersion = "appVersion";
+  static String updateAppDate = "updateAppDate";
 }

@@ -19,7 +19,12 @@ class ApiServer {
         return response.body.toString();
       } else if (response.body == "Access denied") {
         await SharedPref.clearAll();
-        return Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.splash, (Route<dynamic> route) => false);
+        return  Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => SplashView(),
+          ),
+              (Route<dynamic> route) => false,
+        );
       }
       if (response.statusCode == 400) {
         return response.body.toString();
@@ -60,7 +65,12 @@ class ApiServer {
         return SessionDialogUtils.logOut(context: context);
       } else if (res.body == "Access denied") {
         await SharedPref.clearAll();
-        return Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.splash, (Route<dynamic> route) => false);
+        return  Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => SplashView(),
+          ),
+              (Route<dynamic> route) => false,
+        );
       }else if (res.statusCode == 401) {
         return jsonDecode(res.body);
       } else if (res.statusCode == 415) {

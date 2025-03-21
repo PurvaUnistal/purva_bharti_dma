@@ -47,7 +47,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
           preferredSize: const Size.fromHeight(50),
           child: AppBarWidget(
             boolLeading: true,
-            title: RoutesName.customerRegistrationForm,
+            title: "Registration Form",
           ),
         ),
         body: BackgroundWidget(

@@ -63,9 +63,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             await SharedPref.setString(key:  PrefsValue.userName, value: res.user!.name.toString());
             await SharedPref.setString(key:  PrefsValue.userId, value: res.user!.id.toString());
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
-          String appVersion = packageInfo.version;
+          String appVersion = packageInfo.buildNumber;
           await SharedPref.setString(key: PrefsValue.appVersion,value: appVersion);
-            Navigator.pushReplacementNamed(event.context, RoutesName.dashboard);
+          Navigator.pushReplacement(event.context, MaterialPageRoute(builder: (_) => DashboardPage()));
         } else {
           isPageLoader = false;
           _eventCompleted(emit);
