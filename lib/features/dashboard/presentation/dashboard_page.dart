@@ -77,63 +77,58 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-  //  callMethodeChannel();
-    return WillPopScope(
-      onWillPop: () => _onWillPop(),
-      child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(50),
-            child: AppBarWidget(
-              boolLeading: false,
-              title: "Dashboard",
-              actions: [
-                IconButton(
-                    onPressed: () async {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (context) => const LogoutWidget());
-                    },
-                    icon: Icon(
-                      Icons.logout,
-                      color: AppColor.white,
-                    ))
+    return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: AppBarWidget(
+            boolLeading: false,
+            title: "Dashboard",
+            actions: [
+              IconButton(
+                  onPressed: () async {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) => const LogoutWidget());
+                  },
+                  icon: Icon(
+                    Icons.logout,
+                    color: AppColor.white,
+                  ))
+            ],
+          ),
+        ),
+        body: BackgroundWidget(
+          child: BlocListener<InternetBloc, InternetState>(
+            listener: (context, state) {
+              if (state is ConnectedState) {
+                if (state.isConnected) {
+                  Utils.successSnackBar(msg: state.msg, context: context);
+                } else {
+                  SizedBox.shrink();
+                }
+              }
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BlocBuilder<InternetBloc, InternetState>(
+                  builder: (context, state) {
+                    if (state is ConnectedState) {
+                      return _checkNetBtnWidget(stateData: state);
+                    } else {
+                      return const Center(child: SpinLoader());
+                    }
+                  },
+                ),
+                _buildCardButton()
               ],
             ),
           ),
-          body: BackgroundWidget(
-            child: BlocListener<InternetBloc, InternetState>(
-              listener: (context, state) {
-                if (state is ConnectedState) {
-                  if (state.isConnected) {
-                    Utils.successSnackBar(msg: state.msg, context: context);
-                  } else {
-                    SizedBox.shrink();
-                  }
-                }
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BlocBuilder<InternetBloc, InternetState>(
-                    builder: (context, state) {
-                      if (state is ConnectedState) {
-                        return _checkNetBtnWidget(stateData: state);
-                      } else {
-                        return const Center(child: SpinLoader());
-                      }
-                    },
-                  ),
-                  _buildCardButton()
-                ],
-              ),
-            ),
-          )),
-    );
+        ));
   }
 
   Future<bool> _onWillPop() async {
-    return false;
     return (await showDialog(
             context: context,
             builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(

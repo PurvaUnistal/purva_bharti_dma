@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -37,6 +38,7 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
       String email = await SharedPref.getString(key: PrefsValue.emailVal);
       String password = await SharedPref.getString(key: PrefsValue.passwordVal);
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      AppConfig.instanceInit()?.setBuildName(name: packageInfo.buildNumber);
       String newVersion = packageInfo.buildNumber;
       String oldVersion = await SharedPref.getString(key: PrefsValue.appVersion);
       print("newVersion--${newVersion}");
