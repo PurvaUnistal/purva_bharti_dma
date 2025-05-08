@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Service/api_server_dio.dart';
 
 class LoginHelper {
   static String p =
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 
-  static Future<dynamic> textFieldValidation(
-      {required String email,
-      required password,
-      required BuildContext context}) async {
+  static Future<dynamic> textFieldValidation({
+    required String email,
+    required password,
+    required BuildContext context,
+  }) async {
     try {
       if (email.isEmpty) {
         Utils.errorSnackBar(msg: AppString.emailLabel, context: context);
@@ -25,49 +27,59 @@ class LoginHelper {
     }
   }
 
-  static Future<dynamic> loginData(
-      {required String emailId,
-      required String password,
-      required BuildContext context}) async {
-    var param = {
+  static getUniqueDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor;
+    } else if (Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.id;
+    }
+    return null;
+  }
+
+  static Future<dynamic> loginData({
+    required String emailId,
+    required String password,
+    required BuildContext context,
+  }) async {
+    var deviceId = await getUniqueDeviceId();
+    Map<String, String> para = {
       "email": emailId,
       "password": password,
+      "deviceId": deviceId,
     };
     try {
-      var res = await ApiServer.postData(
+      var res = await ApiHelperDio.postData(
         urlEndPoint: AppUrl.auth,
+        param: para,
         context: context,
-        body: json.encode(param),
       );
-      if (res != null && res["status"] == 200) {
-        if (res["user"]["role"] == "dma" && res["messages"] == "User logged In successfully") {
+      if (res != null && res["error"] == false) {
+        if (res["user"]["role"] == "dma" &&
+            res["messages"] == "User logged In successfully") {
           return LoginModel.fromJson(res);
         } else {
           Utils.errorSnackBar(
-              msg: "Invalid role ID. Please check your credentials.",
-              context: context);
+            msg: "Invalid role ID. Please check your credentials.",
+            context: context,
+          );
           return null;
         }
-      }
-      if (res != null && res["status"] == 401) {
-        if (res["messages"] == "Unauthorised") {
-          Utils.errorSnackBar(msg: res["messages"], context: context);
-        } else if (res["messages"] is Map &&
-            res["messages"].containsKey("email")) {
-          Utils.errorSnackBar(msg: res["messages"]["email"], context: context);
-        } else {
-          Utils.errorSnackBar(
-              msg: "Unknown authentication error", context: context);
-        }
+      } else if (res != null && res["error"] == true) {
+        await Utils.errorSnackBar(msg: res["messages"], context: context);
+        return null;
+      } else {
+        await Utils.errorSnackBar(msg: res["messages"], context: context);
         return null;
       }
-      Utils.errorSnackBar(
-          msg: "Something went wrong. Please try again.", context: context);
-      return null;
     } catch (e) {
       log("catchLogin-->${e.toString()}");
       Utils.errorSnackBar(
-          msg: "An error occurred. Please try again.", context: context);
+        msg: "An error occurred. Please try again.",
+        context: context,
+      );
       return null;
     }
   }

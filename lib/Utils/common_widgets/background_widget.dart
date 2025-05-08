@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pbg_app/Utils/common_widgets/app_color.dart';
-import 'app_string.dart';
-import 'styles_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_color.dart';
+import 'res/app_string.dart';
+import 'res/styles_widget.dart';
 
 class BackgroundWidget extends StatelessWidget {
   final Widget child;

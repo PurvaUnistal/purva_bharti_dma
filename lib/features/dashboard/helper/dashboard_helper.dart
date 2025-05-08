@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Service/api_server_dio.dart';
 
 class DashboardHelper {
-  static Future<GetLabelModel?> getLabelApi(
-      {required BuildContext context}) async {
+  static Future<GetLabelModel?> getLabelApi({
+    required BuildContext context,
+  }) async {
     try {
-      final res = await ApiServer.getData(
-          urlEndPoint: AppUrl.getLabel, context: context);
+      final res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.getLabel,
+        context: context,
+      );
       if (res != null) {
-        GetLabelModel response = GetLabelModel.fromJson(jsonDecode(res));
-        if (response.toJson().isNotEmpty) {
-          if (await HiveDataBase.allLabelBox!.isOpen) {
-            await HiveDataBase.allLabelBox!.clear();
-            HiveDataBase.allLabelBox!.add(response);
-          }
+        GetLabelModel response = GetLabelModel.fromJson(res);
+        if (HiveDataBase.allLabelBox != null &&
+            HiveDataBase.allLabelBox!.isOpen) {
+          await HiveDataBase.allLabelBox!.clear();
+          await HiveDataBase.allLabelBox!.add(response);
         }
         return response;
       }
@@ -26,18 +29,23 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetNotInterestedModel>?> getNotInterestedApi(
-      {required BuildContext context}) async {
+  static Future<List<GetNotInterestedModel>?> getNotInterestedApi({
+    required BuildContext context,
+  }) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.notInterested, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.notInterested,
+        context: context,
+      );
       if (res != null) {
-        List<GetNotInterestedModel> response =
-            GetNotInterestedModel.mapToList(jsonDecode(res));
+        List<GetNotInterestedModel> response = GetNotInterestedModel.mapToList(
+          res,
+        );
         if (response.isNotEmpty) {
-          if (await HiveDataBase.notInterestedBox!.isOpen) {
+          if (HiveDataBase.notInterestedBox != null &&
+              HiveDataBase.notInterestedBox!.isOpen) {
             await HiveDataBase.notInterestedBox!.clear();
-            HiveDataBase.notInterestedBox!.addAll(response);
+            await HiveDataBase.notInterestedBox!.addAll(response);
           }
         }
         return response;
@@ -50,18 +58,21 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetInitialDepositStatusModel>?> getInitialDepositStatusApi(
-      {required BuildContext context}) async {
+  static Future<List<GetInitialDepositStatusModel>?>
+  getInitialDepositStatusApi({required BuildContext context}) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.initialDepositStatus, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.initialDepositStatus,
+        context: context,
+      );
       if (res != null) {
         List<GetInitialDepositStatusModel> response =
-            GetInitialDepositStatusModel.mapToList(jsonDecode(res));
+            GetInitialDepositStatusModel.mapToList(res);
         if (response.isNotEmpty) {
-          if (await HiveDataBase.initDepositStatusBox!.isOpen) {
+          if (HiveDataBase.initDepositStatusBox != null &&
+              HiveDataBase.initDepositStatusBox!.isOpen) {
             await HiveDataBase.initDepositStatusBox!.clear();
-            HiveDataBase.initDepositStatusBox!.addAll(response);
+            await HiveDataBase.initDepositStatusBox!.addAll(response);
           }
         }
         return response;
@@ -75,17 +86,20 @@ class DashboardHelper {
   }
 
   static Future<List<GetAcceptExtraFittingCostModel>?>
-      getAcceptExtraFittingCostApi({required BuildContext context}) async {
+  getAcceptExtraFittingCostApi({required BuildContext context}) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.acceptExtraFittingCost, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.acceptExtraFittingCost,
+        context: context,
+      );
       if (res != null) {
         List<GetAcceptExtraFittingCostModel> response =
-            GetAcceptExtraFittingCostModel.mapToList(jsonDecode(res));
+            GetAcceptExtraFittingCostModel.mapToList(res);
         if (response.isNotEmpty) {
-          if (await HiveDataBase.acceptExtraFittingCostBox!.isOpen) {
+          if (HiveDataBase.acceptExtraFittingCostBox != null &&
+              HiveDataBase.acceptExtraFittingCostBox!.isOpen) {
             await HiveDataBase.acceptExtraFittingCostBox!.clear();
-            HiveDataBase.acceptExtraFittingCostBox!.addAll(response);
+            await HiveDataBase.acceptExtraFittingCostBox!.addAll(response);
           }
         }
         return response;
@@ -99,20 +113,23 @@ class DashboardHelper {
   }
 
   static Future<List<GetAcceptConversionPolicyModel>?>
-      getAcceptConversionPolicyApi({required BuildContext context}) async {
+  getAcceptConversionPolicyApi({required BuildContext context}) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.acceptConversionPolicy, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.acceptConversionPolicy,
+        context: context,
+      );
       if (res != null) {
-        List<GetAcceptConversionPolicyModel> response =
-            GetAcceptConversionPolicyModel.mapToList(jsonDecode(res));
-        if (response.isNotEmpty) {
-          if (await HiveDataBase.acceptConversionPolicyBox!.isOpen) {
+        List<GetAcceptConversionPolicyModel> list =
+            GetAcceptConversionPolicyModel.mapToList(res);
+        if (res.isNotEmpty) {
+          if (HiveDataBase.acceptConversionPolicyBox != null &&
+              HiveDataBase.acceptConversionPolicyBox!.isOpen) {
             await HiveDataBase.acceptConversionPolicyBox!.clear();
-            HiveDataBase.acceptConversionPolicyBox!.addAll(response);
+            await HiveDataBase.acceptConversionPolicyBox!.addAll(list);
           }
         }
-        return response;
+        return list;
       }
     } catch (e) {
       print("GetAcceptConversionPolicyModel-->${e.toString()}");
@@ -122,21 +139,29 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi(
-      {required BuildContext context}) async {
+  static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi({
+    required BuildContext context,
+  }) async {
     String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.getAllDistrict + schema, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.getAllDistrict + schema,
+        context: context,
+      );
       if (res != null) {
-        List<GetAllDistrictModel> response = getAllDistrictModelFromJson(res);
-        if (response.isNotEmpty) {
-          if (await HiveDataBase.allDistrictBox!.isOpen) {
-            await HiveDataBase.allDistrictBox!.clear();
-            HiveDataBase.allDistrictBox!.addAll(response);
-          }
+        List<GetAllDistrictModel> list =
+            res
+                .map<GetAllDistrictModel>(
+                  (json) => GetAllDistrictModel.fromJson(json),
+                )
+                .toList();
+        if (HiveDataBase.allDistrictBox != null &&
+            HiveDataBase.allDistrictBox!.isOpen) {
+          await HiveDataBase.allDistrictBox!.clear();
+          await HiveDataBase.allDistrictBox!.addAll(list);
         }
-        return response;
+
+        return list;
       }
     } catch (e) {
       print("GetAllDistrictModel-->${e.toString()}");
@@ -146,18 +171,22 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetResidentStatusModel>?> getResidentStatusApi(
-      {required BuildContext context}) async {
+  static Future<List<GetResidentStatusModel>?> getResidentStatusApi({
+    required BuildContext context,
+  }) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.residentStatus, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.residentStatus,
+        context: context,
+      );
       if (res != null) {
         List<GetResidentStatusModel> response =
-            GetResidentStatusModel.mapToList(jsonDecode(res));
+            GetResidentStatusModel.mapToList(res);
         if (response.isNotEmpty) {
-          if (await HiveDataBase.resStatusBox!.isOpen) {
+          if (HiveDataBase.resStatusBox != null &&
+              HiveDataBase.resStatusBox!.isOpen) {
             await HiveDataBase.resStatusBox!.clear();
-            HiveDataBase.resStatusBox!.addAll(response);
+            await HiveDataBase.resStatusBox!.addAll(response);
           }
         }
         return response;
@@ -170,20 +199,24 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetModeOfDepositModel>?> getModeOfDepositApi(
-      {required BuildContext context}) async {
+  static Future<List<GetModeOfDepositModel>?> getModeOfDepositApi({
+    required BuildContext context,
+  }) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.modeOfDeposit, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.modeOfDeposit,
+        context: context,
+      );
       if (res != null) {
-        List<GetModeOfDepositModel> response =
-            GetModeOfDepositModel.mapToList(jsonDecode(res));
-        if (response.isNotEmpty) {
-          if (await HiveDataBase.modeOfDepositBox!.isOpen) {
-            await HiveDataBase.modeOfDepositBox!.clear();
-            HiveDataBase.modeOfDepositBox!.addAll(response);
-          }
+        List<GetModeOfDepositModel> response = GetModeOfDepositModel.mapToList(
+          res,
+        );
+        if (HiveDataBase.modeOfDepositBox != null &&
+            HiveDataBase.modeOfDepositBox!.isOpen) {
+          await HiveDataBase.modeOfDepositBox!.clear();
+          await HiveDataBase.modeOfDepositBox!.addAll(response);
         }
+
         return response;
       }
     } catch (e) {
@@ -194,20 +227,21 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetEBillingModel>?> getEBillingApi(
-      {required BuildContext context}) async {
+  static Future<List<GetEBillingModel>?> getEBillingApi({
+    required BuildContext context,
+  }) async {
     try {
-      var res = await ApiServer.getData(
+      var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.eBilling,
         context: context,
       );
       if (res != null) {
-        List<GetEBillingModel> response =
-            GetEBillingModel.mapToList(jsonDecode(res));
+        List<GetEBillingModel> response = GetEBillingModel.mapToList(res);
         if (response.isNotEmpty) {
-          if (await HiveDataBase.eBillingBox!.isOpen) {
+          if (HiveDataBase.eBillingBox != null &&
+              HiveDataBase.eBillingBox!.isOpen) {
             await HiveDataBase.eBillingBox!.clear();
-            HiveDataBase.eBillingBox!.addAll(response);
+            await HiveDataBase.eBillingBox!.addAll(response);
           }
         }
         return response;
@@ -220,20 +254,22 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetKycDocModel>?> getKycDocApi(
-      {required BuildContext context}) async {
+  static Future<List<GetKycDocModel>?> getKycDocApi({
+    required BuildContext context,
+  }) async {
     try {
-      var res =
-          await ApiServer.getData(urlEndPoint: AppUrl.kycDoc, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.kycDoc,
+        context: context,
+      );
       log("resKycDoc-->${res}");
       if (res != null) {
-        List<GetKycDocModel> response =
-            GetKycDocModel.mapToList(jsonDecode(res));
+        List<GetKycDocModel> response = GetKycDocModel.mapToList(res);
         log("responseKycDoc-->${response}");
         if (response.isNotEmpty) {
-          if (await HiveDataBase.kycDocBox!.isOpen) {
+          if (HiveDataBase.kycDocBox != null && HiveDataBase.kycDocBox!.isOpen) {
             await HiveDataBase.kycDocBox!.clear();
-            HiveDataBase.kycDocBox!.addAll(response);
+            await HiveDataBase.kycDocBox!.addAll(response);
           }
         }
         return response;
@@ -246,18 +282,22 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetOwnershipProofModel>?> getOwnershipProofApi(
-      {required BuildContext context}) async {
+  static Future<List<GetOwnershipProofModel>?> getOwnershipProofApi({
+    required BuildContext context,
+  }) async {
     try {
-      final res = await ApiServer.getData(
-          urlEndPoint: AppUrl.ownershipProof, context: context);
+      final res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.ownershipProof,
+        context: context,
+      );
       if (res != null) {
         List<GetOwnershipProofModel> response =
-            GetOwnershipProofModel.mapToList(jsonDecode(res));
+            GetOwnershipProofModel.mapToList(res);
         if (response.isNotEmpty) {
-          if (await HiveDataBase.ownershipProofBox!.isOpen) {
+          if (HiveDataBase.ownershipProofBox != null &&
+              HiveDataBase.ownershipProofBox!.isOpen) {
             await HiveDataBase.ownershipProofBox!.clear();
-            HiveDataBase.ownershipProofBox!.addAll(response);
+            await HiveDataBase.ownershipProofBox!.addAll(response);
           }
         }
         return response;
@@ -270,18 +310,23 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetIdentityProofModel>?> getIdentityProofApi(
-      {required BuildContext context}) async {
+  static Future<List<GetIdentityProofModel>?> getIdentityProofApi({
+    required BuildContext context,
+  }) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.identityProof, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.identityProof,
+        context: context,
+      );
       if (res != null) {
-        List<GetIdentityProofModel> response =
-            GetIdentityProofModel.mapToList(jsonDecode(res));
+        List<GetIdentityProofModel> response = GetIdentityProofModel.mapToList(
+          res,
+        );
         if (response.isNotEmpty) {
-          if (await HiveDataBase.idProofBox!.isOpen) {
+          if (HiveDataBase.idProofBox != null &&
+              HiveDataBase.idProofBox!.isOpen) {
             await HiveDataBase.idProofBox!.clear();
-            HiveDataBase.idProofBox!.addAll(response);
+            await HiveDataBase.idProofBox!.addAll(response);
           }
         }
         return response;
@@ -294,18 +339,23 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetGuardianTypeModel>?> getGuardianTypeApi(
-      {required BuildContext context}) async {
+  static Future<List<GetGuardianTypeModel>?> getGuardianTypeApi({
+    required BuildContext context,
+  }) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.guardianType, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.guardianType,
+        context: context,
+      );
       if (res != null) {
-        List<GetGuardianTypeModel> response =
-            GetGuardianTypeModel.mapToList(jsonDecode(res));
+        List<GetGuardianTypeModel> response = GetGuardianTypeModel.mapToList(
+          res,
+        );
         if (response.isNotEmpty) {
-          if (await HiveDataBase.guardianTypeBox!.isOpen) {
+          if (HiveDataBase.guardianTypeBox != null &&
+              HiveDataBase.guardianTypeBox!.isOpen) {
             await HiveDataBase.guardianTypeBox!.clear();
-            HiveDataBase.guardianTypeBox!.addAll(response);
+            await HiveDataBase.guardianTypeBox!.addAll(response);
           }
         }
         return response;
@@ -318,18 +368,22 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetExistingCookingFuelModel>?> getExistingCookingFuelApi(
-      {required BuildContext context}) async {
+  static Future<List<GetExistingCookingFuelModel>?> getExistingCookingFuelApi({
+    required BuildContext context,
+  }) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.existingCookingFuel, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.existingCookingFuel,
+        context: context,
+      );
       if (res != null) {
         List<GetExistingCookingFuelModel> response =
-            GetExistingCookingFuelModel.mapToList(jsonDecode(res));
+            GetExistingCookingFuelModel.mapToList(res);
         if (response.isNotEmpty) {
-          if (await HiveDataBase.cookingFuelBox!.isOpen) {
+          if (HiveDataBase.cookingFuelBox != null &&
+              HiveDataBase.cookingFuelBox!.isOpen) {
             await HiveDataBase.cookingFuelBox!.clear();
-            HiveDataBase.cookingFuelBox!.addAll(response);
+            await HiveDataBase.cookingFuelBox!.addAll(response);
           }
         }
         return response;
@@ -342,18 +396,23 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetSocietyAllowModel>?> getSocietyAllowApi(
-      {required BuildContext context}) async {
+  static Future<List<GetSocietyAllowModel>?> getSocietyAllowApi({
+    required BuildContext context,
+  }) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.societyAllow, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.societyAllow,
+        context: context,
+      );
       if (res != null) {
-        List<GetSocietyAllowModel> response =
-            GetSocietyAllowModel.mapToList(jsonDecode(res));
+        List<GetSocietyAllowModel> response = GetSocietyAllowModel.mapToList(
+          res,
+        );
         if (response.isNotEmpty) {
-          if (await HiveDataBase.societyAllowBox!.isOpen) {
+          if (HiveDataBase.societyAllowBox != null &&
+              HiveDataBase.societyAllowBox!.isOpen) {
             await HiveDataBase.societyAllowBox!.clear();
-            HiveDataBase.societyAllowBox!.addAll(response);
+            await HiveDataBase.societyAllowBox!.addAll(response);
           }
         }
         return response;
@@ -366,22 +425,30 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetPropertyClassModel>?> getPropertyClassApi(
-      {required BuildContext context}) async {
+  static Future<List<GetPropertyClassModel>?> getPropertyClassApi({
+    required BuildContext context,
+  }) async {
     String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.getPropertyClass + schema, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.getPropertyClass + schema,
+        context: context,
+      );
       if (res != null) {
-        List<GetPropertyClassModel> response =
-            getPropertyClassModelFromJson(res);
-        if (response.isNotEmpty) {
-          if (await HiveDataBase.proClassBox!.isOpen) {
+        List<GetPropertyClassModel> list =
+            res
+                .map<GetPropertyClassModel>(
+                  (json) => GetPropertyClassModel.fromJson(json),
+                )
+                .toList();
+        if (res.isNotEmpty) {
+          if (HiveDataBase.proClassBox != null &&
+              HiveDataBase.proClassBox!.isOpen) {
             await HiveDataBase.proClassBox!.clear();
-            HiveDataBase.proClassBox!.addAll(response);
+            await HiveDataBase.proClassBox!.addAll(list);
           }
         }
-        return response;
+        return list;
       }
     } catch (e) {
       print("GetPropertyClassModel-->${e.toString()}");
@@ -391,22 +458,30 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetPropertyCategoryModel>?> getPropertyCategoryApi(
-      {required BuildContext context}) async {
+  static Future<List<GetPropertyCategoryModel>?> getPropertyCategoryApi({
+    required BuildContext context,
+  }) async {
     String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.getPropertyCategory + schema, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.getPropertyCategory + schema,
+        context: context,
+      );
       if (res != null) {
-        List<GetPropertyCategoryModel> response =
-            getPropertyCategoryModelFromJson(res);
-        if (response.isNotEmpty) {
-          if (await HiveDataBase.proCateBox!.isOpen) {
+        List<GetPropertyCategoryModel> list =
+            res
+                .map<GetPropertyCategoryModel>(
+                  (json) => GetPropertyCategoryModel.fromJson(json),
+                )
+                .toList();
+        if (res.isNotEmpty) {
+          if (HiveDataBase.proCateBox != null &&
+              HiveDataBase.proCateBox!.isOpen) {
             await HiveDataBase.proCateBox!.clear();
-            HiveDataBase.proCateBox!.addAll(response);
+            await HiveDataBase.proCateBox!.addAll(list);
           }
         }
-        return response;
+        return list;
       }
     } catch (e) {
       print("GetPropertyCategoryModel-->${e.toString()}");
@@ -416,21 +491,28 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetAllAreaModel>?> getAllAreaApi(
-      {required BuildContext context}) async {
+  static Future<List<GetAllAreaModel>?> getAllAreaApi({
+    required BuildContext context,
+  }) async {
     String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.getAllArea + schema, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.getAllArea + schema,
+        context: context,
+      );
       if (res != null) {
-        List<GetAllAreaModel> response = getAllAreaModelFromJson(res);
-        if (response.isNotEmpty) {
-          if (await HiveDataBase.allAreaBox!.isOpen) {
+        List<GetAllAreaModel> list =
+            res
+                .map<GetAllAreaModel>((json) => GetAllAreaModel.fromJson(json))
+                .toList();
+        if (res.isNotEmpty) {
+          if (HiveDataBase.allAreaBox != null &&
+              HiveDataBase.allAreaBox!.isOpen) {
             await HiveDataBase.allAreaBox!.clear();
-            HiveDataBase.allAreaBox!.addAll(response);
+            await HiveDataBase.allAreaBox!.addAll(list);
           }
         }
-        return response;
+        return list;
       }
     } catch (e) {
       print("GetAllAreaModel-->${e.toString()}");
@@ -440,22 +522,30 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetChargeAreaListModel>?> getChargeAreaListApi(
-      {required BuildContext context}) async {
+  static Future<List<GetChargeAreaListModel>?> getChargeAreaListApi({
+    required BuildContext context,
+  }) async {
     String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.getChargeAreaList + schema, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.getChargeAreaList + schema,
+        context: context,
+      );
       if (res != null) {
-        List<GetChargeAreaListModel> response =
-            getChargeAreaListModelFromJson(res);
-        if (response.isNotEmpty) {
-          if (await HiveDataBase.chargeAreaListBox!.isOpen) {
+        List<GetChargeAreaListModel> list =
+            res
+                .map<GetChargeAreaListModel>(
+                  (json) => GetChargeAreaListModel.fromJson(json),
+                )
+                .toList();
+        if (res.isNotEmpty) {
+          if (HiveDataBase.chargeAreaListBox != null &&
+              HiveDataBase.chargeAreaListBox!.isOpen) {
             await HiveDataBase.chargeAreaListBox!.clear();
-            HiveDataBase.chargeAreaListBox!.addAll(response);
+            await HiveDataBase.chargeAreaListBox!.addAll(list);
           }
         }
-        return response;
+        return list;
       }
     } catch (e) {
       print("GetChargeAreaListModel-->${e.toString()}");
@@ -465,22 +555,30 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetAllDepositOfflineModel>?> getAllDepositOfflineApi(
-      {required BuildContext context}) async {
+  static Future<List<GetAllDepositOfflineModel>?> getAllDepositOfflineApi({
+    required BuildContext context,
+  }) async {
     String schema = await SharedPref.getString(key: PrefsValue.schema);
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.getAllDepositOffline + schema, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.getAllDepositOffline + schema,
+        context: context,
+      );
       if (res != null) {
-        List<GetAllDepositOfflineModel> response =
-            getAllDepositOfflineModelFromJson(res);
-        if (response.isNotEmpty) {
-          if (await HiveDataBase.allDepositOfflineBox!.isOpen) {
+        List<GetAllDepositOfflineModel> list =
+            res
+                .map<GetAllDepositOfflineModel>(
+                  (json) => GetAllDepositOfflineModel.fromJson(json),
+                )
+                .toList();
+        if (res.isNotEmpty) {
+          if (HiveDataBase.allDepositOfflineBox != null &&
+              HiveDataBase.allDepositOfflineBox!.isOpen) {
             await HiveDataBase.allDepositOfflineBox!.clear();
-            HiveDataBase.allDepositOfflineBox!.addAll(response);
+            await HiveDataBase.allDepositOfflineBox!.addAll(list);
           }
         }
-        return response;
+        return list;
       }
     } catch (e) {
       print("GetAllDepositOfflineModel-->${e.toString()}");
@@ -490,17 +588,21 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<String>?> getBankNameListApi(
-      {required BuildContext context}) async {
+  static Future<List<String>?> getBankNameListApi({
+    required BuildContext context,
+  }) async {
     try {
-      var res = await ApiServer.getData(
-          urlEndPoint: AppUrl.getAllBanks, context: context);
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.getAllBanks,
+        context: context,
+      );
       if (res != null) {
-        List<String> response = bankNameListModelFromJson(res);
+        List<String> response = List<String>.from(res);
         if (response.isNotEmpty) {
-          if (await HiveDataBase.getAllBanksBox!.isOpen) {
+          if (HiveDataBase.getAllBanksBox != null &&
+              HiveDataBase.getAllBanksBox!.isOpen) {
             await HiveDataBase.getAllBanksBox!.clear();
-            HiveDataBase.getAllBanksBox!.addAll(response);
+            await HiveDataBase.getAllBanksBox!.addAll(response);
           }
         }
         return response;
@@ -542,11 +644,10 @@ class DashboardHelper {
     await Permission.locationAlways.request();
     if (Platform.isAndroid) {
       Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-          forceAndroidLocationManager: true,
-          locationSettings: LocationSettings(
-
-          ));
+        desiredAccuracy: LocationAccuracy.high,
+        forceAndroidLocationManager: true,
+        locationSettings: LocationSettings(),
+      );
       log('latitude : ${position.latitude} longitude : ${position.longitude}');
       return position;
     }

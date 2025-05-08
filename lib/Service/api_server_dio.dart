@@ -6,6 +6,8 @@ import 'package:mime/mime.dart';
 import 'package:pbg_app/Service/Apis.dart';
 import 'package:pbg_app/Utils/Utils.dart';
 import 'package:pbg_app/Utils/common_widgets/InternetConnectivity/connectivity_helper.dart';
+
+
 class ApiHelperDio {
 
 
@@ -14,31 +16,29 @@ class ApiHelperDio {
     required BuildContext context,
   }) async {
     try {
-      if (!await ConnectivityHelper.checkInternetConnect(context: context)) {
+      if (!await ConnectivityHelper.allConnectivityCheck(context: context)) {
         return null;
       }
-      final url = Uri.parse("${AppUrl.baseUrl}$urlEndPoint");
-      final response = await Dio().get(url.toString());
+      String url = AppUrl.baseUrl + urlEndPoint;
+      final response = await Dio().get(Uri.parse(url).toString());
       log("URL --> $url");
       log("Response Data --> ${response.data}");
       if (response.statusCode == 200) {
         return response.data;
+      } else {
+        return response.data;
       }
-      return response.data;
     } on DioException catch (error) {
-      log("Dio Error --> ${error.message}");
-
+      debugPrint("Dio Error --> ${error.message}");
       final statusCode = error.response?.statusCode;
-      final errorMessage = error.response?.data?.toString() ?? "Unknown Error";
-
-      await _handleError(statusCode, errorMessage, context);
+      Response? errorMessage = error.response;
+      return await _handleError(statusCode :statusCode, errorMessage: errorMessage,context: context);
     } catch (e) {
       log("Catch Error --> $e");
       await Utils.errorSnackBar(msg: "Something Went Wrong", context: context);
       throw 'Something Went Wrong';
     }
   }
-
 
   static Future<dynamic> postData({
     required BuildContext context,
@@ -49,35 +49,35 @@ class ApiHelperDio {
     formData,
   }) async {
     try {
-      if (!await ConnectivityHelper.checkInternetConnect(context: context)) {
+      if (!await ConnectivityHelper.allConnectivityCheck(context: context)) {
         return null;
       }
-
-      final url = Uri.parse("${AppUrl.baseUrl}$urlEndPoint");
+      String url = AppUrl.baseUrl + urlEndPoint;
       var options = Options(
         headers: headers ?? {},
-        contentType: contentType ?? (formData != null ? "multipart/form-data" : null),
+        contentType:
+        contentType ?? (formData != null ? "multipart/form-data" : null),
       );
-      var response = await Dio().post(url.toString(),
+      var res = await Dio().post(Uri.parse(url).toString(),
           options: options, data: param ?? FormData.fromMap(formData));
-      log("URL --> $url");
-      log("Response Data --> ${response.data}");
-      if (response.statusCode == 200) {
-        return response.data;
+      log("URL :- ${url}");
+      log("RES Data :- ${res.data}");
+      if (res.statusCode == 200) {
+        return res.data;
+      } else {
+        return res.data;
       }
-      return response.data;
     } on DioException catch (error) {
-      log("Dio Error --> ${error.message}");
+      debugPrint("Dio Error --> ${error.message}");
       final statusCode = error.response?.statusCode;
-      final errorMessage = error.response?.data?.toString() ?? "Unknown Error";
-      await _handleError(statusCode, errorMessage, context);
+      Response? errorMessage = error.response;
+      return await _handleError(statusCode :statusCode, errorMessage: errorMessage,context: context);
     } catch (e) {
       log("Multipart Error --> $e");
       await Utils.errorSnackBar(msg: "Something Went Wrong", context: context);
       throw 'Something Went Wrong';
     }
   }
-
 
   static Future<dynamic> postDataWithFile({
     required String urlEndPoint,
@@ -86,15 +86,15 @@ class ApiHelperDio {
     required BuildContext context,
   }) async {
     try {
-      if (!await ConnectivityHelper.checkInternetConnect(context: context)) {
+      if (!await ConnectivityHelper.allConnectivityCheck(context: context)) {
         return null;
       }
-
       final formData = FormData.fromMap(body);
-
       for (var element in imageRequestObject) {
         if (element.path!.isNotEmpty && !element.path!.startsWith("http")) {
-          final mimeTypeData = lookupMimeType(element.path!, headerBytes: [0xFF, 0xD8])?.split('/');
+          final mimeTypeData =
+          lookupMimeType(element.path!, headerBytes: [0xFF, 0xD8])
+              ?.split('/');
           if (mimeTypeData != null && mimeTypeData.length == 2) {
             formData.files.add(
               MapEntry(
@@ -111,19 +111,21 @@ class ApiHelperDio {
         }
       }
 
-      final url = Uri.parse("$urlEndPoint");
-      final response = await Dio().post(url.toString(), data: formData);
+      String url = AppUrl.baseUrl + urlEndPoint;
+      final response =
+      await Dio().post(Uri.parse(url).toString(), data: formData);
       debugPrint("URL --> $url");
       debugPrint("Response Data --> ${response.data}");
       if (response.statusCode == 200) {
         return response.data;
+      } else {
+        return response.data;
       }
-      return response.data;
     } on DioException catch (error) {
-      debugPrint("Dio Error message --> ${error.message}");
+      debugPrint("Dio Error --> ${error.message}");
       final statusCode = error.response?.statusCode;
-      final errorMessage = error.response?.data?.toString() ?? "Unknown Error";
-      await _handleError(statusCode, errorMessage, context);
+      Response? errorMessage = error.response;
+      return await _handleError(statusCode :statusCode, errorMessage: errorMessage,context: context);
     } catch (e) {
       debugPrint("Multipart Error --> $e");
       await Utils.errorSnackBar(msg: "Something Went Wrong", context: context);
@@ -131,19 +133,22 @@ class ApiHelperDio {
     }
   }
 
-
-  static Future<void> _handleError(int? statusCode, String errorMessage, BuildContext context) async {
-    switch (statusCode) {
-      case 400:
-      case 401:
-      case 404:
-      case 415:
-      case 500:
-        await Utils.errorSnackBar(msg: errorMessage.replaceAll("{", "").replaceAll("}", ""), context: context);
-        break;
-      default:
-        await Utils.errorSnackBar(msg: "Unexpected Error: $errorMessage", context: context);
-        break;
+  static Future<void> _handleError(
+      {int? statusCode, Response? errorMessage, required BuildContext context}) async {
+    if(statusCode == 400){
+      return errorMessage!.data;
+    }else if(statusCode == 401){
+      log("errorStatus(401)-->${errorMessage.toString()}");
+      return await Utils.errorSnackBar(msg: errorMessage!.data.toString(), context: context);
+    }else if(statusCode == 404){
+      log("errorStatus(404)-->${errorMessage.toString()}");
+      return await Utils.errorSnackBar(msg: errorMessage!.data.toString(), context: context);
+    }else if(statusCode == 415){
+      return await Utils.errorSnackBar(msg: errorMessage!.data.toString(), context: context);
+    } else if(statusCode == 500){
+      return await Utils.errorSnackBar(msg: errorMessage!.statusMessage.toString(), context: context);
+    } else{
+      return await Utils.errorSnackBar(msg: errorMessage!.data.toString(), context: context);
     }
   }
 }

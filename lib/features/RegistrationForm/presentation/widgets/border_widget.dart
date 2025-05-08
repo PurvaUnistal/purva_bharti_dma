@@ -1,6 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:pbg_app/Utils/common_widgets/app_color.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_color.dart';
 
 class BorderWidget extends StatelessWidget {
   final List<Widget> children;

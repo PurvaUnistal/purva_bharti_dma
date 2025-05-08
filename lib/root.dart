@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/Utils/common_widgets/res/singleton.dart';
 
+import 'Utils/common_widgets/res/enums.dart';
 import 'features/internet/bloc/internet_bloc.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await HiveDataBase().init();
-  runApp(MyApp());
-}
-
-class MyApp extends StatefulWidget {
+class Root extends StatefulWidget {
+  final Client client;
+  const Root({required this.client});
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<Root> createState() => _RootState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _RootState extends State<Root> {
 
   void initState() {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
@@ -24,6 +23,8 @@ class _MyAppState extends State<MyApp> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
+    Singleton.instanceInit()?.context = context;
+    AppConfig.instanceInit()!.setClient(client: widget.client);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: AppColor.prime));
     return MultiBlocProvider(
       providers: [

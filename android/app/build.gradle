@@ -23,14 +23,11 @@ if (flutterVersionName == null) {
 }
 
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
+
 
 
 android {
-    namespace "com.unistal.pbg_app"
+    namespace "com"
     compileSdk 35
     ndkVersion flutter.ndkVersion
 
@@ -47,9 +44,35 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    flavorDimensions "app"
+    productFlavors {
+        pbgplDMA {
+            dimension "app"
+            applicationIdSuffix ".unistal.pbg_app"
+            resValue "string", "app_name", "PBGPL DMA"
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/pbg_logo",
+                    appIconRound: "@mipmap/pbg_logo"
+            ]
+            def keystorePropertiesFile = rootProject.file('key.properties')
+            if (keystorePropertiesFile.exists()) {
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+            }
+        }
+        mglDMA {
+            dimension "app"
+            applicationIdSuffix ".unistal.mgl.dma"
+            resValue "string", "app_name", "MGL DMA"
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/mgl_logo",
+                    appIconRound: "@mipmap/mgl_logo"
+            ]
+        }
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.unistal.pbg_app"
+        applicationId "com"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24
@@ -89,4 +112,5 @@ flutter {
 dependencies {
     implementation("com.google.android.play:app-update:2.1.0")
     implementation("com.google.android.play:app-update-ktx:2.1.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
 }

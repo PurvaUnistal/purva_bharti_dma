@@ -357,35 +357,47 @@ class RegistrationFormBloc
   }
 
   void _setDependentData() {
-    initialDepositStatusValue = (listOfInitialDepositStatus.isNotEmpty
-        ? listOfInitialDepositStatus.first
-        : null)!;
-    registrationTypeValue = (listOfRegistrationType.isNotEmpty
-        ? listOfRegistrationType.first
-        : null)!;
-    conversionPolicyValue = (listOfConversionPolicy.isNotEmpty
-        ? listOfConversionPolicy.first
-        : null)!;
-    extraFittingValue = (listOfExtraFittingCost.isNotEmpty
-        ? listOfExtraFittingCost.first
-        : null)!;
-    societyAllowValue =
-        (listOfSocietyAllow.isNotEmpty ? listOfSocietyAllow.first : null)!;
-    guardianTypeValue =
-        (listOfGuardianType.isNotEmpty ? listOfGuardianType.first : null)!;
-    propertyCategoryValue =
-        (listOfProCategory.isNotEmpty ? listOfProCategory.first : null)!;
-    propertyClassValue =
-        (listOfProClass.isNotEmpty ? listOfProClass.first : null)!;
-    existingCookingFuelValue =
-        (listOfCookingFuel.isNotEmpty ? listOfCookingFuel.first : null)!;
-    kycDoc1Value =
-        (listOfIdentityProof.isNotEmpty ? listOfIdentityProof.first : null)!;
-    kycDoc2Value =
-        (listOfOwnershipProof.isNotEmpty ? listOfOwnershipProof.first : null)!;
-    kycDoc3Value = (listOfKycDoc.isNotEmpty ? listOfKycDoc.first : null)!;
-    preferredBillValue =
-        (listOfEBilling.isNotEmpty ? listOfEBilling.first : null)!;
+    if (listOfInitialDepositStatus.isNotEmpty) {
+      initialDepositStatusValue = listOfInitialDepositStatus.first;
+    }
+    if (listOfRegistrationType.isNotEmpty) {
+      registrationTypeValue = listOfRegistrationType.first;
+    }
+    if (listOfConversionPolicy.isNotEmpty) {
+      conversionPolicyValue = listOfConversionPolicy.first;
+    }
+    if (listOfExtraFittingCost.isNotEmpty) {
+      extraFittingValue = listOfExtraFittingCost.first;
+    }
+    if (listOfSocietyAllow.isNotEmpty) {
+      societyAllowValue = listOfSocietyAllow.first;
+    }
+    if (listOfGuardianType.isNotEmpty) {
+      guardianTypeValue = listOfGuardianType.first;
+    }
+    if (listOfProCategory.isNotEmpty) {
+      propertyCategoryValue = listOfProCategory.first;
+    }
+    if (listOfProClass.isNotEmpty) {
+      propertyClassValue = listOfProClass.first;
+    }
+    if (listOfCookingFuel.isNotEmpty) {
+      existingCookingFuelValue = listOfCookingFuel.first;
+    }
+    if (listOfIdentityProof.isNotEmpty) {
+      kycDoc1Value = listOfIdentityProof.first;
+    }
+    if (listOfOwnershipProof.isNotEmpty) {
+      kycDoc2Value = listOfOwnershipProof.first;
+    }
+    if (listOfKycDoc.isNotEmpty) {
+      kycDoc3Value = listOfKycDoc.first;
+    }
+    if (listOfEBilling.isNotEmpty) {
+      preferredBillValue = listOfEBilling.first;
+    }
+
+
 
     if (propertyCategoryValue.id != null) {
       listOfDepositOffline = HiveDataBase.allDepositOfflineBox?.values

@@ -68,6 +68,6 @@ class GetChargeAreaListModel {
   @override
   String toString() {
     // TODO: implement toString
-    return chargeAreaName!;
+    return chargeAreaName.toString();
   }
 }

@@ -1,4 +1,4 @@
-package com.unistal.pbg_app
+package com
 
 
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory

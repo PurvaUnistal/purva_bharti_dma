@@ -1,9 +1,9 @@
-import 'res/app_config.dart';
+import 'app_config.dart';
 
 class AppString{
 
 
-  static String version = "Version : DMA-${AppConfig.instanceInit()?.buildName}-24/03/2025";
+  static String version = "Version : DMA-${AppConfig.instanceInit()?.buildName}-08/05/2025";
   static String companyName = "© Unistal Systems Pvt. Ltd.";
   static String appName = "Purba Bharati  DMA";
   static String companyNameDesc = "Unistal Private Ltd.";
@@ -134,8 +134,10 @@ class AppString{
   static String logoutMsg = "Are you sure you want to logout?";
 }
 
-class ImgAsset{
-  static String appLogo = "assets/images/pbg_logo.png";
+class AppIcon{
+  static String pbgplLogo = "assets/images/pbgpl_logo.png";
+  static String mglLogo = "assets/images/mgl_logo.png";
+  static String colourStrip = "assets/images/ic_strip.png";
   static String imageCaptureIcon = "assets/images/ic_image.png";
 }
 

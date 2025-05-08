@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/Utils/common_widgets/app_color.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_color.dart';
 
 class Styles {
   static TextStyle rel = TextStyle(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/Utils/common_widgets/res/enums.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -68,7 +69,11 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image.asset(
-              ImgAsset.appLogo,
+              AppConfig.instanceInit()!.client == Client.purvaBharti
+                  ? AppIcon.pbgplLogo
+                  :AppConfig.instanceInit()!.client == Client.mahaNagar
+                  ? AppIcon.mglLogo
+                  : AppIcon.pbgplLogo,
               width: 200,
               height: 200,
             ),
