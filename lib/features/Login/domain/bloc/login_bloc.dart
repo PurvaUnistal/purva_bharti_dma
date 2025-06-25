@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitState()) {
@@ -55,16 +56,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           _eventCompleted(emit);
             loginModel = res;
             Utils.successSnackBar(msg: res.messages!,context: event.context);
-            await SharedPref.setString(key: PrefsValue.emailVal, value: res.user!.email.toString());
-            await SharedPref.setString(key: PrefsValue.passwordVal, value:password.toString());
-            await SharedPref.setString(key:  PrefsValue.token, value: res.token.toString());
-            await SharedPref.setString(key:  PrefsValue.schema, value: res.user!.schema.toString());
-            await SharedPref.setString(key:  PrefsValue.userRole, value: res.user!.role.toString());
-            await SharedPref.setString(key:  PrefsValue.userName, value: res.user!.name.toString());
-            await SharedPref.setString(key:  PrefsValue.userId, value: res.user!.id.toString());
+          await SharedPref.setString(key: PrefsValue.passwordVal,value: res.user!.email.toString());
+          await SharedPref.setString(key: PrefsValue.emailVal,value: password.toString());
+          String userJson = jsonEncode(res.toJson());
+          await SharedPref.setString(key: PrefsValue.userInfo, value: userJson);
+          await AppConfig.instanceInit()?.setLoginData(newLoginData: loginModel);
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
-          String appVersion = packageInfo.buildNumber;
-          await SharedPref.setString(key: PrefsValue.appVersion,value: appVersion);
+          await SharedPref.setString(key: PrefsValue.buildNumber, value: packageInfo.buildNumber,);
           Navigator.pushReplacement(event.context, MaterialPageRoute(builder: (_) => DashboardPage()));
         } else {
           isPageLoader = false;

@@ -1,5 +1,6 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 
 class RegistrationFormHelper {
   static Future<dynamic> textFieldValidationCheck({
@@ -259,9 +260,9 @@ class RegistrationFormHelper {
           }
         }
       }
-      String schema = await SharedPref.getString(key: PrefsValue.schema);
-      String dmaUserId = await SharedPref.getString(key: PrefsValue.userId);
-      String dmaUserName = await SharedPref.getString(key: PrefsValue.userName);
+      String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
+      String? dmaUserId = await AppConfig.instanceInit()?.loginData.user!.id!;
+      String? dmaUserName = await AppConfig.instanceInit()?.loginData.user!.name!;
       SaveRegistrationFormModel custRegSyncStore = SaveRegistrationFormModel(
         schema: schema,
         dmaUserId: dmaUserId,
@@ -346,103 +347,98 @@ class RegistrationFormHelper {
     required SaveRegistrationFormModel custRegSyncStore,
   }) async {
     try {
-      String _getString(String? value) => value ?? "";
-      SaveRegistrationFormModel custRegSyncAdd = SaveRegistrationFormModel(
-        dmaUserName: _getString(custRegSyncStore.dmaUserName),
-        dmaUserId: _getString(custRegSyncStore.dmaUserId),
-        schema: _getString(custRegSyncStore.schema),
-        registrationType: _getString(custRegSyncStore.registrationType),
-        acceptConversionPolicy:
-            _getString(custRegSyncStore.acceptConversionPolicy),
-        acceptExtraFittingCost:
-            _getString(custRegSyncStore.acceptExtraFittingCost),
-        societyAllowedMdpe: _getString(custRegSyncStore.societyAllowedMdpe),
-        chargeArea: _getString(custRegSyncStore.chargeArea),
-        areaId: _getString(custRegSyncStore.areaId),
-        mobileNumber: _getString(custRegSyncStore.mobileNumber),
-        firstName: _getString(custRegSyncStore.firstName),
-        middleName: _getString(custRegSyncStore.middleName),
-        lastName: _getString(custRegSyncStore.lastName),
-        guardianType: _getString(custRegSyncStore.guardianType),
-        guardianName: _getString(custRegSyncStore.guardianName),
-        emailId: _getString(custRegSyncStore.emailId),
-        propertyCategoryId: _getString(custRegSyncStore.propertyCategoryId),
-        propertyClassId: _getString(custRegSyncStore.propertyClassId),
-        buildingNumber: _getString(custRegSyncStore.buildingNumber),
-        houseNumber: _getString(custRegSyncStore.houseNumber),
-        colonySocietyApartment:
-            _getString(custRegSyncStore.colonySocietyApartment),
-        streetName: _getString(custRegSyncStore.streetName),
-        town: _getString(custRegSyncStore.town),
-        districtId: _getString(custRegSyncStore.districtId),
-        pinCode: _getString(custRegSyncStore.pinCode),
-        residentStatus: _getString(custRegSyncStore.residentStatus),
-        noOfKitchen: _getString(custRegSyncStore.noOfKitchen),
-        noOfBathroom: _getString(custRegSyncStore.noOfBathroom),
-        noOfFamilyMembers: _getString(custRegSyncStore.noOfFamilyMembers),
-        existingCookingFuel: _getString(custRegSyncStore.existingCookingFuel),
-        latitude: _getString(custRegSyncStore.latitude),
-        longitude: _getString(custRegSyncStore.longitude),
-        nearestLandmark: _getString(custRegSyncStore.nearestLandmark),
-        kycDocument1: _getString(custRegSyncStore.kycDocument1),
-        kycDocument1Number: _getString(custRegSyncStore.kycDocument1Number),
-        kycDocument2: _getString(custRegSyncStore.kycDocument2),
-        kycDocument2Number: _getString(custRegSyncStore.kycDocument2Number),
-        kycDocument3: _getString(custRegSyncStore.kycDocument3),
-        kycDocument3Number: _getString(custRegSyncStore.kycDocument3Number),
-        eBillingModel: _getString(custRegSyncStore.eBillingModel),
-        bankNameOfBank: _getString(custRegSyncStore.bankNameOfBank),
-        bankAccountNumber: _getString(custRegSyncStore.bankAccountNumber),
-        bankIfscCode: _getString(custRegSyncStore.bankIfscCode),
-        bankAddress: _getString(custRegSyncStore.bankAddress),
-        initialDepositeStatus:
-            _getString(custRegSyncStore.initialDepositeStatus),
-        schemeType: _getString(custRegSyncStore.schemeType),
-        schemeTypeAmount: _getString(custRegSyncStore.schemeTypeAmount),
-        modeOfDeposite: _getString(custRegSyncStore.modeOfDeposite),
-        chequeNumber: _getString(custRegSyncStore.chequeNumber),
-        chequeDepositDate: _getString(custRegSyncStore.chequeDepositDate),
-        payementBankName: _getString(custRegSyncStore.payementBankName),
-        chequeBankAccount: _getString(custRegSyncStore.chequeBankAccount),
-        noInitialDepositStatusReason:
-            _getString(custRegSyncStore.noInitialDepositStatusReason),
-        alternateMobile: _getString(custRegSyncStore.alternateMobile),
-        chequeMicrAccount: _getString(custRegSyncStore.chequeMicrAccount),
-        housePhoto: _getString(custRegSyncStore.housePhoto),
-        ownerConsentText: _getString(custRegSyncStore.ownerConsentText),
-        reasonForHold: _getString(
-          custRegSyncStore.reasonForHold,
-        ),
-        idFrontPath1: _getString(custRegSyncStore.idFrontPath1),
-        idBackPath1: _getString(custRegSyncStore.idBackPath1),
-        addFrontPath2: _getString(custRegSyncStore.addFrontPath2),
-        addBackPath2: _getString(custRegSyncStore.addBackPath2),
-        nocFrontPath3: _getString(custRegSyncStore.nocFrontPath3),
-        nocBackPath3: _getString(custRegSyncStore.nocBackPath3),
-        uploadCustomerPhoto: _getString(custRegSyncStore.uploadCustomerPhoto),
-        uploadHousePhoto: _getString(custRegSyncStore.uploadHousePhoto),
-        customerConsent: _getString(custRegSyncStore.customerConsent),
-        ownerConsent: _getString(custRegSyncStore.ownerConsent),
-        canceledChequePhoto: _getString(custRegSyncStore.canceledChequePhoto),
-        chequePhoto: _getString(custRegSyncStore.chequePhoto),
-        customerConsentPhoto: _getString(custRegSyncStore.customerConsentPhoto),
-        reasonRegistration: _getString(custRegSyncStore.reasonRegistration),
+      final hiveBox = await HiveDataBase.registrationFormBox;
+      if (hiveBox == null) {
+        Utils.errorSnackBar(msg: "Local database not available", context: context);
+        return;
+      }
+      SaveRegistrationFormModel entry = SaveRegistrationFormModel(
+        dmaUserName: custRegSyncStore.dmaUserName ?? "",
+        dmaUserId: custRegSyncStore.dmaUserId ?? "",
+        schema: custRegSyncStore.schema ?? "",
+        registrationType: custRegSyncStore.registrationType ?? "",
+        acceptConversionPolicy: custRegSyncStore.acceptConversionPolicy ?? "",
+        acceptExtraFittingCost: custRegSyncStore.acceptExtraFittingCost ?? "",
+        societyAllowedMdpe: custRegSyncStore.societyAllowedMdpe ?? "",
+        chargeArea: custRegSyncStore.chargeArea ?? "",
+        areaId: custRegSyncStore.areaId ?? "",
+        mobileNumber: custRegSyncStore.mobileNumber ?? "",
+        firstName: custRegSyncStore.firstName ?? "",
+        middleName: custRegSyncStore.middleName ?? "",
+        lastName: custRegSyncStore.lastName ?? "",
+        guardianType: custRegSyncStore.guardianType ?? "",
+        guardianName: custRegSyncStore.guardianName ?? "",
+        emailId: custRegSyncStore.emailId ?? "",
+        propertyCategoryId: custRegSyncStore.propertyCategoryId ?? "",
+        propertyClassId: custRegSyncStore.propertyClassId ?? "",
+        buildingNumber: custRegSyncStore.buildingNumber ?? "",
+        houseNumber: custRegSyncStore.houseNumber ?? "",
+        colonySocietyApartment: custRegSyncStore.colonySocietyApartment ?? "",
+        streetName: custRegSyncStore.streetName ?? "",
+        town: custRegSyncStore.town ?? "",
+        districtId: custRegSyncStore.districtId ?? "",
+        pinCode: custRegSyncStore.pinCode ?? "",
+        residentStatus: custRegSyncStore.residentStatus ?? "",
+        noOfKitchen: custRegSyncStore.noOfKitchen ?? "",
+        noOfBathroom: custRegSyncStore.noOfBathroom ?? "",
+        noOfFamilyMembers: custRegSyncStore.noOfFamilyMembers ?? "",
+        existingCookingFuel: custRegSyncStore.existingCookingFuel ?? "",
+        latitude: custRegSyncStore.latitude ?? "",
+        longitude: custRegSyncStore.longitude ?? "",
+        nearestLandmark: custRegSyncStore.nearestLandmark ?? "",
+        kycDocument1: custRegSyncStore.kycDocument1 ?? "",
+        kycDocument1Number: custRegSyncStore.kycDocument1Number ?? "",
+        kycDocument2: custRegSyncStore.kycDocument2 ?? "",
+        kycDocument2Number: custRegSyncStore.kycDocument2Number ?? "",
+        kycDocument3: custRegSyncStore.kycDocument3 ?? "",
+        kycDocument3Number: custRegSyncStore.kycDocument3Number ?? "",
+        eBillingModel: custRegSyncStore.eBillingModel ?? "",
+        bankNameOfBank: custRegSyncStore.bankNameOfBank ?? "",
+        bankAccountNumber: custRegSyncStore.bankAccountNumber ?? "",
+        bankIfscCode: custRegSyncStore.bankIfscCode ?? "",
+        bankAddress: custRegSyncStore.bankAddress ?? "",
+        initialDepositeStatus: custRegSyncStore.initialDepositeStatus ?? "",
+        schemeType: custRegSyncStore.schemeType ?? "",
+        schemeTypeAmount: custRegSyncStore.schemeTypeAmount ?? "",
+        modeOfDeposite: custRegSyncStore.modeOfDeposite ?? "",
+        chequeNumber: custRegSyncStore.chequeNumber ?? "",
+        chequeDepositDate: custRegSyncStore.chequeDepositDate ?? "",
+        payementBankName: custRegSyncStore.payementBankName ?? "",
+        chequeBankAccount: custRegSyncStore.chequeBankAccount ?? "",
+        noInitialDepositStatusReason: custRegSyncStore.noInitialDepositStatusReason ?? "",
+        alternateMobile: custRegSyncStore.alternateMobile ?? "",
+        chequeMicrAccount: custRegSyncStore.chequeMicrAccount ?? "",
+        housePhoto: custRegSyncStore.housePhoto ?? "",
+        ownerConsentText: custRegSyncStore.ownerConsentText ?? "",
+        reasonForHold: custRegSyncStore.reasonForHold ?? "",
+        idFrontPath1: custRegSyncStore.idFrontPath1 ?? "",
+        idBackPath1: custRegSyncStore.idBackPath1 ?? "",
+        addFrontPath2: custRegSyncStore.addFrontPath2 ?? "",
+        addBackPath2: custRegSyncStore.addBackPath2 ?? "",
+        nocFrontPath3: custRegSyncStore.nocFrontPath3 ?? "",
+        nocBackPath3: custRegSyncStore.nocBackPath3 ?? "",
+        uploadCustomerPhoto: custRegSyncStore.uploadCustomerPhoto ?? "",
+        uploadHousePhoto: custRegSyncStore.uploadHousePhoto ?? "",
+        customerConsent: custRegSyncStore.customerConsent ?? "",
+        ownerConsent: custRegSyncStore.ownerConsent ?? "",
+        canceledChequePhoto: custRegSyncStore.canceledChequePhoto ?? "",
+        chequePhoto: custRegSyncStore.chequePhoto ?? "",
+        customerConsentPhoto: custRegSyncStore.customerConsentPhoto ?? "",
+        reasonRegistration: custRegSyncStore.reasonRegistration ?? "",
       );
-      var hiveBox = await HiveDataBase.registrationFormBox;
-      int recordCount = await hiveBox!.length;
       if (isUpdate) {
-        await hiveBox.putAt(index, custRegSyncAdd);
+        await hiveBox.putAt(index, entry);
         Utils.successSnackBar(
             msg: 'Record Updated Successfully', context: context);
       } else {
-        if (recordCount <= 15) {
-          log("custRegSyncAdd${custRegSyncAdd}");
-          await hiveBox.add(custRegSyncAdd);
+        if (hiveBox.length < 15) {
+          log("custRegSyncAdd${entry}");
+          await hiveBox.add(entry);
           Utils.successSnackBar(
               msg: "Data Saved Successfully", context: context);
         } else {
           Utils.errorSnackBar(
-              msg: 'Please upload previous records first.', context: context);
+              msg: 'Please upload previous records before adding more.', context: context);
         }
       }
     } catch (e) {

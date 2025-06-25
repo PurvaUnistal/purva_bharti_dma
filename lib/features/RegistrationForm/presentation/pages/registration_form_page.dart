@@ -25,18 +25,21 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   @override
   void initState() {
-    BlocProvider.of<RegistrationFormBloc>(context)
-        .add(RegistrationFormPageLoadEvent(
-      context: context,
-    ));
-    BlocProvider.of<RegistrationFormBloc>(context).add(UpdateLocalDataEvent(
-      context: context,
-      index: widget.index,
-      isUpdate: widget.isUpdate,
-      updateDate: widget.localData,
-    ));
     super.initState();
+
+    final bloc = BlocProvider.of<RegistrationFormBloc>(context);
+    bloc.add(RegistrationFormPageLoadEvent(context: context));
+
+    if (widget.isUpdate) {
+      bloc.add(UpdateLocalDataEvent(
+        context: context,
+        isUpdate: true,
+        index: widget.index,
+        updatedModel: widget.localData,
+      ));
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {

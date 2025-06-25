@@ -17,7 +17,7 @@ class ViewSyncRecordDataState extends ViewSyncRecordState {
   final bool isGrpServerLoader;
   final bool isConnective;
   final bool isDeleteLoader;
-  final List<SaveRegistrationFormModel>? listOfRegistrationForm;
+  final List<SaveRegistrationFormModel> listOfRegistrationForm;
   final Box<SaveRegistrationFormModel>? boxOfRegistrationForm;
 
   ViewSyncRecordDataState({

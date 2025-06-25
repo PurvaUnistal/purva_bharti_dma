@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pbg_app/Utils/common_widgets/res/app_color.dart';
+import 'res/app_color.dart';
 import 'res/app_string.dart';
+import 'res/environment_config.dart';
 import 'res/styles_widget.dart';
 
 class BackgroundWidget extends StatelessWidget {
@@ -24,17 +25,19 @@ class BackgroundWidget extends StatelessWidget {
                     gradient: LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
-                        colors: <Color>[AppColor.prime1, AppColor.prime]),
+                        colors: <Color>[
+                          EnvironmentConfig.of(context)!.secondaryTheme,
+                          EnvironmentConfig.of(context)!.primaryTheme,]),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
                           child: Text(
-                        AppString.companyName,
-                        textAlign: TextAlign.start,
-                        style: Styles.rel,
-                      )),
+                            AppString.companyName,
+                            textAlign: TextAlign.start,
+                            style: Styles.rel,
+                          )),
                       Flexible(
                           child: Text(
                             AppString.version,

@@ -315,15 +315,15 @@ class UpdateLocalDataEvent extends RegistrationFormEvent {
   final BuildContext context;
   final int index;
   final bool isUpdate;
-  final SaveRegistrationFormModel updateDate;
+  final SaveRegistrationFormModel updatedModel;
   UpdateLocalDataEvent({
     required this.context,
     required this.index,
     required this.isUpdate,
-    required this.updateDate,
+    required this.updatedModel,
   });
   @override
-  List<Object?> get props => [context, index,isUpdate,updateDate];
+  List<Object?> get props => [context, index,isUpdate,updatedModel];
 }
 
 class AddFormEvent extends RegistrationFormEvent {

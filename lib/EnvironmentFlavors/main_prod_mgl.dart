@@ -20,7 +20,7 @@ main() async {
   };*/
   var configurationApp = EnvironmentConfig(
     child: Root(client: Client.mahaNagar),
-    flavors: EnvironmentFlavors.mglDMA,
+    flavors: EnvironmentFlavors.prodMGL,
   );
   runApp(configurationApp);
 }

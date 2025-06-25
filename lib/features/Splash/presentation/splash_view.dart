@@ -15,6 +15,7 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
   @override
   void initState() {
     // TODO: implement initState
+    _getData();
     toLogin();
     super.initState();
   }
@@ -35,13 +36,31 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
     curve: Curves.fastOutSlowIn,
   );
 
+  Future<LoginModel?> _getData() async {
+    try {
+      String? userJson = await SharedPref.getString(key: PrefsValue.userInfo ?? "");
+      if (userJson != '') {
+        Map<String, dynamic> userMap = jsonDecode(userJson!);
+        LoginModel loginModel = LoginModel.fromJson(userMap);
+        final appConfig = AppConfig.instanceInit();
+        if (appConfig != null) {
+          await appConfig.setLoginData(newLoginData: loginModel);
+        }
+        return loginModel;
+      }
+    } catch (e) {
+      debugPrint("Error in _getData: $e");
+    }
+    return null;
+  }
+
     Future<void> toLogin() async {
       String email = await SharedPref.getString(key: PrefsValue.emailVal);
       String password = await SharedPref.getString(key: PrefsValue.passwordVal);
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       AppConfig.instanceInit()?.setBuildName(name: packageInfo.buildNumber);
       String newVersion = packageInfo.buildNumber;
-      String oldVersion = await SharedPref.getString(key: PrefsValue.appVersion);
+      String oldVersion = await SharedPref.getString(key: PrefsValue.buildNumber);
       print("newVersion--${newVersion}");
       print("oldVersion--${oldVersion}");
       Timer(

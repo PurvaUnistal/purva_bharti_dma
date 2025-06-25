@@ -16,8 +16,9 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
   @override
   void initState() {
     BlocProvider.of<InternetBloc>(context).add(OnConnectedEvent());
-    BlocProvider.of<ViewSyncRecordBloc>(context)
-        .add(ViewSyncRecordLoadPageEvent(context: context));
+    BlocProvider.of<ViewSyncRecordBloc>(
+      context,
+    ).add(ViewSyncRecordLoadPageEvent(context: context));
     super.initState();
   }
 
@@ -28,10 +29,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
-          child: AppBarWidget(
-            boolLeading: true,
-            title: "View Sync Record",
-          ),
+          child: AppBarWidget(boolLeading: true, title: "View Sync Record"),
         ),
         body: BackgroundWidget(
           child: BlocListener<InternetBloc, InternetState>(
@@ -74,11 +72,15 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
-            context: context,
-            builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
-                message: "Do you want to exit an View Sync Record Page?",
-                okButtonText: "Exit",
-                onPressed: () => Navigator.of(context).pop(true)))) ??
+      context: context,
+      builder:
+          (BuildContext mContext) =>
+          MessageBoxTwoButtonPopWidget(
+            message: "Do you want to exit an View Sync Record Page?",
+            okButtonText: "Exit",
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+    )) ??
         false;
   }
 
@@ -103,16 +105,15 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
               if (state is ViewSyncRecordDataState) {
                 return !state.isGrpServerLoader
                     ? RowBtnWidget(
-                        color:
-                            dataState.isConnected ? Colors.green : Colors.red,
-                        icon: Icons.sync,
-                        text: AppString.upload,
-                        onTap: () {
-                          BlocProvider.of<ViewSyncRecordBloc>(context).add(
-                            SyncRecordListServerDataEvent(context: context),
-                          );
-                        },
-                      )
+                  color: dataState.isConnected ? Colors.green : Colors.red,
+                  icon: Icons.sync,
+                  text: AppString.upload,
+                  onTap: () {
+                    BlocProvider.of<ViewSyncRecordBloc>(
+                      context,
+                    ).add(SyncRecordListServerDataEvent(context: context));
+                  },
+                )
                     : const SpinLoader();
               }
               // Default return to avoid errors
@@ -127,10 +128,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
   Widget _row({required String leading, required String training}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(leading),
-        Text(training),
-      ],
+      children: [Text(leading), Text(training)],
     );
   }
 
@@ -138,99 +136,110 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
     return Flexible(
       child: Stack(
         children: [
-          dataState.listOfRegistrationForm?.length == 0
+          dataState.listOfRegistrationForm.length == 0
               ? SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  child: Center(
-                      child: Text("No Data Found", style: Styles.labels)))
+            height: MediaQuery
+                .of(context)
+                .size
+                .height * 0.7,
+            child: Center(
+              child: Text("No Data Found", style: Styles.labels),
+            ),
+          )
               : ListView.builder(
-                  itemCount: dataState.listOfRegistrationForm?.length ?? 0,
-                  itemBuilder: (BuildContext context, int index) {
-                    var data = dataState.listOfRegistrationForm?[index];
-                    return Card(
-                      color: AppColor.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: BorderSide(width: 0.8, color: AppColor.prime)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
+              itemCount: dataState.listOfRegistrationForm.length ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                var data = dataState.listOfRegistrationForm[index];
+                return Card(
+                  color: AppColor.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(width: 0.8, color: AppColor.prime)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            Text("Record : ${index + 1}"),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Record : ${index + 1}"),
-                                Row(
-                                  children: [
-                                    data?.isSingleServerLoader == false
-                                        ? dataState.isGrpServerLoader == true ? Container() :IconButton(
-                                            icon: Icon(Icons.sync,
-                                                color: AppColor.prime),
-                                            onPressed: () {
-                                              BlocProvider.of<
-                                                          ViewSyncRecordBloc>(
-                                                      context)
-                                                  .add(SyncRecordSingleServerDataEvent(
-                                                      context: context,
-                                                      index: index));
-                                            },
-                                          )
-                                        : DottedLoaderWidget(),
-                                    _deleteButton(data, index),
-                                    _editButton(data, index),
-                                  ],
+                                data.isSingleServerLoader == false
+                                    ? dataState.isGrpServerLoader == true
+                                    ? Container()
+                                    : IconButton(
+                                  icon: Icon(Icons.sync,
+                                      color: AppColor.prime),
+                                  onPressed: () {
+                                    BlocProvider.of<
+                                        ViewSyncRecordBloc>(
+                                        context)
+                                        .add(SyncRecordSingleServerDataEvent(
+                                        context: context,
+                                        index: index));
+                                  },
                                 )
+                                    : DottedLoaderWidget(),
+                                _deleteButton(data: data, index: index),
+                                _editButton(data: data, index: index),
                               ],
-                            ),
-                            Divider(),
-                            _row(
-                                leading: "Mobile Number : ",
-                                training: data?.mobileNumber ?? ""),
-                            Divider(),
-                            _row(
-                                leading: "Name : ",
-                                training:
-                                    "${data?.firstName} ${data?.lastName}"),
+                            )
                           ],
                         ),
-                      ),
-                    );
-                  }),
+                        Divider(),
+                        _row(
+                            leading: "Mobile Number : ",
+                            training: data!.mobileNumber ?? ""),
+                        Divider(),
+                        _row(
+                            leading: "Name : ",
+                            training:
+                            "${data.firstName} ${data.lastName}"),
+                      ],
+                    ),
+                  ),
+                );
+              }),
           dataState.isGrpServerLoader == false
               ? Container()
               : Center(
-                  child: PhysicalModel(
-                    elevation: 21,
-                    borderRadius: BorderRadius.circular(20),
-                    color: AppColor.white,
-                    shadowColor: AppColor.prime,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 21),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SpinLoader(),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.02,
-                          ),
-                          Text(
-                            "Please wait",
-                            style: Styles.labels,
-                          ),
-                        ],
-                      ),
+            child: PhysicalModel(
+              elevation: 21,
+              borderRadius: BorderRadius.circular(20),
+              color: AppColor.white,
+              shadowColor: AppColor.prime,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 8.0, horizontal: 21),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SpinLoader(),
+                    SizedBox(
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * 0.02,
                     ),
-                  ),
-                )
+                    Text(
+                      "Please wait",
+                      style: Styles.labels,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
   }
 
-  Widget _deleteButton(data, int index) {
+  Widget _deleteButton({required SaveRegistrationFormModel data,required int index}) {
+    print("------------------------------------->_deleteButton${index}");
     return IconButton(
       icon: Icon(Icons.delete_forever, color: AppColor.prime),
       onPressed: () {
@@ -243,14 +252,18 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
     );
   }
 
-  Widget _editButton(data, int index) {
+  Widget _editButton({required SaveRegistrationFormModel data,required int index}) {
+    print("------------------------------------->${index}");
     return IconButton(
       onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RegistrationFormPage(
-                isUpdate: true, localData: data, index: index),
+            builder: (_) => RegistrationFormPage(
+              isUpdate: true,
+              index: index,
+              localData: data,
+            ),
           ),
         );
       },

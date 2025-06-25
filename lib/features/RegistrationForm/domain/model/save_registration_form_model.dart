@@ -5,149 +5,149 @@ part 'save_registration_form_model.g.dart';
 @HiveType(typeId: HiveTypeId.RegistrationFormId)
 class SaveRegistrationFormModel extends HiveObject implements Equatable {
   @HiveField(0)
-  String? areaId;
+  final String? areaId;
   @HiveField(1)
-  String? mobileNumber;
+  final String? mobileNumber;
   @HiveField(2)
-  String? firstName;
+  final String? firstName;
   @HiveField(3)
-  String? middleName;
+  final String? middleName;
   @HiveField(4)
-  String? lastName;
+  final String? lastName;
   @HiveField(5)
-  String? guardianType;
+  final String? guardianType;
   @HiveField(6)
-  String? guardianName;
+  final String? guardianName;
   @HiveField(7)
-  String? emailId;
+  final String? emailId;
   @HiveField(8)
-  String? propertyCategoryId;
+  final String? propertyCategoryId;
   @HiveField(9)
-  String? propertyClassId;
+  final String? propertyClassId;
   @HiveField(10)
-  String? houseNumber;
+  final String? houseNumber;
   @HiveField(11)
-  String? colonySocietyApartment;
+  final String? colonySocietyApartment;
   @HiveField(12)
-  String? town;
+  final String? town;
   @HiveField(13)
-  String? pinCode;
+  final String? pinCode;
   @HiveField(14)
-  String? societyAllowedMdpe;
+  final String? societyAllowedMdpe;
   @HiveField(15)
-  String? residentStatus;
+  final String? residentStatus;
   @HiveField(16)
-  String? noOfKitchen;
+  final String? noOfKitchen;
   @HiveField(17)
-  String? noOfBathroom;
+  final String? noOfBathroom;
   @HiveField(18)
-  String? existingCookingFuel;
+  final String? existingCookingFuel;
   @HiveField(19)
-  String? noOfFamilyMembers;
+  final String? noOfFamilyMembers;
   @HiveField(20)
-  String? latitude;
+  final String? latitude;
   @HiveField(21)
-  String? longitude;
+  final String? longitude;
   @HiveField(22)
-  String? noInitialDepositStatusReason;
+  final String? noInitialDepositStatusReason;
   @HiveField(23)
-  String? schema;
+  final String? schema;
   @HiveField(24)
-  String? dmaUserName;
+  final String? dmaUserName;
   @HiveField(25)
-  String? dmaUserId;
+  final String? dmaUserId;
   @HiveField(26)
-  String? ownerConsent;
+  final String? ownerConsent;
   @HiveField(27)
-  String? kycDocument1;
+  final String? kycDocument1;
   @HiveField(28)
-  String? kycDocument1Number;
+  final String? kycDocument1Number;
   @HiveField(29)
-  String? kycDocument2;
+  final String? kycDocument2;
   @HiveField(30)
-  String? kycDocument2Number;
+  final String? kycDocument2Number;
   @HiveField(31)
-  String? kycDocument3;
+  final String? kycDocument3;
   @HiveField(32)
-  String? idBackPath1;
+  final String? idBackPath1;
   @HiveField(33)
-  String? addBackPath2;
+  final String? addBackPath2;
   @HiveField(34)
-  String? nocBackPath3;
+  final String? nocBackPath3;
   @HiveField(35)
-  String? idFrontPath1;
+  final String? idFrontPath1;
   @HiveField(36)
-  String? addFrontPath2;
+  final String? addFrontPath2;
   @HiveField(37)
-  String? nocFrontPath3;
+  final String? nocFrontPath3;
   @HiveField(38)
-  String? uploadCustomerPhoto;
+  final String? uploadCustomerPhoto;
   @HiveField(39)
-  String? uploadHousePhoto;
+  final String? uploadHousePhoto;
   @HiveField(40)
-  String? canceledChequePhoto;
+  final String? canceledChequePhoto;
   @HiveField(41)
-  String? chequePhoto;
+  final String? chequePhoto;
   @HiveField(42)
-  String? customerConsentPhoto;
+  final String? customerConsentPhoto;
   @HiveField(43)
-  String? bankNameOfBank;
+  final String? bankNameOfBank;
   @HiveField(44)
-  String? bankAccountNumber;
+  final String? bankAccountNumber;
   @HiveField(45)
-  String? bankIfscCode;
+  final String? bankIfscCode;
   @HiveField(46)
-  String? bankAddress;
+  final String? bankAddress;
   @HiveField(47)
-  String? initialDepositeStatus;
+  final String? initialDepositeStatus;
   @HiveField(48)
-  String? reasonForHold;
+  final String? reasonForHold;
   @HiveField(49)
-  String? modeOfDeposite;
+  final String? modeOfDeposite;
   @HiveField(50)
-  String? schemeType;
+  final String? schemeType;
   @HiveField(51)
-  String? schemeTypeAmount;
+  final String? schemeTypeAmount;
   @HiveField(52)
-  String? payementBankName;
+  final String? payementBankName;
   @HiveField(53)
-  String? chequeBankAccount;
+  final String? chequeBankAccount;
   @HiveField(54)
-  String? chequeNumber;
+  final String? chequeNumber;
   @HiveField(55)
-  String? registrationType;
+  final String? registrationType;
   @HiveField(56)
-  String? districtId;
+  final String? districtId;
   @HiveField(57)
-  String? chequeDepositDate;
+  final String? chequeDepositDate;
   @HiveField(58)
-  String? kycDocument3Number;
+  final String? kycDocument3Number;
   @HiveField(59)
-  String? acceptConversionPolicy;
+  final String? acceptConversionPolicy;
   @HiveField(60)
-  String? acceptExtraFittingCost;
+  final String? acceptExtraFittingCost;
   @HiveField(61)
-  String? chequeMicrAccount;
+  final String? chequeMicrAccount;
   @HiveField(62)
-  String? buildingNumber;
+  final String? buildingNumber;
   @HiveField(63)
-  String? chargeArea;
+  final String? chargeArea;
   @HiveField(64)
-  String? eBillingModel;
+  final String? eBillingModel;
   @HiveField(65)
-  String? streetName;
+  final String? streetName;
   @HiveField(66)
-  String? ownerConsentText;
+  final String? ownerConsentText;
   @HiveField(67)
-  String? nearestLandmark;
+  final String? nearestLandmark;
   @HiveField(68)
-  String? customerConsent;
+  final String? customerConsent;
   @HiveField(69)
-  String? alternateMobile;
+  final String? alternateMobile;
   @HiveField(70)
-  String? housePhoto;
+  final String? housePhoto;
   @HiveField(71)
-  String? reasonRegistration;
+  final String? reasonRegistration;
   bool isSingleServerLoader = false;
 
   SaveRegistrationFormModel({

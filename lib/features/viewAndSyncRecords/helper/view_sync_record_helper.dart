@@ -86,7 +86,7 @@ class ViewSyncRecordHelper {
         json.remove("accept_conversion_policy");
         json.remove("accept_extra_fitting_cost");
       }
-      print("requestBody-->${json}");
+      log("requestBody-->${json}");
       var res = await ApiHelperDio.postDataWithFile(
           urlEndPoint: AppUrl.saveCustomerRegistrationOffline,
           body: json,
@@ -153,6 +153,7 @@ class ViewSyncRecordHelper {
                     ? ""
                     : custRegSyncData.customerConsent),
           ]);
+      log("res-->${res}");
       if (res != null) {
         return SendRegistrationOfflineModel.fromJson(res);
       }else{

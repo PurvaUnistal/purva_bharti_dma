@@ -3,7 +3,7 @@ import 'app_config.dart';
 class AppString{
 
 
-  static String version = "Version : DMA-${AppConfig.instanceInit()?.buildName}-08/05/2025";
+  static String version = "Version : DMA-${AppConfig.instanceInit()?.buildName}-25/06/2025";
   static String companyName = "© Unistal Systems Pvt. Ltd.";
   static String appName = "Purba Bharati  DMA";
   static String companyNameDesc = "Unistal Private Ltd.";

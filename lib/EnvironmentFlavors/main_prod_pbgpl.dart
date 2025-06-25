@@ -10,16 +10,9 @@ import 'package:pbg_app/root.dart';
 main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await HiveDataBase().init();
-/*  await Firebase.initializeApp();
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };*/
+
   var configurationApp = EnvironmentConfig(
       child: Root(client: Client.purvaBharti),
-      flavors: EnvironmentFlavors.pbgplDMA);
+      flavors: EnvironmentFlavors.prodPBGPL);
   runApp(configurationApp);
 }

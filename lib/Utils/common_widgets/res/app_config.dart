@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pbg_app/features/Login/domain/model/login_model.dart';
 
 import 'enums.dart';
 
@@ -6,7 +7,7 @@ class AppConfig {
   static AppConfig? instance;
   RoleType? roleType;
   Client? client;
-
+  LoginModel loginData = LoginModel();
   static AppConfig? instanceInit() {
     instance ??= AppConfig();
     return instance;
@@ -21,6 +22,10 @@ class AppConfig {
 
   setClient({required Client client}){
     this.client =  client;
+  }
+
+  setLoginData({required LoginModel newLoginData}) {
+    this.loginData = newLoginData;
   }
 
   static DeviceType getDeviceType({BuildContext? context}) {

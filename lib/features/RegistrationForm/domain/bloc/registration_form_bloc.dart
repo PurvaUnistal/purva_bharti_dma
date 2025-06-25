@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/DepositOfflinePop.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/pop_widget.dart';
@@ -52,7 +51,8 @@ class RegistrationFormBloc
     on<SchemeTypeDetailEvent>(_selectSchemeTypeDetail);
     on<RegistrationFormPreviewPageEvent>(_previewPage);
     on<RegistrationFormSaveLocalDataEvent>(_saveLocalData);
-    on<UpdateLocalDataEvent>(_updateLocalData);
+    on<UpdateLocalDataEvent>(_updateLocalDataEvent);
+   // on<UpdateLocalDataEvent>(_updateLocalData);
   }
 
   bool isUpdate = false;
@@ -320,8 +320,7 @@ class RegistrationFormBloc
 
   Future<void> _fetchHiveData() async {
     listOfAllLabel = HiveDataBase.allLabelBox?.values.toSet().toList() ?? [];
-    listOfRegistrationType =
-        HiveDataBase.notInterestedBox?.values.toSet().toList() ?? [];
+    listOfRegistrationType = HiveDataBase.notInterestedBox?.values.toSet().toList() ?? [];
     listOfInitialDepositStatus =
         HiveDataBase.initDepositStatusBox?.values.toSet().toList() ?? [];
     listOfExtraFittingCost =
@@ -396,9 +395,6 @@ class RegistrationFormBloc
     if (listOfEBilling.isNotEmpty) {
       preferredBillValue = listOfEBilling.first;
     }
-
-
-
     if (propertyCategoryValue.id != null) {
       listOfDepositOffline = HiveDataBase.allDepositOfflineBox?.values
               .where((element) =>
@@ -891,7 +887,6 @@ class RegistrationFormBloc
       _buildPopItem(AppString.firstName, firstController.text),
       _buildPopItem(AppString.middleName, middleController.text),
       _buildPopItem(AppString.lastName, lastController.text),
-      _buildPopItem(AppString.lastName, lastController.text),
       PopWidget.itemBuilder(
           star: registrationTypeValue.value != "Future Registration"
               ? AppString.star
@@ -1105,157 +1100,164 @@ class RegistrationFormBloc
     );
   }
 
-  _updateLocalData(UpdateLocalDataEvent event, emit) async {
-    emit(RegistrationFormInitialState());
-    isUpdate = event.isUpdate;
-    if (isUpdate == true) {
-      List<SaveRegistrationFormModel> data =
-          await HiveDataBase.registrationFormBox!.values.toList();
-      if (data.isNotEmpty) {
-        await _updateControllers(localData: data, i: event.index);
-      }
-    }
-    _eventCompleted(emit);
-  }
-
-  _updateControllers(
-      {required List<SaveRegistrationFormModel> localData, required int i}) {
-    registrationTypeValue = localData[i].registrationType != ""
-        ? listOfRegistrationType
-            .firstWhere((e) => e.key == localData[i].registrationType)
-        : GetNotInterestedModel();
-    conversionPolicyValue = localData[i].acceptConversionPolicy != null
-        ? listOfConversionPolicy
-            .firstWhere((e) => e.key == localData[i].acceptConversionPolicy)
-        : GetAcceptConversionPolicyModel();
-    extraFittingValue = localData[i].acceptConversionPolicy != ""
-        ? listOfExtraFittingCost
-            .firstWhere((e) => e.key == localData[i].acceptConversionPolicy)
-        : GetAcceptExtraFittingCostModel();
-    societyAllowValue = localData[i].societyAllowedMdpe != ""
-        ? listOfSocietyAllow
-            .firstWhere((e) => e.key == localData[i].societyAllowedMdpe)
-        : GetSocietyAllowModel();
-    guardianTypeValue = localData[i].guardianType != ""
-        ? listOfGuardianType
-            .firstWhere((e) => e.key == localData[i].guardianType)
-        : GetGuardianTypeModel();
-    preferredBillValue = localData[i].eBillingModel != ""
-        ? listOfEBilling.firstWhere((e) => e.key == localData[i].eBillingModel)
-        : GetEBillingModel();
-    allDistrictValue = localData[i].districtId != ""
-        ? listOfAllDistrict.firstWhere((e) => e.id == localData[i].districtId)
-        : GetAllDistrictModel();
-    initialDepositStatusValue = listOfInitialDepositStatus
-        .firstWhere((e) => e.key == localData[i].initialDepositeStatus);
-    modeDepositValue = localData[i].modeOfDeposite != ""
-        ? listOfModeOfDeposit
-            .firstWhere((e) => e.key == localData[i].modeOfDeposite)
-        : GetModeOfDepositModel();
-    schemeTypeValue = localData[i].schemeType != ""
-        ? listOfDepositOffline
-            .firstWhere((e) => e.depositTypesId == localData[i].schemeType)
-        : GetAllDepositOfflineModel();
-    kycDoc1Value = localData[i].kycDocument1 != ""
-        ? listOfIdentityProof
-            .firstWhere((e) => e.key == localData[i].kycDocument1)
-        : GetIdentityProofModel();
-    kycDoc2Value = localData[i].kycDocument2 != ""
-        ? listOfOwnershipProof
-            .firstWhere((e) => e.key == localData[i].kycDocument2)
-        : GetOwnershipProofModel();
-    kycDoc3Value = localData[i].kycDocument3 != ""
-        ? listOfKycDoc.firstWhere((e) => e.key == localData[i].kycDocument3)
-        : GetKycDocModel();
-    existingCookingFuelValue = localData[i].existingCookingFuel != ""
-        ? listOfCookingFuel
-            .firstWhere((e) => e.key == localData[i].existingCookingFuel)
-        : GetExistingCookingFuelModel();
-    residentStatusValue = localData[i].residentStatus != ""
-        ? listOfResidentStatus
-            .firstWhere((e) => e.key == localData[i].residentStatus)
-        : GetResidentStatusModel();
-    chargeAreaValue = localData[i].chargeArea != null
-        ? listOfChargeArea.firstWhere((e) => e.gid == localData[i].chargeArea)
-        : GetChargeAreaListModel();
-    if (localData[i].chargeArea != null) {
-      List<GetAllAreaModel> dataList =
-          HiveDataBase.allAreaBox?.values.toSet().toList() ?? [];
-      listOfAllArea = dataList
-          .where((element) => chargeAreaValue.gid == element.chargeAreaId)
-          .toList();
-    }
-    areaValue = localData[i].areaId != null
-        ? listOfAllArea.firstWhere((e) => e.gid == localData[i].areaId)
-        : GetAllAreaModel();
-
-    // Update text controllers
-    firstController.text = localData[i].firstName ?? "";
-    middleController.text = localData[i].middleName ?? "";
-    lastController.text = localData[i].lastName ?? "";
-    guardianNameController.text = localData[i].guardianName ?? "";
-    emailIdController.text = localData[i].emailId ?? "";
-    buildingNumberController.text = localData[i].buildingNumber ?? "";
-    houseNumberController.text = localData[i].houseNumber ?? "";
-    colonyController.text = localData[i].colonySocietyApartment ?? "";
-    streetController.text = localData[i].streetName ?? "";
-    townController.text = localData[i].town ?? "";
-    pinCodeController.text = localData[i].pinCode ?? "";
-    numberKitchenController.text = localData[i].noOfKitchen ?? "";
-    numberBathroomController.text = localData[i].noOfBathroom ?? "";
-    familyMemberController.text = localData[i].noOfFamilyMembers ?? "";
-    nearestLandmarkController.text = localData[i].nearestLandmark ?? "";
-    kyc1NumberController.text = localData[i].kycDocument1Number ?? "";
-    kyc2NumberController.text = localData[i].kycDocument2Number ?? "";
-    kyc3NumberController.text = localData[i].kycDocument3Number ?? "";
-    custBankAccNumberController.text = localData[i].bankAccountNumber ?? "";
-    custIfscCodeController.text = localData[i].bankIfscCode ?? "";
-    custBankAddController.text = localData[i].bankAddress ?? "";
-    schemeAmountController.text = localData[i].schemeTypeAmount ?? "";
-    latController.text = localData[i].latitude ?? "";
-    longController.text = localData[i].longitude ?? "";
-    chequeNoController.text = localData[i].chequeNumber ?? "";
-    chequeDateController.text = localData[i].chequeDepositDate ?? "";
-    chequeAccountNoController.text = localData[i].chequeBankAccount ?? "";
-    chequeMicrNoController.text = localData[i].chequeMicrAccount ?? "";
-    mobileController.text = localData[i].mobileNumber ?? "";
-    altMobileController.text = localData[i].alternateMobile ?? "";
-    reasonRegistrationController.text = localData[i].reasonRegistration ?? "";
-
-    // Update file paths
-    idFrontPath = File(localData[i].idFrontPath1 ?? "");
-    idBackPath = File(localData[i].idBackPath1 ?? "");
-    addFrontPath = File(localData[i].addFrontPath2 ?? "");
-    addBackPath = File(localData[i].addBackPath2 ?? "");
-    nocFrontPath = File(localData[i].nocFrontPath3 ?? "");
-    nocBackPath = File(localData[i].nocBackPath3 ?? "");
-    uploadCustomerPath = File(localData[i].uploadCustomerPhoto ?? "");
-    uploadHousePath = File(localData[i].uploadHousePhoto ?? "");
-    customerConsentPath = File(localData[i].customerConsentPhoto ?? "");
-    ownerConsentPath = File(localData[i].ownerConsent ?? "");
-    cancelChequePath = File(localData[i].canceledChequePhoto ?? "");
-    chequePath = File(localData[i].chequePhoto ?? "");
-    custBankNameValue = localData[i].bankNameOfBank ?? "";
-    paymentBankNameValue = localData[i].payementBankName ?? "";
-  }
-
   _saveLocalData(RegistrationFormSaveLocalDataEvent event, emit) async {
     try {
       isSaveLoader = true;
       _eventCompleted(emit);
       await RegistrationFormHelper.addCustRegSyncLocalDB(
-          context: event.context,
-          custRegSyncStore: localData,
-          isUpdate: isUpdate,
-          index: index);
-      Navigator.pushAndRemoveUntil(event.context,
-          MaterialPageRoute(builder: (_) => DashboardPage()), (r) => false);
+        context: event.context,
+        custRegSyncStore: localData,
+        isUpdate: isUpdate,
+        index: index,
+      );
+      Navigator.pushAndRemoveUntil(
+        event.context,
+        MaterialPageRoute(builder: (_) => DashboardPage()),
+            (r) => false,
+      );
       isSaveLoader = false;
       _eventCompleted(emit);
     } catch (e) {
-      log("_saveLocalData-->${e.toString()}");
+      log("_saveLocalData Error --> ${e.toString()}");
     }
   }
+
+  _updateLocalDataEvent(UpdateLocalDataEvent event, emit) async {
+    isUpdate = event.isUpdate;
+    index = event.index;
+    localData = event.updatedModel;
+    try {
+      isSaveLoader = true;
+      _eventCompleted(emit);
+      if(event.isUpdate) {
+        final localData = event.updatedModel;
+        registrationTypeValue = localData.registrationType != "" ? listOfRegistrationType.firstWhere((e) => e.key == localData.registrationType) : GetNotInterestedModel();
+              conversionPolicyValue = localData.acceptConversionPolicy != null ? listOfConversionPolicy.firstWhere((e) => e.key == localData.acceptConversionPolicy) : GetAcceptConversionPolicyModel();
+              propertyClassValue = localData.propertyClassId != null ? listOfProClass.firstWhere((e) => e.id == localData.propertyClassId) : GetPropertyClassModel();
+              propertyCategoryValue = localData.propertyCategoryId != null ? listOfProCategory.firstWhere((e) => e.id == localData.propertyCategoryId) : GetPropertyCategoryModel();
+              List<GetAllDepositOfflineModel> dataList =
+                  HiveDataBase.allDepositOfflineBox?.values.toSet().toList() ?? [];
+              listOfDepositOffline = dataList
+                  .where((element) =>
+              propertyCategoryValue.id == element.propertyCategoryId)
+                  .toList();
+              extraFittingValue = localData.acceptExtraFittingCost != ""
+                  ? listOfExtraFittingCost
+                  .firstWhere((e) => e.key == localData.acceptExtraFittingCost)
+                  : GetAcceptExtraFittingCostModel();
+              societyAllowValue = localData.societyAllowedMdpe != ""
+                  ? listOfSocietyAllow
+                  .firstWhere((e) => e.key == localData.societyAllowedMdpe)
+                  : GetSocietyAllowModel();
+              guardianTypeValue = localData.guardianType != ""
+                  ? listOfGuardianType
+                  .firstWhere((e) => e.key == localData.guardianType)
+                  : GetGuardianTypeModel();
+              preferredBillValue = localData.eBillingModel != ""
+                  ? listOfEBilling.firstWhere((e) => e.key == localData.eBillingModel)
+                  : GetEBillingModel();
+              allDistrictValue = localData.districtId != ""
+                  ? listOfAllDistrict.firstWhere((e) => e.id == localData.districtId)
+                  : GetAllDistrictModel();
+              initialDepositStatusValue = listOfInitialDepositStatus
+                  .firstWhere((e) => e.key == localData.initialDepositeStatus);
+              modeDepositValue = localData.modeOfDeposite != ""
+                  ? listOfModeOfDeposit
+                  .firstWhere((e) => e.key == localData.modeOfDeposite)
+                  : GetModeOfDepositModel();
+              schemeTypeValue = localData.schemeType != ""
+                  ? listOfDepositOffline.firstWhere(
+                    (e) => e.depositTypesId == localData.schemeType,
+                orElse: () => GetAllDepositOfflineModel(),
+              )
+                  : GetAllDepositOfflineModel();
+              kycDoc1Value = localData.kycDocument1 != ""
+                  ? listOfIdentityProof
+                  .firstWhere((e) => e.key == localData.kycDocument1)
+                  : GetIdentityProofModel();
+              kycDoc2Value = localData.kycDocument2 != ""
+                  ? listOfOwnershipProof
+                  .firstWhere((e) => e.key == localData.kycDocument2)
+                  : GetOwnershipProofModel();
+              kycDoc3Value = localData.kycDocument3 != ""
+                  ? listOfKycDoc.firstWhere((e) => e.key == localData.kycDocument3)
+                  : GetKycDocModel();
+              existingCookingFuelValue = localData.existingCookingFuel != ""
+                  ? listOfCookingFuel
+                  .firstWhere((e) => e.key == localData.existingCookingFuel)
+                  : GetExistingCookingFuelModel();
+              residentStatusValue = localData.residentStatus != ""
+                  ? listOfResidentStatus
+                  .firstWhere((e) => e.key == localData.residentStatus)
+                  : GetResidentStatusModel();
+              chargeAreaValue = localData.chargeArea != null
+                  ? listOfChargeArea.firstWhere((e) => e.gid == localData.chargeArea)
+                  : GetChargeAreaListModel();
+              if (localData.chargeArea != null) {
+                List<GetAllAreaModel> dataList =
+                    HiveDataBase.allAreaBox?.values.toSet().toList() ?? [];
+                listOfAllArea = dataList
+                    .where((element) => chargeAreaValue.gid == element.chargeAreaId)
+                    .toList();
+              }
+              areaValue = localData.areaId != null
+                  ? listOfAllArea.firstWhere((e) => e.gid == localData.areaId)
+                  : GetAllAreaModel();
+
+              firstController.text = localData.firstName ?? "";
+              middleController.text = localData.middleName ?? "";
+              lastController.text = localData.lastName ?? "";
+              guardianNameController.text = localData.guardianName ?? "";
+              emailIdController.text = localData.emailId ?? "";
+              buildingNumberController.text = localData.buildingNumber ?? "";
+              houseNumberController.text = localData.houseNumber ?? "";
+              colonyController.text = localData.colonySocietyApartment ?? "";
+              streetController.text = localData.streetName ?? "";
+              townController.text = localData.town ?? "";
+              pinCodeController.text = localData.pinCode ?? "";
+              numberKitchenController.text = localData.noOfKitchen ?? "";
+              numberBathroomController.text = localData.noOfBathroom ?? "";
+              familyMemberController.text = localData.noOfFamilyMembers ?? "";
+              nearestLandmarkController.text = localData.nearestLandmark ?? "";
+              kyc1NumberController.text = localData.kycDocument1Number ?? "";
+              kyc2NumberController.text = localData.kycDocument2Number ?? "";
+              kyc3NumberController.text = localData.kycDocument3Number ?? "";
+              custBankAccNumberController.text = localData.bankAccountNumber ?? "";
+              custIfscCodeController.text = localData.bankIfscCode ?? "";
+              custBankAddController.text = localData.bankAddress ?? "";
+              schemeAmountController.text = localData.schemeTypeAmount ?? "";
+              latController.text = localData.latitude ?? "";
+              longController.text = localData.longitude ?? "";
+              chequeNoController.text = localData.chequeNumber ?? "";
+              chequeDateController.text = localData.chequeDepositDate ?? "";
+              chequeAccountNoController.text = localData.chequeBankAccount ?? "";
+              chequeMicrNoController.text = localData.chequeMicrAccount ?? "";
+              mobileController.text = localData.mobileNumber ?? "";
+              altMobileController.text = localData.alternateMobile ?? "";
+              reasonRegistrationController.text = localData.reasonRegistration ?? "";
+
+              idFrontPath = File(localData.idFrontPath1 ?? "");
+              idBackPath = File(localData.idBackPath1 ?? "");
+              addFrontPath = File(localData.addFrontPath2 ?? "");
+              addBackPath = File(localData.addBackPath2 ?? "");
+              nocFrontPath = File(localData.nocFrontPath3 ?? "");
+              nocBackPath = File(localData.nocBackPath3 ?? "");
+              uploadCustomerPath = File(localData.uploadCustomerPhoto ?? "");
+              uploadHousePath = File(localData.uploadHousePhoto ?? "");
+              customerConsentPath = File(localData.customerConsentPhoto ?? "");
+              ownerConsentPath = File(localData.ownerConsent ?? "");
+              cancelChequePath = File(localData.canceledChequePhoto ?? "");
+              chequePath = File(localData.chequePhoto ?? "");
+              custBankNameValue = localData.bankNameOfBank ?? "";
+              paymentBankNameValue = localData.payementBankName ?? "";
+      }
+      isSaveLoader = false;
+      _eventCompleted(emit);
+    } catch (e) {
+      log("_updateLocalDataEvent Error --> ${e.toString()}");
+    }
+  }
+
 
   _eventCompleted(Emitter<RegistrationFormState> emit) {
     emit(RegistrationFormGetAllDataState(

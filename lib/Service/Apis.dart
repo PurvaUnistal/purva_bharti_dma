@@ -3,11 +3,6 @@ import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 import 'package:pbg_app/Utils/common_widgets/res/singleton.dart';
 
 class AppUrl {
- // static get baseUrl = 'http://142.79.231.30:9097/';
- // static get baseUrl = 'https://nmpplstations1.smartgasnet.com/';
-  // static get baseUrl = 'http://pbgpl.smartgasnet.com/';
-  // static get baseUrl = 'https://pbgplc.smartgasnet.com/';
-  // static get baseUrl = 'https://pbgpluat.smartgasnet.com/';
 
   static BuildContext? context = Singleton.instanceInit()?.context;
 

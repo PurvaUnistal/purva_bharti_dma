@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'enums.dart';
 
 class EnvironmentConfig extends InheritedWidget {
@@ -19,11 +19,31 @@ class EnvironmentConfig extends InheritedWidget {
   String get generalUrlBaseFlavour {
     print("flavor-->${flavors}");
     switch (flavors) {
-      case EnvironmentFlavors.pbgplDMA:
-        return "https://pbgplc.smartgasnet.com/api/";
-     //   return "https://pbgpluat.smartgasnet.com/api/";
-      case EnvironmentFlavors.mglDMA:
-        return "https://mgluat.smartgasnet.com/api/";
+      case EnvironmentFlavors.prodPBGPL:
+       // return "https://pbgplc.smartgasnet.com/api/";
+       // return "https://pbgpluat.smartgasnet.com/api/";
+        return "https://pbgpl.smartgasnet.com/api/";
+      case EnvironmentFlavors.prodMGL:
+      //  return "https://mgluat.smartgasnet.com/api/";
+        return "https://mgl.smartgasnet.com/api/";
+    }
+  }
+
+  Color get primaryTheme {
+    switch (flavors) {
+      case EnvironmentFlavors.prodPBGPL:
+        return Colors.green.shade800;
+      case EnvironmentFlavors.prodMGL:
+        return Colors.green.shade800;
+    }
+  }
+
+  Color get secondaryTheme {
+    switch (flavors) {
+      case EnvironmentFlavors.prodPBGPL:
+        return Colors.yellow.shade800;
+      case EnvironmentFlavors.prodMGL:
+        return Colors.yellow.shade800;
     }
   }
 }

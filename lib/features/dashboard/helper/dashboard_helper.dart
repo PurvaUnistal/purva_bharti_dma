@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Service/api_server_dio.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 
 class DashboardHelper {
   static Future<GetLabelModel?> getLabelApi({
@@ -142,7 +143,7 @@ class DashboardHelper {
   static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi({
     required BuildContext context,
   }) async {
-    String schema = await SharedPref.getString(key: PrefsValue.schema);
+    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getAllDistrict + schema,
@@ -428,7 +429,7 @@ class DashboardHelper {
   static Future<List<GetPropertyClassModel>?> getPropertyClassApi({
     required BuildContext context,
   }) async {
-    String schema = await SharedPref.getString(key: PrefsValue.schema);
+    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getPropertyClass + schema,
@@ -461,7 +462,7 @@ class DashboardHelper {
   static Future<List<GetPropertyCategoryModel>?> getPropertyCategoryApi({
     required BuildContext context,
   }) async {
-    String schema = await SharedPref.getString(key: PrefsValue.schema);
+    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getPropertyCategory + schema,
@@ -494,7 +495,7 @@ class DashboardHelper {
   static Future<List<GetAllAreaModel>?> getAllAreaApi({
     required BuildContext context,
   }) async {
-    String schema = await SharedPref.getString(key: PrefsValue.schema);
+    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getAllArea + schema,
@@ -525,7 +526,7 @@ class DashboardHelper {
   static Future<List<GetChargeAreaListModel>?> getChargeAreaListApi({
     required BuildContext context,
   }) async {
-    String schema = await SharedPref.getString(key: PrefsValue.schema);
+    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getChargeAreaList + schema,
@@ -558,7 +559,7 @@ class DashboardHelper {
   static Future<List<GetAllDepositOfflineModel>?> getAllDepositOfflineApi({
     required BuildContext context,
   }) async {
-    String schema = await SharedPref.getString(key: PrefsValue.schema);
+    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getAllDepositOffline + schema,
