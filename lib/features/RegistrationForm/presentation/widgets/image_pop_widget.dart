@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class ImagePopWidget extends StatelessWidget {
   final void Function()? onTapGallery, onTapCamera;
@@ -29,7 +30,7 @@ class ImagePopWidget extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: Text('Choose One',textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColor.prime,fontSize: 18, fontWeight: FontWeight.bold),),
+                  style: TextStyle(color: EnvironmentConfig.of(context)!.primaryTheme,fontSize: 18, fontWeight: FontWeight.bold),),
               ),
               TextButton(child: Text('Gallery'), onPressed: onTapGallery),
               TextButton(child: Text('Camera',), onPressed: onTapCamera,),

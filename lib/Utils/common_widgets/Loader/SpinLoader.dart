@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class SpinLoader extends StatelessWidget {
   const SpinLoader({Key? key}) : super(key: key);
@@ -7,7 +8,7 @@ class SpinLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SpinKitCubeGrid(
-      color: AppColor.prime,
+      color:EnvironmentConfig.of(context)!.primaryTheme,
     );
   }
 }

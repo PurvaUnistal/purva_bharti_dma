@@ -1,9 +1,17 @@
 import 'app_config.dart';
+import 'enums.dart';
 
 class AppString{
 
+  static const Map<Client, String> _releaseDates = {
+    Client.mahaNagar: "14/08/2025",
+    Client.purvaBharti: "11-06-2025",
+    Client.oilIndia: "17-02-2026",
+    Client.vppl: "28-01-2026",
+    Client.vrpl: "17-02-2026",
+  };
 
-  static String version = "Version : DMA-${AppConfig.instanceInit()?.buildName}-25/06/2025";
+  static String get version => "Version : 1.0.0 - DMA-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
   static String companyName = "© Unistal Systems Pvt. Ltd.";
   static String appName = "Purba Bharati  DMA";
   static String companyNameDesc = "Unistal Private Ltd.";
@@ -135,8 +143,27 @@ class AppString{
 }
 
 class AppIcon{
+
+  static logo(){
+    return AppConfig.instanceInit()!.client == Client.purvaBharti
+        ? AppIcon.pbgplLogo
+        :AppConfig.instanceInit()!.client == Client.mahaNagar
+        ? AppIcon.mglLogo
+        :AppConfig.instanceInit()!.client == Client.oilIndia
+        ? AppIcon.hpOilLogo
+        :AppConfig.instanceInit()!.client == Client.vppl
+        ? AppIcon.vpplLogo
+        :AppConfig.instanceInit()!.client == Client.vrpl
+        ? AppIcon.vrplLogo
+        : AppIcon.unistalLogo;
+  }
   static String pbgplLogo = "assets/images/pbgpl_logo.png";
   static String mglLogo = "assets/images/mgl_logo.png";
+  static String agclLogo = "assets/images/agcl_logo.png";
+  static String hpOilLogo = "assets/images/oil_india_logo.png";
+  static String vpplLogo = "assets/images/vppl_plcms.png";
+  static String vrplLogo = "assets/images/vrpl_plcms.png";
+  static String unistalLogo = "assets/images/unistal_logo.png";
   static String colourStrip = "assets/images/ic_strip.png";
   static String imageCaptureIcon = "assets/images/ic_image.png";
 }

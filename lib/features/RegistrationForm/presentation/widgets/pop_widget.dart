@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class PopWidget{
   static Widget header({required BuildContext context}) {
@@ -19,7 +20,7 @@ class PopWidget{
     );
   }
 
-  static Widget itemBuilder({String? star, String? textName, String? textValue}) {
+  static Widget itemBuilder({String? star, String? textName, String? textValue, required BuildContext context}) {
     return Column(
       children: [
         Padding(
@@ -44,15 +45,15 @@ class PopWidget{
             ],
           ),
         ),
-        divider(),
+        divider(context: context),
 
       ],
     );
   }
 
-  static Widget divider(){
+  static Widget divider({required BuildContext context}){
     return Divider(
-      color: AppColor.prime,
+      color: EnvironmentConfig.of(context)!.primaryTheme,
     );
   }
 

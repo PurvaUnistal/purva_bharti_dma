@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
+import 'res/environment_config.dart';
+
 class ButtonWidget extends StatelessWidget {
   final Function() onPressed;
   final String text;
@@ -13,12 +15,12 @@ class ButtonWidget extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColor.prime,
+        backgroundColor:EnvironmentConfig.of(context)!.primaryTheme,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: BorderSide(
             width: 2,
-            color:  AppColor.prime1,
+            color:  EnvironmentConfig.of(context)!.secondaryTheme,
           ),
 
         ),

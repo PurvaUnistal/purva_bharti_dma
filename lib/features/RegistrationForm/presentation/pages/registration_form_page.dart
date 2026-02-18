@@ -3,6 +3,7 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/Utils/common_widgets/background_widget.dart';
 import 'package:pbg_app/Utils/common_widgets/drop_down_search_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class RegistrationFormPage extends StatefulWidget {
   final bool isUpdate;
@@ -153,7 +154,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                       : DottedLoaderWidget(),
                   IconButton(
                     icon:
-                        Icon(Icons.location_on_outlined, color: AppColor.prime),
+                        Icon(Icons.location_on_outlined, color: EnvironmentConfig.of(context)!.primaryTheme),
                     onPressed: () {
                       BlocProvider.of<RegistrationFormBloc>(context)
                           .add(RegistrationFormSetLocation(context: context));
@@ -1429,7 +1430,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
             : stateData.labelModel.deposit!.chqDate,
         suffixIcon: Icon(
           Icons.calendar_today,
-          color: AppColor.prime,
+          color: EnvironmentConfig.of(context)!.primaryTheme,
         ),
         controller: stateData.chequeDateController,
         enabled: true,

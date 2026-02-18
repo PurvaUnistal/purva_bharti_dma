@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'res/app_color.dart';
 import 'button_widget.dart';
 import 'res/common_style.dart';
+import 'res/environment_config.dart';
 import 'res/styles_widget.dart';
 
 class DropDownSearchWidget extends StatelessWidget {
@@ -39,11 +40,11 @@ class DropDownSearchWidget extends StatelessWidget {
             isDense: true,
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 5.0, vertical: 8),
-            enabledBorder: CommonStyle.border,
-            disabledBorder: CommonStyle.border,
-            border: CommonStyle.border,
-            focusedBorder: CommonStyle.border,
-            errorBorder: CommonStyle.border,
+            enabledBorder: CommonStyle.border(context: context),
+            disabledBorder: CommonStyle.border(context: context),
+            border: CommonStyle.border(context: context),
+            focusedBorder: CommonStyle.border(context: context),
+            errorBorder: CommonStyle.border(context: context),
             label: Padding(
               padding: const EdgeInsets.only(left: 2.0),
               child: Row(
@@ -69,7 +70,7 @@ class DropDownSearchWidget extends StatelessWidget {
           bottomSheetProps: BottomSheetProps(
               backgroundColor: AppColor.white,
               shape: LinearBorder.top(
-        side: BorderSide(color: AppColor.prime)
+        side: BorderSide(color: EnvironmentConfig.of(context)!.primaryTheme,)
         ),
         ),
           searchFieldProps: TextFieldProps(
@@ -79,11 +80,11 @@ class DropDownSearchWidget extends StatelessWidget {
                 isDense: true,
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 5.0, vertical: 8),
-                enabledBorder: CommonStyle.border,
-                disabledBorder: CommonStyle.border,
-                border: CommonStyle.border,
-                focusedBorder: CommonStyle.border,
-                errorBorder: CommonStyle.border,
+                enabledBorder: CommonStyle.border(context: context),
+                disabledBorder: CommonStyle.border(context: context),
+                border: CommonStyle.border(context: context),
+                focusedBorder: CommonStyle.border(context: context),
+                errorBorder: CommonStyle.border(context: context),
                 label: Padding(
                   padding: const EdgeInsets.only(left: 2.0),
                   child: Row(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class RowBtnWidget extends StatelessWidget {
   final IconData icon;
@@ -42,9 +43,9 @@ class CardBtnWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
-        shape: Border(left: BorderSide(color: AppColor.prime, width: 15)),
+        shape: Border(left: BorderSide(color: EnvironmentConfig.of(context)!.primaryTheme,width: 15)),
         elevation: 5,
-        shadowColor: AppColor.prime,
+        shadowColor: EnvironmentConfig.of(context)!.primaryTheme,
         color: Colors.white,
         child: Container(
           color: Colors.white,
@@ -56,7 +57,7 @@ class CardBtnWidget extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 22,
-                  backgroundColor: AppColor.prime,
+                  backgroundColor: EnvironmentConfig.of(context)!.primaryTheme,
                   child: CircleAvatar(
                     radius: 21,
                     backgroundColor: Colors.white,

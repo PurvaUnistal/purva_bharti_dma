@@ -1,6 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:pbg_app/Utils/common_widgets/res/app_color.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class BorderWidget extends StatelessWidget {
   final List<Widget> children;
@@ -9,8 +9,13 @@ class BorderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  DottedBorder(
-      dashPattern: [6, 3, 2, 7],
-      color: AppColor.prime,
+      options: RectDottedBorderOptions(
+        dashPattern: [10, 5],
+        strokeWidth: 2,
+        color:EnvironmentConfig.of(context)!.primaryTheme,
+      ),
+
+
       child: Center(
         child: Column(
           children: children,

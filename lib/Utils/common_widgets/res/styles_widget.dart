@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_color.dart';
+import 'package:pbg_app/Utils/common_widgets/res/singleton.dart';
+
+import 'environment_config.dart';
 
 class Styles {
+
+  static BuildContext? context = Singleton.instanceInit()?.context;
+
   static TextStyle rel = TextStyle(
       color: AppColor.white,
       fontWeight: FontWeight.w800, fontSize: 8
@@ -20,7 +26,7 @@ class Styles {
 
   static TextStyle title = TextStyle(
       fontSize: 12,
-      color: AppColor.prime,
+      color: EnvironmentConfig.of(context!)!.primaryTheme,
       fontWeight: FontWeight.bold
   );
 
@@ -64,7 +70,7 @@ class Styles {
   static TextStyle labels = TextStyle(
       fontWeight: FontWeight.w400,
       fontSize: 12,
-      color:AppColor.prime
+      color:EnvironmentConfig.of(context!)!.primaryTheme,
   );
   static TextStyle texts = TextStyle(
       fontWeight: FontWeight.normal,

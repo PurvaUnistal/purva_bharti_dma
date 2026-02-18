@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class GPSSettingPermissionPopWidget extends StatelessWidget {
   const GPSSettingPermissionPopWidget({super.key});
@@ -62,11 +63,11 @@ class GPSSettingPermissionPopWidget extends StatelessWidget {
         style: ButtonStyle(
             padding:
                 MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.all(15)),
-            foregroundColor: MaterialStateProperty.all<Color>(AppColor.prime),
+            foregroundColor: MaterialStateProperty.all<Color>(EnvironmentConfig.of(context)!.primaryTheme,),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    side: BorderSide(color: AppColor.prime)))),
+                    side: BorderSide(color: EnvironmentConfig.of(context)!.primaryTheme,)))),
         onPressed: () async {
           await openAppSettings();
           if (!context.mounted) return;

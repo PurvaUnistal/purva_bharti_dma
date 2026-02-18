@@ -1,9 +1,12 @@
-import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/features/internet/bloc/internet_event.dart';
-import 'package:pbg_app/features/internet/bloc/internet_state.dart';
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'internet_event.dart';
+import 'internet_state.dart';
 
 class InternetBloc extends Bloc<InternetEvent, InternetState> {
-  StreamSubscription? subscription;
+  StreamSubscription<List<ConnectivityResult>>? subscription;
+
   bool isConnected = false;
   bool isWifi = false;
   bool isMobile = false;
@@ -12,50 +15,39 @@ class InternetBloc extends Bloc<InternetEvent, InternetState> {
     on<OnConnectedEvent>(_connected);
     on<NotConnectedEvent>(_notConnected);
 
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult? result) {
-      if (result == ConnectivityResult.wifi) {
-        isConnected = true;
-        isWifi = true;
-        isMobile = false;
-        add(OnConnectedEvent());
-      } else if (result == ConnectivityResult.mobile) {
-        isConnected = true;
-        isWifi = false;
-        isMobile = true;
-        add(OnConnectedEvent());
-      } else if (result == ConnectivityResult.none) {
-        isConnected = false;
-        isWifi = false;
-        isMobile = false;
+    subscription = Connectivity().onConnectivityChanged.listen((results) {
+      bool hasWifi = results.contains(ConnectivityResult.wifi);
+      bool hasMobile = results.contains(ConnectivityResult.mobile);
+      bool hasNone = results.contains(ConnectivityResult.none);
+
+      isConnected = !hasNone;
+      isWifi = hasWifi;
+      isMobile = hasMobile;
+
+      if (isConnected) {
         add(OnConnectedEvent());
       } else {
-        print("result.toString()");
-        print(result.toString());
-        isConnected = false;
-        isWifi = false;
-        isMobile = false;
         add(NotConnectedEvent());
       }
     });
   }
+
   @override
   Future<void> close() {
-    subscription!.cancel();
-    // TODO: implement close
+    subscription?.cancel();
     return super.close();
   }
 
-  _connected(OnConnectedEvent event, emit) {
+  void _connected(OnConnectedEvent event, Emitter<InternetState> emit) {
     emit(ConnectedState(
-        msg: isConnected ? "Connected" : "Not Connected",
-        isConnected: isConnected,
-        isWifi: isWifi,
-        isMobile: isMobile));
+      msg: isConnected ? "Connected" : "Not Connected",
+      isConnected: isConnected,
+      isWifi: isWifi,
+      isMobile: isMobile,
+    ));
   }
 
-  _notConnected(NotConnectedEvent event, emit) {
+  void _notConnected(NotConnectedEvent event, Emitter<InternetState> emit) {
     emit(NotConnectedState(msg: "Not Connected"));
   }
 }

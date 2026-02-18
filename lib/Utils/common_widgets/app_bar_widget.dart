@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
+import 'res/environment_config.dart';
+
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final bool? boolLeading;
@@ -33,7 +35,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              colors: <Color>[AppColor.prime1,AppColor.prime]),
+              colors: <Color>[EnvironmentConfig.of(context)!.secondaryTheme,EnvironmentConfig.of(context)!.primaryTheme,]),
         ),
       ),
 

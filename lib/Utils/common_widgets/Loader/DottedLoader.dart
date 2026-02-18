@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class DottedLoaderWidget extends StatelessWidget {
   const DottedLoaderWidget({Key? key}) : super(key: key);
@@ -8,7 +9,7 @@ class DottedLoaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width * 0.12;
     return SpinKitThreeInOut(
-      color: AppColor.prime,
+      color: EnvironmentConfig.of(context)!.primaryTheme,
       size: size,
     );
   }

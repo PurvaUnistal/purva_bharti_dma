@@ -20,12 +20,15 @@ class EnvironmentConfig extends InheritedWidget {
     print("flavor-->${flavors}");
     switch (flavors) {
       case EnvironmentFlavors.prodPBGPL:
-       // return "https://pbgplc.smartgasnet.com/api/";
-       // return "https://pbgpluat.smartgasnet.com/api/";
         return "https://pbgpl.smartgasnet.com/api/";
       case EnvironmentFlavors.prodMGL:
-      //  return "https://mgluat.smartgasnet.com/api/";
         return "https://mgl.smartgasnet.com/api/";
+      case EnvironmentFlavors.prodVRPL:
+        return "https://vrpl.plcms.net/api/";
+      case EnvironmentFlavors.prodVPPL:
+        return "https://vppl.plcms.net/api/";
+      case EnvironmentFlavors.prodHPOIL:
+        return "https://hpoil.smartgasnet.com/api/";
     }
   }
 
@@ -35,6 +38,12 @@ class EnvironmentConfig extends InheritedWidget {
         return Colors.green.shade800;
       case EnvironmentFlavors.prodMGL:
         return Colors.green.shade800;
+      case EnvironmentFlavors.prodHPOIL:
+        return Colors.red.shade700;
+      case EnvironmentFlavors.prodVPPL:
+        return Colors.green.shade800;
+      case EnvironmentFlavors.prodVRPL:
+        return Colors.amber.shade400;
     }
   }
 
@@ -44,6 +53,12 @@ class EnvironmentConfig extends InheritedWidget {
         return Colors.yellow.shade800;
       case EnvironmentFlavors.prodMGL:
         return Colors.yellow.shade800;
+      case EnvironmentFlavors.prodHPOIL:
+        return Colors.red.shade700;
+      case EnvironmentFlavors.prodVPPL:
+        return Colors.green.shade800;
+      case EnvironmentFlavors.prodVRPL:
+        return Colors.amber.shade400;
     }
   }
 }

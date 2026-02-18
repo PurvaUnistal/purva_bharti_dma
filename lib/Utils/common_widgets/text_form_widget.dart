@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
+import 'res/common_style.dart';
+import 'res/environment_config.dart';
+
 class TextFieldWidget extends StatelessWidget {
   final TextEditingController? controller;
   final String? initialValue;
@@ -61,7 +64,7 @@ class TextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      cursorColor: AppColor.prime,
+      cursorColor: EnvironmentConfig.of(context)!.primaryTheme,
       focusNode: focusNode,
       autofillHints: autofillHints,
       onTap: onTap,
@@ -105,21 +108,16 @@ class TextFieldWidget extends StatelessWidget {
         fillColor: AppColor.white,
         filled: true,
         contentPadding: EdgeInsets.symmetric(horizontal: 5.0, vertical: maxLine != null ? 8 : 0),
-        border: border,
-        focusedBorder: border,
-        disabledBorder: border,
-        enabledBorder: border,
+        border: CommonStyle.border(context: context),
+        focusedBorder: CommonStyle.border(context: context),
+        disabledBorder: CommonStyle.border(context: context),
+        enabledBorder: CommonStyle.border(context: context),
         errorBorder: borderE,
         errorStyle:Styles.subStar,
        ),
     );
   }
 
-  OutlineInputBorder border = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(5.0),
-    borderSide: BorderSide(
-        color: AppColor.prime, style: BorderStyle.solid, width: 0.80),
-  );
   OutlineInputBorder borderE = OutlineInputBorder(
     borderRadius: BorderRadius.circular(5.0),
     borderSide: BorderSide(

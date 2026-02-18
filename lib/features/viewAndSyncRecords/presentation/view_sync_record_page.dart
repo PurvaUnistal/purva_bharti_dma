@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/background_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 import 'package:pbg_app/features/internet/bloc/internet_bloc.dart';
 import 'package:pbg_app/features/internet/bloc/internet_event.dart';
 import 'package:pbg_app/features/internet/bloc/internet_state.dart';
@@ -154,7 +155,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                   color: AppColor.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(width: 0.8, color: AppColor.prime)),
+                      side: BorderSide(width: 0.8, color: EnvironmentConfig.of(context)!.primaryTheme,)),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -170,7 +171,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
                                     ? Container()
                                     : IconButton(
                                   icon: Icon(Icons.sync,
-                                      color: AppColor.prime),
+                                      color: EnvironmentConfig.of(context)!.primaryTheme,),
                                   onPressed: () {
                                     BlocProvider.of<
                                         ViewSyncRecordBloc>(
@@ -208,7 +209,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
               elevation: 21,
               borderRadius: BorderRadius.circular(20),
               color: AppColor.white,
-              shadowColor: AppColor.prime,
+              shadowColor: EnvironmentConfig.of(context)!.primaryTheme,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                     vertical: 8.0, horizontal: 21),
@@ -241,7 +242,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
   Widget _deleteButton({required SaveRegistrationFormModel data,required int index}) {
     print("------------------------------------->_deleteButton${index}");
     return IconButton(
-      icon: Icon(Icons.delete_forever, color: AppColor.prime),
+      icon: Icon(Icons.delete_forever, color: EnvironmentConfig.of(context)!.primaryTheme,),
       onPressed: () {
         BlocProvider.of<ViewSyncRecordBloc>(context).add(DeleteLocalDataEvent(
           index: index,
@@ -267,7 +268,7 @@ class _ViewSyncRecordPageState extends State<ViewSyncRecordPage> {
           ),
         );
       },
-      icon: Icon(Icons.edit, color: AppColor.prime),
+      icon: Icon(Icons.edit, color: EnvironmentConfig.of(context)!.primaryTheme,),
     );
   }
 }

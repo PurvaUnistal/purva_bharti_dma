@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/enlarge_widge.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class ImageWidget extends StatelessWidget {
   final File imgFile;
@@ -48,7 +48,7 @@ class ImageWidget extends StatelessWidget {
 
                       child: TextButton(
                         child: Container(
-                            color: AppColor.prime,
+                            color: EnvironmentConfig.of(context)!.primaryTheme,
                             child: Icon(Icons.zoom_out_map,color: AppColor.white,)),
                         onPressed: () async {
                           await showBottomSheet(
@@ -64,7 +64,7 @@ class ImageWidget extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.photo_camera_back_outlined, color: AppColor.prime,size: 18,),
+                    Icon(Icons.photo_camera_back_outlined, color: EnvironmentConfig.of(context)!.primaryTheme,size: 18,),
                     Text("Photo",style: Styles.labels,),
                   ],
                 ),

@@ -77,56 +77,35 @@ class ConnectivityHelper {
     return true;
   }
 
-/*  static Future<dynamic> allConnectivityCheck(
-      {required BuildContext context}) async {
-*//*    if( await checkPermissions(context: context) == false){
-      return false;
-    }*//*
-
-    bool isConnected = await checkInterNetConnect();
-    if (isConnected == false) {
-      if (!context.mounted) return;
-      showDialog(
-          context: context,
-          builder: (BuildContext context) =>
-              const InternetConnectivityPopWidget());
-      return false;
-    }
-    return true;
-  }*/
-
-  /*static Future<bool> checkInterNetConnect() async {
+  static Future<bool> checkInternetConnect({required BuildContext context}) async {
     try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
-      }
-      return false;
-    } on SocketException catch (_) {
-      return false;
-    }
-  }*/
-  static Future<bool> checkInternetConnect(
-      {required BuildContext context}) async {
-    try {
-      ConnectivityResult result = await Connectivity().checkConnectivity();
-      if (result == ConnectivityResult.mobile ||
-          result == ConnectivityResult.wifi) {
+
+      final List<ConnectivityResult> results = await Connectivity().checkConnectivity();
+
+      bool hasWifi = results.contains(ConnectivityResult.wifi);
+      bool hasMobile = results.contains(ConnectivityResult.mobile);
+      bool hasEthernet = results.contains(ConnectivityResult.ethernet);
+      bool hasVpn = results.contains(ConnectivityResult.vpn);
+
+      bool isConnected = hasWifi || hasMobile || hasEthernet || hasVpn;
+
+      if (isConnected) {
         return true;
       } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) =>
-                const InternetConnectivityPopWidget());
+        _showNoInternetDialog(context);
         return false;
       }
     } on SocketException catch (_) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) =>
-              const InternetConnectivityPopWidget());
+      _showNoInternetDialog(context);
       return false;
     }
+  }
+
+  static void _showNoInternetDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const InternetConnectivityPopWidget(),
+    );
   }
 
   static Future<dynamic> allConnectivityCheck({required BuildContext context}) async {

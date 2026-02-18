@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'app_color.dart';
+import 'environment_config.dart';
 import 'styles_widget.dart';
 
 class CommonStyle {
 
-  static OutlineInputBorder border = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(5.0),
-    borderSide: BorderSide(
-        color: AppColor.prime, style: BorderStyle.solid, width: 0.80),
-  );
+
+ static OutlineInputBorder border({required BuildContext context}) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(5.0),
+      borderSide: BorderSide(
+        color: EnvironmentConfig.of(context)!.primaryTheme,
+        style: BorderStyle.solid,
+        width: 0.80,
+      ),
+    );
+  }
 
   static OutlineInputBorder borderGrey = OutlineInputBorder(
     borderRadius: BorderRadius.circular(5.0),

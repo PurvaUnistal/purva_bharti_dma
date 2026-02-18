@@ -428,8 +428,7 @@ class RegistrationFormHelper {
       );
       if (isUpdate) {
         await hiveBox.putAt(index, entry);
-        Utils.successSnackBar(
-            msg: 'Record Updated Successfully', context: context);
+        Utils.successSnackBar(msg: 'Record Updated Successfully', context: context);
       } else {
         if (hiveBox.length < 15) {
           log("custRegSyncAdd${entry}");

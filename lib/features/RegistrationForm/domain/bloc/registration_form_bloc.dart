@@ -869,25 +869,27 @@ class RegistrationFormBloc
 
   List<Widget> _buildPreviewItems({required BuildContext context}) {
     return [
-      _buildPopItem(AppString.registrationType, registrationTypeValue.value),
+      _buildPopItem(AppString.registrationType, registrationTypeValue.value, context),
       registrationTypeValue.key == "0"
           ? PopWidget.itemBuilder(
+        context: context,
               textName: AppString.reasonRegistration,
               textValue: reasonRegistrationController.text)
           : Container(),
-      _buildPopItem(AppString.conversionPolicy, conversionPolicyValue.value),
-      _buildPopItem(AppString.fittingCost, extraFittingValue.value),
+      _buildPopItem(AppString.conversionPolicy, conversionPolicyValue.value, context),
+      _buildPopItem(AppString.fittingCost, extraFittingValue.value, context),
       registrationTypeValue.key == "1"
-          ? _buildPopItem(AppString.mdpeAllow, societyAllowValue.value)
+          ? _buildPopItem(AppString.mdpeAllow, societyAllowValue.value, context)
           : Container(),
-      _buildPopItem(AppString.chargeArea, chargeAreaValue.chargeAreaName),
-      _buildPopItem(AppString.area, areaValue.areaName),
-      _buildPopItem(AppString.mobileNo, mobileController.text),
-      _buildPopItem(AppString.alternateMobileNo, altMobileController.text),
-      _buildPopItem(AppString.firstName, firstController.text),
-      _buildPopItem(AppString.middleName, middleController.text),
-      _buildPopItem(AppString.lastName, lastController.text),
+      _buildPopItem(AppString.chargeArea, chargeAreaValue.chargeAreaName, context),
+      _buildPopItem(AppString.area, areaValue.areaName, context),
+      _buildPopItem(AppString.mobileNo, mobileController.text, context),
+      _buildPopItem(AppString.alternateMobileNo, altMobileController.text, context),
+      _buildPopItem(AppString.firstName, firstController.text, context),
+      _buildPopItem(AppString.middleName, middleController.text, context),
+      _buildPopItem(AppString.lastName, lastController.text, context),
       PopWidget.itemBuilder(
+          context: context,
           star: registrationTypeValue.value != "Future Registration"
               ? AppString.star
               : "",
@@ -895,6 +897,7 @@ class RegistrationFormBloc
           textValue:
               guardianTypeValue.key == null ? "" : guardianTypeValue.value),
       PopWidget.itemBuilder(
+          context: context,
           star: registrationTypeValue.value != "Future Registration"
               ? AppString.star
               : "",
@@ -902,29 +905,29 @@ class RegistrationFormBloc
           textValue: guardianNameController.text.isEmpty
               ? ""
               : guardianNameController.text),
-      _buildPopItem(AppString.emailAddress, emailIdController.text),
+      _buildPopItem(AppString.emailAddress, emailIdController.text, context),
       registrationTypeValue.key == "1"
           ? _buildPopItem(
-              AppString.propertyCategory, propertyCategoryValue.name)
+              AppString.propertyCategory, propertyCategoryValue.name, context)
           : Container(),
       registrationTypeValue.key == "1"
-          ? _buildPopItem(AppString.propertyClass, propertyClassValue.name)
+          ? _buildPopItem(AppString.propertyClass, propertyClassValue.name, context)
           : Container(),
-      _buildPopItem(AppString.buildingNumber, buildingNumberController.text),
-      _buildPopItem(AppString.houseNumber, houseNumberController.text),
-      _buildPopItem(AppString.colony, colonyController.text),
-      _buildPopItem(AppString.streetName, streetController.text),
-      _buildPopItem(AppString.town, townController.text),
-      _buildPopItem(AppString.district, allDistrictValue.districtName),
-      _buildPopItem(AppString.pinCode, pinCodeController.text),
-      _buildPopItem(AppString.noOfKitchen, numberKitchenController.text),
-      _buildPopItem(AppString.noOfBathroom, numberBathroomController.text),
-      _buildPopItem(AppString.fuel, existingCookingFuelValue.value),
-      _buildPopItem(AppString.noOfFamilyMembers, familyMemberController.text),
-      _buildPopItem(AppString.locationLat, latController.text),
-      _buildPopItem(AppString.locationLong, longController.text),
-      _buildPopItem(AppString.idProof, kycDoc1Value.value),
-      _buildPopItem(AppString.idProofNo, kyc1NumberController.text),
+      _buildPopItem(AppString.buildingNumber, buildingNumberController.text, context),
+      _buildPopItem(AppString.houseNumber, houseNumberController.text, context),
+      _buildPopItem(AppString.colony, colonyController.text, context),
+      _buildPopItem(AppString.streetName, streetController.text, context),
+      _buildPopItem(AppString.town, townController.text, context),
+      _buildPopItem(AppString.district, allDistrictValue.districtName, context),
+      _buildPopItem(AppString.pinCode, pinCodeController.text, context),
+      _buildPopItem(AppString.noOfKitchen, numberKitchenController.text, context),
+      _buildPopItem(AppString.noOfBathroom, numberBathroomController.text, context),
+      _buildPopItem(AppString.fuel, existingCookingFuelValue.value, context),
+      _buildPopItem(AppString.noOfFamilyMembers, familyMemberController.text, context),
+      _buildPopItem(AppString.locationLat, latController.text, context),
+      _buildPopItem(AppString.locationLong, longController.text, context),
+      _buildPopItem(AppString.idProof, kycDoc1Value.value, context),
+      _buildPopItem(AppString.idProofNo, kyc1NumberController.text, context),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -943,14 +946,16 @@ class RegistrationFormBloc
           ),
         ],
       ),
-      PopWidget.divider(),
+      PopWidget.divider(context: context,),
       PopWidget.itemBuilder(
+          context: context,
           star: registrationTypeValue.value != "Future Registration"
               ? AppString.star
               : "",
           textName: AppString.addProof,
           textValue: kycDoc2Value.key == "" ? "-" : kycDoc2Value.value),
       PopWidget.itemBuilder(
+          context: context,
           star: registrationTypeValue.value != "Future Registration"
               ? AppString.star
               : "",
@@ -978,9 +983,10 @@ class RegistrationFormBloc
           ),
         ],
       ),
-      PopWidget.divider(),
+      PopWidget.divider(context: context,),
       if (registrationTypeValue.key != "0") ...[
         PopWidget.itemBuilder(
+            context: context,
             textName: AppString.ownershipProperty,
             textValue: kycDoc3Value.key == null ? "-" : kycDoc3Value.value),
         Row(
@@ -1010,48 +1016,57 @@ class RegistrationFormBloc
             ),
           ],
         ),
-        PopWidget.divider(),
+        PopWidget.divider(context: context,),
         PopWidget.itemBuilder(
+            context: context,
             textName: AppString.initDepositStatus,
             textValue: initialDepositStatusValue.key == null
                 ? "-"
                 : initialDepositStatusValue.value),
         PopWidget.itemBuilder(
+            context: context,
             textName: AppString.schemeType,
             textValue: schemeTypeValue.depositTypesId == null
                 ? "-"
                 : schemeTypeValue.depositName),
         PopWidget.itemBuilder(
+            context: context,
             textName: AppString.schemeAmt,
             textValue: schemeAmountController.text.isEmpty
                 ? "-"
                 : schemeAmountController.text),
         PopWidget.itemBuilder(
+            context: context,
             textName: AppString.modeDeposit,
             textValue:
                 modeDepositValue.key == null ? "-" : modeDepositValue.value),
         if (modeDepositValue.key == "1") ...[
           PopWidget.itemBuilder(
+              context: context,
               textName: AppString.chqNo,
               textValue: chequeNoController.text.isEmpty
                   ? "-"
                   : chequeNoController.text),
           PopWidget.itemBuilder(
+              context: context,
               textName: AppString.chqDate,
               textValue: chequeDateController.text.isEmpty
                   ? ""
                   : chequeDateController.text),
           PopWidget.itemBuilder(
+              context: context,
               textName: AppString.chqBank,
               textValue: paymentBankNameValue.isEmpty
                   ? ""
                   : paymentBankNameValue.toString()),
           PopWidget.itemBuilder(
+              context: context,
               textName: AppString.chequeAccountNo,
               textValue: chequeAccountNoController.text.isEmpty
                   ? ""
                   : chequeAccountNoController.text),
           PopWidget.itemBuilder(
+              context: context,
               textName: AppString.chequeMICRNo,
               textValue: chequeMicrNoController.text.isEmpty
                   ? ""
@@ -1068,8 +1083,9 @@ class RegistrationFormBloc
     ];
   }
 
-  Widget _buildPopItem(String label, String? value) {
+  Widget _buildPopItem(String label, String? value, BuildContext context) {
     return PopWidget.itemBuilder(
+      context: context,
       star: value?.isNotEmpty ?? false ? AppString.star : "",
       textName: label,
       textValue: value ?? "",

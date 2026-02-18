@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
+import 'res/common_style.dart';
+
 class DropdownWidget<T> extends StatelessWidget {
   final T? dropdownValue;
   final String hint;
@@ -29,10 +31,10 @@ class DropdownWidget<T> extends StatelessWidget {
           // labelText: label,
           isDense: false,
           contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-          enabledBorder: _border(),
-          disabledBorder: _border(),
-          border: _border(),
-          focusedBorder: _border(),
+          enabledBorder: CommonStyle.border(context: context),
+          disabledBorder: CommonStyle.border(context: context),
+          border: CommonStyle.border(context: context),
+          focusedBorder: CommonStyle.border(context: context),
           label: Padding(
             padding: const EdgeInsets.only(left: 2.0),
             child: Row(
@@ -62,16 +64,5 @@ class DropdownWidget<T> extends StatelessWidget {
           );
         }).toList(),
         onChanged: onChanged);
-  }
-
-  OutlineInputBorder _border() {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(
-        style: BorderStyle.solid,
-        width: 0.80,
-        color: AppColor.prime,
-      ),
-    );
   }
 }

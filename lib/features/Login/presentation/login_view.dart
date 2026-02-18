@@ -4,6 +4,7 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/background_widget.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 import 'package:pbg_app/Utils/common_widgets/res/enums.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -67,7 +68,7 @@ class _LoginViewState extends State<LoginView> {
           child: Card(
 
             elevation: 8,
-            shadowColor: AppColor.prime1,
+            shadowColor: EnvironmentConfig.of(context)!.secondaryTheme,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
@@ -115,9 +116,7 @@ class _LoginViewState extends State<LoginView> {
               right: 0,
               bottom: height * 0.08,
               child: Image.asset(
-                AppConfig.instanceInit()!.client == Client.mahaNagar
-                    ? AppIcon.mglLogo
-                    : AppIcon.pbgplLogo,
+                AppIcon.logo(),
                 width: width * 0.30,
               ),
             ),
@@ -125,7 +124,7 @@ class _LoginViewState extends State<LoginView> {
               alignment: Alignment.bottomCenter,
               child: Image.asset(
                 AppIcon.colourStrip,
-                color: AppColor.prime1,
+                color: EnvironmentConfig.of(context)!.secondaryTheme,
                 fit: BoxFit.cover,
                 width: width,
               ),
@@ -147,7 +146,7 @@ class _LoginViewState extends State<LoginView> {
         keyboardType: TextInputType.emailAddress,
         prefixIcon: Icon(
           Icons.email,
-          color: Colors.green.shade800,
+          color: EnvironmentConfig.of(context)!.primaryTheme,
         ),
         onChanged: (val) {
           BlocProvider.of<LoginBloc>(context).add(
@@ -167,12 +166,12 @@ class _LoginViewState extends State<LoginView> {
         keyboardType: TextInputType.visiblePassword,
         prefixIcon: Icon(
           Icons.password,
-          color: Colors.green.shade800,
+          color: EnvironmentConfig.of(context)!.primaryTheme,
         ),
         suffixIcon: IconButton(
           icon: Icon(
             dataState.isPassword ? Icons.visibility_off : Icons.visibility,
-            color: Colors.green.shade800,
+            color: EnvironmentConfig.of(context)!.primaryTheme,
           ),
           onPressed: () {
             BlocProvider.of<LoginBloc>(context).add(

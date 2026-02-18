@@ -5,6 +5,7 @@ import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 import 'package:pbg_app/Utils/common_widgets/res/singleton.dart';
 
 import 'Utils/common_widgets/res/enums.dart';
+import 'Utils/common_widgets/res/environment_config.dart';
 import 'features/internet/bloc/internet_bloc.dart';
 
 class Root extends StatefulWidget {
@@ -25,7 +26,7 @@ class _RootState extends State<Root> {
   Widget build(BuildContext context) {
     Singleton.instanceInit()?.context = context;
     AppConfig.instanceInit()!.setClient(client: widget.client);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: AppColor.prime));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor:EnvironmentConfig.of(context)!.primaryTheme,));
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (BuildContext context) => InternetBloc()),
@@ -39,11 +40,13 @@ class _RootState extends State<Root> {
         title: AppString.appName,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Colors.green.shade800,
-          hintColor: Colors.green.shade800,
+          primaryColor: EnvironmentConfig.of(context)!.primaryTheme,
+          hintColor: EnvironmentConfig.of(context)!.primaryTheme,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor:  Colors.green.shade800),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: EnvironmentConfig.of(context)!.primaryTheme,
+          ),
         ),
         home: SplashView(),
 

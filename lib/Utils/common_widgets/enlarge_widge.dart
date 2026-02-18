@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 
+import 'res/environment_config.dart';
+
 class EnlargeWidget extends StatelessWidget {
   final String text;
   final File photoPath;
@@ -14,7 +16,7 @@ class EnlargeWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          color: AppColor.prime,
+          color: EnvironmentConfig.of(context)!.primaryTheme,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
             children: [
