@@ -4,11 +4,11 @@ import 'enums.dart';
 class AppString{
 
   static const Map<Client, String> _releaseDates = {
-    Client.mahaNagar: "14/08/2025",
+    Client.mahaNagar: "12-03-2026",
     Client.purvaBharti: "11-06-2025",
-    Client.oilIndia: "17-02-2026",
-    Client.vppl: "28-01-2026",
-    Client.vrpl: "17-02-2026",
+    Client.hpoil: "12-03-2026",
+    Client.vppl: "12-03-2026",
+    Client.vrpl: "12-03-2026",
   };
 
   static String get version => "Version : 1.0.0 - DMA-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
@@ -149,7 +149,7 @@ class AppIcon{
         ? AppIcon.pbgplLogo
         :AppConfig.instanceInit()!.client == Client.mahaNagar
         ? AppIcon.mglLogo
-        :AppConfig.instanceInit()!.client == Client.oilIndia
+        :AppConfig.instanceInit()!.client == Client.hpoil
         ? AppIcon.hpOilLogo
         :AppConfig.instanceInit()!.client == Client.vppl
         ? AppIcon.vpplLogo
@@ -160,10 +160,12 @@ class AppIcon{
   static String pbgplLogo = "assets/images/pbgpl_logo.png";
   static String mglLogo = "assets/images/mgl_logo.png";
   static String agclLogo = "assets/images/agcl_logo.png";
-  static String hpOilLogo = "assets/images/oil_india_logo.png";
+  static String oilIndiaLogo = "assets/images/oil_india_logo.png";
   static String vpplLogo = "assets/images/vppl_plcms.png";
   static String vrplLogo = "assets/images/vrpl_plcms.png";
+  static String hpOilLogo = "assets/images/hp_oil_logo.png";
   static String unistalLogo = "assets/images/unistal_logo.png";
+
   static String colourStrip = "assets/images/ic_strip.png";
   static String imageCaptureIcon = "assets/images/ic_image.png";
 }

@@ -56,6 +56,8 @@ class User {
   final String? role;
   final String? spreadId;
   final String? sectionId;
+  final String? smartLogo;
+  final String? projectLogo;
 
   User({
     this.id,
@@ -69,6 +71,8 @@ class User {
     this.role,
     this.spreadId,
     this.sectionId,
+    this.smartLogo,
+    this.projectLogo,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -83,6 +87,8 @@ class User {
     role: json["role"] ?? "",
     spreadId: json["spread_id"] ?? "",
     sectionId: json["section_id"] ?? "",
+    smartLogo: json["smartLogo"] ?? "",
+    projectLogo: json["projectLogo"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {
@@ -97,5 +103,7 @@ class User {
     "role": role,
     "spread_id": spreadId,
     "section_id": sectionId,
+    "smartLogo": smartLogo,
+    "projectLogo": projectLogo,
   };
 }

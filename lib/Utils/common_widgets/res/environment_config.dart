@@ -39,7 +39,7 @@ class EnvironmentConfig extends InheritedWidget {
       case EnvironmentFlavors.prodMGL:
         return Colors.green.shade800;
       case EnvironmentFlavors.prodHPOIL:
-        return Colors.red.shade700;
+        return Colors.green.shade800;
       case EnvironmentFlavors.prodVPPL:
         return Colors.green.shade800;
       case EnvironmentFlavors.prodVRPL:
@@ -54,7 +54,7 @@ class EnvironmentConfig extends InheritedWidget {
       case EnvironmentFlavors.prodMGL:
         return Colors.yellow.shade800;
       case EnvironmentFlavors.prodHPOIL:
-        return Colors.red.shade700;
+        return Colors.blue.shade800;
       case EnvironmentFlavors.prodVPPL:
         return Colors.green.shade800;
       case EnvironmentFlavors.prodVRPL:

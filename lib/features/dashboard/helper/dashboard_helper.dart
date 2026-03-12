@@ -86,8 +86,7 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetAcceptExtraFittingCostModel>?>
-  getAcceptExtraFittingCostApi({required BuildContext context}) async {
+  static Future<List<GetAcceptExtraFittingCostModel>?> getAcceptExtraFittingCostApi({required BuildContext context}) async {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.acceptExtraFittingCost,
@@ -113,8 +112,7 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetAcceptConversionPolicyModel>?>
-  getAcceptConversionPolicyApi({required BuildContext context}) async {
+  static Future<List<GetAcceptConversionPolicyModel>?> getAcceptConversionPolicyApi({required BuildContext context}) async {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.acceptConversionPolicy,
@@ -140,9 +138,7 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi({
-    required BuildContext context,
-  }) async {
+  static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi({required BuildContext context,}) async {
     String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
     try {
       var res = await ApiHelperDio.getData(

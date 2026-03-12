@@ -70,10 +70,10 @@ android {
         prodHPOIL {
             dimension "app"
             applicationIdSuffix ".unistal.hpoil.dma"
-            resValue "string", "app_name", "HP OIL DMA"
+            resValue "string", "app_name", "HPOIL DMA"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/mgl_logo",
-                    appIconRound: "@mipmap/mgl_logo"
+                    appIcon: "@mipmap/hp_oil_logo",
+                    appIconRound: "@mipmap/hp_oil_logo"
             ]
             versionCode 1
             versionName "1.0.0-HPOIL DMA"

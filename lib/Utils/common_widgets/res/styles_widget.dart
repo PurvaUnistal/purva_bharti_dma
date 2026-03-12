@@ -21,6 +21,7 @@ class Styles {
 
   static TextStyle login = TextStyle(
     color:AppColor.white,
+    fontSize: 12,
     fontWeight: FontWeight.bold,
   );
 

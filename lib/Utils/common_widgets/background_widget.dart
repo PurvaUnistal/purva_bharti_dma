@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'res/app_color.dart';
-import 'res/app_string.dart';
-import 'res/environment_config.dart';
-import 'res/styles_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_string.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
+import 'package:pbg_app/Utils/common_widgets/res/styles_widget.dart';
 
 class BackgroundWidget extends StatelessWidget {
   final Widget child;
@@ -11,9 +10,8 @@ class BackgroundWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.white,
-      body: Stack(
+    return SafeArea(
+      child: Stack(
         children: [
           child,
           Positioned(
@@ -38,16 +36,16 @@ class BackgroundWidget extends StatelessWidget {
                             textAlign: TextAlign.start,
                             style: Styles.rel,
                           )),
-                      Flexible(
-                          child: Text(
-                            AppString.version,
-                            textAlign: TextAlign.start,
-                            style: Styles.rel,
-                          )),
+                      Text(
+                        AppString.version,
+                        textAlign: TextAlign.start,
+                        style: Styles.rel,
+                      ),
                     ],
                   )))
         ],
       ),
     );
+
   }
 }
