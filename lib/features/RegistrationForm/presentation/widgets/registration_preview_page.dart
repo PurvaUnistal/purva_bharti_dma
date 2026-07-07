@@ -103,7 +103,7 @@ class RegistrationPreviewPage extends StatelessWidget {
           ? SizedBox.shrink()
           : PopWidget.itemBuilder(
             context: context,
-            star: AppString.star,
+            star: bloc.isAGCL ? "" : AppString.star,
             textName: AppString.titleName,
             textValue:
                 bloc.nameTitleValue.id == null ? "" : bloc.nameTitleValue.name,
@@ -116,7 +116,7 @@ class RegistrationPreviewPage extends StatelessWidget {
           : _buildPopItem(AppString.dob, bloc.dobController.text, context),
       PopWidget.itemBuilder(
         context: context,
-        star: _regVal != "Future Registration" ? AppString.star : "",
+        star: bloc.isAGCL ? "": _regVal != "Future Registration" ? AppString.star : "",
         textName: AppString.guardianType,
         textValue:
             bloc.guardianTypeValue.key == null
@@ -125,7 +125,7 @@ class RegistrationPreviewPage extends StatelessWidget {
       ),
       PopWidget.itemBuilder(
         context: context,
-        star: _regVal != "Future Registration" ? AppString.star : "",
+        star: bloc.isAGCL ? "": _regVal != "Future Registration" ? AppString.star : "",
         textName: AppString.guardianName,
         textValue:
             bloc.guardianNameController.text.isEmpty
@@ -225,75 +225,81 @@ class RegistrationPreviewPage extends StatelessWidget {
         bloc.kyc1NumberController.text,
         context,
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: ImageWidget(
-              star: AppString.star,
-              title: AppString.idProofFront,
-              imgFile:
-                  bloc.idFrontPath.path.isEmpty
-                      ? File("")
-                      : File(bloc.idFrontPath.path),
-              onPressed: () {},
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: ImageWidget(
+                star: AppString.star,
+                title: AppString.idProofFront,
+                imgFile:
+                    bloc.idFrontPath.path.isEmpty
+                        ? File("")
+                        : File(bloc.idFrontPath.path),
+                onPressed: () {},
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: ImageWidget(
-              title: AppString.idProofBack,
-              imgFile:
-                  bloc.idBackPath.path.isEmpty
-                      ? File("")
-                      : File(bloc.idBackPath.path),
-              onPressed: () {},
+            const SizedBox(width: 8),
+            Expanded(
+              child: ImageWidget(
+                title: AppString.idProofBack,
+                imgFile:
+                    bloc.idBackPath.path.isEmpty
+                        ? File("")
+                        : File(bloc.idBackPath.path),
+                onPressed: () {},
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       PopWidget.divider(context: context),
       PopWidget.itemBuilder(
         context: context,
-        star: _regVal != "Future Registration" ? AppString.star : "",
+        star: bloc.isAGCL ? "": _regVal != "Future Registration" ? AppString.star : "",
         textName: AppString.addProof,
         textValue: bloc.kycDoc2Value.key == "" ? "-" : bloc.kycDoc2Value.value,
       ),
       PopWidget.itemBuilder(
         context: context,
-        star: _regVal != "Future Registration" ? AppString.star : "",
+        star: bloc.isAGCL ? "": _regVal != "Future Registration" ? AppString.star : "",
         textName: AppString.addProofNo,
         textValue:
             bloc.kyc2NumberController.text.isEmpty
                 ? ""
                 : bloc.kyc2NumberController.text,
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: ImageWidget(
-              star: _regVal != "Future Registration" ? AppString.star : "",
-              title: AppString.addProofFront,
-              imgFile:
-                  bloc.addFrontPath.path.isEmpty
-                      ? File("")
-                      : File(bloc.addFrontPath.path),
-              onPressed: () {},
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: ImageWidget(
+                star: bloc.isAGCL ? "":_regVal != "Future Registration" ? AppString.star : "",
+                title: AppString.addProofFront,
+                imgFile:
+                    bloc.addFrontPath.path.isEmpty
+                        ? File("")
+                        : File(bloc.addFrontPath.path),
+                onPressed: () {},
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: ImageWidget(
-              title: AppString.addProofBack,
-              imgFile:
-                  bloc.addBackPath.path.isEmpty
-                      ? File("")
-                      : File(bloc.addBackPath.path),
-              onPressed: () {},
+            const SizedBox(width: 8),
+            Expanded(
+              child: ImageWidget(
+                title: AppString.addProofBack,
+                imgFile:
+                    bloc.addBackPath.path.isEmpty
+                        ? File("")
+                        : File(bloc.addBackPath.path),
+                onPressed: () {},
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       PopWidget.divider(context: context),
       if (_regVal != "Future Registration") ...[
@@ -324,77 +330,84 @@ class RegistrationPreviewPage extends StatelessWidget {
                   : bloc.kyc3NumberController.text,
         ),
         bloc.isAGCL
-            ? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ImageWidget(
-                    title: AppString.ownershipProofFront,
-                    imgFile:
-                        bloc.nocFrontPath.path.isEmpty
-                            ? File("")
-                            : File(bloc.nocFrontPath.path),
-                    onPressed: () {},
+            ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ImageWidget(
+                      title: AppString.ownershipProofFront,
+                      imgFile:
+                          bloc.nocFrontPath.path.isEmpty
+                              ? File("")
+                              : File(bloc.nocFrontPath.path),
+                      onPressed: () {},
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ImageWidget(
-                    title: AppString.ownershipProofBack,
-                    imgFile:
-                        bloc.nocBackPath.path.isEmpty
-                            ? File("")
-                            : File(bloc.nocBackPath.path),
-                    onPressed: () {},
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ImageWidget(
+                      title: AppString.ownershipProofBack,
+                      imgFile:
+                          bloc.nocBackPath.path.isEmpty
+                              ? File("")
+                              : File(bloc.nocBackPath.path),
+                      onPressed: () {},
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
             : SizedBox.shrink(),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: ImageWidget(
-                title: AppString.customerImg,
-                imgFile:
-                    bloc.uploadCustomerPath.path.isEmpty
-                        ? File("")
-                        : File(bloc.uploadCustomerPath.path),
-                onPressed: () {},
-              ),
-            ),
-            const SizedBox(width: 8),
-            if (bloc.kycDoc3Value.value == "Rented") ...[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               Expanded(
                 child: ImageWidget(
-                  star: AppString.star,
-                  title: AppString.nocDoc,
+                  title: AppString.customerImg,
                   imgFile:
-                      bloc.nocDocPath.path.isEmpty
+                      bloc.uploadCustomerPath.path.isEmpty
                           ? File("")
-                          : File(bloc.nocDocPath.path),
+                          : File(bloc.uploadCustomerPath.path),
                   onPressed: () {},
                 ),
               ),
               const SizedBox(width: 8),
-            ],
-            Expanded(
-              child: ImageWidget(
-                title: AppString.houseImg,
-                imgFile:
-                    bloc.uploadHousePath.path.isEmpty
-                        ? File("")
-                        : File(bloc.uploadHousePath.path),
-                onPressed: () {},
+              if (bloc.kycDoc3Value.value == "Rented") ...[
+                Expanded(
+                  child: ImageWidget(
+                    star: AppString.star,
+                    title: AppString.nocDoc,
+                    imgFile:
+                        bloc.nocDocPath.path.isEmpty
+                            ? File("")
+                            : File(bloc.nocDocPath.path),
+                    onPressed: () {},
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ],
+              Expanded(
+                child: ImageWidget(
+                  title: AppString.houseImg,
+                  imgFile:
+                      bloc.uploadHousePath.path.isEmpty
+                          ? File("")
+                          : File(bloc.uploadHousePath.path),
+                  onPressed: () {},
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         PopWidget.divider(context: context),
         _buildPopItem(AppString.meterType, bloc.meterTypeVal.name, context),
         PopWidget.itemBuilder(
+          star:  AppString.star,
           context: context,
           textName: AppString.initDepositStatus,
           textValue:
@@ -410,6 +423,7 @@ class RegistrationPreviewPage extends StatelessWidget {
             )
             : Container(),
         PopWidget.itemBuilder(
+          star:  AppString.star,
           context: context,
           textName: AppString.schemeType,
           textValue:
@@ -418,6 +432,7 @@ class RegistrationPreviewPage extends StatelessWidget {
                   : bloc.schemeTypeValue.depositName,
         ),
         PopWidget.itemBuilder(
+          star:  AppString.star,
           context: context,
           textName: AppString.schemeAmt,
           textValue:

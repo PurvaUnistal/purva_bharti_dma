@@ -1,362 +1,414 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_connection_type_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_name_title_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_property_type_model.dart';
 
 class RegistrationFormHelper {
-  static Future<dynamic> textFieldValidationCheck({
+  static bool _blank(String? v) => v == null || v.trim().isEmpty;
+
+  static bool _fail(BuildContext context, String field) {
+    Utils.errorSnackBar(msg: "The $field field is required.", context: context);
+    return true;
+  }
+
+  /// Validates the form and, if valid, returns a [SaveRegistrationFormModel].
+  /// Returns null (and shows a snackbar) on the first validation failure.
+  ///
+  /// Mandatory-field rules (per BRD change request):
+  ///   MANDATORY     : Registration type, Grid (charge area), Area, Mobile,
+  ///                   First Name, Ward Number, House Number, District,
+  ///                   Pin Code, Location, KYC1 + number + front image,
+  ///                   Meter Type, Deposit Status, Scheme Type
+  ///   NON-MANDATORY : Title, Last Name, DOB, Guardian Name, Floor Number,
+  ///                   Building Number, Colony/Society/Apartment,
+  ///                   Lane/Street Name, Town
+  ///
+  /// Client rules:
+  ///  - AGCL   : registration type from [regFrom]; Mode of Deposit + cheque
+  ///             section NOT validated (dropdown hidden). Ownership proof
+  ///             comes from [addressProof].
+  ///  - others : registration type from [registrationType]; Mode of Deposit
+  ///             validated, cheque fields when mode == Cheque.
+  static Future<SaveRegistrationFormModel?> textFieldValidationCheck({
     required BuildContext context,
-    required String registrationType,
-    required String applicationNumber,
+    required bool isAGCL,
     required String reasonRegistration,
-    required String chargeId,
-    required String areaId,
-    required String mobileNumber,
-    required String altMobileNo,
-    required String nameTitle,
-    required String firstName,
-    required String middleName,
-    required String lastName,
+    required String applicationNumber,
+    required String mobile,
+    required String altMobile,
+    required String first,
+    required String middle,
+    required String last,
     required String dob,
-    required String guardianType,
     required String guardianName,
     required String emailId,
-    required String propertyCategoryId,
-    required String propertyClassId,
     required String buildingNumber,
     required String floorNumber,
     required String houseNumber,
-    required String colonySocietyApartment,
-    required String streetName,
+    required String colony,
+    required String street,
     required String town,
-    required String districtId,
     required String wardNumber,
     required String premiseType,
-    required String meterType,
-    required String houseHoldType,
-    required String nearestLandmark,
     required String pinCode,
-    required String latitude,
-    required String longitude,
-    required String residentStatus,
-    required String noOfKitchen,
-    required String noOfBathroom,
-    required String existingCookingFuel,
-    required String noOfFamilyMembers,
-    required String idProof,
-    required String idProofNo,
+    required String numberKitchen,
+    required String numberBathroom,
+    required String familyMember,
+    required String nearestLandmark,
+    required String kyc1Number,
+    required String kyc2Number,
+    required String kyc3Number,
+    required String custBankAccNumber,
+    required String custIfscCode,
+    required String custBankAdd,
+    required String reasonDepositSts,
+    required String schemeAmount,
+    required String chequeNo,
+    required String chequeDate,
+    required String chequeAccountNo,
+    required String chequeMicrNo,
+    required String lat,
+    required String long,
+    required String custBankName,
+    required String paymentBankName,
+    required GetChargeAreaListModel chargeArea,
+    required GetAllAreaModel area,
+    required GetPropertyCategoryModel propertyCategory,
+    required GetPropertyClassModel propertyClass,
+    required GetNameTitleModel nameTitle,
+    required ConnectionTypeModel regFrom,
+    required ConnectionTypeModel meterType,
+    required GetAllDistrictModel allDistrict,
+    required GetAllDepositOfflineModel schemeType,
+    required GetNotInterestedModel registrationType,
+    required GetAcceptConversionPolicyModel conversionPolicy,
+    required GetAcceptExtraFittingCostModel extraFitting,
+    required GetSocietyAllowModel societyAllow,
+    required GetGuardianTypeModel guardianType,
+    required GetResidentStatusModel residentStatus,
+    required PropertyTypeModel houseHoldType,
+    required GetExistingCookingFuelModel existingCookingFuel,
+    required GetIdentityProofModel kycDoc1,
+    required GetOwnershipProofModel kycDoc2,
+    required GetOwnershipProofModel addressProof,
+    required GetKycDocModel kycDoc3,
+    required GetEBillingModel preferredBill,
+    required GetInitialDepositStatusModel initialDepositStatus,
+    required GetModeOfDepositModel modeDeposit,
+    required BankNameListModel bankName,
+    required File customerConsent,
+    required File canceledCheque,
     required File idFrontPath,
     required File idBackPath,
-    required String addProof,
-    required String addProofNo,
     required File addFrontPath,
     required File addBackPath,
-    required String ownershipProperty,
-    required File ownerConsent,
-    required File customerConsent,
-    required String eBillingModel,
-    required String bankNameOfBank,
-    required String bankAccountNumber,
-    required String bankIfscCode,
-    required String bankAddress,
     required File nocDocPath,
-    required File customerPath,
-    required File housePath,
-    required String acceptConversionPolicy,
-    required String acceptExtraFittingCost,
-    required String societyAllowedMdpe,
-    required String depositStatus,
-    required String reasonDeposit,
-    required String schemeType,
-    required String depositAmt,
-    required String modeDepositValue,
-    required String chqNo,
-    required String chqDate,
-    required String chqBank,
-    required String chequeAccountNo,
-    required String chequeMICRNo,
-    required File chequePath,
-    required File canceledCheque,
-    required String kyc3Number,
     required File nocFrontPath,
     required File nocBackPath,
-
+    required File uploadCustomerPath,
+    required File uploadHousePath,
+    required File ownerConsentPath,
+    required File customerConsentPath,
+    required File cancelChequePath,
+    required File chequePath,
   }) async {
     try {
-      if (registrationType == "") {
-        Utils.errorSnackBar(
-            msg: "The Registration field is required.", context: context);
-        return null;
-      } else if (chargeId == "") {
-        Utils.errorSnackBar(
-            msg: 'The Charge Area field is required.', context: context);
-        return null;
-      } else if (areaId == "") {
-        Utils.errorSnackBar(
-            msg: 'The Area field is required.', context: context);
-        return null;
-      } else if (mobileNumber.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "THe Mobile Number field is required.", context: context);
-        return null;
-      } else if (nameTitle == "") {
-        Utils.errorSnackBar(
-            msg: "The Title field is required.", context: context);
-        return null;
-      } else if (firstName.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "The First Name field is required.", context: context);
-        return null;
-      } else if (lastName.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "The Last Name field is required.", context: context);
-        return null;
-      }  else if (dob.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "The DOB field is required.", context: context);
-        return null;
-      }else if (registrationType == "1") {
-        if (guardianType == "") {
-          Utils.errorSnackBar(
-              msg: "The Guardian Type field is required.", context: context);
-          return null;
-        } else if (guardianName.isEmpty) {
-          Utils.errorSnackBar(
-              msg: "The Guardian Name field is required.", context: context);
-          return null;
-        } else if (propertyCategoryId == "") {
-          Utils.errorSnackBar(
-              msg: "The Property Category field is required.",
-              context: context);
-          return null;
-        } else if (propertyClassId == "") {
-          Utils.errorSnackBar(
-              msg: "The Property Class Id field is required.",
-              context: context);
+      // ---------- resolve registration type per client ----------
+      final String regTypeKey = isAGCL
+          ? (regFrom.key?.toString() ?? "")
+          : (registrationType.key?.toString() ?? "");
+      final String regTypeValue = isAGCL
+          ? (regFrom.name?.toString() ?? "")
+          : (registrationType.value?.toString() ?? "");
+
+      final bool requiresFullDetails = regTypeValue != "Future Registration";
+
+      // ---------- basic details ----------
+      if (_blank(regTypeKey)) {
+        if (_fail(context, isAGCL ? "Registration From" : "Registration")) {
           return null;
         }
       }
-      if (houseNumber.isEmpty) {
+      // Charge Area is labelled "Grid" per BRD.
+      if (_blank(chargeArea.gid?.toString())) {
+        if (_fail(context, "Grid")) return null;
+      }
+      if (_blank(area.gid?.toString())) {
+        if (_fail(context, "Area")) return null;
+      }
+      if (_blank(mobile)) {
+        if (_fail(context, "Mobile Number")) return null;
+      }
+      if (mobile.trim().length != 10) {
         Utils.errorSnackBar(
-            msg: "The House Number field is required.", context: context);
-        return null;
-      } else if (colonySocietyApartment.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "The Colony/Society/Apartment field is required.",
+            msg: "Please enter a valid 10 digit Mobile Number.",
             context: context);
         return null;
-      } else if (streetName.isEmpty) {
+      }
+      // Title -> NON-MANDATORY (check removed)
+      // DOB   -> NON-MANDATORY (check removed)
+      if (_blank(first)) {
+        if (_fail(context, "First Name")) return null;
+      }
+      // Last Name -> NON-MANDATORY (check removed)
+
+      // ---------- guardian / property (skipped for Future Registration) ----------
+      if (requiresFullDetails) {
+        if (_blank(guardianType.key?.toString())) {
+          if (_fail(context, "Guardian Type")) return null;
+        }
+        // Guardian Name -> NON-MANDATORY (check removed)
+      }
+      // Property dropdowns show for AGCL always, others only for LMC.
+      final bool showsPropertyDropdowns =
+          isAGCL || regTypeValue == "Registration For LMC";
+      if (showsPropertyDropdowns) {
+        if (_blank(propertyCategory.id?.toString())) {
+          if (_fail(context, "Property Category")) return null;
+        }
+        if (_blank(propertyClass.id?.toString())) {
+          if (_fail(context, "Property Class")) return null;
+        }
+      }
+
+      // ---------- address ----------
+      // Floor Number    -> NON-MANDATORY
+      // Building Number -> NON-MANDATORY
+      if (_blank(houseNumber)) {
+        if (_fail(context, "House Number")) return null;
+      }
+      // Colony/Society/Apartment -> NON-MANDATORY (check removed)
+      // Lane/Street Name         -> NON-MANDATORY (check removed)
+      // Town                     -> NON-MANDATORY
+      if (_blank(allDistrict.id?.toString())) {
+        if (_fail(context, "District")) return null;
+      }
+      // Ward Number -> MANDATORY (new)
+      if (_blank(wardNumber)) {
+        if (_fail(context, "Ward Number")) return null;
+      }
+      if (_blank(pinCode)) {
+        if (_fail(context, "Pin Code")) return null;
+      }
+      if (pinCode.trim().length != 6) {
         Utils.errorSnackBar(
-            msg: "The Lane/Street Name field is required.", context: context);
+            msg: "Please enter a valid 6 digit Pin Code.", context: context);
         return null;
-      } else if (districtId == "") {
-        Utils.errorSnackBar(
-            msg: "The District field is required.", context: context);
-        return null;
-      } else if (pinCode.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "The Pin Code field is required. ", context: context);
-        return null;
-      } else if (latitude.isEmpty && longitude.isEmpty) {
+      }
+      if (_blank(lat) || _blank(long)) {
         Utils.errorSnackBar(
             msg:
-                "Location access denied. Please enable location services and grant location permissions in app settings to proceed.",
+            "Location access denied. Please enable location services and grant location permissions in app settings to proceed.",
             context: context);
         return null;
-      } else if (noOfKitchen.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "The No. of Kitchen field is required.", context: context);
-        return null;
-      } else if (noOfBathroom.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "The No. of Bathroom field is required.", context: context);
-        return null;
-      } else if (existingCookingFuel == "") {
-        Utils.errorSnackBar(
-            msg: "The Cooking Fuel field is required.", context: context);
-        return null;
-      } else if (noOfFamilyMembers.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "The No. of Family Members field is required.",
-            context: context);
-        return null;
-      } else if (idProof == "") {
-        Utils.errorSnackBar(
-            msg: "The KYC(Identification Proof) field is required.",
-            context: context);
-        return null;
-      } else if (idProofNo.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "The KYC(Identification Proof)Number field is required.",
-            context: context);
-        return null;
-      } else if (idFrontPath.path.isEmpty) {
-        Utils.errorSnackBar(
-            msg: "The Id Proof Front Image field is required.",
-            context: context);
-        return null;
-      } else if (registrationType == "1") {
-        if (addProof == "") {
-          Utils.errorSnackBar(
-              msg: "The KYC (Address Proof) field is required.",
-              context: context);
-          return null;
-        } else if (addProofNo.isEmpty) {
-          Utils.errorSnackBar(
-              msg: "The KYC (Address Proof)Number field is required.",
-              context: context);
-          return null;
-        } else if (addFrontPath.path.isEmpty) {
-          Utils.errorSnackBar(
-              msg: "The Address Proof Front Image field is required.",
-              context: context);
-          return null;
-        } else if (ownershipProperty == "") {
-          Utils.errorSnackBar(msg: "The Ownership Type Property field is required.",
-              context: context);
-          return null;
-        } else if (ownershipProperty == "Rented") {
-          if (nocDocPath.path.isEmpty) {
-            Utils.errorSnackBar(msg: "The NOC Document field is required.", context: context);
-            return null;
-          }
-        } else if (acceptConversionPolicy == "") {
-          Utils.errorSnackBar(msg: "The Accept Conversion Policy field is required.", context: context);
-          return null;
-        } else if (acceptExtraFittingCost == "") {
-          Utils.errorSnackBar(
-              msg: "The Accept Extra Fitting Cost field is required.",
-              context: context);
-          return null;
-        } else if (societyAllowedMdpe == "") {
-          Utils.errorSnackBar(
-              msg: "The Society Allows MDPE field is required.",
-              context: context);
-          return null;
-        } else if (depositStatus == "") {
-          Utils.errorSnackBar(msg: "The Deposit Status field is required.", context: context);
-          return null;
-        } else if (schemeType == "") {
-          Utils.errorSnackBar(msg: "The Scheme Type field is required.", context: context);
-          return null;
+      }
+
+      // ---------- household (hidden for Future Registration) ----------
+      if (requiresFullDetails) {
+        if (_blank(numberKitchen)) {
+          if (_fail(context, "No. of Kitchen")) return null;
         }
-        if (modeDepositValue == "") {
-          Utils.errorSnackBar(msg: "The Mode Of Deposit field is required.", context: context);
-          return null;
-        } else if (modeDepositValue == "1") {
-          if (chqNo.isEmpty) {
-            Utils.errorSnackBar(msg: "The Cheque Number field is required.", context: context);
-            return null;
-          } else if (chqDate.isEmpty) {
-            Utils.errorSnackBar(
-                msg: "The Cheque date field is required.", context: context);
-            return null;
-          } else if (chqBank.isEmpty || chqBank == "") {
-            Utils.errorSnackBar(
-                msg: "The Cheque Bank Name field is required.",
-                context: context);
-            return null;
-          } else if (chequeAccountNo.isEmpty) {
-            Utils.errorSnackBar(
-                msg: "The Cheque Bank Account Number field is required.",
-                context: context);
-            return null;
-          } else if (chequeMICRNo.isEmpty) {
-            Utils.errorSnackBar(
-                msg: "The Cheque MICR Code field is required.",
-                context: context);
-            return null;
-          } else if (chequePath.path.isEmpty) {
-            Utils.errorSnackBar(
-                msg: "The Cheque Image field is required.", context: context);
-            return null;
+        if (_blank(numberBathroom)) {
+          if (_fail(context, "No. of Bathroom")) return null;
+        }
+        if (_blank(existingCookingFuel.key?.toString())) {
+          if (_fail(context, "Cooking Fuel")) return null;
+        }
+        if (_blank(familyMember)) {
+          if (_fail(context, "No. of Family Members")) return null;
+        }
+      }
+
+      // ---------- KYC: identity proof (always required) ----------
+      if (_blank(kycDoc1.key?.toString())) {
+        if (_fail(context, "KYC (Identification Proof)")) return null;
+      }
+      if (_blank(kyc1Number)) {
+        if (_fail(context, "KYC (Identification Proof) Number")) return null;
+      }
+      if (idFrontPath.path.isEmpty) {
+        if (_fail(context, "Id Proof Front Image")) return null;
+      }
+
+      // ---------- full-detail KYC / policy / deposit ----------
+      if (requiresFullDetails) {
+        // Address Proof - Required only for non-AGCL clients
+        if (!isAGCL) {
+          if (_blank(kycDoc2.key?.toString())) {
+            if (_fail(context, "KYC (Address Proof)")) return null;
+          }
+
+          if (_blank(kyc2Number)) {
+            if (_fail(context, "KYC (Address Proof) Number")) return null;
+          }
+
+          if (addFrontPath.path.isEmpty) {
+            if (_fail(context, "Address Proof Front Image")) return null;
+          }
+        }
+
+        // Ownership proof: AGCL uses addressProof dropdown, others kycDoc3.
+        if (isAGCL) {
+          if (_blank(addressProof.key?.toString())) {
+            if (_fail(context, "Ownership Proof")) return null;
+          }
+        } else {
+          if (_blank(kycDoc3.key?.toString())) {
+            if (_fail(context, "Ownership Type Property")) return null;
+          }
+        }
+
+        // NOC document only when property is Rented.
+        final String ownership = kycDoc3.value?.toString() ?? "";
+        if (ownership == "Rented" && nocDocPath.path.isEmpty) {
+          if (_fail(context, "NOC Document")) return null;
+        }
+
+        // policies
+        if (_blank(conversionPolicy.key?.toString())) {
+          if (_fail(context, "Accept Conversion Policy")) return null;
+        }
+        if (_blank(extraFitting.key?.toString())) {
+          if (_fail(context, "Accept Extra Fitting Cost")) return null;
+        }
+        if (_blank(societyAllow.key?.toString())) {
+          if (_fail(context, "Society Allows MDPE")) return null;
+        }
+
+        // deposit section
+        // Meter Type -> MANDATORY (was previously allowing empty submit)
+        if (_blank(meterType.key?.toString())) {
+          if (_fail(context, "Meter Type")) return null;
+        }
+        if (_blank(initialDepositStatus.key?.toString())) {
+          if (_fail(context, "Deposit Status")) return null;
+        }
+        // Scheme Type -> MANDATORY (was previously allowing empty submit)
+        if (_blank(schemeType.depositTypesId?.toString())) {
+          if (_fail(context, "Scheme Type")) return null;
+        }
+
+        // Mode of Deposit hidden for AGCL -> validate only for others.
+        if (!isAGCL) {
+          final String depositModeKey = modeDeposit.key?.toString() ?? "";
+          final String depositModeValue = modeDeposit.value?.toString() ?? "";
+          if (_blank(depositModeKey)) {
+            if (_fail(context, "Mode Of Deposit")) return null;
+          }
+          if (depositModeValue == "Cheque") {
+            if (_blank(chequeNo)) {
+              if (_fail(context, "Cheque Number")) return null;
+            }
+            if (_blank(chequeDate)) {
+              if (_fail(context, "Cheque Date")) return null;
+            }
+            if (_blank(paymentBankName)) {
+              if (_fail(context, "Cheque Bank Name")) return null;
+            }
+            if (_blank(chequeAccountNo)) {
+              if (_fail(context, "Cheque Bank Account Number")) return null;
+            }
+            if (_blank(chequeMicrNo)) {
+              if (_fail(context, "Cheque MICR Code")) return null;
+            }
+            if (chequePath.path.isEmpty) {
+              if (_fail(context, "Cheque Image")) return null;
+            }
           }
         }
       }
-      String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
-      String? dmaUserId = await AppConfig.instanceInit()?.loginData.user!.id!;
-      String? dmaUserName = await AppConfig.instanceInit()?.loginData.user!.name!;
-      SaveRegistrationFormModel custRegSyncStore = SaveRegistrationFormModel(
+
+      // ---------- all good: build the model ----------
+      final String? schema = AppConfig.instanceInit()?.loginData.user?.schema;
+      final String? dmaUserId = AppConfig.instanceInit()?.loginData.user?.id;
+      final String? dmaUserName =
+          AppConfig.instanceInit()?.loginData.user?.name;
+
+      return SaveRegistrationFormModel(
         schema: schema,
         dmaUserId: dmaUserId,
         dmaUserName: dmaUserName,
-        registrationType: registrationType,
-        acceptConversionPolicy: acceptConversionPolicy,
-        acceptExtraFittingCost: acceptExtraFittingCost,
-        societyAllowedMdpe: societyAllowedMdpe,
-        areaId: areaId,
-        chargeArea: chargeId,
-        mobileNumber: mobileNumber,
-        alternateMobile: altMobileNo,
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName,
-        guardianType: guardianType,
+        registrationType: regTypeKey,
+        regFromVal: regFrom.key?.toString() ?? "",
+        acceptConversionPolicy: conversionPolicy.key?.toString() ?? "",
+        acceptExtraFittingCost: extraFitting.key?.toString() ?? "",
+        societyAllowedMdpe: societyAllow.key?.toString() ?? "",
+        areaId: area.gid?.toString() ?? "",
+        chargeArea: chargeArea.gid?.toString() ?? "",
+        mobileNumber: mobile,
+        alternateMobile: altMobile,
+        firstName: first,
+        middleName: middle,
+        lastName: last,
+        guardianType: guardianType.key?.toString() ?? "",
         guardianName: guardianName,
         emailId: emailId,
-        propertyCategoryId: propertyCategoryId,
-        propertyClassId: propertyClassId,
+        propertyCategoryId: propertyCategory.id?.toString() ?? "",
+        propertyClassId: propertyClass.id?.toString() ?? "",
         buildingNumber: buildingNumber,
         floorNumber: floorNumber,
         houseNumber: houseNumber,
-        colonySocietyApartment: colonySocietyApartment,
-        streetName: streetName,
+        colonySocietyApartment: colony,
+        streetName: street,
         town: town,
-        districtId: districtId,
+        districtId: allDistrict.id?.toString() ?? "",
         pinCode: pinCode,
-        residentStatus: residentStatus,
-        noOfKitchen: noOfKitchen,
-        noOfBathroom: noOfBathroom,
-        existingCookingFuel: existingCookingFuel,
-        noOfFamilyMembers: noOfFamilyMembers,
-        latitude: latitude,
-        longitude: longitude,
+        residentStatus: residentStatus.key?.toString() ?? "",
+        noOfKitchen: numberKitchen,
+        noOfBathroom: numberBathroom,
+        existingCookingFuel: existingCookingFuel.key?.toString() ?? "",
+        noOfFamilyMembers: familyMember,
+        latitude: lat,
+        longitude: long,
         nearestLandmark: nearestLandmark,
-        kycDocument1: idProof,
-        kycDocument1Number: idProofNo,
-        kycDocument2: addProof,
-        kycDocument2Number: addProofNo,
-        kycDocument3: ownershipProperty,
-        eBillingModel: eBillingModel,
-        bankNameOfBank: bankNameOfBank,
-        bankAccountNumber: bankAccountNumber,
-        bankIfscCode: bankIfscCode,
-        bankAddress: bankAddress,
-        initialDepositeStatus: depositStatus,
-        noInitialDepositStatusReason: reasonDeposit,
-        schemeType: schemeType,
-        schemeTypeAmount: depositAmt,
-        modeOfDeposite: modeDepositValue,
-        chequeNumber: chqNo,
-        chequeDepositDate: chqDate,
-        payementBankName: chqBank,
+        kycDocument1: kycDoc1.key?.toString() ?? "",
+        kycDocument1Number: kyc1Number,
+        kycDocument2: kycDoc2.key?.toString() ?? "",
+        kycDocument2Number: kyc2Number,
+        kycDocument3: isAGCL
+            ? (addressProof.key?.toString() ?? "")
+            : (kycDoc3.key?.toString() ?? ""),
+        kycDocument3Number: kyc3Number,
+        eBillingModel: preferredBill.key?.toString() ?? "",
+        bankNameOfBank: custBankName,
+        bankAccountNumber: custBankAccNumber,
+        bankIfscCode: custIfscCode,
+        bankAddress: custBankAdd,
+        initialDepositeStatus: initialDepositStatus.key?.toString() ?? "",
+        noInitialDepositStatusReason: reasonDepositSts,
+        schemeType: schemeType.depositTypesId?.toString() ?? "",
+        schemeTypeAmount: schemeAmount,
+        modeOfDeposite: modeDeposit.key?.toString() ?? "",
+        chequeNumber: chequeNo,
+        chequeDepositDate: chequeDate,
+        payementBankName: paymentBankName,
         chequeBankAccount: chequeAccountNo,
-        chequeMicrAccount: chequeMICRNo,
-        idBackPath1: idBackPath.path,
-        addBackPath2: addBackPath.path,
-        nocBackPath3: nocBackPath.path,
+        chequeMicrAccount: chequeMicrNo,
         idFrontPath1: idFrontPath.path,
+        idBackPath1: idBackPath.path,
         addFrontPath2: addFrontPath.path,
+        addBackPath2: addBackPath.path,
         nocFrontPath3: nocFrontPath.path,
-        uploadHousePhoto: housePath.path,
-        uploadCustomerPhoto: customerPath.path,
+        nocBackPath3: nocBackPath.path,
+        uploadHousePhoto: uploadHousePath.path,
+        uploadCustomerPhoto: uploadCustomerPath.path,
         customerConsent: customerConsent.path,
-        ownerConsent: ownerConsent.path,
+        ownerConsent: ownerConsentPath.path,
         canceledChequePhoto: canceledCheque.path,
         chequePhoto: chequePath.path,
         reasonRegistration: reasonRegistration,
         applicationNumber: applicationNumber,
-        nameTitle: nameTitle,
+        nameTitle: nameTitle.id?.toString() ?? "",
         dob: dob,
         wardNumber: wardNumber,
         premiseType: premiseType,
-        reasonDeposit: reasonDeposit,
-        houseHoldType: houseHoldType,
-        meterType: meterType,
-        kycDocument3Number: kyc3Number,
+        reasonDeposit: reasonDepositSts,
+        houseHoldType: houseHoldType.id?.toString() ?? "",
+        meterType: meterType.key?.toString() ?? "",
         nocDocPath: nocDocPath.path,
-
       );
-      return custRegSyncStore;
     } catch (e) {
       log("textFieldValidationCheck-->${e.toString()}");
       Utils.errorSnackBar(msg: e.toString(), context: context);
@@ -373,108 +425,23 @@ class RegistrationFormHelper {
     try {
       final hiveBox = await HiveDataBase.registrationFormBox;
       if (hiveBox == null) {
-        Utils.errorSnackBar(msg: "Local database not available", context: context);
+        Utils.errorSnackBar(
+            msg: "Local database not available", context: context);
         return;
       }
-      SaveRegistrationFormModel entry = SaveRegistrationFormModel(
-        dmaUserName: custRegSyncStore.dmaUserName ?? "",
-        dmaUserId: custRegSyncStore.dmaUserId ?? "",
-        schema: custRegSyncStore.schema ?? "",
-        registrationType: custRegSyncStore.registrationType ?? "",
-        acceptConversionPolicy: custRegSyncStore.acceptConversionPolicy ?? "",
-        acceptExtraFittingCost: custRegSyncStore.acceptExtraFittingCost ?? "",
-        societyAllowedMdpe: custRegSyncStore.societyAllowedMdpe ?? "",
-        chargeArea: custRegSyncStore.chargeArea ?? "",
-        areaId: custRegSyncStore.areaId ?? "",
-        mobileNumber: custRegSyncStore.mobileNumber ?? "",
-        firstName: custRegSyncStore.firstName ?? "",
-        middleName: custRegSyncStore.middleName ?? "",
-        lastName: custRegSyncStore.lastName ?? "",
-        guardianType: custRegSyncStore.guardianType ?? "",
-        guardianName: custRegSyncStore.guardianName ?? "",
-        emailId: custRegSyncStore.emailId ?? "",
-        propertyCategoryId: custRegSyncStore.propertyCategoryId ?? "",
-        propertyClassId: custRegSyncStore.propertyClassId ?? "",
-        buildingNumber: custRegSyncStore.buildingNumber ?? "",
-        houseNumber: custRegSyncStore.houseNumber ?? "",
-        colonySocietyApartment: custRegSyncStore.colonySocietyApartment ?? "",
-        streetName: custRegSyncStore.streetName ?? "",
-        town: custRegSyncStore.town ?? "",
-        districtId: custRegSyncStore.districtId ?? "",
-        pinCode: custRegSyncStore.pinCode ?? "",
-        residentStatus: custRegSyncStore.residentStatus ?? "",
-        noOfKitchen: custRegSyncStore.noOfKitchen ?? "",
-        noOfBathroom: custRegSyncStore.noOfBathroom ?? "",
-        noOfFamilyMembers: custRegSyncStore.noOfFamilyMembers ?? "",
-        existingCookingFuel: custRegSyncStore.existingCookingFuel ?? "",
-        latitude: custRegSyncStore.latitude ?? "",
-        longitude: custRegSyncStore.longitude ?? "",
-        nearestLandmark: custRegSyncStore.nearestLandmark ?? "",
-        kycDocument1: custRegSyncStore.kycDocument1 ?? "",
-        kycDocument1Number: custRegSyncStore.kycDocument1Number ?? "",
-        kycDocument2: custRegSyncStore.kycDocument2 ?? "",
-        kycDocument2Number: custRegSyncStore.kycDocument2Number ?? "",
-        kycDocument3: custRegSyncStore.kycDocument3 ?? "",
-        kycDocument3Number: custRegSyncStore.kycDocument3Number ?? "",
-        eBillingModel: custRegSyncStore.eBillingModel ?? "",
-        bankNameOfBank: custRegSyncStore.bankNameOfBank ?? "",
-        bankAccountNumber: custRegSyncStore.bankAccountNumber ?? "",
-        bankIfscCode: custRegSyncStore.bankIfscCode ?? "",
-        bankAddress: custRegSyncStore.bankAddress ?? "",
-        initialDepositeStatus: custRegSyncStore.initialDepositeStatus ?? "",
-        schemeType: custRegSyncStore.schemeType ?? "",
-        schemeTypeAmount: custRegSyncStore.schemeTypeAmount ?? "",
-        modeOfDeposite: custRegSyncStore.modeOfDeposite ?? "",
-        chequeNumber: custRegSyncStore.chequeNumber ?? "",
-        chequeDepositDate: custRegSyncStore.chequeDepositDate ?? "",
-        payementBankName: custRegSyncStore.payementBankName ?? "",
-        chequeBankAccount: custRegSyncStore.chequeBankAccount ?? "",
-        noInitialDepositStatusReason: custRegSyncStore.noInitialDepositStatusReason ?? "",
-        alternateMobile: custRegSyncStore.alternateMobile ?? "",
-        chequeMicrAccount: custRegSyncStore.chequeMicrAccount ?? "",
-        // housePhoto: custRegSyncStore.housePhoto ?? "",
-        // ownerConsentText: custRegSyncStore.ownerConsentText ?? "",
-        // reasonForHold: custRegSyncStore.reasonForHold ?? "",
-        idFrontPath1: custRegSyncStore.idFrontPath1 ?? "",
-        idBackPath1: custRegSyncStore.idBackPath1 ?? "",
-        addFrontPath2: custRegSyncStore.addFrontPath2 ?? "",
-        addBackPath2: custRegSyncStore.addBackPath2 ?? "",
-        nocFrontPath3: custRegSyncStore.nocFrontPath3 ?? "",
-        nocBackPath3: custRegSyncStore.nocBackPath3 ?? "",
-        uploadCustomerPhoto: custRegSyncStore.uploadCustomerPhoto ?? "",
-        uploadHousePhoto: custRegSyncStore.uploadHousePhoto ?? "",
-        customerConsent: custRegSyncStore.customerConsent ?? "",
-        ownerConsent: custRegSyncStore.ownerConsent ?? "",
-        canceledChequePhoto: custRegSyncStore.canceledChequePhoto ?? "",
-        chequePhoto: custRegSyncStore.chequePhoto ?? "",
-        customerConsentPhoto: custRegSyncStore.customerConsentPhoto ?? "",
-        reasonRegistration: custRegSyncStore.reasonRegistration ?? "",
-        applicationNumber: custRegSyncStore.applicationNumber ?? "",
-        dob: custRegSyncStore.dob,
-        floorNumber: custRegSyncStore.floorNumber,
-        houseHoldType: custRegSyncStore.houseHoldType,
-        isSingleServerLoader: custRegSyncStore.isSingleServerLoader,
-        meterType: custRegSyncStore.meterType,
-        nameTitle: custRegSyncStore.nameTitle,
-        nocDocPath: custRegSyncStore.nocDocPath,
-        premiseType: custRegSyncStore.premiseType,
-        reasonDeposit: custRegSyncStore.reasonDeposit,
-        wardNumber: custRegSyncStore.wardNumber,
-        regFromVal: custRegSyncStore.regFromVal ?? "",
-
-      );
       if (isUpdate) {
-        await hiveBox.putAt(index, entry);
-        Utils.successSnackBar(msg: 'Record Updated Successfully', context: context);
+        await hiveBox.putAt(index, custRegSyncStore);
+        Utils.successSnackBar(
+            msg: 'Record Updated Successfully', context: context);
       } else {
         if (hiveBox.length < 15) {
-          log("custRegSyncAdd${entry}");
-          await hiveBox.add(entry);
+          await hiveBox.add(custRegSyncStore);
           Utils.successSnackBar(
               msg: "Data Saved Successfully", context: context);
         } else {
           Utils.errorSnackBar(
-              msg: 'Please upload previous records before adding more.', context: context);
+              msg: 'Please upload previous records before adding more.',
+              context: context);
         }
       }
     } catch (e) {
@@ -482,5 +449,4 @@ class RegistrationFormHelper {
       log("addCustRegSyncLocalDB Error: ${e.toString()}");
     }
   }
-
 }

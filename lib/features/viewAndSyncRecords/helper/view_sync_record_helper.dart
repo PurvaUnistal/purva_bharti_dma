@@ -10,6 +10,8 @@ import 'package:pbg_app/features/RegistrationForm/domain/model/save_registration
 import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/send_registration_offline_model.dart';
 
 class ViewSyncRecordHelper {
+
+
   static Future<SendRegistrationOfflineModel?> sendData(
       {required BuildContext context,
       required SaveRegistrationFormModel custRegSyncData}) async {
@@ -160,6 +162,11 @@ class ViewSyncRecordHelper {
           ]);
       log("res-->${res}");
       if (res != null) {
+        if (res['errors'] != null) {
+          String errorMsg = _extractErrorMessage(res['errors']);
+          Utils.errorSnackBar(msg: errorMsg, context: context);
+          return null;
+        }
         return SendRegistrationOfflineModel.fromJson(res);
       }else{
         print("no response");
@@ -171,7 +178,27 @@ class ViewSyncRecordHelper {
     }
     return null;
   }
-
+  static String _extractErrorMessage(dynamic errors) {
+    try {
+      List<String> messages = [];
+      if (errors is List) {
+        for (var item in errors) {
+          if (item is Map) {
+            item.forEach((key, value) => messages.add(value.toString()));
+          } else {
+            messages.add(item.toString());
+          }
+        }
+      } else if (errors is Map) {
+        errors.forEach((key, value) => messages.add(value.toString()));
+      } else {
+        messages.add(errors.toString());
+      }
+      return messages.join("\n");
+    } catch (_) {
+      return "Something went wrong. Please try again.";
+    }
+  }
   static Future<bool> isInternetConnected() async {
     bool isConnect = false;
     try {
