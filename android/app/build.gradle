@@ -40,43 +40,17 @@ android {
         prodPBGPL {
             dimension "app"
             applicationIdSuffix ".unistal.pbg_app"
-            resValue "string", "app_name", "PBGPL DMA"
+            resValue "string", "app_name", "PBG DMA"
             manifestPlaceholders = [
                     appIcon: "@mipmap/pbg_logo",
                     appIconRound: "@mipmap/pbg_logo"
             ]
-            def keystorePropertiesFile = rootProject.file('key.properties')
+            def keystorePropertiesFile = rootProject.file('pbg-dma.properties')
             if (keystorePropertiesFile.exists()) {
                 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
             }
-            versionCode 1
-            versionName "1.0.0-PBGPL DMA"
-        }
-        prodMGL {
-            dimension "app"
-            applicationIdSuffix ".unistal.mgl.dma"
-            resValue "string", "app_name", "MGL DMA"
-            manifestPlaceholders = [
-                    appIcon: "@mipmap/mgl_logo",
-                    appIconRound: "@mipmap/mgl_logo"
-            ]
-            def keystorePropertiesFile = rootProject.file('mgl_key.properties')
-            if (keystorePropertiesFile.exists()) {
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-            }
-            versionCode 1
-            versionName "1.0.0-MGL DMA"
-        }
-        prodHPOIL {
-            dimension "app"
-            applicationIdSuffix ".unistal.hpoil.dma"
-            resValue "string", "app_name", "HPOIL DMA"
-            manifestPlaceholders = [
-                    appIcon: "@mipmap/hp_oil_logo",
-                    appIconRound: "@mipmap/hp_oil_logo"
-            ]
-            versionCode 1
-            versionName "1.0.0-HPOIL DMA"
+            versionCode 32
+            versionName "1.0.8-PBGPL"
         }
         prodVPPL {
             dimension "app"
@@ -99,6 +73,17 @@ android {
             ]
             versionCode 1
             versionName "1.0.0-VRPL DMA"
+        }
+        prodAGCL {
+            dimension "app"
+            applicationIdSuffix ".unistal.agcl.dma"
+            resValue "string", "app_name", "AGCL DMA"
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/agcl_logo",
+                    appIconRound: "@mipmap/agcl_logo"
+            ]
+            versionCode 1
+            versionName "1.0.0-AGCL"
         }
     }
 

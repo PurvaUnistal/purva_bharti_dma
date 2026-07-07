@@ -3,613 +3,550 @@ import 'package:geolocator/geolocator.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Service/api_server_dio.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_connection_type_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_customer_details_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_name_title_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_property_type_model.dart';
 
 class DashboardHelper {
-  static Future<GetLabelModel?> getLabelApi({
+  static Future<T?> _fetchOne<T>({
     required BuildContext context,
+    required bool online,
+    required String urlEndPoint,
+    required T Function(dynamic res) parse,
+    required String tag,
+    Box<dynamic>? box,
   }) async {
-    try {
-      final res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getLabel,
-        context: context,
-      );
-      if (res != null) {
-        GetLabelModel response = GetLabelModel.fromJson(res);
-        if (HiveDataBase.allLabelBox != null &&
-            HiveDataBase.allLabelBox!.isOpen) {
-          await HiveDataBase.allLabelBox!.clear();
-          await HiveDataBase.allLabelBox!.add(response);
-        }
-        return response;
+    if (!online) {
+      if (box != null && box.isOpen && box.isNotEmpty) {
+        return box.values.first as T;
       }
-    } catch (e) {
-      print("GetLabelModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
       return null;
     }
-    return null;
+    try {
+      final res = await ServerRequest.getData(urlEndPoint: urlEndPoint);
+      if (res == null) return null;
+
+      final T model = parse(res);
+      if (box != null && box.isOpen) {
+        await box.clear();
+        await box.add(model);
+      }
+      return model;
+    } catch (e, st) {
+      log('$tag -->$e', error: e, stackTrace: st);
+      if (context.mounted) {
+        Utils.errorSnackBar(msg: e.toString(), context: context);
+      }
+      return null;
+    }
   }
+
+  static Future<List<T>?> _fetchList<T>({
+    required BuildContext context,
+    required bool online,
+    required String urlEndPoint,
+    required List<T> Function(dynamic res) parse,
+    required String tag,
+    Box<dynamic>? box,
+  }) async {
+    if (!online) {
+      if (box != null && box.isOpen) {
+        return box.values.cast<T>().toList();
+      }
+      return null;
+    }
+    try {
+      final res = await ServerRequest.getData(urlEndPoint: urlEndPoint);
+      if (res == null) return null;
+
+      final List<T> list = parse(res);
+      if (list.isNotEmpty && box != null && box.isOpen) {
+        await box.clear();
+        await box.addAll(list);
+      }
+      return list;
+    } catch (e, st) {
+      log('$tag -->$e', error: e, stackTrace: st);
+      if (context.mounted) {
+        Utils.errorSnackBar(msg: e.toString(), context: context);
+      }
+      return null;
+    }
+  }
+
+  static String _schema() =>
+      AppConfig.instanceInit()?.loginData.user?.schema ?? '';
+
+  static Future<GetLabelModel?> getLabelApi({
+    required BuildContext context,
+    required bool online,
+  }) => _fetchOne<GetLabelModel>(
+    context: context,
+    online: online,
+    urlEndPoint: AppUrl.getLabel,
+    parse: (res) => GetLabelModel.fromJson(res),
+    box: HiveDataBase.allLabelBox,
+    tag: 'GetLabelModel',
+  );
+
+  static Future<List<T>?> fetchConstantData<T>({
+    required BuildContext context,
+    required bool online,
+    required String key,
+    required T Function(String id, dynamic value) fromEntry,
+    required Box<T> box,
+  }) => _fetchList<T>(
+    context: context,
+    online: online,
+    urlEndPoint: "${AppUrl.getConstant}?key=$key",
+    parse: (res) {
+      if (res is Map<String, dynamic>) {
+        return res.entries
+            .map((entry) => fromEntry(entry.key, entry.value))
+            .toList();
+      }
+      return [];
+    },
+    box: box,
+    tag: 'constant_$key',
+  );
 
   static Future<List<GetNotInterestedModel>?> getNotInterestedApi({
     required BuildContext context,
-  }) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.notInterested,
-        context: context,
-      );
-      if (res != null) {
-        List<GetNotInterestedModel> response = GetNotInterestedModel.mapToList(
-          res,
-        );
-        if (response.isNotEmpty) {
-          if (HiveDataBase.notInterestedBox != null &&
-              HiveDataBase.notInterestedBox!.isOpen) {
-            await HiveDataBase.notInterestedBox!.clear();
-            await HiveDataBase.notInterestedBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("GetNotInterestedModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
-  }
+    required bool online,
+  }) {
+    final box = HiveDataBase.notInterestedBox;
+    if (box == null) return Future.value(null);
 
-  static Future<List<GetInitialDepositStatusModel>?>
-  getInitialDepositStatusApi({required BuildContext context}) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.initialDepositStatus,
-        context: context,
-      );
-      if (res != null) {
-        List<GetInitialDepositStatusModel> response =
-            GetInitialDepositStatusModel.mapToList(res);
-        if (response.isNotEmpty) {
-          if (HiveDataBase.initDepositStatusBox != null &&
-              HiveDataBase.initDepositStatusBox!.isOpen) {
-            await HiveDataBase.initDepositStatusBox!.clear();
-            await HiveDataBase.initDepositStatusBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("GetInitialDepositStatusModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
-  }
-
-  static Future<List<GetAcceptExtraFittingCostModel>?> getAcceptExtraFittingCostApi({required BuildContext context}) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.acceptExtraFittingCost,
-        context: context,
-      );
-      if (res != null) {
-        List<GetAcceptExtraFittingCostModel> response =
-            GetAcceptExtraFittingCostModel.mapToList(res);
-        if (response.isNotEmpty) {
-          if (HiveDataBase.acceptExtraFittingCostBox != null &&
-              HiveDataBase.acceptExtraFittingCostBox!.isOpen) {
-            await HiveDataBase.acceptExtraFittingCostBox!.clear();
-            await HiveDataBase.acceptExtraFittingCostBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("GetAcceptExtraFittingCostModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
-  }
-
-  static Future<List<GetAcceptConversionPolicyModel>?> getAcceptConversionPolicyApi({required BuildContext context}) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.acceptConversionPolicy,
-        context: context,
-      );
-      if (res != null) {
-        List<GetAcceptConversionPolicyModel> list =
-            GetAcceptConversionPolicyModel.mapToList(res);
-        if (res.isNotEmpty) {
-          if (HiveDataBase.acceptConversionPolicyBox != null &&
-              HiveDataBase.acceptConversionPolicyBox!.isOpen) {
-            await HiveDataBase.acceptConversionPolicyBox!.clear();
-            await HiveDataBase.acceptConversionPolicyBox!.addAll(list);
-          }
-        }
-        return list;
-      }
-    } catch (e) {
-      print("GetAcceptConversionPolicyModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
-  }
-
-  static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi({required BuildContext context,}) async {
-    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getAllDistrict + schema,
-        context: context,
-      );
-      if (res != null) {
-        List<GetAllDistrictModel> list =
-            res
-                .map<GetAllDistrictModel>(
-                  (json) => GetAllDistrictModel.fromJson(json),
-                )
-                .toList();
-        if (HiveDataBase.allDistrictBox != null &&
-            HiveDataBase.allDistrictBox!.isOpen) {
-          await HiveDataBase.allDistrictBox!.clear();
-          await HiveDataBase.allDistrictBox!.addAll(list);
-        }
-
-        return list;
-      }
-    } catch (e) {
-      print("GetAllDistrictModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
-  }
-
-  static Future<List<GetResidentStatusModel>?> getResidentStatusApi({
-    required BuildContext context,
-  }) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.residentStatus,
-        context: context,
-      );
-      if (res != null) {
-        List<GetResidentStatusModel> response =
-            GetResidentStatusModel.mapToList(res);
-        if (response.isNotEmpty) {
-          if (HiveDataBase.resStatusBox != null &&
-              HiveDataBase.resStatusBox!.isOpen) {
-            await HiveDataBase.resStatusBox!.clear();
-            await HiveDataBase.resStatusBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("GetResidentStatusModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
-  }
-
-  static Future<List<GetModeOfDepositModel>?> getModeOfDepositApi({
-    required BuildContext context,
-  }) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.modeOfDeposit,
-        context: context,
-      );
-      if (res != null) {
-        List<GetModeOfDepositModel> response = GetModeOfDepositModel.mapToList(
-          res,
-        );
-        if (HiveDataBase.modeOfDepositBox != null &&
-            HiveDataBase.modeOfDepositBox!.isOpen) {
-          await HiveDataBase.modeOfDepositBox!.clear();
-          await HiveDataBase.modeOfDepositBox!.addAll(response);
-        }
-
-        return response;
-      }
-    } catch (e) {
-      print("GetModeOfDepositModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    return fetchConstantData<GetNotInterestedModel>(
+      context: context,
+      online: online,
+      key: 'notIntrested',
+      fromEntry: (id, value) => GetNotInterestedModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
   static Future<List<GetEBillingModel>?> getEBillingApi({
     required BuildContext context,
-  }) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.eBilling,
-        context: context,
-      );
-      if (res != null) {
-        List<GetEBillingModel> response = GetEBillingModel.mapToList(res);
-        if (response.isNotEmpty) {
-          if (HiveDataBase.eBillingBox != null &&
-              HiveDataBase.eBillingBox!.isOpen) {
-            await HiveDataBase.eBillingBox!.clear();
-            await HiveDataBase.eBillingBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("GetEBillingModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.eBillingBox;
+    if (box == null) return Future.value(null);
+
+    return fetchConstantData<GetEBillingModel>(
+      context: context,
+      online: online,
+      key: 'ebilling',
+      fromEntry: (id, value) => GetEBillingModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
   static Future<List<GetKycDocModel>?> getKycDocApi({
     required BuildContext context,
-  }) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.kycDoc,
-        context: context,
-      );
-      log("resKycDoc-->${res}");
-      if (res != null) {
-        List<GetKycDocModel> response = GetKycDocModel.mapToList(res);
-        log("responseKycDoc-->${response}");
-        if (response.isNotEmpty) {
-          if (HiveDataBase.kycDocBox != null && HiveDataBase.kycDocBox!.isOpen) {
-            await HiveDataBase.kycDocBox!.clear();
-            await HiveDataBase.kycDocBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("GetKycDocModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.kycDocBox;
+    if (box == null) return Future.value(null);
+
+    return fetchConstantData<GetKycDocModel>(
+      context: context,
+      online: online,
+      key: 'kycDoc',
+      fromEntry: (id, value) => GetKycDocModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
   static Future<List<GetOwnershipProofModel>?> getOwnershipProofApi({
     required BuildContext context,
-  }) async {
-    try {
-      final res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.ownershipProof,
-        context: context,
-      );
-      if (res != null) {
-        List<GetOwnershipProofModel> response =
-            GetOwnershipProofModel.mapToList(res);
-        if (response.isNotEmpty) {
-          if (HiveDataBase.ownershipProofBox != null &&
-              HiveDataBase.ownershipProofBox!.isOpen) {
-            await HiveDataBase.ownershipProofBox!.clear();
-            await HiveDataBase.ownershipProofBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("ownershipProofRes-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.ownershipProofBox;
+    if (box == null) return Future.value(null);
+    return fetchConstantData<GetOwnershipProofModel>(
+      context: context,
+      online: online,
+      key: 'ownershipProof',
+      fromEntry: (id, value) => GetOwnershipProofModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
   static Future<List<GetIdentityProofModel>?> getIdentityProofApi({
     required BuildContext context,
-  }) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.identityProof,
-        context: context,
-      );
-      if (res != null) {
-        List<GetIdentityProofModel> response = GetIdentityProofModel.mapToList(
-          res,
-        );
-        if (response.isNotEmpty) {
-          if (HiveDataBase.idProofBox != null &&
-              HiveDataBase.idProofBox!.isOpen) {
-            await HiveDataBase.idProofBox!.clear();
-            await HiveDataBase.idProofBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("GetIdentityProofModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.idProofBox;
+    if (box == null) return Future.value(null);
+    return fetchConstantData<GetIdentityProofModel>(
+      context: context,
+      online: online,
+      key: 'identityProof',
+      fromEntry:(id, value) => GetIdentityProofModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
   static Future<List<GetGuardianTypeModel>?> getGuardianTypeApi({
     required BuildContext context,
-  }) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.guardianType,
-        context: context,
-      );
-      if (res != null) {
-        List<GetGuardianTypeModel> response = GetGuardianTypeModel.mapToList(
-          res,
-        );
-        if (response.isNotEmpty) {
-          if (HiveDataBase.guardianTypeBox != null &&
-              HiveDataBase.guardianTypeBox!.isOpen) {
-            await HiveDataBase.guardianTypeBox!.clear();
-            await HiveDataBase.guardianTypeBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("GetGuardianTypeModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.guardianTypeBox;
+    if (box == null) return Future.value(null);
+    return fetchConstantData<GetGuardianTypeModel>(
+      context: context,
+      online: online,
+      key: 'guardian_type',
+      fromEntry: (id, value) => GetGuardianTypeModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
   static Future<List<GetExistingCookingFuelModel>?> getExistingCookingFuelApi({
     required BuildContext context,
-  }) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.existingCookingFuel,
-        context: context,
-      );
-      if (res != null) {
-        List<GetExistingCookingFuelModel> response =
-            GetExistingCookingFuelModel.mapToList(res);
-        if (response.isNotEmpty) {
-          if (HiveDataBase.cookingFuelBox != null &&
-              HiveDataBase.cookingFuelBox!.isOpen) {
-            await HiveDataBase.cookingFuelBox!.clear();
-            await HiveDataBase.cookingFuelBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("GetExistingCookingFuelModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.cookingFuelBox;
+    if (box == null) return Future.value(null);
+    return fetchConstantData<GetExistingCookingFuelModel>(
+      context: context,
+      online: online,
+      key: 'existingCookingFuel',
+      fromEntry: (id, value) => GetExistingCookingFuelModel(key: id, value: value.toString()),
+      box: box,
+    );
+  }
+
+  static Future<List<GetResidentStatusModel>?> getResidentStatusApi({
+    required BuildContext context,
+    required bool online,
+  }) {
+    final box = HiveDataBase.resStatusBox;
+    if (box == null) return Future.value(null);
+    return fetchConstantData<GetResidentStatusModel>(
+      context: context,
+      online: online,
+      key: 'residentStatus',
+      fromEntry: (id, value) => GetResidentStatusModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
   static Future<List<GetSocietyAllowModel>?> getSocietyAllowApi({
     required BuildContext context,
-  }) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.societyAllow,
-        context: context,
-      );
-      if (res != null) {
-        List<GetSocietyAllowModel> response = GetSocietyAllowModel.mapToList(
-          res,
-        );
-        if (response.isNotEmpty) {
-          if (HiveDataBase.societyAllowBox != null &&
-              HiveDataBase.societyAllowBox!.isOpen) {
-            await HiveDataBase.societyAllowBox!.clear();
-            await HiveDataBase.societyAllowBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("GetSocietyAllowModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.societyAllowBox;
+    if (box == null) return Future.value(null);
+    return fetchConstantData<GetSocietyAllowModel>(
+      context: context,
+      online: online,
+      key: 'societyAllow',
+      fromEntry: (id, value) => GetSocietyAllowModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
-  static Future<List<GetPropertyClassModel>?> getPropertyClassApi({
+  static Future<List<GetInitialDepositStatusModel>?>
+  getInitialDepositStatusApi({
     required BuildContext context,
-  }) async {
-    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getPropertyClass + schema,
-        context: context,
-      );
-      if (res != null) {
-        List<GetPropertyClassModel> list =
-            res
-                .map<GetPropertyClassModel>(
-                  (json) => GetPropertyClassModel.fromJson(json),
-                )
-                .toList();
-        if (res.isNotEmpty) {
-          if (HiveDataBase.proClassBox != null &&
-              HiveDataBase.proClassBox!.isOpen) {
-            await HiveDataBase.proClassBox!.clear();
-            await HiveDataBase.proClassBox!.addAll(list);
-          }
-        }
-        return list;
-      }
-    } catch (e) {
-      print("GetPropertyClassModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.initDepositStatusBox;
+    if (box == null) return Future.value(null);
+    return fetchConstantData<GetInitialDepositStatusModel>(
+      context: context,
+      online: online,
+      key: 'initialDepositeStatus',
+      fromEntry: (id, value) => GetInitialDepositStatusModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
-  static Future<List<GetPropertyCategoryModel>?> getPropertyCategoryApi({
+  static Future<List<GetModeOfDepositModel>?> getModeOfDepositApi({
     required BuildContext context,
-  }) async {
-    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getPropertyCategory + schema,
-        context: context,
-      );
-      if (res != null) {
-        List<GetPropertyCategoryModel> list =
-            res
-                .map<GetPropertyCategoryModel>(
-                  (json) => GetPropertyCategoryModel.fromJson(json),
-                )
-                .toList();
-        if (res.isNotEmpty) {
-          if (HiveDataBase.proCateBox != null &&
-              HiveDataBase.proCateBox!.isOpen) {
-            await HiveDataBase.proCateBox!.clear();
-            await HiveDataBase.proCateBox!.addAll(list);
-          }
-        }
-        return list;
-      }
-    } catch (e) {
-      print("GetPropertyCategoryModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.modeOfDepositBox;
+    if (box == null) return Future.value(null);
+    return fetchConstantData<GetModeOfDepositModel>(
+      context: context,
+      online: online,
+      key: 'modeOfDeposite',
+      fromEntry: (id, value) => GetModeOfDepositModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
-  static Future<List<GetAllAreaModel>?> getAllAreaApi({
+  static Future<List<GetAcceptExtraFittingCostModel>?>
+  getAcceptExtraFittingCostApi({
     required BuildContext context,
-  }) async {
-    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getAllArea + schema,
-        context: context,
-      );
-      if (res != null) {
-        List<GetAllAreaModel> list =
-            res
-                .map<GetAllAreaModel>((json) => GetAllAreaModel.fromJson(json))
-                .toList();
-        if (res.isNotEmpty) {
-          if (HiveDataBase.allAreaBox != null &&
-              HiveDataBase.allAreaBox!.isOpen) {
-            await HiveDataBase.allAreaBox!.clear();
-            await HiveDataBase.allAreaBox!.addAll(list);
-          }
-        }
-        return list;
-      }
-    } catch (e) {
-      print("GetAllAreaModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.acceptExtraFittingCostBox;
+    if (box == null) return Future.value(null);
+    return fetchConstantData<GetAcceptExtraFittingCostModel>(
+      context: context,
+      online: online,
+      key: 'acceptExtraFittingCost',
+      fromEntry: (id, value) => GetAcceptExtraFittingCostModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
 
-  static Future<List<GetChargeAreaListModel>?> getChargeAreaListApi({
+  static Future<List<GetAcceptConversionPolicyModel>?>
+  getAcceptConversionPolicyApi({
     required BuildContext context,
-  }) async {
-    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getChargeAreaList + schema,
-        context: context,
-      );
-      if (res != null) {
-        List<GetChargeAreaListModel> list =
-            res
-                .map<GetChargeAreaListModel>(
-                  (json) => GetChargeAreaListModel.fromJson(json),
-                )
-                .toList();
-        if (res.isNotEmpty) {
-          if (HiveDataBase.chargeAreaListBox != null &&
-              HiveDataBase.chargeAreaListBox!.isOpen) {
-            await HiveDataBase.chargeAreaListBox!.clear();
-            await HiveDataBase.chargeAreaListBox!.addAll(list);
-          }
-        }
-        return list;
-      }
-    } catch (e) {
-      print("GetChargeAreaListModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) {
+    final box = HiveDataBase.acceptConversionPolicyBox;
+    if (box == null) return Future.value(null);
+    return fetchConstantData<GetAcceptConversionPolicyModel>(
+      context: context,
+      online: online,
+      key: 'acceptConversionPolicy',
+      fromEntry: (id, value) => GetAcceptConversionPolicyModel(key: id, value: value.toString()),
+      box: box,
+    );
   }
-
-  static Future<List<GetAllDepositOfflineModel>?> getAllDepositOfflineApi({
+  static Future<List<CustomerDetailsModel>?> getPngrbCustomerDataApi({
     required BuildContext context,
-  }) async {
-    String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getAllDepositOffline + schema,
-        context: context,
-      );
-      if (res != null) {
-        List<GetAllDepositOfflineModel> list =
-            res
-                .map<GetAllDepositOfflineModel>(
-                  (json) => GetAllDepositOfflineModel.fromJson(json),
-                )
-                .toList();
-        if (res.isNotEmpty) {
-          if (HiveDataBase.allDepositOfflineBox != null &&
-              HiveDataBase.allDepositOfflineBox!.isOpen) {
-            await HiveDataBase.allDepositOfflineBox!.clear();
-            await HiveDataBase.allDepositOfflineBox!.addAll(list);
-          }
-        }
-        return list;
+    required String applicationNo,
+  }) {
+
+    if (applicationNo.trim().isEmpty) {
+      if (context.mounted) {
+        Utils.errorSnackBar(msg: 'Application number is required', context: context);
       }
-    } catch (e) {
-      print("GetAllDepositOfflineModel-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
+      return Future.value(null);
     }
-    return null;
+    var param = {
+      "schema": _schema(),
+      "application_number": applicationNo.trim(),
+    };
+    String query = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getPngrbCustomerData}?$query";
+    return _fetchList<CustomerDetailsModel>(
+      context: context,
+      online: true,
+      urlEndPoint: url,
+      parse: (res) {
+        if (res is Map<String, dynamic>) {
+          if (res['status'] == 'error') {
+          //  throw Exception(res['message']?.toString() ?? 'Server error');
+          }
+          return [CustomerDetailsModel.fromJson(res)];
+        }
+        return <CustomerDetailsModel>[];
+      },
+      box: null,
+      tag: 'getPngrbCustomerData',
+    );
   }
 
   static Future<List<String>?> getBankNameListApi({
     required BuildContext context,
-  }) async {
-    try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getAllBanks,
-        context: context,
-      );
-      if (res != null) {
-        List<String> response = List<String>.from(res);
-        if (response.isNotEmpty) {
-          if (HiveDataBase.getAllBanksBox != null &&
-              HiveDataBase.getAllBanksBox!.isOpen) {
-            await HiveDataBase.getAllBanksBox!.clear();
-            await HiveDataBase.getAllBanksBox!.addAll(response);
-          }
-        }
-        return response;
-      }
-    } catch (e) {
-      print("getAllBanksBox-->${e.toString()}");
-      Utils.errorSnackBar(msg: e.toString(), context: context);
-      return null;
-    }
-    return null;
+    required bool online,
+  }) => _fetchList<String>(
+    context: context,
+    online: online,
+    urlEndPoint: AppUrl.getAllBanks,
+    parse: (res) => List<String>.from(res),
+    box: HiveDataBase.getAllBanksBox,
+    tag: 'getAllBanksBox',
+  );
+
+  static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi({
+    required BuildContext context,
+    required bool online,
+  }) {
+    var param = {"schema": _schema()};
+    String json = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getAllDistrict}?$json";
+    return _fetchList<GetAllDistrictModel>(
+      context: context,
+      online: online,
+      urlEndPoint: url,
+      parse: (res) => (res as List).map((json) => GetAllDistrictModel.fromJson(json)).toList(),
+      box: HiveDataBase.allDistrictBox,
+      tag: 'GetAllDistrictModel',
+    );
+  }
+
+  static Future<List<GetPropertyClassModel>?> getPropertyClassApi({
+    required BuildContext context,
+    required bool online,
+  }) {
+    var param = {"schema": _schema()};
+    String json = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getPropertyClass}?$json";
+    return _fetchList<GetPropertyClassModel>(
+      context: context,
+      online: online,
+      urlEndPoint: url,
+      parse: (res) => (res as List).map((json) {
+                final model = GetPropertyClassModel.fromJson(json);
+                return model;
+              }).toList(),
+      box: HiveDataBase.proClassBox,
+      tag: 'GetPropertyClassModel',
+    );
+  }
+
+  static Future<List<GetNameTitleModel>?> getTitleApi({
+    required BuildContext context,
+    required bool online,
+  }) {
+    var param = {"schema": _schema()};
+    String json = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getTitle}?$json";
+    return _fetchList<GetNameTitleModel>(
+      context: context,
+      online: online,
+      urlEndPoint: url,
+      parse: (res) => (res as List).map((json) {
+                final model = GetNameTitleModel.fromJson(json);
+                return model;
+              }).toList(),
+      box: HiveDataBase.nameTitleBox,
+      tag: 'GetNameTitleModel',
+    );
+  }
+
+  static Future<List<ConnectionTypeModel>?> getDmaRegFormApi({
+    required BuildContext context,
+    required bool online,
+  }) {
+    var param = {"schema": _schema()};
+    String json = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getDmaRegForm}?$json";
+    return _fetchList<ConnectionTypeModel>(
+      context: context,
+      online: online,
+      urlEndPoint:url,
+      parse: (res) => (res as List).map((json) {
+                final model = ConnectionTypeModel.fromJson(json);
+                return model;
+              }).toList(),
+      box: HiveDataBase.dmaRegFormBox,
+      tag: 'getDmaRegForm',
+    );
+  }
+
+  static Future<List<ConnectionTypeModel>?> getMeterTypeApi({
+    required BuildContext context,
+    required bool online,
+  }) {
+    var param = {"schema": _schema()};
+    String json = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getMeterType}?$json";
+    return _fetchList<ConnectionTypeModel>(
+      context: context,
+      online: online,
+      urlEndPoint: url,
+      parse: (res) => (res as List).map((json) {
+                final model = ConnectionTypeModel.fromJson(json);
+                return model;
+              }).toList(),
+      box: HiveDataBase.meterTypeBox,
+      tag: 'getMeterType',
+    );
+  }
+
+  static Future<List<PropertyTypeModel>?> getHouseHoldTypeApi({
+    required BuildContext context,
+    required bool online,
+    required String propertyCategoryId,
+  }) {
+    var param = {
+      "schema": _schema(),
+      "property_category_id":
+      propertyCategoryId.isNotEmpty ? propertyCategoryId : "89",
+    };
+    String json = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getHouseHoldType}?$json";
+    return _fetchList<PropertyTypeModel>(
+      context: context,
+      online: online,
+      urlEndPoint:url,
+      parse: (res) => (res as List).map((json) {
+        final model = PropertyTypeModel.fromJson(json);
+                return model;
+              }).toList(),
+      box: HiveDataBase.houseHoldTypeBox,
+      tag: 'houseHoldTypeBox',
+    );
+  }
+
+  static Future<List<GetPropertyCategoryModel>?> getPropertyCategoryApi({
+    required BuildContext context,
+    required bool online,
+  }) {
+    var param = {"schema": _schema()};
+    String json = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getPropertyCategory}?$json";
+    return _fetchList<GetPropertyCategoryModel>(
+      context: context,
+      online: online,
+      urlEndPoint: url,
+      parse: (res) => (res as List).map((json) => GetPropertyCategoryModel.fromJson(json)).toList(),
+      box: HiveDataBase.proCateBox,
+      tag: 'GetPropertyCategoryModel',
+    );
+  }
+
+  static Future<List<GetAllAreaModel>?> getAllAreaApi({
+    required BuildContext context,
+    required bool online,
+}) {
+    var param = {"schema": _schema()};
+    String json = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getAllArea}?$json";
+    return _fetchList<GetAllAreaModel>(
+      context: context,
+      online: online,
+      urlEndPoint: url,
+      parse: (res) => (res as List).map((json) => GetAllAreaModel.fromJson(json)).toList(),
+      box: HiveDataBase.allAreaBox,
+      tag: 'GetAllAreaModel',
+    );
+  }
+
+  static Future<List<GetChargeAreaListModel>?> getChargeAreaListApi({
+    required BuildContext context,
+    required bool online,
+}) {
+    var param = {"schema": _schema()};
+    String json = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getChargeAreaList}?$json";
+    return _fetchList<GetChargeAreaListModel>(
+      context: context,
+      online: online,
+      urlEndPoint:url,
+      parse: (res) => (res as List).map((json) => GetChargeAreaListModel.fromJson(json)).toList(),
+      box: HiveDataBase.chargeAreaListBox,
+      tag: 'GetChargeAreaListModel',
+    );
+  }
+
+  static Future<List<GetAllDepositOfflineModel>?> getAllDepositOfflineApi({
+    required BuildContext context,
+    required bool online,
+}) {
+    var param = {"schema": _schema()};
+    String json = Uri(queryParameters: param).query;
+    String url = "${AppUrl.getAllDepositOffline}?$json";
+    return _fetchList<GetAllDepositOfflineModel>(
+      context: context,
+      online: online,
+      urlEndPoint: url,
+      parse: (res) => (res as List).map((json) => GetAllDepositOfflineModel.fromJson(json)).toList(),
+      box: HiveDataBase.allDepositOfflineBox,
+      tag: 'GetAllDepositOfflineModel',
+    );
   }
 
   static Future<File?> cameraCapture() async {
@@ -620,8 +557,8 @@ class DashboardHelper {
       maxHeight: 900,
       maxWidth: 1000,
     );
-    File files = File(file!.path);
-    return files;
+    if (file == null) return null;
+    return File(file.path);
   }
 
   static Future<File?> galleryCapture() async {
@@ -632,34 +569,32 @@ class DashboardHelper {
       maxHeight: 900,
       maxWidth: 1000,
     );
-    File files = File(file!.path);
-    return files;
+    if (file == null) return null;
+    return File(file.path);
   }
 
   static Future<Position?> getCurrentLocation() async {
-    await Geolocator.requestPermission();
-    await Permission.locationAlways.request();
-    if (Platform.isAndroid) {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        forceAndroidLocationManager: true,
-        locationSettings: LocationSettings(),
-      );
-      log('latitude : ${position.latitude} longitude : ${position.longitude}');
-      return position;
+    final permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      return null;
     }
-    return null;
+    await Permission.locationAlways.request();
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+      forceAndroidLocationManager: Platform.isAndroid,
+      locationSettings: const LocationSettings(),
+    );
+    log('latitude : ${position.latitude} longitude : ${position.longitude}');
+    return position;
   }
 
   static Future<bool> isInternetConnected() async {
-    bool isConnect = false;
     try {
       final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        isConnect = true;
-      }
-    } on SocketException catch (_) {}
-
-    return isConnect;
+      return result.isNotEmpty && result.first.rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
+    }
   }
 }

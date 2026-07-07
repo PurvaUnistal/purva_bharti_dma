@@ -1,5 +1,9 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_connection_type_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_customer_details_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_name_title_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_property_type_model.dart';
 
 class HiveDataBase {
   static Box<GetAcceptConversionPolicyModel>? acceptConversionPolicyBox;
@@ -20,10 +24,15 @@ class HiveDataBase {
   static Box<GetOwnershipProofModel>? ownershipProofBox;
   static Box<GetPropertyCategoryModel>? proCateBox;
   static Box<GetPropertyClassModel>? proClassBox;
+  static Box<GetNameTitleModel>? nameTitleBox;
   static Box<GetResidentStatusModel>? resStatusBox;
   static Box<GetSocietyAllowModel>? societyAllowBox;
   static Box<String>? getAllBanksBox;
   static Box<SaveRegistrationFormModel>? registrationFormBox;
+  static Box<ConnectionTypeModel >? dmaRegFormBox;
+  static Box<ConnectionTypeModel >? meterTypeBox;
+  static Box<PropertyTypeModel >? houseHoldTypeBox;
+  static Box<CustomerDetailsModel>? customerDetailsBox;
 
 
   Future<void> init() async {
@@ -57,10 +66,14 @@ class HiveDataBase {
     Hive.registerAdapter(GetOwnershipProofModelAdapter());
     Hive.registerAdapter(GetPropertyCategoryModelAdapter());
     Hive.registerAdapter(GetPropertyClassModelAdapter());
+    Hive.registerAdapter(GetNameTitleModelAdapter());
     Hive.registerAdapter(GetResidentStatusModelAdapter());
     Hive.registerAdapter(GetSocietyAllowModelAdapter());
     Hive.registerAdapter(BankNameListModelAdapter());
     Hive.registerAdapter(SaveRegistrationFormModelAdapter());
+    Hive.registerAdapter(ConnectionTypeModelAdapter());
+    Hive.registerAdapter(PropertyTypeModelAdapter());
+    Hive.registerAdapter(CustomerDetailsModelAdapter());
 
     acceptConversionPolicyBox = await Hive.openBox<GetAcceptConversionPolicyModel>(HiveBoxName.AcceptConversionPolicyBox);
     acceptExtraFittingCostBox = await Hive.openBox<GetAcceptExtraFittingCostModel>(HiveBoxName.AcceptExtraFittingCostBox);
@@ -80,10 +93,15 @@ class HiveDataBase {
     ownershipProofBox = await Hive.openBox<GetOwnershipProofModel>(HiveBoxName.OwnershipProofBox);
     proCateBox = await Hive.openBox<GetPropertyCategoryModel>(HiveBoxName.ProCateBox);
     proClassBox = await Hive.openBox<GetPropertyClassModel>(HiveBoxName.ProClassBox);
+    nameTitleBox = await Hive.openBox<GetNameTitleModel>(HiveBoxName.nameTitleBox);
     resStatusBox = await Hive.openBox<GetResidentStatusModel>(HiveBoxName.ResStatusBox);
     societyAllowBox = await Hive.openBox<GetSocietyAllowModel>(HiveBoxName.SocietyAllowBox);
     getAllBanksBox = await Hive.openBox<String>(HiveBoxName.AllBanksBox);
     registrationFormBox = await Hive.openBox<SaveRegistrationFormModel>(HiveBoxName.registrationFormBox);
+    dmaRegFormBox = await Hive.openBox<ConnectionTypeModel>("DmaRegFormBox");
+    meterTypeBox = await Hive.openBox<ConnectionTypeModel>("MeterTypeBox");
+    houseHoldTypeBox = await Hive.openBox<PropertyTypeModel>("houseHoldTypeBox");
+    customerDetailsBox = await Hive.openBox<CustomerDetailsModel>("customerDetailsBox");
 
   }
 }

@@ -31,6 +31,7 @@ class GetPropertyClassModel {
   Map<String, dynamic> toJson() => {
         "name": name,
         "id": id,
+
       };
   @override
   String toString() {

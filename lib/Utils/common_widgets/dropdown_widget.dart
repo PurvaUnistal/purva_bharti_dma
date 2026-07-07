@@ -1,68 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:pbg_app/ExportFile/export_file.dart';
-
-import 'res/common_style.dart';
+import 'input_decoration_style.dart';
 
 class DropdownWidget<T> extends StatelessWidget {
-  final T? dropdownValue;
   final String hint;
-  final String? label;
-  final String? star;
-  final void Function(T?)? onChanged;
+  final bool isRequired;
+  final T? dropdownValue;
   final List<T> items;
+  final Function(T?) onChanged;
+  final String? Function(T?)? validator;
+  final VoidCallback? onPressed;
 
   const DropdownWidget({
-    Key? key,
-    required this.dropdownValue,
-    required this.onChanged,
-    required this.items,
+    super.key,
     required this.hint,
-    this.label,
-    this.star,
-  }) : super(key: key);
+    this.isRequired = false,
+    required this.dropdownValue,
+    required this.items,
+    required this.onChanged,
+    this.validator,
+    this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = theme.colorScheme.onSurface;       // ✅
+    final dropdownBg = theme.colorScheme.surfaceContainerHighest; // ✅
+
     return DropdownButtonFormField<T>(
-        borderRadius: BorderRadius.circular(5),
-        decoration: InputDecoration(
-          fillColor: AppColor.white,
-          filled: true,
-          // labelText: label,
-          isDense: false,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-          enabledBorder: CommonStyle.border(context: context),
-          disabledBorder: CommonStyle.border(context: context),
-          border: CommonStyle.border(context: context),
-          focusedBorder: CommonStyle.border(context: context),
-          label: Padding(
-            padding: const EdgeInsets.only(left: 2.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(child: Text(star ?? "", style: Styles.stars)),
-                Flexible(
-                  child: Text(label ?? "", style: Styles.labels),
-                ),
-              ],
+      initialValue: items.contains(dropdownValue) ? dropdownValue : null,
+      onChanged: onChanged,
+      validator: validator,
+      isExpanded: true,
+      selectedItemBuilder: (context) => items.map((T value) {   // add
+        return Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            value.toString(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        ),
-        hint: Text(hint, style: Styles.labels),
-        style: Styles.texts,
-        isExpanded: true,
-        value: dropdownValue != null ? dropdownValue : null,
-        items: items.map<DropdownMenuItem<T>>((T value) {
-          return DropdownMenuItem<T>(
-            value: value,
-            child: Text(
-              value.toString(),
-              style: Styles.texts,
+        );
+      }).toList(),
+      decoration: InputDecorationStyle.inputDecoration(
+        context,
+        labelText: hint,
+        isRequired: isRequired,
+        suffixIcon: (onPressed != null && dropdownValue != null)
+            ? IconButton(
+          icon: const Icon(Icons.clear, size: 20),
+          onPressed: onPressed,
+        )
+            : null,
+      ),
+      dropdownColor: dropdownBg, // ✅ was Colors.white
+      items: items.map((T value) {
+        return DropdownMenuItem<T>(
+          value: value,
+          child: Text(
+            value.toString(),
+            maxLines: 1,                          // add
+            overflow: TextOverflow.ellipsis,      // add
+            style: TextStyle(
+              color: textColor,        // ✅ was AppColor.black
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
-          );
-        }).toList(),
-        onChanged: onChanged);
+          ),
+        );
+      }).toList(),
+    );
   }
 }

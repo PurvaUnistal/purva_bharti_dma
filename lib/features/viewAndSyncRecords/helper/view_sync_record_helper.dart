@@ -72,12 +72,18 @@ class ViewSyncRecordHelper {
         "cheque_bank_account": custRegSyncData.chequeBankAccount ?? "",
         "cheque_number": custRegSyncData.chequeNumber ?? "",
         "district_id": custRegSyncData.districtId ?? "",
-        "accept_conversion_policy":
-            custRegSyncData.acceptConversionPolicy ?? "",
-        "accept_extra_fitting_cost":
-            custRegSyncData.acceptExtraFittingCost ?? "",
+        "accept_conversion_policy": custRegSyncData.acceptConversionPolicy ?? "",
+        "accept_extra_fitting_cost": custRegSyncData.acceptExtraFittingCost ?? "",
         "micr": custRegSyncData.chequeMicrAccount ?? "",
         "building_number": custRegSyncData.buildingNumber ?? "",
+        "title_id": custRegSyncData.nameTitle ?? "",
+        "house_hold_type_id": custRegSyncData.houseHoldType ?? "",
+        "dob": custRegSyncData.dob ?? "",
+        "meter_type": custRegSyncData.meterType ?? "",
+        "premise_type": custRegSyncData.premiseType ?? "",
+        "floor_number": custRegSyncData.floorNumber ?? "",
+        "ward_number": custRegSyncData.wardNumber ?? "",
+        "application_number": custRegSyncData.applicationNumber ?? "",
       };
       if (json['interested'] == "0") {
         json.remove("initial_deposite_status");
@@ -87,69 +93,68 @@ class ViewSyncRecordHelper {
         json.remove("accept_extra_fitting_cost");
       }
       log("requestBody-->${json}");
-      var res = await ApiHelperDio.postDataWithFile(
+      var res = await ServerRequest.postDataWithFile(
           urlEndPoint: AppUrl.saveCustomerRegistrationOffline,
           body: json,
-          context: context,
           imageRequestObject: [
             ImageRequestObject(
-                "backside1",
-                custRegSyncData.idBackPath1 == null
+               key: "backside1",
+               path: custRegSyncData.idBackPath1 == null
                     ? ""
                     : custRegSyncData.idBackPath1),
             ImageRequestObject(
-                "backside2",
-                custRegSyncData.addBackPath2 == null
+                key: "backside2",
+                path: custRegSyncData.addBackPath2 == null
                     ? ""
                     : custRegSyncData.addBackPath2),
             ImageRequestObject(
-                "backside3",
-                custRegSyncData.nocBackPath3 == null
+                key:"backside3",
+                path:custRegSyncData.nocBackPath3 == null
                     ? ""
                     : custRegSyncData.nocBackPath3),
             ImageRequestObject(
-                "document_uploads_1",
-                custRegSyncData.idFrontPath1 == null
+                key:"document_uploads_1",
+                path:custRegSyncData.idFrontPath1 == null
                     ? ""
                     : custRegSyncData.idFrontPath1),
             ImageRequestObject(
-                "document_uploads_2",
-                custRegSyncData.addFrontPath2 == null
+                key: "document_uploads_2",
+                path:custRegSyncData.addFrontPath2 == null
                     ? ""
                     : custRegSyncData.addFrontPath2),
             ImageRequestObject(
-                "document_uploads_3",
-                custRegSyncData.nocFrontPath3 == null
+                key: "document_uploads_3",
+                path:custRegSyncData.nocFrontPath3 == null
                     ? ""
                     : custRegSyncData.nocFrontPath3),
             ImageRequestObject(
-                "upload_customer_photo",
-                custRegSyncData.uploadCustomerPhoto == null
+                key:"upload_customer_photo",
+                path:custRegSyncData.uploadCustomerPhoto == null
                     ? ""
                     : custRegSyncData.uploadCustomerPhoto),
             ImageRequestObject(
-                "upload_house_photo",
-                custRegSyncData.uploadHousePhoto == null
+                key:"upload_house_photo",
+                path:custRegSyncData.uploadHousePhoto == null
                     ? ""
                     : custRegSyncData.uploadHousePhoto),
             ImageRequestObject(
-                "canceled_cheque",
-                custRegSyncData.canceledChequePhoto == null
+                key: "canceled_cheque",
+                path:custRegSyncData.canceledChequePhoto == null
                     ? ""
                     : custRegSyncData.canceledChequePhoto),
             ImageRequestObject(
-                "cheque_photo",
-                custRegSyncData.chequePhoto == null
+                key: "cheque_photo",
+                path:custRegSyncData.chequePhoto == null
                     ? ""
                     : custRegSyncData.chequePhoto),
             ImageRequestObject(
-                "owner_consent",
-                custRegSyncData.ownerConsent == null
+                key: "owner_consent",
+                path:custRegSyncData.ownerConsent == null
                     ? ""
                     : custRegSyncData.ownerConsent),
             ImageRequestObject(
-                "customer_consent",
-                custRegSyncData.customerConsent == null
+                key:"customer_consent",
+                path: custRegSyncData.customerConsent == null
                     ? ""
                     : custRegSyncData.customerConsent),
           ]);

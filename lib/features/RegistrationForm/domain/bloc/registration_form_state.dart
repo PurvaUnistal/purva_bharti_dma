@@ -1,5 +1,9 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_connection_type_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_customer_details_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_name_title_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_property_type_model.dart';
 
 
 abstract class RegistrationFormState extends Equatable {}
@@ -23,8 +27,9 @@ class RegistrationFormGetLabelState extends RegistrationFormState {
   List<Object?> get props => [getLabelModel];
 }
 
-class RegistrationFormGetAllDataState extends RegistrationFormState {
+class RegiFormUpdateDataState extends RegistrationFormState {
   final bool isPageLoader;
+  final bool searchCustomerLoader;
   final bool isLocationLoader;
   final bool isUpdate;
   final GetLabelModel labelModel;
@@ -37,9 +42,14 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final GetSocietyAllowModel? societyAllowValue;
   final List<GetSocietyAllowModel> societyAllowList;
   final GetGuardianTypeModel? guardianTypeValue;
+  final PropertyTypeModel? houseHoldTypeValue;
   final List<GetGuardianTypeModel> getGuardianTypeList;
+  final List<PropertyTypeModel> listOfHouseHoldType;
   final GetPropertyCategoryModel? propertyCategoryValue;
   final GetPropertyClassModel? propertyClassValue;
+  final GetNameTitleModel? nameTitleValue;
+  final ConnectionTypeModel? regFromVal;
+  final ConnectionTypeModel? meterTypeVal;
   final GetNotInterestedModel getNotInterestedModel;
   final GetAcceptConversionPolicyModel getAcceptConversionPolicyModel;
   final GetAcceptExtraFittingCostModel getAcceptExtraFittingCostModel;
@@ -61,8 +71,10 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final GetIdentityProofModel? identityProofValue;
   final List identityProofList;
   final GetIdentityProofModel getIdentityProofModel;
+  final GetOwnershipProofModel? addressProofValue;
   final GetOwnershipProofModel? ownershipProofValue;
   final List<GetOwnershipProofModel> ownershipProofList;
+  final List<GetOwnershipProofModel> listOfAddressProof;
   final GetOwnershipProofModel getOwnershipProofModel;
   final GetKycDocModel? kycDoc3Value;
   final List<GetKycDocModel> kycDocList;
@@ -75,24 +87,32 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final List<GetResidentStatusModel> getResidentStatusList;
   final GetResidentStatusModel? residentStatusValue;
   final List<GetPropertyClassModel> getPropertyClassModel;
+  final List<GetNameTitleModel> listOfNameTitle;
+  final List<ConnectionTypeModel> listOfDmaRegForm;
+  final List<ConnectionTypeModel> listOfMeterType;
   final List<GetPropertyCategoryModel> getPropertyCategoryModel;
   final GetAllAreaModel? areaValue;
   final List<GetAllAreaModel> getAllAreaModel;
   final GetChargeAreaListModel? chargeAreaValue;
   final List<GetChargeAreaListModel> getChargeAreaListModel;
+  final TextEditingController applicationNumberController;
   final TextEditingController reasonRegistrationController;
   final TextEditingController mobileController;
   final TextEditingController altMobileController;
   final TextEditingController firstController;
   final TextEditingController middleController;
   final TextEditingController lastController;
+  final TextEditingController dobController;
   final TextEditingController guardianNameController;
   final TextEditingController emailIdController;
   final TextEditingController buildingNumberController;
+  final TextEditingController floorNumberController;
   final TextEditingController houseNumberController;
   final TextEditingController colonyController;
   final TextEditingController streetController;
   final TextEditingController townController;
+  final TextEditingController wardNumberController;
+  final TextEditingController premiseTypeController;
   final TextEditingController pinCodeController;
   final TextEditingController numberKitchenController;
   final TextEditingController numberBathroomController;
@@ -116,6 +136,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final String? paymentBankNameValue;
   final List<String> custBankNameList;
   final List<String> paymentBankNameList;
+  final List<CustomerDetailsModel> customerSuggestions;
   final File idFrontFilePath;
   final File idBackFilePath;
   final File eleBillFrontPath;
@@ -132,8 +153,9 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final bool isPreviewLoader;
   final bool isSaveLoader;
 
-  RegistrationFormGetAllDataState({
+  RegiFormUpdateDataState({
     required this.isPageLoader,
+    required this.searchCustomerLoader,
     required this.isLocationLoader,
     required this.isUpdate,
     required this.labelModel,
@@ -154,14 +176,21 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     required this.chargeAreaValue,
     required this.getChargeAreaListModel,
     required this.guardianTypeValue,
+    required this.houseHoldTypeValue,
     required this.getGuardianTypeList,
+    required this.listOfHouseHoldType,
     required this.propertyCategoryValue,
     required this.propertyClassValue,
+    required this.nameTitleValue,
+    required this.regFromVal,
+    required this.meterTypeVal,
     required this.identityProofValue,
     required this.identityProofList,
     required this.getIdentityProofModel,
     required this.ownershipProofValue,
+    required this.addressProofValue,
     required this.ownershipProofList,
+    required this.listOfAddressProof,
     required this.getOwnershipProofModel,
     required this.kycDoc3Value,
     required this.kycDocList,
@@ -174,6 +203,9 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     required this.getResidentStatusList,
     required this.residentStatusValue,
     required this.getPropertyClassModel,
+    required this.listOfNameTitle,
+    required this.listOfDmaRegForm,
+    required this.listOfMeterType,
     required this.getPropertyCategoryModel,
     required this.eBillingValue,
     required this.eBillingList,
@@ -188,18 +220,23 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     required this.getAllDepositOfflineModel,
     required this.getModeOfDepositModel,
     required this.reasonRegistrationController,
+    required this.applicationNumberController,
     required this.mobileController,
     required this.altMobileController,
     required this.firstController,
     required this.middleController,
     required this.lastController,
+    required this.dobController,
     required this.guardianNameController,
     required this.emailIdController,
     required this.buildingNumberController,
+    required this.floorNumberController,
     required this.houseNumberController,
     required this.colonyController,
     required this.streetController,
     required this.townController,
+    required this.wardNumberController,
+    required this.premiseTypeController,
     required this.pinCodeController,
     required this.numberKitchenController,
     required this.numberBathroomController,
@@ -224,6 +261,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     required this.paymentBankNameValue,
     required this.custBankNameList,
     required this.paymentBankNameList,
+    required this.customerSuggestions,
     required this.getAllDistrictModel,
     required this.idFrontFilePath,
     required this.idBackFilePath,
@@ -246,6 +284,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   // TODO: implement props
   List<Object?> get props => [
     isPageLoader,
+    searchCustomerLoader,
     isLocationLoader,
     isUpdate,
     labelModel,
@@ -259,9 +298,14 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     societyAllowList,
     getNotInterestedModel,
     guardianTypeValue,
+    houseHoldTypeValue,
     getGuardianTypeList,
+    listOfHouseHoldType,
     propertyCategoryValue,
     propertyClassValue,
+    nameTitleValue,
+    regFromVal,
+    meterTypeVal,
     getAcceptExtraFittingCostModel,
     getAcceptConversionPolicyModel,
     areaValue,
@@ -280,6 +324,9 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     residentStatusValue,
     getSocietyAllowModel,
     getPropertyClassModel,
+    listOfNameTitle,
+   listOfDmaRegForm,
+    listOfMeterType,
     getPropertyCategoryModel,
     eBillingValue,
     eBillingList,
@@ -294,18 +341,23 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     getAllDepositOfflineModel,
     getModeOfDepositModel,
     reasonRegistrationController,
+    applicationNumberController,
     mobileController,
     altMobileController,
     firstController,
     middleController,
     lastController,
+    dobController,
     guardianNameController,
     emailIdController,
     buildingNumberController,
+    floorNumberController,
     houseNumberController,
     colonyController,
     streetController,
     townController,
+    wardNumberController,
+    premiseTypeController,
     pinCodeController,
     numberKitchenController,
     numberBathroomController,
@@ -332,6 +384,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     paymentBankNameValue,
     custBankNameList,
     paymentBankNameList,
+    customerSuggestions,
     idFrontFilePath,
     idBackFilePath,
     eleBillFrontPath,

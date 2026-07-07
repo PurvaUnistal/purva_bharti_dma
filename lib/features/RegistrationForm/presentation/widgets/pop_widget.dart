@@ -57,7 +57,7 @@ class PopWidget{
     );
   }
 
-  static Widget actionButton({required BuildContext context, required RegistrationFormGetAllDataState dataState}) {
+  static Widget actionButton({required BuildContext context, required RegiFormUpdateDataState dataState}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,

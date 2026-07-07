@@ -11,25 +11,19 @@ class AppUrl {
 
   static get auth  => "auth";
   static get getLabel  => "getLabel";
-  static get notInterested  => "getConstant?key=notIntrested";
-  static get initialDepositStatus => "getConstant?key=initialDepositeStatus";
-  static get modeOfDeposit  => "getConstant?key=modeOfDeposite";
-  static get acceptExtraFittingCost => "getConstant?key=acceptExtraFittingCost";
-  static get acceptConversionPolicy => "getConstant?key=acceptConversionPolicy";
-  static get getAllDistrict  => "getAllDistrict?schema=";
-  static get eBilling  => "getConstant?key=ebilling";
-  static get kycDoc  => "getConstant?key=kycDoc";
-  static get ownershipProof  => "getConstant?key=ownershipProof";
-  static get identityProof  => "getConstant?key=identityProof";
-  static get guardianType  => "getConstant?key=guardian_type";
-  static get existingCookingFuel => "getConstant?key=existingCookingFuel";
-  static get residentStatus  => "getConstant?key=residentStatus";
-  static get societyAllow  => "getConstant?key=societyAllow";
-  static get getPropertyClass  => "getPropertyClass?schema=";
-  static get getPropertyCategory => "getPropertyCategory?schema=";
-  static get getChargeAreaList  => "getChargeAreaList?schema=";
-  static get getAllArea  => "getAllArea?schema=";
-  static get getAllDepositOffline => "getAllDepositOffline?schema=";
+  static get getConstant  => "getConstant";
+
+  static get getAllDistrict  => "getAllDistrict";
+  static get getPropertyClass  => "getPropertyClass";
+  static get getPngrbCustomerData  => "getPngrbCustomerDataAPi";
+  static get getTitle  => "getTitle";
+  static get getDmaRegForm  => "getDmaRegForm";
+  static get getMeterType  => "getMeterType";
+  static get getHouseHoldType  => "getHouseHoldType";
+  static get getPropertyCategory => "getPropertyCategory";
+  static get getChargeAreaList  => "getChargeAreaList";
+  static get getAllArea  => "getAllArea";
+  static get getAllDepositOffline => "getAllDepositOffline";
   static get saveCustomerRegistration => "saveCustomerRegistration";
   static get getConsentByPhone  => "getConsentByPhone";
   static get saveCustomerConsent => "saveCustomerConsent";

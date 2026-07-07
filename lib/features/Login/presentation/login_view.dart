@@ -140,9 +140,7 @@ class _LoginViewState extends State<LoginView> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
       child: TextFieldWidget(
-        label:  AppString.emailLabel,
-        hintText: AppString.emailLabel,
-        autofillHints: [AutofillHints.email,AutofillHints.password],
+        labelText:  AppString.emailLabel,
         keyboardType: TextInputType.emailAddress,
         prefixIcon: Icon(
           Icons.email,
@@ -160,9 +158,7 @@ class _LoginViewState extends State<LoginView> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
       child: TextFieldWidget(
-        label: AppString.passwordLabel,
-        hintText: AppString.passwordLabel,
-        autofillHints: const [AutofillHints.password],
+        labelText: AppString.passwordLabel,
         keyboardType: TextInputType.visiblePassword,
         prefixIcon: Icon(
           Icons.password,

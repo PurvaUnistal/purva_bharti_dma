@@ -17,8 +17,11 @@ class BorderWidget extends StatelessWidget {
 
 
       child: Center(
-        child: Column(
-          children: children,
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            children: children,
+          ),
         ),
       ),
     );

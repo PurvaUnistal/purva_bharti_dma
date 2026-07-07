@@ -1,126 +1,133 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pbg_app/ExportFile/export_file.dart';
-
-import 'res/common_style.dart';
-import 'res/environment_config.dart';
+import 'input_decoration_style.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final TextEditingController? controller;
   final String? initialValue;
-  final String? star;
-  final String? label;
-  final FocusNode? focusNode;
-  final Iterable<String>? autofillHints;
-  final String? hintText;
-  final String? labelText;
-  final String? counterText;
-  final ValueChanged<String>? onChanged;
-  final bool? obscureText;
-  final TextInputType? inputType;
-  final int? maxLength;
-  final int? maxLine;
   final GestureTapCallback? onTap;
-  final ValueChanged<String>? onFieldSubmitted;
-  final bool? enabled;
-  final bool? autofocus;
-  final TextCapitalization? textCapitalization;
-  final TextInputAction? textInputAction;
-  final TextInputType? keyboardType;
-  final String? Function(String?)? validator;
-  final List<TextInputFormatter>? inputFormatters;
-  final Widget? prefixIcon;
+  final String labelText;
+  final bool enabled;
+  final bool readOnly;
+  final bool obscureText;
+  final ValueChanged<String>? onChanged;
+  final TextInputType? textInputType;
+  final int? maxLength;
+  final int maxLine;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
+  final bool isRequired;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final FormFieldValidator<String>? validator;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
-  TextFieldWidget({
-    Key? key,
-    this.focusNode,
-    this.initialValue,
-    this.star,
-    this.label,
-    this.hintText,
-    this.labelText,
-    this.counterText,
-    this.autofillHints,
+  const TextFieldWidget({
+    super.key,
+    required this.labelText,
+    this.enabled = true,
+    this.readOnly = false,
+    this.obscureText= false,
     this.controller,
-    this.obscureText,
-    this.onChanged,
-    this.inputType,
-    this.maxLength,
-    this.maxLine,
+    this.initialValue,
     this.onTap,
-    this.onFieldSubmitted,
-    this.enabled,
-    this.autofocus,
-    this.textCapitalization,
-    this.textInputAction,
-    this.keyboardType,
-    this.validator,
-    this.inputFormatters,
-    this.prefixIcon,
+    this.onChanged,
+    this.textInputType,
+    this.maxLength,
     this.suffixIcon,
-  }) : super(key: key);
+    this.prefixIcon,
+    this.maxLine = 1,
+    this.isRequired = false,
+    this.fontSize,
+    this.fontWeight,
+    this.validator,
+    this.keyboardType,
+    this.inputFormatters,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme
+        .of(context)
+        .brightness == Brightness.dark;
+    final textColor = Theme
+        .of(context)
+        .colorScheme
+        .onSurface; // ✅ auto light/dark
+
+    // ✅ Dynamic fill colors based on theme
+    final enabledFill = isDark
+        ? Theme
+        .of(context)
+        .colorScheme
+        .surfaceContainerHighest
+        : Colors.white;
+    final disabledFill = isDark
+        ? Theme
+        .of(context)
+        .colorScheme
+        .surfaceContainerHighest
+        .withOpacity(0.4)
+        : Colors.grey.shade100;
+
     return TextFormField(
-      cursorColor: EnvironmentConfig.of(context)!.primaryTheme,
-      focusNode: focusNode,
-      autofillHints: autofillHints,
-      onTap: onTap,
-      autofocus: autofocus ?? false,
-      onFieldSubmitted: onFieldSubmitted,
-      enabled: enabled ?? true,
-      maxLength: maxLength,
-      maxLines: maxLine ?? 1,
-      onChanged: onChanged,
-      keyboardType: keyboardType ?? TextInputType.text,
       controller: controller,
-      initialValue: initialValue,
-      obscureText: obscureText ?? false,
-      validator: validator ?? null,
-      textCapitalization: textCapitalization ?? TextCapitalization.words,
-      textInputAction: textInputAction ?? TextInputAction.done,
+      initialValue: controller == null ? initialValue : null,
+      onTap: onTap,
+      enabled: enabled,
+      readOnly: readOnly,
+      onChanged: onChanged,
+      maxLength: maxLength,
+      maxLines: maxLine,
+      validator: validator,
       inputFormatters: inputFormatters,
-      style: Styles.texts,
-      decoration: InputDecoration(
-        suffixIcon: suffixIcon,
-        prefixIcon: prefixIcon,
-        hintText: hintText,
-        // labelText: "${star ?? ""}${label ?? ""}",
+      keyboardType: keyboardType,
+      obscureText :obscureText,
+     // inputFormatters: _getInputFormatter(),
+      //  keyboardType: _getKeyboardType(),
+
+      // ✅ Theme-aware text color
+      style: TextStyle(
+        fontSize: 14,
+        color: textColor,
+      ),
+
+
+      decoration: InputDecorationStyle.inputDecoration(
+        context,
+        labelText: labelText,
+        isRequired: isRequired,
+      ).copyWith(
+        fillColor: enabled ? enabledFill : disabledFill,
         counterText: "",
-        label: Padding(
-          padding: const EdgeInsets.only(left: 2.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(flex: 1, child: Text(star ?? "", style: Styles.stars)),
-              Flexible(
-                flex: 6,
-                child: Text(label ?? "", style: Styles.labels),
-              ),
-            ],
-          ),
-        ),
-        hintStyle: Styles.labels,
-        fillColor: AppColor.white,
-        filled: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 5.0, vertical: maxLine != null ? 8 : 0),
-        border: CommonStyle.border(context: context),
-        focusedBorder: CommonStyle.border(context: context),
-        disabledBorder: CommonStyle.border(context: context),
-        enabledBorder: CommonStyle.border(context: context),
-        errorBorder: borderE,
-        errorStyle:Styles.subStar,
-       ),
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+      ),
     );
   }
 
-  OutlineInputBorder borderE = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(5.0),
-    borderSide: BorderSide(
-        color: AppColor.red, style: BorderStyle.solid, width: 0.80),
-  );
+  List<TextInputFormatter>? _getInputFormatter() {
+    if (textInputType == TextInputType.number) {
+      return [
+        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,4}')),
+      ];
+    }
+    return null;
+  }
+
+  TextInputType _getKeyboardType() {
+    if (textInputType == null) return TextInputType.text;
+
+    if (Platform.isIOS && textInputType == TextInputType.number) {
+      return const TextInputType.numberWithOptions(
+        signed: true,
+        decimal: true,
+      );
+    }
+
+    return textInputType!;
+  }
 }

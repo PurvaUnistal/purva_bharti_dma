@@ -17,10 +17,12 @@ class HiveBoxName {
   static String OwnershipProofBox = "ownershipProofBox";
   static String ProCateBox = "proCateBox";
   static String ProClassBox = "proClassBox";
+  static String nameTitleBox = "nameTitleBox";
   static String ResStatusBox = "resStatusBox";
   static String SocietyAllowBox = "societyAllowBox";
   static String AllBanksBox = "getAllBanksBox";
   static String registrationFormBox = "registrationFormBox";
+  static String dmaRegFormBox = "dmaRegFormBox";
 }
 
 class HiveTypeId {
@@ -55,4 +57,8 @@ class HiveTypeId {
   static const GetLabelId = 28;
   static const FileRegistrationFormId = 29;
   static const BankNameListModel = 30;
+  static const GetNameTitle = 31;
+  static const ConnectionTypeModel = 32;
+  static const PropertyTypeModel = 33;
+  static const CustomerDetailsId = 34;
 }

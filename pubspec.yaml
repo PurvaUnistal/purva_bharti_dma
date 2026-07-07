@@ -31,11 +31,12 @@ dependencies:
   image_picker: ^1.0.4
   flutter_spinkit: ^5.2.0
   dotted_border: ^3.1.0
-  dropdown_search: ^5.0.2
+  dropdown_search: ^6.0.2
   url_launcher: ^6.3.1
   package_info_plus: ^8.1.2
   firebase_crashlytics: ^5.0.5
   firebase_core: ^4.2.1
+  flutter_image_compress: ^2.4.0
 
 
 dev_dependencies:
@@ -45,10 +46,10 @@ dev_dependencies:
   build_runner: ^2.4.8
 
 flutter_icons:
-  android: "hp_oil_logo"
+  android: "agcl_logo"
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/images/hp_oil_logo.png"
+  image_path: "assets/images/agcl_logo.png"
 
 flutter:
   uses-material-design: true

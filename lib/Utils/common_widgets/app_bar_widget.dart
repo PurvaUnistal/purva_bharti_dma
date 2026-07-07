@@ -12,14 +12,14 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final Widget? tabBar;
 
-  const AppBarWidget(
-      {Key? key,
-      this.title,
-      this.leading,
-      this.boolLeading,
-      this.actions,
-      this.tabBar})
-      : super(key: key);
+  const AppBarWidget({
+    Key? key,
+    this.title,
+    this.leading,
+    this.boolLeading,
+    this.actions,
+    this.tabBar,
+  }) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(50);
@@ -28,18 +28,19 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: boolLeading ?? false,
-    /*  systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: AppColor.prime),*/
       iconTheme: IconThemeData(color: AppColor.white),
-     // backgroundColor: AppColor.prime,
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: <Color>[EnvironmentConfig.of(context)!.secondaryTheme,EnvironmentConfig.of(context)!.primaryTheme,]),
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: <Color>[
+              EnvironmentConfig.of(context)!.secondaryTheme,
+              EnvironmentConfig.of(context)!.primaryTheme,
+            ],
+          ),
         ),
       ),
-
       elevation: 0,
       leading: leading,
       centerTitle: true,
@@ -47,7 +48,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Flexible(
+          AppConfig.instanceInit()?.loginData.user?.projectLogo == null ?  SizedBox.shrink() :Flexible(
             child: Container(
               width: MediaQuery.of(context).size.width * 0.15,
               height: MediaQuery.of(context).size.height * 0.04,
@@ -67,13 +68,8 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-          Flexible(
-            child: Text(
-              title ?? "",
-              style: Styles.login,
-            ),
-          ),
-          Flexible(
+          Flexible(child: Text(title ?? "", style: Styles.login)),
+          AppConfig.instanceInit()?.loginData.user?.smartLogo == null ?  SizedBox.shrink() :Flexible(
             child: Container(
               width: MediaQuery.of(context).size.width * 0.15,
               height: MediaQuery.of(context).size.height * 0.03,

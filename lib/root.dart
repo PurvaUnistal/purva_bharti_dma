@@ -4,6 +4,8 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 import 'package:pbg_app/Utils/common_widgets/res/singleton.dart';
 
+import 'Service/api_server_dio.dart';
+import 'Utils/common_widgets/res/app_navigator.dart';
 import 'Utils/common_widgets/res/enums.dart';
 import 'Utils/common_widgets/res/environment_config.dart';
 import 'features/internet/bloc/internet_bloc.dart';
@@ -15,13 +17,42 @@ class Root extends StatefulWidget {
   State<Root> createState() => _RootState();
 }
 
-class _RootState extends State<Root> {
+class _RootState extends State<Root> with WidgetsBindingObserver {
 
+  @override
   void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.initState();
   }
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    AppConfig.init(context);
+    ServerRequest.init();
+    AppConfig.instanceInit()!.setClient(client: widget.client);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: EnvironmentConfig.of(context)?.primaryTheme,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // listen for system changes
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    if (mounted) setState(() {}); // rebuild when dark/light toggles
+    super.didChangePlatformBrightness();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Singleton.instanceInit()?.context = context;
@@ -36,8 +67,8 @@ class _RootState extends State<Root> {
         BlocProvider(create: (BuildContext context) => ViewSyncRecordBloc()),
       ],
       child: MaterialApp(
-        navigatorKey: navigatorKey,
-        title: AppString.appName,
+        navigatorKey: AppNavigator.navigatorKey,
+        title: "DMA APP",
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: EnvironmentConfig.of(context)!.primaryTheme,
@@ -48,6 +79,7 @@ class _RootState extends State<Root> {
             seedColor: EnvironmentConfig.of(context)!.primaryTheme,
           ),
         ),
+        themeMode: ThemeMode.system,
         home: SplashView(),
 
       ),

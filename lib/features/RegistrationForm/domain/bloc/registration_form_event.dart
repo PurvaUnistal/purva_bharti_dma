@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_connection_type_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_customer_details_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_name_title_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_property_type_model.dart';
 
 abstract class RegistrationFormEvent extends Equatable {}
 
@@ -16,6 +20,23 @@ class RegistrationFormSetInterestValue extends RegistrationFormEvent {
   @override
   // TODO: implement props
   List<Object?> get props => [registrationTypeValue];
+}
+
+class RegistrationFormApplicationNoEvent extends RegistrationFormEvent {
+  final String applicationNo;
+  final BuildContext context;
+  RegistrationFormApplicationNoEvent({required this.applicationNo, required this.context});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [applicationNo, context];
+}
+
+class RegistrationFormCustomerSelectedEvent extends RegistrationFormEvent {
+  final CustomerDetailsModel customer;
+  RegistrationFormCustomerSelectedEvent({required this.customer});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [customer];
 }
 
 class RegistrationFormSetConversionPolicyValue extends RegistrationFormEvent {
@@ -66,6 +87,14 @@ class RegistrationFormSetGuardianTypeValue extends RegistrationFormEvent {
   List<Object?> get props => [guardianTypeValue];
 }
 
+class RegistrationFormSetHouseHoldTypeValue extends RegistrationFormEvent {
+  final PropertyTypeModel houseHoldTypeValue;
+  RegistrationFormSetHouseHoldTypeValue({required this.houseHoldTypeValue});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [houseHoldTypeValue];
+}
+
 class RegistrationFormSetPropertyCategoryValue extends RegistrationFormEvent {
   final dynamic propertyCategoryValue;
   RegistrationFormSetPropertyCategoryValue({required this.propertyCategoryValue});
@@ -81,6 +110,31 @@ class RegistrationFormSetPropertyClassValue extends RegistrationFormEvent {
   // TODO: implement props
   List<Object?> get props => [propertyClassValue];
 }
+
+class RegistrationFormNameTitleValue extends RegistrationFormEvent {
+  final GetNameTitleModel nameTitleVal;
+  RegistrationFormNameTitleValue({required this.nameTitleVal});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [nameTitleVal];
+}
+
+class RegistrationFormRegTypeValue extends RegistrationFormEvent {
+  final ConnectionTypeModel regFromVal;
+  RegistrationFormRegTypeValue({required this.regFromVal});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [regFromVal];
+}
+
+class RegistrationFormMeterTypeValue extends RegistrationFormEvent {
+  final ConnectionTypeModel meterTypeVal;
+  RegistrationFormMeterTypeValue({required this.meterTypeVal});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [meterTypeVal];
+}
+
 
 class RegistrationFormSetDistrictValue extends RegistrationFormEvent {
   final dynamic allDistrictValue;
@@ -120,6 +174,14 @@ class RegistrationFormSetKycDoc2Value extends RegistrationFormEvent {
   @override
   // TODO: implement props
   List<Object?> get props => [kycDoc2Value];
+}
+
+class RegistrationFormAddressProofEvent extends RegistrationFormEvent {
+  final GetOwnershipProofModel addressProofValue;
+  RegistrationFormAddressProofEvent({required this.addressProofValue});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [addressProofValue];
 }
 
 class RegistrationFormSetKycDoc3Value extends RegistrationFormEvent {
@@ -242,13 +304,35 @@ class SelectAddBackCameraCapture extends RegistrationFormEvent {
   List<Object?> get props => [];
 }
 
+class SelectNocDocBackCameraCapture extends RegistrationFormEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
 class SelectNocDocBackGalleryCapture extends RegistrationFormEvent {
   @override
   // TODO: implement props
   List<Object?> get props => [];
 }
 
+class SelectNocDocFrontCameraCapture extends RegistrationFormEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+class SelectNocDocFrontGalleryCapture extends RegistrationFormEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
 class SelectNocDocCameraCapture extends RegistrationFormEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class SelectNocDocGalleryCapture extends RegistrationFormEvent {
   @override
   // TODO: implement props
   List<Object?> get props => [];

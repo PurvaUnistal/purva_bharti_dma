@@ -11,41 +11,48 @@ class BackgroundWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Stack(
-        children: [
-          child,
-          Positioned(
+      child: Container(
+        color: Colors.white, // White background
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+            child,
+            Positioned(
               bottom: 0,
               left: 0,
               right: 0,
               child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: <Color>[
-                          EnvironmentConfig.of(context)!.secondaryTheme,
-                          EnvironmentConfig.of(context)!.primaryTheme,]),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      EnvironmentConfig.of(context)!.secondaryTheme,
+                      EnvironmentConfig.of(context)!.primaryTheme,
+                    ],
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                          child: Text(
-                            AppString.companyName,
-                            textAlign: TextAlign.start,
-                            style: Styles.rel,
-                          )),
-                      Text(
-                        AppString.version,
-                        textAlign: TextAlign.start,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        AppString.companyName,
                         style: Styles.rel,
                       ),
-                    ],
-                  )))
-        ],
+                    ),
+                    Text(
+                      AppString.version,
+                      style: Styles.rel,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
-
   }
 }

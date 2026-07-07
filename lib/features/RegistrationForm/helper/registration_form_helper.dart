@@ -6,25 +6,33 @@ class RegistrationFormHelper {
   static Future<dynamic> textFieldValidationCheck({
     required BuildContext context,
     required String registrationType,
+    required String applicationNumber,
     required String reasonRegistration,
     required String chargeId,
     required String areaId,
     required String mobileNumber,
     required String altMobileNo,
+    required String nameTitle,
     required String firstName,
     required String middleName,
     required String lastName,
+    required String dob,
     required String guardianType,
     required String guardianName,
     required String emailId,
     required String propertyCategoryId,
     required String propertyClassId,
     required String buildingNumber,
+    required String floorNumber,
     required String houseNumber,
     required String colonySocietyApartment,
     required String streetName,
     required String town,
     required String districtId,
+    required String wardNumber,
+    required String premiseType,
+    required String meterType,
+    required String houseHoldType,
     required String nearestLandmark,
     required String pinCode,
     required String latitude,
@@ -68,6 +76,10 @@ class RegistrationFormHelper {
     required String chequeMICRNo,
     required File chequePath,
     required File canceledCheque,
+    required String kyc3Number,
+    required File nocFrontPath,
+    required File nocBackPath,
+
   }) async {
     try {
       if (registrationType == "") {
@@ -86,6 +98,10 @@ class RegistrationFormHelper {
         Utils.errorSnackBar(
             msg: "THe Mobile Number field is required.", context: context);
         return null;
+      } else if (nameTitle == "") {
+        Utils.errorSnackBar(
+            msg: "The Title field is required.", context: context);
+        return null;
       } else if (firstName.isEmpty) {
         Utils.errorSnackBar(
             msg: "The First Name field is required.", context: context);
@@ -94,7 +110,11 @@ class RegistrationFormHelper {
         Utils.errorSnackBar(
             msg: "The Last Name field is required.", context: context);
         return null;
-      } else if (registrationType == "1") {
+      }  else if (dob.isEmpty) {
+        Utils.errorSnackBar(
+            msg: "The DOB field is required.", context: context);
+        return null;
+      }else if (registrationType == "1") {
         if (guardianType == "") {
           Utils.errorSnackBar(
               msg: "The Guardian Type field is required.", context: context);
@@ -191,20 +211,16 @@ class RegistrationFormHelper {
               context: context);
           return null;
         } else if (ownershipProperty == "") {
-          Utils.errorSnackBar(
-              msg: "The Ownership Type Property field is required.",
+          Utils.errorSnackBar(msg: "The Ownership Type Property field is required.",
               context: context);
           return null;
         } else if (ownershipProperty == "Rented") {
           if (nocDocPath.path.isEmpty) {
-            Utils.errorSnackBar(
-                msg: "The NOC Document field is required.", context: context);
+            Utils.errorSnackBar(msg: "The NOC Document field is required.", context: context);
             return null;
           }
         } else if (acceptConversionPolicy == "") {
-          Utils.errorSnackBar(
-              msg: "The Accept Conversion Policy field is required.",
-              context: context);
+          Utils.errorSnackBar(msg: "The Accept Conversion Policy field is required.", context: context);
           return null;
         } else if (acceptExtraFittingCost == "") {
           Utils.errorSnackBar(
@@ -217,22 +233,18 @@ class RegistrationFormHelper {
               context: context);
           return null;
         } else if (depositStatus == "") {
-          Utils.errorSnackBar(
-              msg: "The Deposit Status field is required.", context: context);
+          Utils.errorSnackBar(msg: "The Deposit Status field is required.", context: context);
           return null;
         } else if (schemeType == "") {
-          Utils.errorSnackBar(
-              msg: "The Scheme Type field is required.", context: context);
+          Utils.errorSnackBar(msg: "The Scheme Type field is required.", context: context);
           return null;
         }
         if (modeDepositValue == "") {
-          Utils.errorSnackBar(
-              msg: "The Mode Of Deposit field is required.", context: context);
+          Utils.errorSnackBar(msg: "The Mode Of Deposit field is required.", context: context);
           return null;
         } else if (modeDepositValue == "1") {
           if (chqNo.isEmpty) {
-            Utils.errorSnackBar(
-                msg: "The Cheque Number field is required.", context: context);
+            Utils.errorSnackBar(msg: "The Cheque Number field is required.", context: context);
             return null;
           } else if (chqDate.isEmpty) {
             Utils.errorSnackBar(
@@ -284,6 +296,7 @@ class RegistrationFormHelper {
         propertyCategoryId: propertyCategoryId,
         propertyClassId: propertyClassId,
         buildingNumber: buildingNumber,
+        floorNumber: floorNumber,
         houseNumber: houseNumber,
         colonySocietyApartment: colonySocietyApartment,
         streetName: streetName,
@@ -320,10 +333,10 @@ class RegistrationFormHelper {
         chequeMicrAccount: chequeMICRNo,
         idBackPath1: idBackPath.path,
         addBackPath2: addBackPath.path,
-        nocBackPath3: nocDocPath.path,
+        nocBackPath3: nocBackPath.path,
         idFrontPath1: idFrontPath.path,
         addFrontPath2: addFrontPath.path,
-        nocFrontPath3: nocDocPath.path,
+        nocFrontPath3: nocFrontPath.path,
         uploadHousePhoto: housePath.path,
         uploadCustomerPhoto: customerPath.path,
         customerConsent: customerConsent.path,
@@ -331,6 +344,17 @@ class RegistrationFormHelper {
         canceledChequePhoto: canceledCheque.path,
         chequePhoto: chequePath.path,
         reasonRegistration: reasonRegistration,
+        applicationNumber: applicationNumber,
+        nameTitle: nameTitle,
+        dob: dob,
+        wardNumber: wardNumber,
+        premiseType: premiseType,
+        reasonDeposit: reasonDeposit,
+        houseHoldType: houseHoldType,
+        meterType: meterType,
+        kycDocument3Number: kyc3Number,
+        nocDocPath: nocDocPath.path,
+
       );
       return custRegSyncStore;
     } catch (e) {
@@ -408,9 +432,9 @@ class RegistrationFormHelper {
         noInitialDepositStatusReason: custRegSyncStore.noInitialDepositStatusReason ?? "",
         alternateMobile: custRegSyncStore.alternateMobile ?? "",
         chequeMicrAccount: custRegSyncStore.chequeMicrAccount ?? "",
-        housePhoto: custRegSyncStore.housePhoto ?? "",
-        ownerConsentText: custRegSyncStore.ownerConsentText ?? "",
-        reasonForHold: custRegSyncStore.reasonForHold ?? "",
+        // housePhoto: custRegSyncStore.housePhoto ?? "",
+        // ownerConsentText: custRegSyncStore.ownerConsentText ?? "",
+        // reasonForHold: custRegSyncStore.reasonForHold ?? "",
         idFrontPath1: custRegSyncStore.idFrontPath1 ?? "",
         idBackPath1: custRegSyncStore.idBackPath1 ?? "",
         addFrontPath2: custRegSyncStore.addFrontPath2 ?? "",
@@ -425,6 +449,19 @@ class RegistrationFormHelper {
         chequePhoto: custRegSyncStore.chequePhoto ?? "",
         customerConsentPhoto: custRegSyncStore.customerConsentPhoto ?? "",
         reasonRegistration: custRegSyncStore.reasonRegistration ?? "",
+        applicationNumber: custRegSyncStore.applicationNumber ?? "",
+        dob: custRegSyncStore.dob,
+        floorNumber: custRegSyncStore.floorNumber,
+        houseHoldType: custRegSyncStore.houseHoldType,
+        isSingleServerLoader: custRegSyncStore.isSingleServerLoader,
+        meterType: custRegSyncStore.meterType,
+        nameTitle: custRegSyncStore.nameTitle,
+        nocDocPath: custRegSyncStore.nocDocPath,
+        premiseType: custRegSyncStore.premiseType,
+        reasonDeposit: custRegSyncStore.reasonDeposit,
+        wardNumber: custRegSyncStore.wardNumber,
+        regFromVal: custRegSyncStore.regFromVal ?? "",
+
       );
       if (isUpdate) {
         await hiveBox.putAt(index, entry);

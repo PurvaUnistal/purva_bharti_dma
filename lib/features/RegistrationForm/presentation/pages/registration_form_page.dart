@@ -3,19 +3,25 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/Utils/common_widgets/background_widget.dart';
 import 'package:pbg_app/Utils/common_widgets/drop_down_search_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/Utils/common_widgets/res/enums.dart';
 import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
+import 'package:pbg_app/Utils/common_widgets/search_text_field.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_connection_type_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_name_title_model.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_property_type_model.dart';
 
 class RegistrationFormPage extends StatefulWidget {
   final bool isUpdate;
   final int index;
   final SaveRegistrationFormModel localData;
 
-  const RegistrationFormPage(
-      {Key? key,
-      required this.isUpdate,
-      required this.index,
-      required this.localData})
-      : super(key: key);
+  const RegistrationFormPage({
+    Key? key,
+    required this.isUpdate,
+    required this.index,
+    required this.localData,
+  }) : super(key: key);
 
   @override
   State<RegistrationFormPage> createState() => _RegistrationFormPageState();
@@ -24,23 +30,49 @@ class RegistrationFormPage extends StatefulWidget {
 class _RegistrationFormPageState extends State<RegistrationFormPage> {
   final formGlobalKey = GlobalKey<FormState>();
 
+  late final Client _client;
+
+  bool get _isVPPL => _client == Client.vppl;
+
+  bool get _isVRPL => _client == Client.vrpl;
+
+  bool get _isHPOIL => _client == Client.hpoil;
+
+  bool get _isAGCL => _client == Client.agcl;
+
+  bool get _isMGL => _client == Client.mahaNagar;
+
+  bool get _isPBGPL => _client == Client.purvaBharti;
+
+  String _regKey(RegiFormUpdateDataState s) =>
+      _isAGCL
+          ? (s.regFromVal?.name?.toString() ?? "")
+          : (s.registrationTypeValue?.value?.toString() ?? "");
+
+  bool _showPropertyDropdowns(RegiFormUpdateDataState s) {
+    if (_isAGCL) return true;
+    return s.registrationTypeValue?.value?.toString() == "Registration For LMC";
+  }
+
   @override
   void initState() {
     super.initState();
+    _client = AppConfig.instanceInit()!.client!;
 
     final bloc = BlocProvider.of<RegistrationFormBloc>(context);
     bloc.add(RegistrationFormPageLoadEvent(context: context));
 
     if (widget.isUpdate) {
-      bloc.add(UpdateLocalDataEvent(
-        context: context,
-        isUpdate: true,
-        index: widget.index,
-        updatedModel: widget.localData,
-      ));
+      bloc.add(
+        UpdateLocalDataEvent(
+          context: context,
+          isUpdate: true,
+          index: widget.index,
+          updatedModel: widget.localData,
+        ),
+      );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +81,12 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
-          child: AppBarWidget(
-            boolLeading: true,
-            title: "Registration Form",
-          ),
+          child: AppBarWidget(boolLeading: true, title: "Registration Form"),
         ),
         body: BackgroundWidget(
           child: BlocBuilder<RegistrationFormBloc, RegistrationFormState>(
             builder: (context, state) {
-              if (state is RegistrationFormGetAllDataState) {
+              if (state is RegiFormUpdateDataState) {
                 return _buildLayout(stateData: state);
               } else {
                 return const Center(child: SpinLoader());
@@ -69,19 +98,20 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  // _buildLayout(stateData: state);
-
   Future<bool> _onWillPop() async {
     return (await showDialog(
-            context: context,
-            builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
+          context: context,
+          builder:
+              (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
                 message: "Do you want to exit an Registration Form Page?",
                 okButtonText: "Exit",
-                onPressed: () => Navigator.of(context).pop(true)))) ??
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+        )) ??
         false;
   }
 
-  Widget _buildLayout({required RegistrationFormGetAllDataState stateData}) {
+  Widget _buildLayout({required RegiFormUpdateDataState stateData}) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -89,7 +119,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
           key: formGlobalKey,
           child: Column(
             children: [
-              _registrationTypeDropdown(stateData: stateData),
+              if (!_isAGCL) ...[
+                _registrationTypeDropdown(stateData: stateData),
+              ],
+              if (_isAGCL) ...[_registrationFromDropdown(stateData: stateData)],
+              _applicationNumberController(stateData: stateData),
               _reasonRegistrationController(stateData: stateData),
               _chargeAreaDropdown(stateData: stateData),
               _verticalSpace(),
@@ -98,32 +132,43 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               _mobileNumberWidget(stateData: stateData),
               _verticalSpace(),
               _altMobileNumberWidget(stateData: stateData),
+              !_isAGCL
+                  ? SizedBox.shrink()
+                  : _nameTitleDropdown(stateData: stateData),
+              _verticalSpace(),
               _firstNameWidget(stateData: stateData),
               _middleNameWidget(stateData: stateData),
               _lastNameWidget(stateData: stateData),
+              !_isAGCL ? SizedBox.shrink() : _dobWidget(stateData: stateData),
               _guardianDropdown(stateData: stateData),
               _guardianNameWidget(stateData: stateData),
               _emailIdWidget(stateData: stateData),
-              stateData.registrationTypeValue?.key == "1"
+              _showPropertyDropdowns(stateData)
                   ? Column(
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                                flex: 3,
-                                child: _propertyCategoryDropdown(
-                                    stateData: stateData)),
-                            _widthSpace(),
-                            Flexible(
-                                flex: 3,
-                                child: _propertyClassDropdown(
-                                    stateData: stateData)),
-                          ],
-                        ),
-                        _verticalSpace(),
-                      ],
-                    )
+                    children: [
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 3,
+                            child: _propertyCategoryDropdown(
+                              stateData: stateData,
+                            ),
+                          ),
+                          _widthSpace(),
+                          Flexible(
+                            flex: 3,
+                            child: _propertyClassDropdown(stateData: stateData),
+                          ),
+                        ],
+                      ),
+                      _verticalSpace(),
+                    ],
+                  )
                   : Container(),
+              _houseHoldTypeDropdown(stateData: stateData),
+              !_isAGCL
+                  ? SizedBox.shrink()
+                  : _floorNumberWidget(stateData: stateData),
               _buildNumberWidget(stateData: stateData),
               _houseNumberWidget(stateData: stateData),
               _colonyWidget(stateData: stateData),
@@ -132,48 +177,60 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               _districtDropdown(stateData: stateData),
               _nearestLandmarkWidget(stateData: stateData),
               _pinCodeWidget(stateData: stateData),
+              !_isAGCL
+                  ? SizedBox.shrink()
+                  : _wardNumberWidget(stateData: stateData),
+              !_isAGCL
+                  ? SizedBox.shrink()
+                  : _premiseTypeWidget(stateData: stateData),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   stateData.isLocationLoader == false
                       ? Flexible(
                         child: Row(
-                            children: [
-                              Flexible(
-                                  flex: 3,
-                                  child: _latWidget(stateData: stateData)),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.02,
-                              ),
-                              Flexible(
-                                  flex: 3,
-                                  child: _longWidget(stateData: stateData)),
-                            ],
-                          ),
+                          children: [
+                            Flexible(
+                              flex: 3,
+                              child: _latWidget(stateData: stateData),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.02,
+                            ),
+                            Flexible(
+                              flex: 3,
+                              child: _longWidget(stateData: stateData),
+                            ),
+                          ],
+                        ),
                       )
                       : DottedLoaderWidget(),
                   IconButton(
-                    icon:
-                        Icon(Icons.location_on_outlined, color: EnvironmentConfig.of(context)!.primaryTheme),
+                    icon: Icon(
+                      Icons.location_on_outlined,
+                      color: EnvironmentConfig.of(context)!.primaryTheme,
+                    ),
                     onPressed: () {
-                      BlocProvider.of<RegistrationFormBloc>(context)
-                          .add(RegistrationFormSetLocation(context: context));
+                      BlocProvider.of<RegistrationFormBloc>(
+                        context,
+                      ).add(RegistrationFormSetLocation(context: context));
                     },
-                    //  stateData: stateData
                   ),
                 ],
               ),
-              if (stateData.registrationTypeValue?.key != "0") ...[
+              if (_regKey(stateData) != "Future Registration") ...[
                 _verticalSpace(),
                 Row(
                   children: [
                     Flexible(
-                        flex: 3,
-                        child: _existCookingFuelDropdown(stateData: stateData)),
+                      flex: 3,
+                      child: _existCookingFuelDropdown(stateData: stateData),
+                    ),
                     _widthSpace(),
                     Flexible(
-                        flex: 3,
-                        child: _numberKitchenWidget(stateData: stateData)),
+                      flex: 3,
+                      child: _numberKitchenWidget(stateData: stateData),
+                    ),
                   ],
                 ),
                 _verticalSpace(),
@@ -181,12 +238,14 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
-                        flex: 3,
-                        child: _numberBathroomWidget(stateData: stateData)),
+                      flex: 3,
+                      child: _numberBathroomWidget(stateData: stateData),
+                    ),
                     _widthSpace(),
                     Flexible(
-                        flex: 3,
-                        child: _familyMemberWidget(stateData: stateData)),
+                      flex: 3,
+                      child: _familyMemberWidget(stateData: stateData),
+                    ),
                   ],
                 ),
               ],
@@ -196,8 +255,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _idFrontFileImg(stateData: stateData),
-                  _idBackFileImg(context: context, stateData: stateData),
+                  Flexible(child: _idFrontFileImg(stateData: stateData)),
+                  _widthSpace(),
+                  Flexible(child: _idBackFileImg(stateData: stateData)),
                 ],
               ),
               _verticalSpace(),
@@ -206,75 +266,95 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _eleBillFrontImg(context: context, stateData: stateData),
-                  _eleBillBackImg(context: context, stateData: stateData),
+                  Flexible(child: _eleBillFrontImg(stateData: stateData)),
+                  _widthSpace(),
+                  Flexible(child: _eleBillBackImg(stateData: stateData)),
                 ],
               ),
               _verticalSpace(),
-              if (stateData.registrationTypeValue?.key != "0") ...[
-                _kycDoc3Dropdown(stateData: stateData),
+              if (_regKey(stateData) != "Future Registration") ...[
+                _isAGCL ? _kycDoc33Dropdown(stateData: stateData) : _kycDoc3Dropdown(stateData: stateData),
+                _isAGCL
+                    ? _kycDoc3Widget(stateData: stateData)
+                    : SizedBox.shrink(),
+                _isAGCL
+                    ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(child: _nocFrontImg(stateData: stateData)),
+                        _widthSpace(),
+                        Flexible(child: _nocBackImg(stateData: stateData)),
+                      ],
+                    )
+                    : SizedBox.shrink(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _uploadCustomerImg(context: context, stateData: stateData),
-                    _uploadHouseImg(context: context, stateData: stateData),
-                    if (stateData.kycDoc3Value?.value == "Rented")
-                      _nocDocImg(context: context, stateData: stateData),
+                    Flexible(child: _uploadCustomerImg(stateData: stateData)),
+                    _widthSpace(),
+                    Flexible(child: _uploadHouseImg(stateData: stateData)),
+                    if (stateData.kycDoc3Value?.value == "Rented") ...[
+                      _widthSpace(),
+                      Flexible(child: _nocDocImg(stateData: stateData)),
+                    ],
                   ],
                 ),
                 _verticalSpace(),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Flexible(
-                        flex: 3,
-                        child: _acceptConversionPolicyDropdown(
-                            stateData: stateData)),
+                      child: _acceptConversionPolicyDropdown(
+                        stateData: stateData,
+                      ),
+                    ),
                     _widthSpace(),
                     Flexible(
-                        flex: 3,
-                        child: _acceptExtraFittingCostDropdown(
-                            stateData: stateData)),
+                      child: _acceptExtraFittingCostDropdown(
+                        stateData: stateData,
+                      ),
+                    ),
                     _widthSpace(),
                     Flexible(
-                        flex: 3,
-                        child: _societyAllowDropdown(stateData: stateData))
+                      child: _societyAllowDropdown(stateData: stateData),
+                    ),
                   ],
                 ),
                 BorderWidget(
                   children: [
-                    Text(
-                      "Security Deposit",
-                      style: Styles.title,
-                    ),
+                    Text("Security Deposit", style: Styles.title),
                     _verticalSpace(),
+                    _meterTypeDropdown(stateData: stateData),
                     _initialDepositStatusDropdown(stateData: stateData),
                     _reasonDepositStatusWidget(stateData: stateData),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Flexible(
-                            flex: 6,
-                            child: _schemeTypeDropdown(stateData: stateData)),
+                          flex: 6,
+                          child: _schemeTypeDropdown(stateData: stateData),
+                        ),
                         _widthSpace(),
                         Flexible(
-                            flex: 3,
-                            child: _depositTypeDetailsButton(
-                                stateData: stateData)),
+                          flex: 3,
+                          child: _depositTypeDetailsButton(
+                            stateData: stateData,
+                          ),
+                        ),
                       ],
                     ),
                     _verticalSpace(),
                     _depositAmountWidget(stateData: stateData),
-                    _modeDepositDropdown(stateData: stateData),
+                    _isAGCL
+                        ? SizedBox.shrink()
+                        : _modeDepositDropdown(stateData: stateData),
                   ],
                 ),
                 if (stateData.modeDepositValue != null &&
                     stateData.modeDepositValue?.value == "Cheque") ...[
                   BorderWidget(
                     children: [
-                      Text(
-                        "Cheque",
-                        style: Styles.title,
-                      ),
+                      Text("Cheque", style: Styles.title),
                       _verticalSpace(),
                       _chequeNoWidget(stateData: stateData),
                       _chequeDateWidget(stateData: stateData),
@@ -297,180 +377,245 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _registrationTypeDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _registrationTypeDropdown({
+    required RegiFormUpdateDataState stateData,
+  }) {
     return ColumnWidget(
       child: DropdownWidget<GetNotInterestedModel>(
-        star: AppString.star,
-        label: stateData.labelModel.registration == null
-            ? AppString.registrationType
-            : stateData.labelModel.registration!.registrationType,
-        hint: stateData.labelModel.registration == null
-            ? AppString.registrationType
-            : stateData.labelModel.registration!.registrationType,
-        dropdownValue: stateData.registrationTypeValue?.key == null
-            ? null
-            : stateData.registrationTypeValue,
+        isRequired: true,
+        hint:
+            stateData.labelModel.registration == null
+                ? AppString.registrationType
+                : stateData.labelModel.registration!.registrationType,
+        dropdownValue:
+            stateData.registrationTypeValue?.key == null
+                ? null
+                : stateData.registrationTypeValue,
         items: stateData.getNotInterestedList,
         onChanged: (val) {
-          log("stateData.registrationTypeValue-->${stateData.registrationTypeValue}");
-          BlocProvider.of<RegistrationFormBloc>(context).add(
-              RegistrationFormSetInterestValue(registrationTypeValue: val!));
+          log(
+            "stateData.registrationTypeValue-->${stateData.registrationTypeValue}",
+          );
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetInterestValue(registrationTypeValue: val!));
         },
       ),
     );
   }
 
-  Widget _reasonRegistrationController(
-      {required RegistrationFormGetAllDataState stateData}) {
-    return stateData.registrationTypeValue?.key == "0"
+  Widget _registrationFromDropdown({
+    required RegiFormUpdateDataState stateData,
+  }) {
+    return ColumnWidget(
+      child: DropdownWidget<ConnectionTypeModel>(
+        isRequired: true,
+        hint: "Registration From",
+        dropdownValue:
+            stateData.regFromVal?.key == null ? null : stateData.regFromVal,
+        items: stateData.listOfDmaRegForm,
+        onChanged: (val) {
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormRegTypeValue(regFromVal: val!));
+          log(
+            "key=${stateData.regFromVal?.key} value=${stateData.regFromVal?.name}",
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _applicationNumberController({
+    required RegiFormUpdateDataState stateData,
+  }) {
+    if (_regKey(stateData) != "PNGRB") return Container();
+
+    return ColumnWidget(
+      child: SearchTextField(
+        isLoader: stateData.searchCustomerLoader,
+        controller: stateData.applicationNumberController,
+        label: AppString.applicationNumber,
+        list: stateData.customerSuggestions,
+        itemLabel:
+            (item) =>
+                "${item.applicationNumber ?? ''} — ${item.firstName ?? ''} ${item.lastName ?? ''}",
+        onChange: (value) {
+          if (value.toString().isNotEmpty) {
+            BlocProvider.of<RegistrationFormBloc>(context).add(
+              RegistrationFormApplicationNoEvent(
+                applicationNo: value.toString(),
+                context: context,
+              ),
+            );
+          }
+        },
+        onClick: (value) {
+          FocusScope.of(context).unfocus();
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormCustomerSelectedEvent(customer: value));
+        },
+      ),
+    );
+  }
+
+  Widget _reasonRegistrationController({
+    required RegiFormUpdateDataState stateData,
+  }) {
+    return _regKey(stateData) == "Future Registration"
         ? ColumnWidget(
-            child: TextFieldWidget(
-              label: AppString.reasonRegistration,
-              hintText: AppString.reasonRegistration,
-              controller: stateData.reasonRegistrationController,
-              keyboardType: TextInputType.text,
-            ),
-          )
+          child: TextFieldWidget(
+            labelText: AppString.reasonRegistration,
+            controller: stateData.reasonRegistrationController,
+            keyboardType: TextInputType.text,
+          ),
+        )
         : Container();
   }
 
-  Widget _acceptConversionPolicyDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _acceptConversionPolicyDropdown({
+    required RegiFormUpdateDataState stateData,
+  }) {
     return ColumnWidget(
       child: DropdownWidget<GetAcceptConversionPolicyModel>(
-        label: AppString.conversionPolicy,
         hint: AppString.conversionPolicy,
-        dropdownValue: stateData.conversionPolicyValue?.key == null
-            ? null
-            : stateData.conversionPolicyValue,
+        dropdownValue:
+            stateData.conversionPolicyValue?.key == null
+                ? null
+                : stateData.conversionPolicyValue,
         items: stateData.conversionPolicyList,
         onChanged: (val) {
           BlocProvider.of<RegistrationFormBloc>(context).add(
-              RegistrationFormSetConversionPolicyValue(
-                  conversionPolicyValue: val!));
+            RegistrationFormSetConversionPolicyValue(
+              conversionPolicyValue: val!,
+            ),
+          );
         },
       ),
     );
   }
 
-  Widget _acceptExtraFittingCostDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _acceptExtraFittingCostDropdown({
+    required RegiFormUpdateDataState stateData,
+  }) {
     return ColumnWidget(
       child: DropdownWidget<GetAcceptExtraFittingCostModel>(
-        label: AppString.fittingCost,
         hint: AppString.fittingCost,
-        dropdownValue: stateData.extraFittingValue?.key == null
-            ? null
-            : stateData.extraFittingValue,
+        dropdownValue:
+            stateData.extraFittingValue?.key == null
+                ? null
+                : stateData.extraFittingValue,
         items: stateData.extraFittingCostList,
         onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context).add(
-              RegistrationFormSetExtraFittingValue(extraFittingValue: val));
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetExtraFittingValue(extraFittingValue: val));
         },
       ),
     );
   }
 
-  Widget _societyAllowDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _societyAllowDropdown({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetSocietyAllowModel>(
-        label: stateData.labelModel.registration == null
-            ? AppString.mdpeAllow
-            : stateData.labelModel.registration!.mdpe,
-        hint: stateData.labelModel.registration == null
-            ? AppString.mdpeAllow
-            : stateData.labelModel.registration!.mdpe,
-        dropdownValue: stateData.societyAllowValue?.key == null
-            ? null
-            : stateData.societyAllowValue,
+        hint:
+            stateData.labelModel.registration == null
+                ? AppString.mdpeAllow
+                : stateData.labelModel.registration!.mdpe,
+        dropdownValue:
+            stateData.societyAllowValue?.key == null
+                ? null
+                : stateData.societyAllowValue,
         items: stateData.societyAllowList,
         onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context).add(
-              RegistrationFormSetSocietyAllowValue(societyAllowValue: val));
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetSocietyAllowValue(societyAllowValue: val));
         },
       ),
     );
   }
 
-  Widget _chargeAreaDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
-    return DropDownSearchWidget(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.chargeArea
-          : stateData.labelModel.registration!.chargeArea,
-      hint: stateData.labelModel.registration == null
-          ? AppString.chargeArea
-          : stateData.labelModel.registration!.chargeArea,
-      dropdownValue: stateData.chargeAreaValue?.gid == null
-          ? null
-          : stateData.chargeAreaValue,
+  Widget _chargeAreaDropdown({required RegiFormUpdateDataState stateData}) {
+    return DropDownSearchWidget<GetChargeAreaListModel>(
+      isRequired: true,
+      label:
+          stateData.labelModel.registration == null
+              ? AppString.chargeArea
+              : stateData.labelModel.registration!.chargeArea,
+      hint:
+          stateData.labelModel.registration == null
+              ? AppString.chargeArea
+              : stateData.labelModel.registration!.chargeArea,
+      dropdownValue:
+          stateData.chargeAreaValue?.gid == null
+              ? null
+              : stateData.chargeAreaValue,
       itemAsString: (alignmentData) => alignmentData.chargeAreaName.toString(),
       items: stateData.getChargeAreaListModel,
       onChanged: (val) {
-        BlocProvider.of<RegistrationFormBloc>(context)
-            .add(RegistrationFormSetChargeAreaValue(chargeAreaValue: val));
+        BlocProvider.of<RegistrationFormBloc>(
+          context,
+        ).add(RegistrationFormSetChargeAreaValue(chargeAreaValue: val));
       },
     );
   }
 
-  Widget _areaDropdown({required RegistrationFormGetAllDataState stateData}) {
-    return DropDownSearchWidget(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.area
-          : stateData.labelModel.registration!.area,
-      hint: stateData.labelModel.registration == null
-          ? AppString.area
-          : stateData.labelModel.registration!.area,
+  Widget _areaDropdown({required RegiFormUpdateDataState stateData}) {
+    return DropDownSearchWidget<GetAllAreaModel>(
+      isRequired: true,
+      label:
+          stateData.labelModel.registration == null
+              ? AppString.area
+              : stateData.labelModel.registration!.area,
+      hint:
+          stateData.labelModel.registration == null
+              ? AppString.area
+              : stateData.labelModel.registration!.area,
       dropdownValue:
           stateData.areaValue?.gid == null ? null : stateData.areaValue,
       itemAsString: (alignmentData) => alignmentData.areaName.toString(),
       items: stateData.getAllAreaModel,
       onChanged: (val) {
-        BlocProvider.of<RegistrationFormBloc>(context)
-            .add(RegistrationFormSetAreaValue(areaValue: val));
+        BlocProvider.of<RegistrationFormBloc>(
+          context,
+        ).add(RegistrationFormSetAreaValue(areaValue: val));
       },
     );
   }
 
-  Widget _mobileNumberWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _mobileNumberWidget({required RegiFormUpdateDataState stateData}) {
     return TextFieldWidget(
-        star: AppString.star,
-        hintText: stateData.labelModel.steps == null
-            ? AppString.mobileNo
-            : stateData.labelModel.steps!.mobile,
-        label: stateData.labelModel.steps == null
-            ? AppString.mobileNo
-            : stateData.labelModel.steps!.mobile,
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
-        maxLength: 10,
-        controller: stateData.mobileController,
-        validator: (String? value) {
-          if (value != stateData.mobileController.text.trim()) {
-            return "Blank space";
-          } else if (value!.isEmpty) {
-            return "Please enter Mobile Number";
-          } else if (value.length <= 9) {
-            return 'Mobile Number must be of 10 digit';
-          }
-          return null;
-        },
-        onChanged: (v) {
-          formGlobalKey.currentState?.validate();
-        });
+      isRequired: true,
+      labelText:
+          stateData.labelModel.steps == null
+              ? AppString.mobileNo
+              : stateData.labelModel.steps!.mobile,
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
+      maxLength: 10,
+      controller: stateData.mobileController,
+      validator: (String? value) {
+        if (value != stateData.mobileController.text.trim()) {
+          return "Blank space";
+        } else if (value!.isEmpty) {
+          return "Please enter Mobile Number";
+        } else if (value.length <= 9) {
+          return 'Mobile Number must be of 10 digit';
+        }
+        return null;
+      },
+      onChanged: (v) {
+        formGlobalKey.currentState?.validate();
+      },
+    );
   }
 
-  Widget _altMobileNumberWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _altMobileNumberWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        hintText: AppString.alternateMobileNo,
-        label: AppString.alternateMobileNo,
+        labelText: AppString.alternateMobileNo,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
         maxLength: 10,
@@ -479,17 +624,14 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _firstNameWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _firstNameWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: stateData.labelModel.steps == null
-            ? AppString.firstName
-            : stateData.labelModel.steps!.firstname,
-        hintText: stateData.labelModel.steps == null
-            ? AppString.firstName
-            : stateData.labelModel.steps!.firstname,
+        isRequired: true,
+        labelText:
+            stateData.labelModel.steps == null
+                ? AppString.firstName
+                : stateData.labelModel.steps!.firstname,
         controller: stateData.firstController,
         keyboardType: TextInputType.text,
         inputFormatters: [
@@ -513,20 +655,17 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _middleNameWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _middleNameWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        label: stateData.labelModel.steps == null
-            ? AppString.middleName
-            : stateData.labelModel.steps!.middlename,
-        hintText: stateData.labelModel.steps == null
-            ? AppString.middleName
-            : stateData.labelModel.steps!.middlename,
+        labelText:
+            stateData.labelModel.steps == null
+                ? AppString.middleName
+                : stateData.labelModel.steps!.middlename,
         controller: stateData.middleController,
         keyboardType: TextInputType.text,
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
+          FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]")),
         ],
         validator: (value) {
           if (value != stateData.middleController.text.trim()) {
@@ -538,20 +677,18 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _lastNameWidget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _lastNameWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: stateData.labelModel.steps == null
-            ? AppString.lastName
-            : stateData.labelModel.steps!.lastname,
-        hintText: stateData.labelModel.steps == null
-            ? AppString.lastName
-            : stateData.labelModel.steps!.lastname,
+        isRequired: true,
+        labelText:
+            stateData.labelModel.steps == null
+                ? AppString.lastName
+                : stateData.labelModel.steps!.lastname,
         controller: stateData.lastController,
         keyboardType: TextInputType.text,
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
+          FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]")),
         ],
         validator: (value) {
           if (value != stateData.lastController.text.trim()) {
@@ -569,44 +706,96 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _guardianDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _dobWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
-      child: DropdownWidget<GetGuardianTypeModel>(
-        star: stateData.registrationTypeValue?.key != "0" ? AppString.star : "",
-        label: stateData.labelModel.registration == null
-            ? AppString.guardianType
-            : stateData.labelModel.registration!.guardianType,
-        hint: stateData.labelModel.registration == null
-            ? AppString.guardianType
-            : stateData.labelModel.registration!.guardianType,
-        dropdownValue: stateData.guardianTypeValue?.key == null
-            ? null
-            : stateData.guardianTypeValue,
-        items: stateData.getGuardianTypeList,
-        onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context).add(
-              RegistrationFormSetGuardianTypeValue(guardianTypeValue: val));
+      child: TextFieldWidget(
+        isRequired: true,
+        labelText: AppString.dob,
+        controller: stateData.dobController,
+        enabled: true,
+        keyboardType: TextInputType.datetime,
+        suffixIcon: Icon(
+          Icons.calendar_today,
+          color: EnvironmentConfig.of(context)!.primaryTheme,
+        ),
+        onTap: () async {
+          FocusScope.of(context).unfocus();
+          final picked = await showDatePicker(
+            context: context,
+            initialDate: DateTime(2000),
+            firstDate: DateTime(1900),
+            lastDate: DateTime.now(),
+          );
+          if (picked != null) {
+            stateData.dobController.text = DateFormat(
+              'dd-MM-yyyy',
+            ).format(picked);
+            formGlobalKey.currentState?.validate();
+          }
+        },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Please select Date of Birth";
+          }
+          return null;
         },
       ),
     );
   }
 
-  Widget _guardianNameWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _guardianDropdown({required RegiFormUpdateDataState stateData}) {
+    return ColumnWidget(
+      child: DropdownWidget<GetGuardianTypeModel>(
+        isRequired: _regKey(stateData) != "Future Registration" ? true : false,
+        hint:
+            stateData.labelModel.registration == null
+                ? AppString.guardianType
+                : stateData.labelModel.registration!.guardianType,
+        dropdownValue:
+            stateData.guardianTypeValue?.key == null
+                ? null
+                : stateData.guardianTypeValue,
+        items: stateData.getGuardianTypeList,
+        onChanged: (val) {
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetGuardianTypeValue(guardianTypeValue: val));
+        },
+      ),
+    );
+  }
+
+  Widget _houseHoldTypeDropdown({required RegiFormUpdateDataState stateData}) {
+    return ColumnWidget(
+      child: DropdownWidget<PropertyTypeModel>(
+        isRequired: true,
+        hint: AppString.houseHoldType,
+        dropdownValue:
+            stateData.houseHoldTypeValue?.name == null
+                ? null
+                : stateData.houseHoldTypeValue,
+        items: stateData.listOfHouseHoldType,
+        onChanged: (val) {
+          BlocProvider.of<RegistrationFormBloc>(context).add(
+            RegistrationFormSetHouseHoldTypeValue(houseHoldTypeValue: val!),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _guardianNameWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: stateData.registrationTypeValue?.key != "0" ? AppString.star : "",
-        label: stateData.labelModel.registration == null
-            ? AppString.guardianName
-            : stateData.labelModel.registration!.guardian,
-        hintText: stateData.labelModel.registration == null
-            ? AppString.guardianName
-            : stateData.labelModel.registration!.guardian,
+        isRequired: _regKey(stateData) != "Future Registration" ? true : false,
+        labelText:
+            stateData.labelModel.registration == null
+                ? AppString.guardianName
+                : stateData.labelModel.registration!.guardian,
         controller: stateData.guardianNameController,
         keyboardType: TextInputType.text,
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
+          FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]")),
         ],
         validator: (value) {
           if (value != stateData.guardianNameController.text.trim()) {
@@ -627,17 +816,15 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _emailIdWidget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _emailIdWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        label: stateData.labelModel.registration == null
-            ? AppString.emailAddress
-            : stateData.labelModel.registration!.email,
-        hintText: stateData.labelModel.registration == null
-            ? AppString.emailAddress
-            : stateData.labelModel.registration!.email,
+        labelText:
+            stateData.labelModel.registration == null
+                ? AppString.emailAddress
+                : stateData.labelModel.registration!.email,
+
         controller: stateData.emailIdController,
-        textCapitalization: TextCapitalization.none,
         keyboardType: TextInputType.emailAddress,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
@@ -660,55 +847,69 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _propertyCategoryDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _propertyCategoryDropdown({
+    required RegiFormUpdateDataState stateData,
+  }) {
     return DropdownWidget<GetPropertyCategoryModel>(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.propertyCategory
-          : stateData.labelModel.registration!.propertyCategory,
-      hint: stateData.labelModel.registration == null
-          ? AppString.propertyCategory
-          : stateData.labelModel.registration!.propertyCategory,
-      dropdownValue: stateData.propertyCategoryValue?.name != null
-          ? stateData.propertyCategoryValue
-          : null,
+      isRequired: true,
+      hint:
+          stateData.labelModel.registration == null
+              ? AppString.propertyCategory
+              : stateData.labelModel.registration!.propertyCategory,
+      dropdownValue:
+          stateData.propertyCategoryValue?.name != null
+              ? stateData.propertyCategoryValue
+              : null,
       items: stateData.getPropertyCategoryModel,
       onChanged: (val) {
         BlocProvider.of<RegistrationFormBloc>(context).add(
-            RegistrationFormSetPropertyCategoryValue(
-                propertyCategoryValue: val));
+          RegistrationFormSetPropertyCategoryValue(propertyCategoryValue: val),
+        );
       },
     );
   }
 
-  Widget _propertyClassDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _propertyClassDropdown({required RegiFormUpdateDataState stateData}) {
     return DropdownWidget<GetPropertyClassModel>(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.propertyClass
-          : stateData.labelModel.registration!.propertyClass,
-      hint: stateData.labelModel.registration == null
-          ? AppString.propertyClass
-          : stateData.labelModel.registration!.propertyClass,
-      dropdownValue: stateData.propertyClassValue?.name != null
-          ? stateData.propertyClassValue
-          : null,
+      isRequired: true,
+      hint:
+          stateData.labelModel.registration == null
+              ? AppString.propertyClass
+              : stateData.labelModel.registration!.propertyClass,
+      dropdownValue:
+          stateData.propertyClassValue?.name != null
+              ? stateData.propertyClassValue
+              : null,
       items: stateData.getPropertyClassModel,
       onChanged: (val) {
-        BlocProvider.of<RegistrationFormBloc>(context).add(
-            RegistrationFormSetPropertyClassValue(propertyClassValue: val));
+        BlocProvider.of<RegistrationFormBloc>(
+          context,
+        ).add(RegistrationFormSetPropertyClassValue(propertyClassValue: val));
       },
     );
   }
 
-  Widget _buildNumberWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _nameTitleDropdown({required RegiFormUpdateDataState stateData}) {
+    return DropdownWidget<GetNameTitleModel>(
+      isRequired: true,
+      hint: AppString.titleName,
+      dropdownValue:
+          stateData.nameTitleValue?.name != null
+              ? stateData.nameTitleValue
+              : null,
+      items: stateData.listOfNameTitle,
+      onChanged: (val) {
+        BlocProvider.of<RegistrationFormBloc>(
+          context,
+        ).add(RegistrationFormNameTitleValue(nameTitleVal: val!));
+      },
+    );
+  }
+
+  Widget _buildNumberWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        label: AppString.buildingNumber,
-        hintText: AppString.buildingNumber,
+        labelText: AppString.buildingNumber,
         controller: stateData.buildingNumberController,
         keyboardType: TextInputType.text,
         validator: (value) {
@@ -726,17 +927,35 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _houseNumberWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _floorNumberWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: stateData.labelModel.registration == null
-            ? AppString.houseNumber
-            : stateData.labelModel.registration!.house,
-        hintText: stateData.labelModel.registration == null
-            ? AppString.houseNumber
-            : stateData.labelModel.registration!.house,
+        labelText: AppString.floorNumber,
+        controller: stateData.floorNumberController,
+        keyboardType: TextInputType.text,
+        validator: (value) {
+          if (value != stateData.floorNumberController.text.trim()) {
+            return "Blank space";
+          } else if (value!.isEmpty) {
+            return "Please enter floor number";
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
+    );
+  }
+
+  Widget _houseNumberWidget({required RegiFormUpdateDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        isRequired: true,
+        labelText:
+            stateData.labelModel.registration == null
+                ? AppString.houseNumber
+                : stateData.labelModel.registration!.house,
         controller: stateData.houseNumberController,
         keyboardType: TextInputType.text,
         validator: (value) {
@@ -754,12 +973,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _colonyWidget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _colonyWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: AppString.colony,
-        hintText: AppString.colony,
+        isRequired: true,
+        labelText: AppString.colony,
         controller: stateData.colonyController,
         keyboardType: TextInputType.text,
         validator: (value) {
@@ -777,13 +995,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _streetNameWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _streetNameWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: AppString.streetName,
-        hintText: AppString.streetName,
+        isRequired: true,
+        labelText: AppString.streetName,
         controller: stateData.streetController,
         keyboardType: TextInputType.text,
         validator: (value) {
@@ -801,15 +1017,13 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _townWidget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _townWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        label: stateData.labelModel.registration == null
-            ? AppString.town
-            : stateData.labelModel.registration!.town,
-        hintText: stateData.labelModel.registration == null
-            ? AppString.town
-            : stateData.labelModel.registration!.town,
+        labelText:
+            stateData.labelModel.registration == null
+                ? AppString.town
+                : stateData.labelModel.registration!.town,
         controller: stateData.townController,
         keyboardType: TextInputType.name,
         validator: (value) {
@@ -827,146 +1041,145 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _districtDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _districtDropdown({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetAllDistrictModel>(
-        star: AppString.star,
-        label: stateData.labelModel.registration == null
-            ? AppString.district
-            : stateData.labelModel.registration!.district,
-        hint: stateData.labelModel.registration == null
-            ? AppString.district
-            : stateData.labelModel.registration!.district,
-        dropdownValue: stateData.allDistrictValue?.districtName != null
-            ? stateData.allDistrictValue
-            : null,
+        isRequired: true,
+        hint:
+            stateData.labelModel.registration == null
+                ? AppString.district
+                : stateData.labelModel.registration!.district,
+        dropdownValue:
+            stateData.allDistrictValue?.districtName != null
+                ? stateData.allDistrictValue
+                : null,
         items: stateData.getAllDistrictModel,
         onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context)
-              .add(RegistrationFormSetDistrictValue(allDistrictValue: val));
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetDistrictValue(allDistrictValue: val));
         },
       ),
     );
   }
 
-  Widget _pinCodeWidget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _pinCodeWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star: AppString.star,
-          label: stateData.labelModel.registration == null
-              ? AppString.pinCode
-              : stateData.labelModel.registration!.pincode,
-          hintText: stateData.labelModel.registration == null
-              ? AppString.pinCode
-              : stateData.labelModel.registration!.pincode,
-          controller: stateData.pinCodeController,
-          keyboardType: TextInputType.number,
-          maxLength: 6,
-          validator: (value) {
-            if (value != stateData.pinCodeController.text.trim()) {
-              return "Blank space";
-            } else if (value!.isEmpty) {
-              return "Please enter Pin Number";
-            } else if (value.length <= 5) {
-              return 'Pin Number must be of 6 digit';
-            }
-            return null;
-          },
-          onChanged: (v) {
-            formGlobalKey.currentState?.validate();
-          }),
+        isRequired: true,
+        labelText:
+            stateData.labelModel.registration == null
+                ? AppString.pinCode
+                : stateData.labelModel.registration!.pincode,
+        controller: stateData.pinCodeController,
+        keyboardType: TextInputType.number,
+        maxLength: 6,
+        validator: (value) {
+          if (value != stateData.pinCodeController.text.trim()) {
+            return "Blank space";
+          } else if (value!.isEmpty) {
+            return "Please enter Pin Number";
+          } else if (value.length <= 5) {
+            return 'Pin Number must be of 6 digit';
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
     );
   }
 
-  Widget _residentStatusDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _wardNumberWidget({required RegiFormUpdateDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        labelText: AppString.wardNumber,
+        controller: stateData.wardNumberController,
+      ),
+    );
+  }
+
+  Widget _premiseTypeWidget({required RegiFormUpdateDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        labelText: AppString.premiseType,
+        controller: stateData.premiseTypeController,
+      ),
+    );
+  }
+
+  Widget _residentStatusDropdown({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetResidentStatusModel>(
-        label: stateData.labelModel.registration == null
-            ? AppString.residentStatus
-            : stateData.labelModel.registration!.resident,
-        hint: stateData.labelModel.registration == null
-            ? AppString.residentStatus
-            : stateData.labelModel.registration!.resident,
-        dropdownValue: stateData.residentStatusValue?.key == null
-            ? null
-            : stateData.residentStatusValue,
+        hint:
+            stateData.labelModel.registration == null
+                ? AppString.residentStatus
+                : stateData.labelModel.registration!.resident,
+        dropdownValue:
+            stateData.residentStatusValue?.key == null
+                ? null
+                : stateData.residentStatusValue,
         items: stateData.getResidentStatusList,
         onChanged: (val) {
           BlocProvider.of<RegistrationFormBloc>(context).add(
-              RegistrationFormSetResidentStatusValue(residentStatusValue: val));
+            RegistrationFormSetResidentStatusValue(residentStatusValue: val),
+          );
         },
       ),
     );
   }
 
-  Widget _numberKitchenWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _numberKitchenWidget({required RegiFormUpdateDataState stateData}) {
     return TextFieldWidget(
-      label: stateData.labelModel.registration == null
-          ? AppString.noOfKitchen
-          : stateData.labelModel.registration!.kitchen,
-      hintText: stateData.labelModel.registration == null
-          ? AppString.noOfKitchen
-          : stateData.labelModel.registration!.kitchen,
+      labelText:
+          stateData.labelModel.registration == null
+              ? AppString.noOfKitchen
+              : stateData.labelModel.registration!.kitchen,
       controller: stateData.numberKitchenController,
       keyboardType: TextInputType.number,
-      inputFormatters: [
-        new LengthLimitingTextInputFormatter(2),
-
-        /// here char limit is 5
-      ],
-      // maxLength: 2,
+      inputFormatters: [new LengthLimitingTextInputFormatter(2)],
     );
   }
 
-  Widget _numberBathroomWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _numberBathroomWidget({required RegiFormUpdateDataState stateData}) {
     return TextFieldWidget(
-      label: stateData.labelModel.registration == null
-          ? AppString.noOfBathroom
-          : stateData.labelModel.registration!.bathroom,
-      hintText: stateData.labelModel.registration == null
-          ? AppString.noOfBathroom
-          : stateData.labelModel.registration!.bathroom,
+      labelText:
+          stateData.labelModel.registration == null
+              ? AppString.noOfBathroom
+              : stateData.labelModel.registration!.bathroom,
       controller: stateData.numberBathroomController,
       keyboardType: TextInputType.number,
-      inputFormatters: [
-        new LengthLimitingTextInputFormatter(2),
-
-        /// here char limit is 5
-      ],
-      //   maxLength: 2,
+      inputFormatters: [new LengthLimitingTextInputFormatter(2)],
     );
   }
 
-  Widget _existCookingFuelDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _existCookingFuelDropdown({
+    required RegiFormUpdateDataState stateData,
+  }) {
     return DropdownWidget<GetExistingCookingFuelModel>(
-      label: AppString.fuel,
       hint: AppString.fuel,
-      dropdownValue: stateData.existingCookingFuelValue?.key == null
-          ? null
-          : stateData.existingCookingFuelValue,
+      dropdownValue:
+          stateData.existingCookingFuelValue?.key == null
+              ? null
+              : stateData.existingCookingFuelValue,
       items: stateData.existingCookingFuelList,
       onChanged: (val) {
         BlocProvider.of<RegistrationFormBloc>(context).add(
-            RegistrationFormSetExistingCookingFuelValue(
-                existingCookingFuelValue: val));
+          RegistrationFormSetExistingCookingFuelValue(
+            existingCookingFuelValue: val,
+          ),
+        );
       },
     );
   }
 
-  Widget _familyMemberWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _familyMemberWidget({required RegiFormUpdateDataState stateData}) {
     return TextFieldWidget(
-      label: stateData.labelModel.registration == null
-          ? AppString.noOfFamilyMembers
-          : stateData.labelModel.registration!.family,
-      hintText: stateData.labelModel.registration == null
-          ? AppString.noOfFamilyMembers
-          : stateData.labelModel.registration!.family,
+      labelText:
+          stateData.labelModel.registration == null
+              ? AppString.noOfFamilyMembers
+              : stateData.labelModel.registration!.family,
       controller: stateData.familyMemberController,
       keyboardType: TextInputType.number,
       inputFormatters: [
@@ -978,171 +1191,179 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _latWidget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _latWidget({required RegiFormUpdateDataState stateData}) {
     return TextFieldWidget(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.locationLat
-          : stateData.labelModel.registration!.lat,
-      hintText: stateData.labelModel.registration == null
-          ? AppString.locationLat
-          : stateData.labelModel.registration!.lat,
+      isRequired: true,
+      labelText:
+          stateData.labelModel.registration == null
+              ? AppString.locationLat
+              : stateData.labelModel.registration!.lat,
       controller: stateData.latitudeController,
     );
   }
 
-  Widget _longWidget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _longWidget({required RegiFormUpdateDataState stateData}) {
     return TextFieldWidget(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.locationLong
-          : stateData.labelModel.registration!.long,
-      hintText: stateData.labelModel.registration == null
-          ? AppString.locationLong
-          : stateData.labelModel.registration!.long,
+      isRequired: true,
+      labelText:
+          stateData.labelModel.registration == null
+              ? AppString.locationLong
+              : stateData.labelModel.registration!.long,
       controller: stateData.longitudeController,
     );
   }
 
-  Widget _nearestLandmarkWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _nearestLandmarkWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          label: AppString.nearestLandmark,
-          hintText: AppString.nearestLandmark,
-          controller: stateData.nearestLandmarkController,
-          keyboardType: TextInputType.text,
-          validator: (value) {
-            if (value != stateData.nearestLandmarkController.text.trim()) {
-              return "Blank space";
-            }
-            return null;
-          },
-          onChanged: (v) {
-            formGlobalKey.currentState?.validate();
-          }),
+        labelText: AppString.nearestLandmark,
+        controller: stateData.nearestLandmarkController,
+        keyboardType: TextInputType.text,
+        validator: (value) {
+          if (value != stateData.nearestLandmarkController.text.trim()) {
+            return "Blank space";
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
     );
   }
 
-  Widget _kycDoc1Dropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _kycDoc1Dropdown({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget(
-        star: AppString.star,
-        label: AppString.idProof,
+        isRequired: true,
         hint: AppString.idProof,
-        dropdownValue: stateData.identityProofValue?.key == null
-            ? null
-            : stateData.identityProofValue,
+        dropdownValue:
+            stateData.identityProofValue?.key == null
+                ? null
+                : stateData.identityProofValue,
         items: stateData.identityProofList,
         onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context)
-              .add(RegistrationFormSetKycDoc1Value(kycDoc1Value: val));
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetKycDoc1Value(kycDoc1Value: val));
         },
       ),
     );
   }
 
-  Widget _kycDoc1Widget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _kycDoc1Widget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star: AppString.star,
-          label: AppString.idProofNo,
-          hintText: AppString.idProofNo,
-          controller: stateData.kyc1NumberController,
-          keyboardType: TextInputType.text,
-          maxLength: 20,
-          validator: (value) {
-            if (value != stateData.kyc1NumberController.text.trim()) {
-              return "Blank space";
-            }
-            /*  else if (value!.isEmpty) {
+        isRequired: true,
+        labelText: AppString.idProofNo,
+        controller: stateData.kyc1NumberController,
+        keyboardType: TextInputType.text,
+        maxLength: 20,
+        validator: (value) {
+          if (value != stateData.kyc1NumberController.text.trim()) {
+            return "Blank space";
+          }
+          /*  else if (value!.isEmpty) {
             return "Please enter id proof no.";
           }*/
-            return null;
-          },
-          onChanged: (v) {
-            formGlobalKey.currentState?.validate();
-          }),
-    );
-  }
-
-  Widget _kycDoc2Dropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
-    return ColumnWidget(
-      child: DropdownWidget<GetOwnershipProofModel>(
-        star: stateData.registrationTypeValue?.key != "0" ? AppString.star : "",
-        label: stateData.labelModel.kyc == null
-            ? AppString.addProof
-            : stateData.labelModel.kyc!.uploadDoc2,
-        hint: stateData.labelModel.kyc == null
-            ? AppString.addProof
-            : stateData.labelModel.kyc!.uploadDoc2,
-        dropdownValue: stateData.ownershipProofValue?.key == null
-            ? null
-            : stateData.ownershipProofValue,
-        items: stateData.ownershipProofList,
-        onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context)
-              .add(RegistrationFormSetKycDoc2Value(kycDoc2Value: val));
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
         },
       ),
     );
   }
 
-  Widget _kycDoc2Widget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _kycDoc2Dropdown({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
-      child: TextFieldWidget(
-          star:
-              stateData.registrationTypeValue?.key != "0" ? AppString.star : "",
-          label: stateData.labelModel.kyc == null
-              ? AppString.addProofNo
-              : stateData.labelModel.kyc!.uploadDoc2No,
-          hintText: stateData.labelModel.kyc == null
-              ? AppString.addProofNo
-              : stateData.labelModel.kyc!.uploadDoc2No,
-          controller: stateData.kyc2NumberController,
-          keyboardType: TextInputType.text,
-          maxLength: 20,
-          validator: (value) {
-            if (value != stateData.kyc2NumberController.text.trim()) {
-              return "Blank space";
-            }
-            return null;
-          },
-          onChanged: (v) {
-            formGlobalKey.currentState?.validate();
-          }),
+      child: DropdownWidget<GetOwnershipProofModel>(
+        isRequired: _regKey(stateData) != "Future Registration" ? true : false,
+        hint:
+            stateData.labelModel.kyc == null
+                ? AppString.addProof
+                : stateData.labelModel.kyc!.uploadDoc2,
+        dropdownValue:
+            stateData.ownershipProofValue?.key == null
+                ? null
+                : stateData.ownershipProofValue,
+        items: stateData.ownershipProofList,
+        onChanged: (val) {
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetKycDoc2Value(kycDoc2Value: val));
+        },
+      ),
     );
   }
 
-  Widget _kycDoc3Dropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _kycDoc2Widget({required RegiFormUpdateDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        isRequired: _regKey(stateData) != "Future Registration" ? true : false,
+        labelText:
+            stateData.labelModel.kyc == null
+                ? AppString.addProofNo
+                : stateData.labelModel.kyc!.uploadDoc2No,
+        controller: stateData.kyc2NumberController,
+        keyboardType: TextInputType.text,
+        maxLength: 20,
+        validator: (value) {
+          if (value != stateData.kyc2NumberController.text.trim()) {
+            return "Blank space";
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
+    );
+  }
+
+  Widget _kycDoc3Dropdown({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetKycDocModel>(
-        star: AppString.star,
-        label: AppString.ownershipProperty,
+        isRequired: true,
         hint: AppString.ownershipProperty,
         dropdownValue:
             stateData.kycDoc3Value?.key == null ? null : stateData.kycDoc3Value,
         items: stateData.kycDocList,
         onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context)
-              .add(RegistrationFormSetKycDoc3Value(kycDoc3Value: val));
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetKycDoc3Value(kycDoc3Value: val));
         },
       ),
     );
   }
 
-  Widget _kycDoc3Widget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _kycDoc33Dropdown({required RegiFormUpdateDataState stateData}) {
+    return ColumnWidget(
+      child: DropdownWidget<GetOwnershipProofModel>(
+        isRequired: _regKey(stateData) != "Future Registration" ? true : false,
+        hint: _isAGCL ? AppString.ownershipProof :AppString.ownershipProperty,
+        dropdownValue:
+        stateData.addressProofValue?.key == null
+            ? null
+            : stateData.addressProofValue,
+        items: stateData.listOfAddressProof,
+        onChanged: (val) {
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormAddressProofEvent(addressProofValue: val!));
+        },
+      ),
+    );
+  }
+
+  Widget _kycDoc3Widget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        label: stateData.labelModel.kyc == null
-            ? AppString.ownershipProperty
-            : stateData.labelModel.kyc!.uploadDoc3No,
-        hintText: stateData.labelModel.kyc == null
-            ? AppString.ownershipProperty
-            : stateData.labelModel.kyc!.uploadDoc3No,
+        labelText: _isAGCL ? AppString.ownershipProofNo3 :
+            stateData.labelModel.kyc == null
+                ? AppString.ownershipProperty
+                : stateData.labelModel.kyc!.uploadDoc3No,
         controller: stateData.kyc3NumberController,
         keyboardType: TextInputType.text,
         maxLength: 20,
@@ -1156,207 +1377,192 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _preferredBillDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _preferredBillDropdown({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetEBillingModel>(
-        label: stateData.labelModel.consent == null
-            ? AppString.billingMode
-            : stateData.labelModel.consent!.preferredBilling,
-        hint: stateData.labelModel.consent == null
-            ? AppString.billingMode
-            : stateData.labelModel.consent!.preferredBilling,
-        dropdownValue: stateData.eBillingValue?.key == null
-            ? null
-            : stateData.eBillingValue,
+        hint:
+            stateData.labelModel.consent == null
+                ? AppString.billingMode
+                : stateData.labelModel.consent!.preferredBilling,
+        dropdownValue:
+            stateData.eBillingValue?.key == null
+                ? null
+                : stateData.eBillingValue,
         items: stateData.eBillingList,
         onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context).add(
-              RegistrationFormSetPreferredBillValue(preferredBillValue: val));
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetPreferredBillValue(preferredBillValue: val));
         },
       ),
     );
   }
 
-  Widget _custBankNameDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _custBankNameDropdown({required RegiFormUpdateDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.consent == null
-          ? AppString.customerBankName
-          : stateData.labelModel.consent!.custBank,
-      hint: stateData.labelModel.consent == null
-          ? AppString.customerBankName
-          : stateData.labelModel.consent!.custBank,
-      dropdownValue: stateData.custBankNameValue!.isEmpty
-          ? null
-          : stateData.custBankNameValue,
+      hint:
+          stateData.labelModel.consent == null
+              ? AppString.customerBankName
+              : stateData.labelModel.consent!.custBank,
+      dropdownValue:
+          stateData.custBankNameValue!.isEmpty
+              ? null
+              : stateData.custBankNameValue,
       items: stateData.custBankNameList,
       onChanged: (val) {
-        BlocProvider.of<RegistrationFormBloc>(context)
-            .add(RegistrationFormSetCustBankNameValue(custBankNameValue: val));
+        BlocProvider.of<RegistrationFormBloc>(
+          context,
+        ).add(RegistrationFormSetCustBankNameValue(custBankNameValue: val));
       },
     );
   }
 
-  Widget _custBankAccNumberWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _custBankAccNumberWidget({
+    required RegiFormUpdateDataState stateData,
+  }) {
     return TextFieldWidget(
-      label: stateData.labelModel.consent == null
-          ? AppString.customerAccountNo
-          : stateData.labelModel.consent!.custAcc,
-      hintText: stateData.labelModel.consent == null
-          ? AppString.customerAccountNo
-          : stateData.labelModel.consent!.custAcc,
+      labelText:
+          stateData.labelModel.consent == null
+              ? AppString.customerAccountNo
+              : stateData.labelModel.consent!.custAcc,
       controller: stateData.custBankAccNumberController,
       keyboardType: TextInputType.text,
       maxLength: 20,
-      /*  validator: (value) {
-          if (value != customerAccountNum.text.trim()) {
-            return "Blank space";
-          } else if (value.isEmpty) {
-            return "Please enter Customer Account Number";
-          } else if (value.length <= 16) {
-            return "Customer Account Number must be of 17 digit";
-          }
-          return null;
-        },
-        onChanged: (v) {
-          formGlobalKey.currentState.validate();
-        }*/
     );
   }
 
-  Widget _custIfscCodeWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _custIfscCodeWidget({required RegiFormUpdateDataState stateData}) {
     return TextFieldWidget(
-        label: stateData.labelModel.consent == null
-            ? AppString.customerIfscCode
-            : stateData.labelModel.consent!.custIfsc,
-        hintText: stateData.labelModel.consent == null
-            ? AppString.customerIfscCode
-            : stateData.labelModel.consent!.custIfsc,
-        controller: stateData.custIfscCodeController,
-        keyboardType: TextInputType.text,
-        maxLength: 11,
-        validator: (value) {
-          if (value != stateData.custIfscCodeController.text.trim()) {
-            return "Blank space";
-          } else if (value!.isEmpty) {
-            return "Please enter Customer Ifsc Code";
-          } else if (value.length <= 10) {
-            return "Customer Ifsc Code must be of 11 digit";
-          }
-          return null;
-        },
-        onChanged: (v) {
-          formGlobalKey.currentState?.validate();
-        });
-  }
-
-  Widget _custBankAddWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
-    return TextFieldWidget(
-      label: stateData.labelModel.consent == null
-          ? AppString.customerBankAdd
-          : stateData.labelModel.consent!.custBankAdd,
-      hintText: stateData.labelModel.consent == null
-          ? AppString.customerBankAdd
-          : stateData.labelModel.consent!.custBankAdd,
-      controller: stateData.custBankAddController,
+      labelText:
+          stateData.labelModel.consent == null
+              ? AppString.customerIfscCode
+              : stateData.labelModel.consent!.custIfsc,
+      controller: stateData.custIfscCodeController,
       keyboardType: TextInputType.text,
-      /*  validator: (value) {
-        if (value != bank_address.text.trim()) {
+      maxLength: 11,
+      validator: (value) {
+        if (value != stateData.custIfscCodeController.text.trim()) {
           return "Blank space";
-        } else if (value.isEmpty) {
-          return "Please enter the customer bank address";
+        } else if (value!.isEmpty) {
+          return "Please enter Customer Ifsc Code";
+        } else if (value.length <= 10) {
+          return "Customer Ifsc Code must be of 11 digit";
         }
         return null;
       },
       onChanged: (v) {
-        formGlobalKey.currentState.validate();
-      },*/
+        formGlobalKey.currentState?.validate();
+      },
     );
   }
 
-  Widget _initialDepositStatusDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _custBankAddWidget({required RegiFormUpdateDataState stateData}) {
+    return TextFieldWidget(
+      labelText:
+          stateData.labelModel.consent == null
+              ? AppString.customerBankAdd
+              : stateData.labelModel.consent!.custBankAdd,
+      controller: stateData.custBankAddController,
+      keyboardType: TextInputType.text,
+    );
+  }
+
+  Widget _meterTypeDropdown({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
-      child: DropdownWidget(
-        star: AppString.star,
-        label: AppString.initDepositStatus,
-        hint: AppString.initDepositStatus,
-        dropdownValue: stateData.initialDepositStatusValue?.key == null
-            ? null
-            : stateData.initialDepositStatusValue,
-        items: stateData.initialDepositStatusList,
+      child: DropdownWidget<ConnectionTypeModel>(
+        isRequired: true,
+        hint: AppString.meterType,
+        dropdownValue:
+            stateData.meterTypeVal?.key == null ? null : stateData.meterTypeVal,
+        items: stateData.listOfMeterType,
         onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context).add(
-              RegistrationFormSetInitialDepositStatusValue(
-                  initialDepositStatusValue: val));
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormMeterTypeValue(meterTypeVal: val!));
         },
       ),
     );
   }
 
-  Widget _reasonDepositStatusWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _initialDepositStatusDropdown({
+    required RegiFormUpdateDataState stateData,
+  }) {
+    return ColumnWidget(
+      child: DropdownWidget(
+        isRequired: true,
+        hint: AppString.initDepositStatus,
+        dropdownValue:
+            stateData.initialDepositStatusValue?.key == null
+                ? null
+                : stateData.initialDepositStatusValue,
+        items: stateData.initialDepositStatusList,
+        onChanged: (val) {
+          BlocProvider.of<RegistrationFormBloc>(context).add(
+            RegistrationFormSetInitialDepositStatusValue(
+              initialDepositStatusValue: val,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _reasonDepositStatusWidget({
+    required RegiFormUpdateDataState stateData,
+  }) {
     return stateData.initialDepositStatusValue?.value == "No"
         ? ColumnWidget(
-            child: TextFieldWidget(
-              label: AppString.reasonDeposit,
-              hintText: AppString.reasonDeposit,
-              controller: stateData.reasonDepositStsController,
-              keyboardType: TextInputType.text,
-            ),
-          )
+          child: TextFieldWidget(
+            labelText: AppString.reasonDeposit,
+            controller: stateData.reasonDepositStsController,
+            keyboardType: TextInputType.text,
+          ),
+        )
         : Container();
   }
 
-  Widget _schemeTypeDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _schemeTypeDropdown({required RegiFormUpdateDataState stateData}) {
     return DropdownWidget<GetAllDepositOfflineModel>(
-      star: AppString.star,
-      label: AppString.schemeType,
+      isRequired: true,
       hint: AppString.schemeType,
-      dropdownValue: stateData.depositOfflineValue?.depositName == null
-          ? null
-          : stateData.depositOfflineValue,
+      dropdownValue:
+          stateData.depositOfflineValue?.depositName == null
+              ? null
+              : stateData.depositOfflineValue,
       items: stateData.getAllDepositOfflineList,
       onChanged: (val) {
         log("depositTypeValue-->${stateData.depositOfflineValue?.depositName}");
-        BlocProvider.of<RegistrationFormBloc>(context)
-            .add(RegistrationFormSchemeTypeValue(schemeTypeValue: val!));
+        BlocProvider.of<RegistrationFormBloc>(
+          context,
+        ).add(RegistrationFormSchemeTypeValue(schemeTypeValue: val!));
       },
     );
   }
 
-  Widget _depositTypeDetailsButton(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _depositTypeDetailsButton({
+    required RegiFormUpdateDataState stateData,
+  }) {
     return TextButton(
       child: Text(AppString.details),
       onPressed: () {
         FocusScope.of(context).unfocus();
         TextInput.finishAutofillContext();
-        BlocProvider.of<RegistrationFormBloc>(context)
-            .add(SchemeTypeDetailEvent(
-          context: context,
-        ));
+        BlocProvider.of<RegistrationFormBloc>(
+          context,
+        ).add(SchemeTypeDetailEvent(context: context));
       },
     );
   }
 
-  Widget _depositAmountWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _depositAmountWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
+        isRequired: true,
         enabled: false,
-        label: stateData.labelModel.deposit == null
-            ? AppString.schemeAmt
-            : stateData.labelModel.deposit!.depositAmt,
-        hintText: stateData.labelModel.deposit == null
-            ? AppString.schemeAmt
-            : stateData.labelModel.deposit!.depositAmt,
+        labelText:
+            stateData.labelModel.deposit == null
+                ? AppString.schemeAmt
+                : stateData.labelModel.deposit!.depositAmt,
         controller: stateData.schemeAmountController,
         keyboardType: TextInputType.number,
         validator: (value) {
@@ -1369,481 +1575,376 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  Widget _modeDepositDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _modeDepositDropdown({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget(
-        star: AppString.star,
-        label: AppString.modeDeposit,
+        isRequired: true,
         hint: AppString.modeDeposit,
-        dropdownValue: stateData.modeDepositValue?.key == null
-            ? null
-            : stateData.modeDepositValue,
+        dropdownValue:
+            stateData.modeDepositValue?.key == null
+                ? null
+                : stateData.modeDepositValue,
         items: stateData.modeDepositList,
         onChanged: (val) {
-          BlocProvider.of<RegistrationFormBloc>(context)
-              .add(RegistrationFormSetModeDepositValue(modeDepositValue: val));
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetModeDepositValue(modeDepositValue: val));
         },
       ),
     );
   }
 
-  Widget _chequeNoWidget({required RegistrationFormGetAllDataState stateData}) {
+  Widget _chequeNoWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star: AppString.star,
-          label: stateData.labelModel.deposit == null
-              ? AppString.chqNo
-              : stateData.labelModel.deposit!.chqNum,
-          hintText: stateData.labelModel.deposit == null
-              ? AppString.chqNo
-              : stateData.labelModel.deposit!.chqNum,
-          controller: stateData.chequeNoController,
-          maxLength: 6,
-          keyboardType: TextInputType.number,
-          validator: (value) {
-            if (value != stateData.chequeNoController.text.trim()) {
-              return "Blank space";
-            } else if (value!.isEmpty) {
-              return "Please enter Cheque Number";
-            } else if (value.length <= 5) {
-              return 'Cheque Number must be of 6 digit';
-            }
-            return null;
-          },
-          onChanged: (v) {
-            formGlobalKey.currentState?.validate();
-          }),
+        isRequired: true,
+        labelText:
+            stateData.labelModel.deposit == null
+                ? AppString.chqNo
+                : stateData.labelModel.deposit!.chqNum,
+        controller: stateData.chequeNoController,
+        maxLength: 6,
+        keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value != stateData.chequeNoController.text.trim()) {
+            return "Blank space";
+          } else if (value!.isEmpty) {
+            return "Please enter Cheque Number";
+          } else if (value.length <= 5) {
+            return 'Cheque Number must be of 6 digit';
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
     );
   }
 
-  Widget _chequeDateWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _chequeDateWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: stateData.labelModel.deposit == null
-            ? AppString.chqDate
-            : stateData.labelModel.deposit!.chqDate,
-        hintText: stateData.labelModel.deposit == null
-            ? AppString.chqDate
-            : stateData.labelModel.deposit!.chqDate,
+        isRequired: true,
+        labelText:
+            stateData.labelModel.deposit == null
+                ? AppString.chqDate
+                : stateData.labelModel.deposit!.chqDate,
         suffixIcon: Icon(
           Icons.calendar_today,
           color: EnvironmentConfig.of(context)!.primaryTheme,
         ),
         controller: stateData.chequeDateController,
         enabled: true,
-        autofocus: false,
         keyboardType: TextInputType.datetime,
         onTap: () {
-          BlocProvider.of<RegistrationFormBloc>(context)
-              .add(RegistrationFormSetChequeDateEvent(context: context));
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormSetChequeDateEvent(context: context));
         },
       ),
     );
   }
 
-  Widget _chequePaymentBankDropdown(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _chequePaymentBankDropdown({
+    required RegiFormUpdateDataState stateData,
+  }) {
     return ColumnWidget(
       child: DropdownWidget<String>(
-        star: AppString.star,
-        label: AppString.chqBank,
+        isRequired: true,
         hint: AppString.chqBank,
-        dropdownValue: stateData.paymentBankNameValue!.isEmpty
-            ? null
-            : stateData.paymentBankNameValue,
+        dropdownValue:
+            stateData.paymentBankNameValue!.isEmpty
+                ? null
+                : stateData.paymentBankNameValue,
         items: stateData.paymentBankNameList,
         onChanged: (val) {
           BlocProvider.of<RegistrationFormBloc>(context).add(
-              RegistrationFormSetPaymentBankNameValue(
-                  paymentBankNameValue: val));
+            RegistrationFormSetPaymentBankNameValue(paymentBankNameValue: val),
+          );
         },
       ),
     );
   }
 
-  Widget _chequeAccountNoWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _chequeAccountNoWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star: AppString.star,
-          maxLength: 20,
-          label: stateData.labelModel.deposit == null
-              ? AppString.chequeAccountNo
-              : stateData.labelModel.deposit!.chqNum,
-          hintText: stateData.labelModel.deposit == null
-              ? AppString.chequeAccountNo
-              : stateData.labelModel.deposit!.chqNum,
-          controller: stateData.chequeAccountNoController,
-          keyboardType: TextInputType.text,
-          validator: (value) {
-            if (value != stateData.chequeAccountNoController.text.trim()) {
-              return "Blank space";
-            } else if (value!.isEmpty) {
-              return "Please enter bank account number";
-            } else if (value.length <= 7) {
-              return 'bank account number must be of 6 digit';
-            }
-            return null;
-          },
-          onChanged: (v) {
-            formGlobalKey.currentState?.validate();
-          }),
+        isRequired: true,
+        maxLength: 20,
+        labelText:
+            stateData.labelModel.deposit == null
+                ? AppString.chequeAccountNo
+                : stateData.labelModel.deposit!.chqNum,
+        controller: stateData.chequeAccountNoController,
+        keyboardType: TextInputType.text,
+        validator: (value) {
+          if (value != stateData.chequeAccountNoController.text.trim()) {
+            return "Blank space";
+          } else if (value!.isEmpty) {
+            return "Please enter bank account number";
+          } else if (value.length <= 7) {
+            return 'bank account number must be of 6 digit';
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
     );
   }
 
-  Widget _chequeMICRNoWidget(
-      {required RegistrationFormGetAllDataState stateData}) {
+  Widget _chequeMICRNoWidget({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star: AppString.star,
-          label: AppString.chequeMICRNo,
-          hintText: AppString.chequeMICRNo,
-          maxLength: 9,
-          controller: stateData.chequeMicrNoController,
-          keyboardType: TextInputType.number,
-          validator: (value) {
-            if (value != stateData.chequeMicrNoController.text.trim()) {
-              return "Blank space";
-            } else if (value!.isEmpty) {
-              return "Please enter MICR Code";
-            } else if (value.length <= 8) {
-              return 'MICR Code must be of 9 digit';
-            }
-            return null;
-          },
-          onChanged: (v) {
-            formGlobalKey.currentState?.validate();
-          }),
+        isRequired: true,
+        labelText: AppString.chequeMICRNo,
+        maxLength: 9,
+        controller: stateData.chequeMicrNoController,
+        keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value != stateData.chequeMicrNoController.text.trim()) {
+            return "Blank space";
+          } else if (value!.isEmpty) {
+            return "Please enter MICR Code";
+          } else if (value.length <= 8) {
+            return 'MICR Code must be of 9 digit';
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
     );
   }
 
-  Widget _idFrontFileImg({required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
+  Widget _idFrontFileImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
         star: AppString.star,
         title: AppString.idProofFront,
         imgFile: stateData.idFrontFilePath,
-        onPressed: () {
-          showModalBottomSheet(
-              enableDrag: true,
-              isScrollControlled: true,
-              context: context,
-              builder: (BuildContext context) {
-                return ImagePopWidget(
-                  onTapCamera: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectIdFrontCameraCapture());
-                  },
-                  onTapGallery: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectIdFrontGalleryCapture());
-                  },
-                );
-              });
-        });
-  }
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectIdFrontCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectIdFrontGalleryCapture()),
+            ),
+      );
 
-  Widget _idBackFileImg(
-      {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      title: AppString.idProofBack,
-      imgFile: stateData.idBackFilePath,
-      onPressed: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              return ImagePopWidget(
-                onTapCamera: () async {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<RegistrationFormBloc>(context)
-                      .add(SelectIdBackCameraCapture());
-                },
-                onTapGallery: () async {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<RegistrationFormBloc>(context)
-                      .add(SelectIdBackGalleryCapture());
-                },
-              );
-            });
-      },
-    );
-  }
+  Widget _idBackFileImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
+        title: AppString.idProofBack,
+        imgFile: stateData.idBackFilePath,
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectIdBackCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectIdBackGalleryCapture()),
+            ),
+      );
 
-  Widget _eleBillFrontImg(
-      {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      star: stateData.registrationTypeValue?.key != "0" ? AppString.star : "",
-      title: AppString.addProofFront,
-      imgFile: stateData.eleBillFrontPath,
-      onPressed: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              return ImagePopWidget(
-                onTapCamera: () async {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<RegistrationFormBloc>(context)
-                      .add(SelectAddFrontCameraCapture());
-                },
-                onTapGallery: () async {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<RegistrationFormBloc>(context)
-                      .add(SelectAddFrontGalleryCapture());
-                },
-              );
-            });
-      },
-    );
-  }
+  Widget _eleBillFrontImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
+        star: _regKey(stateData) != "Future Registration" ? AppString.star : "",
+        title: AppString.addProofFront,
+        imgFile: stateData.eleBillFrontPath,
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectAddFrontCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectAddFrontGalleryCapture()),
+            ),
+      );
 
-  Widget _eleBillBackImg(
-      {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
+  Widget _eleBillBackImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
         title: AppString.addProofBack,
         imgFile: stateData.eleBillBackPath,
-        onPressed: () {
-          showModalBottomSheet(
-              enableDrag: true,
-              isScrollControlled: true,
-              context: context,
-              builder: (BuildContext context) {
-                return ImagePopWidget(
-                  onTapCamera: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectAddBackCameraCapture());
-                  },
-                  onTapGallery: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectAddBackGalleryCapture());
-                  },
-                );
-              });
-        });
-  }
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectAddBackCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectAddBackGalleryCapture()),
+            ),
+      );
 
-  Widget _customerConsentImg(
-      {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
+  Widget _nocFrontImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
+        title: AppString.ownershipProofFront,
+        imgFile: stateData.nocFrontPath,
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectNocDocFrontCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectNocDocFrontGalleryCapture()),
+            ),
+      );
+
+  Widget _nocBackImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
+        title: AppString.ownershipProofBack,
+        imgFile: stateData.nocBackPath,
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectNocDocBackCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectNocDocBackGalleryCapture()),
+            ),
+      );
+
+  Widget _customerConsentImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
         title: AppString.idProofFront,
         imgFile: stateData.idFrontFilePath,
-        onPressed: () {
-          showModalBottomSheet(
-              enableDrag: true,
-              isScrollControlled: true,
-              context: context,
-              builder: (BuildContext context) {
-                return ImagePopWidget(
-                  onTapCamera: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectIdFrontCameraCapture());
-                  },
-                  onTapGallery: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectIdFrontGalleryCapture());
-                  },
-                );
-              });
-        });
-  }
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectIdFrontCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectIdFrontGalleryCapture()),
+            ),
+      );
 
-  Widget _nocDocImg(
-      {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
+  Widget _nocDocImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
         star: AppString.star,
         title: AppString.nocDoc,
         imgFile: stateData.nocDocPath,
-        onPressed: () {
-          showModalBottomSheet(
-              enableDrag: true,
-              isScrollControlled: true,
-              context: context,
-              builder: (BuildContext context) {
-                return ImagePopWidget(
-                  onTapCamera: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectNocDocCameraCapture());
-                  },
-                  onTapGallery: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectNocDocBackGalleryCapture());
-                  },
-                );
-              });
-        });
-  }
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectNocDocCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectNocDocBackGalleryCapture()),
+            ),
+      );
 
-  /* Widget _nocBackImg({required BuildContext context, required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      onTap: () {
-        BlocProvider.of<RegistrationFormBloc>(context).add(RegistrationFormSetNocBackPath(nocBackPath: stateData.nocBackPath, context: context));
-      },
-      child: stateData.nocBackPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.nocBackPath.toString())),
-      label: AppString.nocBackImgLabel,
-    );
-  }*/
-
-  Widget _uploadCustomerImg(
-      {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
+  Widget _uploadCustomerImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
         title: AppString.customerImg,
         imgFile: stateData.uploadCustomerPath,
-        onPressed: () {
-          showModalBottomSheet(
-              enableDrag: true,
-              isScrollControlled: true,
-              context: context,
-              builder: (BuildContext context) {
-                return ImagePopWidget(
-                  onTapCamera: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectCustomerCameraCapture());
-                  },
-                  onTapGallery: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectCustomerGalleryCapture());
-                  },
-                );
-              });
-        });
-  }
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectCustomerCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectCustomerGalleryCapture()),
+            ),
+      );
 
-  Widget _uploadHouseImg(
-      {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      title: AppString.houseImg,
-      imgFile: stateData.uploadHousePath,
-      onPressed: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              return ImagePopWidget(
-                onTapCamera: () async {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<RegistrationFormBloc>(context)
-                      .add(SelectHouseCameraCapture());
-                },
-                onTapGallery: () async {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<RegistrationFormBloc>(context)
-                      .add(SelectHouseGalleryCapture());
-                },
-              );
-            });
-      },
-    );
-  }
+  Widget _uploadHouseImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
+        title: AppString.houseImg,
+        imgFile: stateData.uploadHousePath,
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectHouseCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectHouseGalleryCapture()),
+            ),
+      );
 
-  Widget _ownerConsentImg(
-      {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      title: AppString.ownerConsentImg,
-      imgFile: stateData.ownerConsentPath,
-      onPressed: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              return ImagePopWidget(
-                onTapCamera: () async {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<RegistrationFormBloc>(context)
-                      .add(SelectIdFrontCameraCapture());
-                },
-                onTapGallery: () async {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<RegistrationFormBloc>(context)
-                      .add(SelectIdFrontGalleryCapture());
-                },
-              );
-            });
-      },
-    );
-  }
+  Widget _ownerConsentImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
+        title: AppString.ownerConsentImg,
+        imgFile: stateData.ownerConsentPath,
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectIdFrontCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectIdFrontGalleryCapture()),
+            ),
+      );
 
-  Widget _cancelChequeImg(
-      {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
+  Widget _cancelChequeImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
         title: AppString.cancelChqPhoto,
         imgFile: stateData.cancelChequePath,
-        onPressed: () {
-          showModalBottomSheet(
-              enableDrag: true,
-              isScrollControlled: true,
-              context: context,
-              builder: (BuildContext context) {
-                return ImagePopWidget(
-                  onTapCamera: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectIdFrontCameraCapture());
-                  },
-                  onTapGallery: () async {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<RegistrationFormBloc>(context)
-                        .add(SelectIdFrontGalleryCapture());
-                  },
-                );
-              });
-        });
-  }
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectIdFrontCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectIdFrontGalleryCapture()),
+            ),
+      );
 
-  Widget _chequeImg({required RegistrationFormGetAllDataState stateData}) {
-    return ImageWidget(
-      star: AppString.star,
-      title: AppString.chqPhoto,
-      imgFile: stateData.chequePath,
-      onPressed: () {
-        showModalBottomSheet(
-            enableDrag: true,
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              return ImagePopWidget(
-                onTapCamera: () async {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<RegistrationFormBloc>(context)
-                      .add(SelectChqCameraCapture());
-                },
-                onTapGallery: () async {
-                  Navigator.of(context).pop();
-                  BlocProvider.of<RegistrationFormBloc>(context)
-                      .add(SelectChqGalleryCapture());
-                },
-              );
-            });
-      },
-    );
-  }
+  Widget _chequeImg({required RegiFormUpdateDataState stateData}) =>
+      ImageWidget(
+        title: AppString.chqPhoto,
+        imgFile: stateData.chequePath,
+        onPressed:
+            () => _imageSheet(
+              onCamera:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectChqCameraCapture()),
+              onGallery:
+                  () => BlocProvider.of<RegistrationFormBloc>(
+                    context,
+                  ).add(SelectChqGalleryCapture()),
+            ),
+      );
 
-  Widget _previewButton({required RegistrationFormGetAllDataState stateData}) {
+  Widget _previewButton({required RegiFormUpdateDataState stateData}) {
     return ButtonWidget(
       text: stateData.isUpdate == true ? "Update" : AppString.preview,
       onPressed: () {
@@ -1851,24 +1952,41 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
           formGlobalKey.currentState?.save();
           FocusScope.of(context).unfocus();
           TextInput.finishAutofillContext();
-          BlocProvider.of<RegistrationFormBloc>(context)
-              .add(RegistrationFormPreviewPageEvent(
-            context: context,
-          ));
+          BlocProvider.of<RegistrationFormBloc>(
+            context,
+          ).add(RegistrationFormPreviewPageEvent(context: context));
         }
       },
     );
   }
 
   Widget _verticalSpace() {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.009,
-    );
+    return SizedBox(height: MediaQuery.of(context).size.height * 0.009);
   }
 
   Widget _widthSpace() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.02,
+    return SizedBox(width: MediaQuery.of(context).size.width * 0.02);
+  }
+
+  void _imageSheet({
+    required VoidCallback onCamera,
+    required VoidCallback onGallery,
+  }) {
+    showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      context: context,
+      builder:
+          (sheetCtx) => ImagePopWidget(
+            onTapCamera: () {
+              Navigator.of(sheetCtx).pop();
+              onCamera();
+            },
+            onTapGallery: () {
+              Navigator.of(sheetCtx).pop();
+              onGallery();
+            },
+          ),
     );
   }
 }

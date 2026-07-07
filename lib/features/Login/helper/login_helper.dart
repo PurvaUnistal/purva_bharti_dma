@@ -51,10 +51,9 @@ class LoginHelper {
       "deviceId": deviceId,
     };
     try {
-      var res = await ApiHelperDio.postData(
+      var res = await ServerRequest.postData(
         urlEndPoint: AppUrl.auth,
-        param: para,
-        context: context,
+        body: jsonEncode(para),
       );
       if (res != null && res["error"] == false) {
         if (res["user"]["role"] == "dma" &&

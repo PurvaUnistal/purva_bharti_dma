@@ -6,9 +6,10 @@ class AppString{
   static const Map<Client, String> _releaseDates = {
     Client.mahaNagar: "12-03-2026",
     Client.purvaBharti: "11-06-2025",
-    Client.hpoil: "12-03-2026",
+    Client.hpoil: "13-03-2026",
     Client.vppl: "12-03-2026",
     Client.vrpl: "12-03-2026",
+    Client.agcl: "03-07-2026",
   };
 
   static String get version => "Version : 1.0.0 - DMA-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
@@ -40,25 +41,33 @@ class AppString{
   static String star = "* ";
 
   static String registrationType =  'Registration Type';
+  static String registrationFrom =  'Registration From';
   static String reasonRegistration =  'Reason Registration';
+  static String applicationNumber =  'Application Number';
   static String chargeArea =  'Charge Area';
   static String area =  'Area';
-  static String mobileNo =  "Mobile No";
-  static String alternateMobileNo = "Alternate Mobile No";
+  static String mobileNo =  "Mobile Number";
+  static String alternateMobileNo = "Alternate Number";
+  static String titleName = 'Title';
   static String firstName = 'First Name';
   static String middleName = 'Middle Name';
   static String lastName = 'Last Name';
-  static String guardianType = 'Guardian Type';
+  static String dob = 'DOB';
+  static String guardianType = 'Select Guardian';
+  static String houseHoldType = 'House Hold Type';
   static String guardianName = 'Guardian Name';
   static String emailAddress = 'Email ID';
   static String propertyCategory = 'Property Category';
   static String propertyClass = 'Property Class';
   static String buildingNumber =  'Building Number';
+  static String floorNumber =  'Floor Number';
   static String houseNumber = 'House Number';
   static String colony = 'Colony/Society/Apartment';
   static String streetName = 'Lane/Street Name';
   static String town = 'Town';
   static String district = 'District';
+  static String wardNumber= 'Ward Number';
+  static String premiseType = 'Premise Type';
   static String pinCode = 'Pin Code';
   static String noOfKitchen = 'Kitchen No.';
   static String noOfBathroom = 'Bathroom No.';
@@ -72,6 +81,10 @@ class AppString{
   static String idProofBack = 'Id Proof Back';
   static String addProof = 'KYC (Address Proof)';
   static String addProofNo = 'KYC (Address Proof) Number';
+  static String ownershipProof = 'Ownership Proof';
+  static String ownershipProofNo3 = 'KYC (Ownership Proof) Number';
+  static String ownershipProofFront = 'Ownership Proof Front';
+  static String ownershipProofBack = 'Ownership Proof Back';
   static String addProofFront = 'Address Proof Front';
   static String addProofBack = 'Address Proof Back';
   static String ownershipProperty = 'Select the Ownership type property';
@@ -91,10 +104,11 @@ class AppString{
   static String customerIfscCode = 'Customer IFSC Code';
   static String customerBankAdd = 'Customer Bank Address';
 
-  static String conversionPolicy =  'Conversion Policy';
-  static String fittingCost =  'Extra Fitting Cost';
-  static String mdpeAllow = 'Society Allow MDPE';
+  static String conversionPolicy = 'Conversion';
+  static String fittingCost      = 'Fitting Cost';
+  static String mdpeAllow        = 'MDPE Allow';
   static String initDepositStatus = 'Initial Deposit Status';
+  static String meterType = 'Meter Type';
   static String reasonDeposit = 'Reason Deposit Status';
   static String schemeType = 'Scheme Type';
   static String schemeAmt = 'Deposit Amount';
@@ -155,11 +169,13 @@ class AppIcon{
         ? AppIcon.vpplLogo
         :AppConfig.instanceInit()!.client == Client.vrpl
         ? AppIcon.vrplLogo
+        :AppConfig.instanceInit()!.client == Client.agcl
+        ? AppIcon.agclLogo
         : AppIcon.unistalLogo;
   }
   static String pbgplLogo = "assets/images/pbgpl_logo.png";
   static String mglLogo = "assets/images/mgl_logo.png";
-  static String agclLogo = "assets/images/agcl_logo.png";
+  static String agclLogo = "assets/images/agcl_banner.png";
   static String oilIndiaLogo = "assets/images/oil_india_logo.png";
   static String vpplLogo = "assets/images/vppl_plcms.png";
   static String vrplLogo = "assets/images/vrpl_plcms.png";

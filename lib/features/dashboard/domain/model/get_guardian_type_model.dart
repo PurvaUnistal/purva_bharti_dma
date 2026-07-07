@@ -38,6 +38,6 @@ class GetGuardianTypeModel {
   @override
   String toString() {
     // TODO: implement toString
-    return value ?? "";
+    return value.toString() ?? "";
   }
 }
