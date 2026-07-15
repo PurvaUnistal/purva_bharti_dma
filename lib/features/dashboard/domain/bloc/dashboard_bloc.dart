@@ -25,7 +25,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   List<GetEBillingModel> listOfEBilling = [];
   List<GetKycDocModel> listOfKycDoc = [];
   List<GetOwnershipProofModel> listOfOwnershipProof = [];
-  List<GetIdentityProofModel> listOfIdentityProof = [];
+  List<GetOwnershipProofModel> listOfIdentityProof = [];
   List<GetGuardianTypeModel> listOfGuardianType = [];
   List<GetExistingCookingFuelModel> listOfCookingFuel = [];
   List<GetSocietyAllowModel> listOfSocietyAllow = [];

@@ -907,6 +907,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _nameTitleDropdown({required RegiFormUpdateDataState stateData}) {
     return DropdownWidget<GetNameTitleModel>(
+      isRequired: true,
       hint: AppString.titleName,
       dropdownValue: stateData.nameTitleValue?.name != null
           ? stateData.nameTitleValue
@@ -1183,18 +1184,18 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _kycDoc1Dropdown({required RegiFormUpdateDataState stateData}) {
     return ColumnWidget(
-      child: DropdownWidget(
+      child: DropdownWidget<GetOwnershipProofModel>(
         isRequired: true,
         hint: AppString.idProof,
         dropdownValue:
         stateData.identityProofValue?.key == null
             ? null
             : stateData.identityProofValue,
-        items: stateData.identityProofList,
+        items: stateData.listOfIdentityProof,
         onChanged: (val) {
           BlocProvider.of<RegistrationFormBloc>(
             context,
-          ).add(RegistrationFormSetKycDoc1Value(kycDoc1Value: val));
+          ).add(RegistrationFormSetKycDoc1Value(kycDoc1Value: val!));
         },
       ),
     );
@@ -1235,7 +1236,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
         onChanged: (val) {
           BlocProvider.of<RegistrationFormBloc>(
             context,
-          ).add(RegistrationFormSetKycDoc2Value(kycDoc2Value: val));
+          ).add(RegistrationFormSetKycDoc2Value(kycDoc2Value: val!));
         },
       ),
     );

@@ -122,7 +122,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
   GetResidentStatusModel residentStatusValue = GetResidentStatusModel();
   PropertyTypeModel houseHoldTypeValue = PropertyTypeModel();
   GetExistingCookingFuelModel existingCookingFuelValue = GetExistingCookingFuelModel();
-  GetIdentityProofModel kycDoc1Value = GetIdentityProofModel();
+  GetOwnershipProofModel kycDoc1Value = GetOwnershipProofModel();
   GetOwnershipProofModel kycDoc2Value = GetOwnershipProofModel();
   GetOwnershipProofModel addressProofValue = GetOwnershipProofModel();
   GetKycDocModel kycDoc3Value = GetKycDocModel();
@@ -161,7 +161,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
   List<GetKycDocModel> listOfKycDoc = [];
   List<GetOwnershipProofModel> listOfOwnershipProof = [];
   List<GetOwnershipProofModel> listOfAddressProof = [];
-  List<GetIdentityProofModel> listOfIdentityProof = [];
+  List<GetOwnershipProofModel> listOfIdentityProof = [];
   List<GetGuardianTypeModel> listOfGuardianType = [];
   List<PropertyTypeModel> listOfHouseHoldType = [];
   List<GetExistingCookingFuelModel> listOfCookingFuel = [];
@@ -338,7 +338,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     houseHoldTypeValue = PropertyTypeModel();
     residentStatusValue = GetResidentStatusModel();
     existingCookingFuelValue = GetExistingCookingFuelModel();
-    kycDoc1Value = GetIdentityProofModel();
+    kycDoc1Value = GetOwnershipProofModel();
     kycDoc2Value = GetOwnershipProofModel();
     addressProofValue = GetOwnershipProofModel();
     kycDoc3Value = GetKycDocModel();
@@ -419,7 +419,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
     listOfKycDoc = HiveDataBase.kycDocBox?.values.toSet().toList() ?? [];
     listOfOwnershipProof = HiveDataBase.ownershipProofBox?.values.toSet().toList() ?? [];
     listOfAddressProof = HiveDataBase.ownershipProofBox?.values.toSet().toList() ?? [];
-    listOfIdentityProof = HiveDataBase.idProofBox?.values.toSet().toList() ?? [];
+    listOfIdentityProof = HiveDataBase.ownershipProofBox?.values.toSet().toList() ?? [];
     listOfGuardianType = HiveDataBase.guardianTypeBox?.values.toSet().toList() ?? [];
     listOfHouseHoldType = HiveDataBase.houseHoldTypeBox?.values.toSet().toList() ?? [];
     listOfCookingFuel = HiveDataBase.cookingFuelBox?.values.toSet().toList() ?? [];
@@ -954,8 +954,8 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
         schemeTypeValue = listOfDepositOffline.firstWhere((e) => e.depositTypesId == localData.schemeType,
           orElse: () => GetAllDepositOfflineModel(),
         );
-        kycDoc1Value = listOfIdentityProof.firstWhere((e) => e.key == localData.kycDocument1,
-          orElse: () => GetIdentityProofModel(),
+        kycDoc1Value = listOfOwnershipProof.firstWhere((e) => e.key == localData.kycDocument1,
+          orElse: () => GetOwnershipProofModel(),
         );
         kycDoc2Value = listOfOwnershipProof.firstWhere((e) => e.key == localData.kycDocument2,
           orElse: () => GetOwnershipProofModel(),
@@ -1079,7 +1079,7 @@ class RegistrationFormBloc extends Bloc<RegistrationFormEvent, RegistrationFormS
       regFromVal: regFromVal,
       meterTypeVal: meterTypeVal,
       identityProofValue: kycDoc1Value,
-      identityProofList: listOfIdentityProof,
+      listOfIdentityProof: listOfIdentityProof,
       getIdentityProofModel: getIdentityProofModel,
       ownershipProofValue: kycDoc2Value,
       ownershipProofList: listOfOwnershipProof,

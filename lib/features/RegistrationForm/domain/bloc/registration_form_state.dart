@@ -68,8 +68,8 @@ class RegiFormUpdateDataState extends RegistrationFormState {
   final GetAllDepositOfflineModel? depositOfflineValue;
   final List<GetAllDepositOfflineModel> getAllDepositOfflineList;
   final GetAllDepositOfflineModel getAllDepositOfflineModel;
-  final GetIdentityProofModel? identityProofValue;
-  final List identityProofList;
+  final GetOwnershipProofModel? identityProofValue;
+  final List<GetOwnershipProofModel> listOfIdentityProof;
   final GetIdentityProofModel getIdentityProofModel;
   final GetOwnershipProofModel? addressProofValue;
   final GetOwnershipProofModel? ownershipProofValue;
@@ -185,7 +185,7 @@ class RegiFormUpdateDataState extends RegistrationFormState {
     required this.regFromVal,
     required this.meterTypeVal,
     required this.identityProofValue,
-    required this.identityProofList,
+    required this.listOfIdentityProof,
     required this.getIdentityProofModel,
     required this.ownershipProofValue,
     required this.addressProofValue,

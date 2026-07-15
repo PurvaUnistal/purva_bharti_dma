@@ -103,7 +103,7 @@ class RegistrationPreviewPage extends StatelessWidget {
           ? SizedBox.shrink()
           : PopWidget.itemBuilder(
             context: context,
-            star: bloc.isAGCL ? "" : AppString.star,
+            star: AppString.star,
             textName: AppString.titleName,
             textValue:
                 bloc.nameTitleValue.id == null ? "" : bloc.nameTitleValue.name,

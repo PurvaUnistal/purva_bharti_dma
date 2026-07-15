@@ -175,17 +175,17 @@ class DashboardHelper {
     );
   }
 
-  static Future<List<GetIdentityProofModel>?> getIdentityProofApi({
+  static Future<List<GetOwnershipProofModel>?> getIdentityProofApi({
     required BuildContext context,
     required bool online,
   }) {
-    final box = HiveDataBase.idProofBox;
+    final box = HiveDataBase.ownershipProofBox;
     if (box == null) return Future.value(null);
-    return fetchConstantData<GetIdentityProofModel>(
+    return fetchConstantData<GetOwnershipProofModel>(
       context: context,
       online: online,
       key: 'identityProof',
-      fromEntry:(id, value) => GetIdentityProofModel(key: id, value: value.toString()),
+      fromEntry:(id, value) => GetOwnershipProofModel(key: id, value: value.toString()),
       box: box,
     );
   }

@@ -161,7 +161,7 @@ class RegistrationFormSetExistingCookingFuelValue extends RegistrationFormEvent 
 }
 
 class RegistrationFormSetKycDoc1Value extends RegistrationFormEvent {
-  final dynamic kycDoc1Value;
+  final GetOwnershipProofModel kycDoc1Value;
   RegistrationFormSetKycDoc1Value({required this.kycDoc1Value});
   @override
   // TODO: implement props
@@ -169,7 +169,7 @@ class RegistrationFormSetKycDoc1Value extends RegistrationFormEvent {
 }
 
 class RegistrationFormSetKycDoc2Value extends RegistrationFormEvent {
-  final dynamic kycDoc2Value;
+  final GetOwnershipProofModel kycDoc2Value;
   RegistrationFormSetKycDoc2Value({required this.kycDoc2Value});
   @override
   // TODO: implement props

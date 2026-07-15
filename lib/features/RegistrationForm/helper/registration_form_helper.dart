@@ -90,7 +90,7 @@ class RegistrationFormHelper {
     required GetResidentStatusModel residentStatus,
     required PropertyTypeModel houseHoldType,
     required GetExistingCookingFuelModel existingCookingFuel,
-    required GetIdentityProofModel kycDoc1,
+    required GetOwnershipProofModel kycDoc1,
     required GetOwnershipProofModel kycDoc2,
     required GetOwnershipProofModel addressProof,
     required GetKycDocModel kycDoc3,
@@ -147,8 +147,9 @@ class RegistrationFormHelper {
             context: context);
         return null;
       }
-      // Title -> NON-MANDATORY (check removed)
-      // DOB   -> NON-MANDATORY (check removed)
+      if (_blank(nameTitle.id?.toString())) {
+        if (_fail(context, "Name Title")) return null;
+      }
       if (_blank(first)) {
         if (_fail(context, "First Name")) return null;
       }
