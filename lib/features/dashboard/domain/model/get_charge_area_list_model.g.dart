@@ -26,13 +26,14 @@ class GetChargeAreaListModelAdapter
       shapeArea: fields[5] as dynamic,
       chargeAreaName: fields[6] as String?,
       billingType: fields[7] as dynamic,
+      chargeAreaGridCode: fields[8] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, GetChargeAreaListModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.gid)
       ..writeByte(1)
@@ -48,7 +49,9 @@ class GetChargeAreaListModelAdapter
       ..writeByte(6)
       ..write(obj.chargeAreaName)
       ..writeByte(7)
-      ..write(obj.billingType);
+      ..write(obj.billingType)
+      ..writeByte(8)
+      ..write(obj.chargeAreaGridCode);
   }
 
   @override

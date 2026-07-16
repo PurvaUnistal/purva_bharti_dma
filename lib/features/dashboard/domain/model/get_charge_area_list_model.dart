@@ -31,6 +31,8 @@ class GetChargeAreaListModel {
    String? chargeAreaName;
   @HiveField(7)
    dynamic billingType;
+  @HiveField(8)
+  String? chargeAreaGridCode;
 
   GetChargeAreaListModel({
     this.gid,
@@ -41,6 +43,7 @@ class GetChargeAreaListModel {
     this.shapeArea,
     this.chargeAreaName,
     this.billingType,
+    this.chargeAreaGridCode,
   });
 
   factory GetChargeAreaListModel.fromJson(Map<String, dynamic> json) =>
@@ -53,6 +56,7 @@ class GetChargeAreaListModel {
         shapeArea: json["shape_area"] ?? "",
         chargeAreaName: json["charge_area_name"] ?? "",
         billingType: json["billing_type"] ?? "",
+        chargeAreaGridCode: json["charge_area_grid_code"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -64,6 +68,7 @@ class GetChargeAreaListModel {
         "shape_area": shapeArea,
         "charge_area_name": chargeAreaName,
         "billing_type": billingType,
+        "charge_area_grid_code": chargeAreaGridCode,
       };
   @override
   String toString() {

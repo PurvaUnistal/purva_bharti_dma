@@ -21,6 +21,7 @@ class ViewSyncRecordHelper {
       }
       var inputFormat = DateFormat('dd-MM-yyyy');
       var date1 = inputFormat.parse(custRegSyncData.chequeDepositDate.toString().replaceAll("00:00:00.000", ""));
+      var date2 = inputFormat.parse(custRegSyncData.dob.toString().replaceAll("00:00:00.000", ""));
       Map<String, String> json = {
         "interested": custRegSyncData.registrationType ?? "",
         "area_id": custRegSyncData.areaId ?? "",
@@ -80,7 +81,7 @@ class ViewSyncRecordHelper {
         "building_number": custRegSyncData.buildingNumber ?? "",
         "title_id": custRegSyncData.nameTitle ?? "",
         "house_hold_type_id": custRegSyncData.houseHoldType ?? "",
-        "dob": custRegSyncData.dob ?? "",
+        "dob": date2.toString().replaceAll("00:00:00.000", ""),
         "meter_type": custRegSyncData.meterType ?? "",
         "premise_type": custRegSyncData.premiseType ?? "",
         "floor_number": custRegSyncData.floorNumber ?? "",

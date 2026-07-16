@@ -189,6 +189,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               _reasonRegistrationController(stateData: stateData),
               _chargeAreaDropdown(stateData: stateData),
               _verticalSpace(),
+              _gridNameWidget(stateData: stateData),
               _areaDropdown(stateData: stateData),
               _verticalSpace(),
               _mobileNumberWidget(stateData: stateData),
@@ -592,23 +593,34 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _chargeAreaDropdown({required RegiFormUpdateDataState stateData}) {
     return DropDownSearchWidget<GetChargeAreaListModel>(
       isRequired: true,
-      label: _isAGCL ? "Grid": stateData.labelModel.registration == null
+      label: _isAGCL ? "Grid Code": stateData.labelModel.registration == null
           ? AppString.chargeArea
           : stateData.labelModel.registration!.chargeArea,
-      hint: _isAGCL ? "Grid":  stateData.labelModel.registration == null
+      hint: _isAGCL ? "Grid Code":  stateData.labelModel.registration == null
           ? AppString.chargeArea
           : stateData.labelModel.registration!.chargeArea,
       dropdownValue:
       stateData.chargeAreaValue?.gid == null
           ? null
           : stateData.chargeAreaValue,
-      itemAsString: (alignmentData) => alignmentData.chargeAreaName.toString(),
+      itemAsString: (alignmentData) => alignmentData.chargeAreaGridCode.toString(),
       items: stateData.getChargeAreaListModel,
       onChanged: (val) {
         BlocProvider.of<RegistrationFormBloc>(
           context,
         ).add(RegistrationFormSetChargeAreaValue(chargeAreaValue: val));
       },
+    );
+  }
+
+  Widget _gridNameWidget({required RegiFormUpdateDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        enabled: false,
+        isRequired: true,
+        labelText: "Grid Name",
+        controller:  TextEditingController(text: stateData.chargeAreaValue!.chargeAreaName),
+      ),
     );
   }
 

@@ -87,10 +87,11 @@ class RegistrationPreviewPage extends StatelessWidget {
           )
           : SizedBox.shrink(),
       _buildPopItem(
-        AppString.chargeArea,
-        bloc.chargeAreaValue.chargeAreaName,
+        bloc.isAGCL ? "Grid Code" :AppString.chargeArea,
+        bloc.chargeAreaValue.chargeAreaCode,
         context,
       ),
+      bloc.isAGCL ? _buildPopItem("Grid Name" , bloc.chargeAreaValue.chargeAreaName, context) : SizedBox.shrink(),
       _buildPopItem(AppString.titleName, bloc.nameTitleValue.name, context),
       _buildPopItem(AppString.area, bloc.areaValue.areaName, context),
       _buildPopItem(AppString.mobileNo, bloc.mobileController.text, context),
