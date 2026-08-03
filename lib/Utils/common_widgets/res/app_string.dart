@@ -13,7 +13,7 @@ class AppString{
 
   static String get version => "Version : 1.0.0 - DMA-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
   static String companyName = "© Unistal Systems Pvt. Ltd.";
-  static String appName = "Purba Bharati  DMA";
+  static String appName = "DMA App";
   static String companyNameDesc = "Unistal Private Ltd.";
   static String appLogo = "assets/images/pbg_logo.png";
   static String dashboardView = "Dashboard View";
