@@ -47,7 +47,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Flexible(
+          AppConfig.instanceInit()?.loginData.user?.projectLogo == null ? SizedBox.shrink():Flexible(
             child: Container(
               width: MediaQuery.of(context).size.width * 0.15,
               height: MediaQuery.of(context).size.height * 0.04,
@@ -73,7 +73,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               style: Styles.login,
             ),
           ),
-          Flexible(
+          AppConfig.instanceInit()?.loginData.user?.smartLogo == null ? SizedBox.shrink():Flexible(
             child: Container(
               width: MediaQuery.of(context).size.width * 0.15,
               height: MediaQuery.of(context).size.height * 0.03,
