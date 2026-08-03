@@ -42,13 +42,13 @@ class _RootState extends State<Root> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this); // listen for system changes
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangePlatformBrightness() {
-    if (mounted) setState(() {}); // rebuild when dark/light toggles
+    if (mounted) setState(() {});
     super.didChangePlatformBrightness();
   }
 

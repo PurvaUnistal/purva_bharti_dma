@@ -46,10 +46,10 @@ dev_dependencies:
   build_runner: ^2.4.8
 
 flutter_icons:
-  android: "agcl_logo"
+  android: "pbg_logo"
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/images/agcl_logo.png"
+  image_path: "assets/images/pbg_logo.png"
 
 flutter:
   uses-material-design: true
