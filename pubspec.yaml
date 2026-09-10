@@ -36,6 +36,8 @@ dependencies:
   package_info_plus: ^8.1.2
   firebase_crashlytics: ^5.0.5
   firebase_core: ^4.2.1
+  uuid: ^4.6.0
+  flutter_image_compress: ^2.5.1
 
 
 dev_dependencies:
@@ -45,10 +47,10 @@ dev_dependencies:
   build_runner: ^2.4.8
 
 flutter_icons:
-  android: "hp_oil_logo"
+  android: "hngpl_logo"
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/images/hp_oil_logo.png"
+  image_path: "assets/images/hngpl_logo.png"
 
 flutter:
   uses-material-design: true

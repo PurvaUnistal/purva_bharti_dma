@@ -5,10 +5,11 @@ class AppString{
 
   static const Map<Client, String> _releaseDates = {
     Client.mahaNagar: "12-03-2026",
-    Client.purvaBharti: "11-06-2025",
+    Client.purvaBharti: "24-08-2026",
     Client.hpoil: "12-03-2026",
     Client.vppl: "12-03-2026",
     Client.vrpl: "12-03-2026",
+    Client.hngpl: "10-09-2026",
   };
 
   static String get version => "Version : 1.0.0 - DMA-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
@@ -140,6 +141,11 @@ class AppString{
   static String logout = "Logout";
   static String sessionExpired = "Session Expired";
   static String logoutMsg = "Are you sure you want to logout?";
+  static String dob = 'Date of Birth';
+  static String doorNumber = 'Door Number';
+  static String floorNumber = 'Floor Number';
+  static String wardNumber = 'Ward Number';
+  static String premiseType = 'Premise Type';
 }
 
 class AppIcon{
@@ -155,6 +161,8 @@ class AppIcon{
         ? AppIcon.vpplLogo
         :AppConfig.instanceInit()!.client == Client.vrpl
         ? AppIcon.vrplLogo
+        :AppConfig.instanceInit()!.client == Client.hngpl
+        ? AppIcon.hngplLogo
         : AppIcon.unistalLogo;
   }
   static String pbgplLogo = "assets/images/pbgpl_logo.png";
@@ -165,6 +173,7 @@ class AppIcon{
   static String vrplLogo = "assets/images/vrpl_plcms.png";
   static String hpOilLogo = "assets/images/hp_oil_logo.png";
   static String unistalLogo = "assets/images/unistal_logo.png";
+  static String hngplLogo = "assets/images/hngpl_logo.png";
 
   static String colourStrip = "assets/images/ic_strip.png";
   static String imageCaptureIcon = "assets/images/ic_image.png";

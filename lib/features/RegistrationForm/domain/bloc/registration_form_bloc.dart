@@ -52,6 +52,7 @@ class RegistrationFormBloc
     on<RegistrationFormPreviewPageEvent>(_previewPage);
     on<RegistrationFormSaveLocalDataEvent>(_saveLocalData);
     on<UpdateLocalDataEvent>(_updateLocalDataEvent);
+    on<RegistrationFormSetDobEvent>(_setDobDate);
    // on<UpdateLocalDataEvent>(_updateLocalData);
   }
 
@@ -135,8 +136,6 @@ class RegistrationFormBloc
   List<String> listOfCustBankName = [];
   List<String> paymentBankNameList = [];
 
-  /* SaveRegistrationFormModel saveCusRegData = SaveRegistrationFormModel();*/
-
   File customerConsent = File("");
   File canceledCheque = File("");
   File idFrontPath = File("");
@@ -178,6 +177,11 @@ class RegistrationFormBloc
       TextEditingController(text: "1");
   TextEditingController familyMemberController =
       TextEditingController(text: "4");
+  TextEditingController premiseTypeController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController doorNumberController = TextEditingController();
+  TextEditingController floorNumberController = TextEditingController();
+  TextEditingController wardNumberController = TextEditingController();
   TextEditingController nearestLandmarkController = TextEditingController();
   TextEditingController kyc1NumberController = TextEditingController();
   TextEditingController kyc2NumberController = TextEditingController();
@@ -240,7 +244,6 @@ class RegistrationFormBloc
     paymentBankNameValue = "";
     initialDepositStatusValue = GetInitialDepositStatusModel();
     modeDepositValue = GetModeOfDepositModel();
-
     listOfAllLabel = [];
     listOfRegistrationType = [];
     listOfInitialDepositStatus = [];
@@ -266,6 +269,11 @@ class RegistrationFormBloc
   }
 
   void _resetControllers() {
+    dobController.text = "";
+    premiseTypeController.text = "";
+    doorNumberController.text = "";
+    floorNumberController.text = "";
+    wardNumberController.text = "";
     reasonRegistrationController.text = "";
     mobileController.text = "";
     altMobileController.text = "";
@@ -551,6 +559,19 @@ class RegistrationFormBloc
   _setModeDepositValue(RegistrationFormSetModeDepositValue event, emit) {
     modeDepositValue = event.modeDepositValue;
     _eventCompleted(emit);
+  }
+
+  _setDobDate(RegistrationFormSetDobEvent event, emit) async {
+    DateTime? dateTime = await showDatePicker(
+        context: event.context,
+        initialDate: DateTime(2000),
+        firstDate: DateTime(1950),
+        lastDate: DateTime.now());
+    if (dateTime != null) {
+      String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+      dobController.text = formattedDate.toString();
+      _eventCompleted(emit);
+    }
   }
 
   _selectIdFrontCameraCapture(SelectIdFrontCameraCapture event, emit) async {
@@ -1219,7 +1240,11 @@ class RegistrationFormBloc
               areaValue = localData.areaId != null
                   ? listOfAllArea.firstWhere((e) => e.gid == localData.areaId)
                   : GetAllAreaModel();
-
+        premiseTypeController.text = localData.premiseType ?? "";
+        dobController.text = localData.dob ?? "";
+        doorNumberController.text = localData.doorNumber ?? "";
+        floorNumberController.text = localData.floorNumber ?? "";
+        wardNumberController.text = localData.wardNumber ?? "";
               firstController.text = localData.firstName ?? "";
               middleController.text = localData.middleName ?? "";
               lastController.text = localData.lastName ?? "";
@@ -1384,6 +1409,11 @@ class RegistrationFormBloc
       chequePath: chequePath,
       isPreviewLoader: isPreviewLoader,
       isSaveLoader: isSaveLoader,
+      dobController: dobController,
+      doorNumberController: doorNumberController,
+      floorNumberController: floorNumberController,
+      wardNumberController: wardNumberController,
+      premiseTypeController: premiseTypeController,
     ));
   }
 }

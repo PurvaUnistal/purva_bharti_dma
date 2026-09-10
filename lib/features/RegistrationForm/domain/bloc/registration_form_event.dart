@@ -346,3 +346,11 @@ class UpdateFormEvent extends RegistrationFormEvent {
   // TODO: implement props
   List<Object?> get props => [index,updatedForm];
 }
+class RegistrationFormSetDobEvent extends RegistrationFormEvent {
+  final BuildContext context;
+  RegistrationFormSetDobEvent({required this.context});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props =>[context];
+}

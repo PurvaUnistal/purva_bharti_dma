@@ -11,7 +11,6 @@ class DashboardHelper {
     try {
       final res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getLabel,
-        context: context,
       );
       if (res != null) {
         GetLabelModel response = GetLabelModel.fromJson(res);
@@ -36,7 +35,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.notInterested,
-        context: context,
       );
       if (res != null) {
         List<GetNotInterestedModel> response = GetNotInterestedModel.mapToList(
@@ -64,7 +62,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.initialDepositStatus,
-        context: context,
       );
       if (res != null) {
         List<GetInitialDepositStatusModel> response =
@@ -90,7 +87,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.acceptExtraFittingCost,
-        context: context,
       );
       if (res != null) {
         List<GetAcceptExtraFittingCostModel> response =
@@ -116,7 +112,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.acceptConversionPolicy,
-        context: context,
       );
       if (res != null) {
         List<GetAcceptConversionPolicyModel> list =
@@ -143,7 +138,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getAllDistrict + schema,
-        context: context,
       );
       if (res != null) {
         List<GetAllDistrictModel> list =
@@ -174,7 +168,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.residentStatus,
-        context: context,
       );
       if (res != null) {
         List<GetResidentStatusModel> response =
@@ -202,7 +195,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.modeOfDeposit,
-        context: context,
       );
       if (res != null) {
         List<GetModeOfDepositModel> response = GetModeOfDepositModel.mapToList(
@@ -230,7 +222,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.eBilling,
-        context: context,
       );
       if (res != null) {
         List<GetEBillingModel> response = GetEBillingModel.mapToList(res);
@@ -257,7 +248,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.kycDoc,
-        context: context,
       );
       log("resKycDoc-->${res}");
       if (res != null) {
@@ -285,7 +275,6 @@ class DashboardHelper {
     try {
       final res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.ownershipProof,
-        context: context,
       );
       if (res != null) {
         List<GetOwnershipProofModel> response =
@@ -313,7 +302,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.identityProof,
-        context: context,
       );
       if (res != null) {
         List<GetIdentityProofModel> response = GetIdentityProofModel.mapToList(
@@ -342,7 +330,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.guardianType,
-        context: context,
       );
       if (res != null) {
         List<GetGuardianTypeModel> response = GetGuardianTypeModel.mapToList(
@@ -371,7 +358,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.existingCookingFuel,
-        context: context,
       );
       if (res != null) {
         List<GetExistingCookingFuelModel> response =
@@ -399,7 +385,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.societyAllow,
-        context: context,
       );
       if (res != null) {
         List<GetSocietyAllowModel> response = GetSocietyAllowModel.mapToList(
@@ -429,7 +414,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getPropertyClass + schema,
-        context: context,
       );
       if (res != null) {
         List<GetPropertyClassModel> list =
@@ -462,7 +446,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getPropertyCategory + schema,
-        context: context,
       );
       if (res != null) {
         List<GetPropertyCategoryModel> list =
@@ -495,7 +478,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getAllArea + schema,
-        context: context,
       );
       if (res != null) {
         List<GetAllAreaModel> list =
@@ -526,7 +508,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getChargeAreaList + schema,
-        context: context,
       );
       if (res != null) {
         List<GetChargeAreaListModel> list =
@@ -559,7 +540,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getAllDepositOffline + schema,
-        context: context,
       );
       if (res != null) {
         List<GetAllDepositOfflineModel> list =
@@ -591,7 +571,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getAllBanks,
-        context: context,
       );
       if (res != null) {
         List<String> response = List<String>.from(res);

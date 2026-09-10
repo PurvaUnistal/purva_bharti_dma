@@ -1843,6 +1843,113 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
+  // DOB — date field, mirrors _chequeDateWidget
+  Widget _dobWidget({required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        star: AppString.star,
+        label: AppString.dob,
+        hintText: AppString.dob,
+        suffixIcon: Icon(
+          Icons.calendar_today,
+          color: EnvironmentConfig.of(context)!.primaryTheme,
+        ),
+        controller: stateData.dobController,
+        enabled: true,
+        autofocus: false,
+        keyboardType: TextInputType.datetime,
+        onTap: () {
+          BlocProvider.of<RegistrationFormBloc>(context)
+              .add(RegistrationFormSetDobEvent(context: context));
+        },
+      ),
+    );
+  }
+
+// Door Number
+  Widget _doorNumberWidget({required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        label: AppString.doorNumber,
+        hintText: AppString.doorNumber,
+        controller: stateData.doorNumberController,
+        keyboardType: TextInputType.text,
+        validator: (value) {
+          if (value != stateData.doorNumberController.text.trim()) {
+            return "Blank space";
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
+    );
+  }
+
+// Floor Number — numeric
+  Widget _floorNumberWidget({required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        label: AppString.floorNumber,
+        hintText: AppString.floorNumber,
+        controller: stateData.floorNumberController,
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
+        validator: (value) {
+          if (value != stateData.floorNumberController.text.trim()) {
+            return "Blank space";
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
+    );
+  }
+
+// Ward Number
+  Widget _wardNumberWidget({required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        label: AppString.wardNumber,
+        hintText: AppString.wardNumber,
+        controller: stateData.wardNumberController,
+        keyboardType: TextInputType.text,
+        validator: (value) {
+          if (value != stateData.wardNumberController.text.trim()) {
+            return "Blank space";
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
+    );
+  }
+
+// Premise Type — dropdown
+  Widget _premiseTypeWidget({required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        label: AppString.premiseType,
+        hintText: AppString.premiseType,
+        controller: stateData.premiseTypeController,
+        keyboardType: TextInputType.text,
+        validator: (value) {
+          if (value != stateData.premiseTypeController.text.trim()) {
+            return "Blank space";
+          }
+          return null;
+        },
+        onChanged: (v) {
+          formGlobalKey.currentState?.validate();
+        },
+      ),
+    );
+  }
   Widget _previewButton({required RegistrationFormGetAllDataState stateData}) {
     return ButtonWidget(
       text: stateData.isUpdate == true ? "Update" : AppString.preview,

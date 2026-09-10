@@ -98,6 +98,11 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final TextEditingController numberBathroomController;
   final TextEditingController familyMemberController;
   final TextEditingController nearestLandmarkController;
+  final TextEditingController premiseTypeController;
+  final TextEditingController dobController;
+  final TextEditingController doorNumberController;
+  final TextEditingController floorNumberController;
+  final TextEditingController wardNumberController;
   final TextEditingController kyc1NumberController;
   final TextEditingController kyc2NumberController;
   final TextEditingController kyc3NumberController;
@@ -240,6 +245,11 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     required this.chequePath,
     required this.isPreviewLoader,
     required this.isSaveLoader,
+    required this.dobController,
+    required this.doorNumberController,
+    required this.floorNumberController,
+    required this.premiseTypeController,
+    required this.wardNumberController,
   });
 
   @override
@@ -347,6 +357,11 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     chequePath,
     isPreviewLoader,
     isSaveLoader,
+    dobController,
+    doorNumberController,
+    floorNumberController,
+    wardNumberController,
+    premiseTypeController
 
   ];
 }

@@ -60,14 +60,11 @@ class ViewSyncRecordBloc
         _eventCompleted(emit);
         bool hasChanges = false;
         for (int i = listOfRegistrationForm.length - 1; i >= 0; i--) {
-          var res = await ViewSyncRecordHelper.sendData(
-              context: event.context, custRegSyncData: listOfRegistrationForm[i]);
-
+          var res = await ViewSyncRecordHelper.sendData(context: event.context, custRegSyncData: listOfRegistrationForm[i]);
           if (res != null) {
             hasChanges = true;
             await HiveDataBase.registrationFormBox!.deleteAt(i);
-            listOfRegistrationForm =
-            await HiveDataBase.registrationFormBox!.values.toList();
+            listOfRegistrationForm = await HiveDataBase.registrationFormBox!.values.toList();
           }else{
             isGrpServerLoader = false;
             _eventCompleted(emit);

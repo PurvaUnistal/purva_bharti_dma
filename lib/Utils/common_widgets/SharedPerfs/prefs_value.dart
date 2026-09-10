@@ -6,4 +6,5 @@ class PrefsValue {
   static String buildNumber = "buildNumber";
   static String updateAppDate = "updateAppDate";
   static String userInfo = "userInfo";
+  static get baseUrl => "baseUrl";
 }

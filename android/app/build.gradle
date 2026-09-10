@@ -75,7 +75,11 @@ android {
                     appIcon: "@mipmap/hp_oil_logo",
                     appIconRound: "@mipmap/hp_oil_logo"
             ]
-            versionCode 1
+            def keystorePropertiesFile = rootProject.file('hpoil.properties')
+            if (keystorePropertiesFile.exists()) {
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+            }
+            versionCode 2
             versionName "1.0.0-HPOIL DMA"
         }
         prodVPPL {
@@ -96,6 +100,17 @@ android {
             manifestPlaceholders = [
                     appIcon: "@mipmap/mgl_logo",
                     appIconRound: "@mipmap/mgl_logo"
+            ]
+            versionCode 1
+            versionName "1.0.0-VRPL DMA"
+        }
+        prodHNGPL {
+            dimension "app"
+            applicationIdSuffix ".unistal.hngpl.dma"
+            resValue "string", "app_name", "HNGPL DMA"
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/hngpl_logo",
+                    appIconRound: "@mipmap/hngpl_logo"
             ]
             versionCode 1
             versionName "1.0.0-VRPL DMA"

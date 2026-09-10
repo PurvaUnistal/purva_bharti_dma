@@ -148,7 +148,19 @@ class SaveRegistrationFormModel extends HiveObject implements Equatable {
   final String? housePhoto;
   @HiveField(71)
   final String? reasonRegistration;
+  @HiveField(72)
+  String? clientRequestId;
   bool isSingleServerLoader = false;
+  @HiveField(73)
+  final String? dob;
+  @HiveField(74)
+  final String? doorNumber;
+  @HiveField(75)
+  final String? floorNumber;
+  @HiveField(76)
+  final String? wardNumber;
+  @HiveField(77)
+  final String? premiseType;
 
   SaveRegistrationFormModel({
     this.areaId,
@@ -223,11 +235,18 @@ class SaveRegistrationFormModel extends HiveObject implements Equatable {
     this.alternateMobile,
     this.housePhoto,
     this.reasonRegistration,
+    this.clientRequestId,
     this.isSingleServerLoader = false,
+    this.dob,
+    this.doorNumber,
+    this.floorNumber,
+    this.wardNumber,
+    this.premiseType,
   });
 
   @override
-  List<Object?> get props => [
+  List<Object?> get props =>
+      [
         areaId,
         chequePhoto,
         noOfFamilyMembers,
@@ -300,7 +319,13 @@ class SaveRegistrationFormModel extends HiveObject implements Equatable {
         alternateMobile,
         housePhoto,
         reasonRegistration,
-        isSingleServerLoader
+        isSingleServerLoader,
+        clientRequestId,
+        dob,
+        doorNumber,
+        floorNumber,
+        wardNumber,
+        premiseType,
       ];
 
   @override

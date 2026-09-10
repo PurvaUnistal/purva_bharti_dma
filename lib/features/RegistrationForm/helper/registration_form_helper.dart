@@ -1,6 +1,7 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:uuid/uuid.dart';
 
 class RegistrationFormHelper {
   static Future<dynamic> textFieldValidationCheck({
@@ -353,6 +354,9 @@ class RegistrationFormHelper {
         return;
       }
       SaveRegistrationFormModel entry = SaveRegistrationFormModel(
+        clientRequestId: isUpdate
+            ? (custRegSyncStore.clientRequestId ?? const Uuid().v4())
+            : const Uuid().v4(),
         dmaUserName: custRegSyncStore.dmaUserName ?? "",
         dmaUserId: custRegSyncStore.dmaUserId ?? "",
         schema: custRegSyncStore.schema ?? "",

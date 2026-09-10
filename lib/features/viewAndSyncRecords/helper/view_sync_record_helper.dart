@@ -20,6 +20,7 @@ class ViewSyncRecordHelper {
       var inputFormat = DateFormat('dd-MM-yyyy');
       var date1 = inputFormat.parse(custRegSyncData.chequeDepositDate.toString().replaceAll("00:00:00.000", ""));
       Map<String, String> json = {
+        "client_request_id": custRegSyncData.clientRequestId ?? "",
         "interested": custRegSyncData.registrationType ?? "",
         "area_id": custRegSyncData.areaId ?? "",
         "mobile_number": custRegSyncData.mobileNumber ?? "",
@@ -90,73 +91,95 @@ class ViewSyncRecordHelper {
       var res = await ApiHelperDio.postDataWithFile(
           urlEndPoint: AppUrl.saveCustomerRegistrationOffline,
           body: json,
-          context: context,
           imageRequestObject: [
             ImageRequestObject(
-                "backside1",
-                custRegSyncData.idBackPath1 == null
+               key: "backside1",
+               path: custRegSyncData.idBackPath1 == null
                     ? ""
                     : custRegSyncData.idBackPath1),
             ImageRequestObject(
-                "backside2",
-                custRegSyncData.addBackPath2 == null
+                key: "backside2",
+                path: custRegSyncData.addBackPath2 == null
                     ? ""
                     : custRegSyncData.addBackPath2),
             ImageRequestObject(
-                "backside3",
-                custRegSyncData.nocBackPath3 == null
+                key: "backside3",
+                path: custRegSyncData.nocBackPath3 == null
                     ? ""
                     : custRegSyncData.nocBackPath3),
             ImageRequestObject(
-                "document_uploads_1",
-                custRegSyncData.idFrontPath1 == null
+                key: "document_uploads_1",
+                path: custRegSyncData.idFrontPath1 == null
                     ? ""
                     : custRegSyncData.idFrontPath1),
             ImageRequestObject(
-                "document_uploads_2",
-                custRegSyncData.addFrontPath2 == null
+                key: "document_uploads_2",
+                path: custRegSyncData.addFrontPath2 == null
                     ? ""
                     : custRegSyncData.addFrontPath2),
             ImageRequestObject(
-                "document_uploads_3",
-                custRegSyncData.nocFrontPath3 == null
+                key: "document_uploads_3",
+                path: custRegSyncData.nocFrontPath3 == null
                     ? ""
                     : custRegSyncData.nocFrontPath3),
             ImageRequestObject(
-                "upload_customer_photo",
-                custRegSyncData.uploadCustomerPhoto == null
+                key: "upload_customer_photo",
+                path: custRegSyncData.uploadCustomerPhoto == null
                     ? ""
                     : custRegSyncData.uploadCustomerPhoto),
             ImageRequestObject(
-                "upload_house_photo",
-                custRegSyncData.uploadHousePhoto == null
+                key: "upload_house_photo",
+                path: custRegSyncData.uploadHousePhoto == null
                     ? ""
                     : custRegSyncData.uploadHousePhoto),
             ImageRequestObject(
-                "canceled_cheque",
-                custRegSyncData.canceledChequePhoto == null
+                key: "canceled_cheque",
+                path: custRegSyncData.canceledChequePhoto == null
                     ? ""
                     : custRegSyncData.canceledChequePhoto),
             ImageRequestObject(
-                "cheque_photo",
-                custRegSyncData.chequePhoto == null
+                key: "cheque_photo",
+                path: custRegSyncData.chequePhoto == null
                     ? ""
                     : custRegSyncData.chequePhoto),
             ImageRequestObject(
-                "owner_consent",
-                custRegSyncData.ownerConsent == null
+                key: "owner_consent",
+                path: custRegSyncData.ownerConsent == null
                     ? ""
                     : custRegSyncData.ownerConsent),
             ImageRequestObject(
-                "customer_consent",
-                custRegSyncData.customerConsent == null
+                key: "customer_consent",
+                path: custRegSyncData.customerConsent == null
                     ? ""
                     : custRegSyncData.customerConsent),
           ]);
       log("res-->${res}");
+      log("res-->${res}");
       if (res != null) {
-        return SendRegistrationOfflineModel.fromJson(res);
-      }else{
+        final success = res["success"];
+        final errors = res["errors"];
+
+        // Case 1: duplicate — server pe pehle se hai → success maano
+        final bool isDuplicate = errors is List &&
+            errors.any((e) => e.toString().toLowerCase().contains("already exists"));
+        if (isDuplicate) {
+          log("Already on server — treating as success, will remove from Hive");
+          return SendRegistrationOfflineModel(); // non-null = delete hoga
+        }
+
+        // Case 2: normal success
+        if (success == 200) {
+          return SendRegistrationOfflineModel.fromJson(res);
+        }
+
+        // Case 3: koi aur genuine error → fail, Hive me rahega
+        log("Server error-->${errors ?? res}");
+        return null;
+      }
+      // if (res != null) {
+      //   return SendRegistrationOfflineModel.fromJson(res);
+      // }
+      else{
         print("no response");
       }
     } catch (e) {
