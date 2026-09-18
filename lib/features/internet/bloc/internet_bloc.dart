@@ -12,9 +12,7 @@ class InternetBloc extends Bloc<InternetEvent, InternetState> {
     on<OnConnectedEvent>(_connected);
     on<NotConnectedEvent>(_notConnected);
 
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult? result) {
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult? result) {
       if (result == ConnectivityResult.wifi) {
         isConnected = true;
         isWifi = true;
