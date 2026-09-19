@@ -9,7 +9,7 @@ class AppString{
     Client.hpoil: "12-03-2026",
     Client.vppl: "12-03-2026",
     Client.vrpl: "12-03-2026",
-    Client.hngpl: "10-09-2026",
+    Client.hngpl: "19-09-2026",
   };
 
   static String get version => "Version : 1.0.0 - DMA-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
