@@ -8,7 +8,7 @@ Client.mahaNagar: "22-07-2025",
 Client.purvaBharti: "19-09-2025",
 };
 
-static String get version => "Version : 1.0.0 - LMC-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
+static String get version => "Version : 1.0.0 - DMA-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
 
 static String companyName = "© Unistal Systems Pvt. Ltd.";
   static String appName = "Purba Bharati  DMA";
