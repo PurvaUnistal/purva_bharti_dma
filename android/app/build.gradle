@@ -113,7 +113,7 @@ android {
                     appIconRound: "@mipmap/hngpl_logo"
             ]
             versionCode 1
-            versionName "1.0.0-VRPL DMA"
+            versionName "1.0.0-HNGPL DMA"
         }
     }
 

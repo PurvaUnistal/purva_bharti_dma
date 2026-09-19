@@ -31,7 +31,7 @@ class EnvironmentConfig extends InheritedWidget {
       //  return "https://hpoil.smartgasnet.com/api/";
         return "http://gis.hpoilgas.in/api/";
       case EnvironmentFlavors.prodHNGPL:
-        return "https://hngpluat.smartgasnet.com/api/";
+        return "https://hngpl.smartgasnet.com/api/";
     }
   }
 
