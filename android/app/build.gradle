@@ -49,8 +49,8 @@ android {
             if (keystorePropertiesFile.exists()) {
                 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
             }
-            versionCode 33
-            versionName "1.0.9-PBGPL"
+            versionCode 34
+            versionName "1.0.10-PBGPL"
         }
 //        prodMGL {
 //            dimension "app"

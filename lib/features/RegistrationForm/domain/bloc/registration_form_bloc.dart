@@ -1371,8 +1371,8 @@ class RegistrationFormBloc
     DateTime? pickedDate = await showDatePicker(
       context: event.context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2023),
-      lastDate: DateTime.now(),
+      firstDate: DateTime(1880),
+      lastDate: DateTime(2780),
     );
 
     if (pickedDate != null) {
