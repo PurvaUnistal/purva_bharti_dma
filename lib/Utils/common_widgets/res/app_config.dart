@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:pbg_app/features/Login/domain/model/login_model.dart';
 
 import 'enums.dart';
+import 'environment_config.dart';
 
 class AppConfig {
   static AppConfig? instance;
+  static String? baseUrl;
   RoleType? roleType;
   Client? client;
   LoginModel loginData = LoginModel();
@@ -16,6 +20,10 @@ class AppConfig {
   String _buildName = "";
   String get buildName => _buildName;
 
+  static void init(BuildContext context) {
+    baseUrl = EnvironmentConfig.of(context)!.generalUrlBaseFlavour;
+    log("baseUrl --> $baseUrl");
+  }
   setBuildName({required String name}) {
     _buildName = name;
   }

@@ -404,7 +404,7 @@ class RegistrationFormHelper {
         premiseType: premiseType,
         floorNumber: floorNumber,
         dob: dob,
-        clientRequestId: Uuid().v4(),
+        clientRequestId: DateTime.now().microsecondsSinceEpoch.toString(),
         doorNumber: doorNumber,
       );
       return custRegSyncStore;
@@ -432,9 +432,8 @@ class RegistrationFormHelper {
       }
       SaveRegistrationFormModel entry = SaveRegistrationFormModel(
         clientRequestId:
-            isUpdate
-                ? (custRegSyncStore.clientRequestId ?? const Uuid().v4())
-                : const Uuid().v4(),
+          isUpdate ? (custRegSyncStore.clientRequestId ?? DateTime.now().microsecondsSinceEpoch.toString())
+          : DateTime.now().microsecondsSinceEpoch.toString(),
         dmaUserName: custRegSyncStore.dmaUserName ?? "",
         dmaUserId: custRegSyncStore.dmaUserId ?? "",
         schema: custRegSyncStore.schema ?? "",

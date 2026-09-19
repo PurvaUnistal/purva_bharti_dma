@@ -49,7 +49,7 @@ android {
             if (keystorePropertiesFile.exists()) {
                 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
             }
-            versionCode 35
+            versionCode 36
             versionName "1.0.10-PBGPL"
         }
 //        prodMGL {

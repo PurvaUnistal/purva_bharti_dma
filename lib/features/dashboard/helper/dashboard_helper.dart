@@ -10,10 +10,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      final res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getLabel,
-        context: context,
-      );
+      final res = await ApiHelperDio.getData(urlEndPoint: AppUrl.getLabel);
       if (res != null) {
         GetLabelModel response = GetLabelModel.fromJson(res);
         if (HiveDataBase.allLabelBox != null &&
@@ -35,10 +32,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.notInterested,
-        context: context,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.notInterested);
       if (res != null) {
         List<GetNotInterestedModel> response = GetNotInterestedModel.mapToList(
           res,
@@ -65,7 +59,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.initialDepositStatus,
-        context: context,
       );
       if (res != null) {
         List<GetInitialDepositStatusModel> response =
@@ -92,7 +85,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.acceptExtraFittingCost,
-        context: context,
       );
       if (res != null) {
         List<GetAcceptExtraFittingCostModel> response =
@@ -119,7 +111,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.acceptConversionPolicy,
-        context: context,
       );
       if (res != null) {
         List<GetAcceptConversionPolicyModel> list =
@@ -148,7 +139,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getAllDistrict + schema,
-        context: context,
       );
       if (res != null) {
         List<GetAllDistrictModel> list =
@@ -177,10 +167,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.residentStatus,
-        context: context,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.residentStatus);
       if (res != null) {
         List<GetResidentStatusModel> response =
             GetResidentStatusModel.mapToList(res);
@@ -205,10 +192,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.modeOfDeposit,
-        context: context,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.modeOfDeposit);
       if (res != null) {
         List<GetModeOfDepositModel> response = GetModeOfDepositModel.mapToList(
           res,
@@ -233,10 +217,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.eBilling,
-        context: context,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.eBilling);
       if (res != null) {
         List<GetEBillingModel> response = GetEBillingModel.mapToList(res);
         if (response.isNotEmpty) {
@@ -260,16 +241,14 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.kycDoc,
-        context: context,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.kycDoc);
       log("resKycDoc-->${res}");
       if (res != null) {
         List<GetKycDocModel> response = GetKycDocModel.mapToList(res);
         log("responseKycDoc-->${response}");
         if (response.isNotEmpty) {
-          if (HiveDataBase.kycDocBox != null && HiveDataBase.kycDocBox!.isOpen) {
+          if (HiveDataBase.kycDocBox != null &&
+              HiveDataBase.kycDocBox!.isOpen) {
             await HiveDataBase.kycDocBox!.clear();
             await HiveDataBase.kycDocBox!.addAll(response);
           }
@@ -290,7 +269,6 @@ class DashboardHelper {
     try {
       final res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.ownershipProof,
-        context: context,
       );
       if (res != null) {
         List<GetOwnershipProofModel> response =
@@ -316,10 +294,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.identityProof,
-        context: context,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.identityProof);
       if (res != null) {
         List<GetIdentityProofModel> response = GetIdentityProofModel.mapToList(
           res,
@@ -345,10 +320,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.guardianType,
-        context: context,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.guardianType);
       if (res != null) {
         List<GetGuardianTypeModel> response = GetGuardianTypeModel.mapToList(
           res,
@@ -376,7 +348,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.existingCookingFuel,
-        context: context,
       );
       if (res != null) {
         List<GetExistingCookingFuelModel> response =
@@ -402,10 +373,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.societyAllow,
-        context: context,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.societyAllow);
       if (res != null) {
         List<GetSocietyAllowModel> response = GetSocietyAllowModel.mapToList(
           res,
@@ -431,14 +399,9 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.premiseType,
-        context: context,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.premiseType);
       if (res != null) {
-        List<GetPremiseTypeModel> response = GetPremiseTypeModel.mapToList(
-          res,
-        );
+        List<GetPremiseTypeModel> response = GetPremiseTypeModel.mapToList(res);
         if (response.isNotEmpty) {
           if (HiveDataBase.premiseTypeBox != null &&
               HiveDataBase.premiseTypeBox!.isOpen) {
@@ -463,7 +426,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getPropertyClass + schema,
-        context: context,
       );
       if (res != null) {
         List<GetPropertyClassModel> list =
@@ -496,7 +458,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getPropertyCategory + schema,
-        context: context,
       );
       if (res != null) {
         List<GetPropertyCategoryModel> list =
@@ -529,7 +490,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getAllArea + schema,
-        context: context,
       );
       if (res != null) {
         List<GetAllAreaModel> list =
@@ -560,7 +520,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getChargeAreaList + schema,
-        context: context,
       );
       if (res != null) {
         List<GetChargeAreaListModel> list =
@@ -593,7 +552,6 @@ class DashboardHelper {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.getAllDepositOffline + schema,
-        context: context,
       );
       if (res != null) {
         List<GetAllDepositOfflineModel> list =
@@ -623,10 +581,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getAllBanks,
-        context: context,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.getAllBanks);
       if (res != null) {
         List<String> response = List<String>.from(res);
         if (response.isNotEmpty) {
@@ -675,9 +630,16 @@ class DashboardHelper {
     await Permission.locationAlways.request();
     if (Platform.isAndroid) {
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        forceAndroidLocationManager: true,
-        locationSettings: LocationSettings(),
+        locationSettings:
+            Platform.isAndroid
+                ? AndroidSettings(
+                  accuracy: LocationAccuracy.high,
+                  forceLocationManager: true,
+                )
+                : AppleSettings(
+                  accuracy: LocationAccuracy.high,
+                  pauseLocationUpdatesAutomatically: true,
+                ),
       );
       log('latitude : ${position.latitude} longitude : ${position.longitude}');
       return position;

@@ -53,8 +53,7 @@ class LoginHelper {
     try {
       var res = await ApiHelperDio.postData(
         urlEndPoint: AppUrl.auth,
-        param: para,
-        context: context,
+        body : jsonEncode(para),
       );
       if (res != null && res["error"] == false) {
         if (res["user"]["role"] == "dma" &&
