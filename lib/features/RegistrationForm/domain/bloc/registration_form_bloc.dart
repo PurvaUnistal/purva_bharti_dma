@@ -1045,7 +1045,7 @@ class RegistrationFormBloc
       if (AppConfig.instanceInit()!.client == Client.purvaBharti) ...[
         PopWidget.itemBuilder(
           textName: AppString.premiseType,
-          textValue: premiseTypeValue.key == "" ? "-" : premiseTypeValue.value!,
+          textValue: premiseTypeValue.key == null ? "" : premiseTypeValue.value!,
         ),
       ],
       _buildPopItem(

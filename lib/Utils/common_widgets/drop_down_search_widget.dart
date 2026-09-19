@@ -1,6 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_string.dart';
+import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 import 'input_decoration_style.dart';
 import 'res/app_color.dart';
 import 'button_widget.dart';
@@ -60,25 +61,29 @@ class DropDownSearchWidget<T> extends StatelessWidget {
             labelText: "Search",
           ),
         ),
-
         containerBuilder: (context, popupWidget) {
           return Column(
             children: [
               Expanded(child: popupWidget),
-
-              /// Footer button
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: SizedBox(
-                    width: 120,
-                    child: ButtonWidget(
-                   //   fontSize: AppFont.font_12,
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,          // ✅ White background
+                        foregroundColor: Colors.black,          // ✅ Black text
+                        side: BorderSide(color: EnvironmentConfig.of(context)!.primaryTheme),  // ✅ Grey border
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
                       onPressed: () => Navigator.pop(context),
-                      text: "Cancel",
+                      child: const Text("Cancel"),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],
