@@ -1,5 +1,6 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_premise_type_model.dart';
 
 class HiveDataBase {
   static Box<GetAcceptConversionPolicyModel>? acceptConversionPolicyBox;
@@ -22,6 +23,7 @@ class HiveDataBase {
   static Box<GetPropertyClassModel>? proClassBox;
   static Box<GetResidentStatusModel>? resStatusBox;
   static Box<GetSocietyAllowModel>? societyAllowBox;
+  static Box<GetPremiseTypeModel>? premiseTypeBox;
   static Box<String>? getAllBanksBox;
   static Box<SaveRegistrationFormModel>? registrationFormBox;
 
@@ -61,6 +63,7 @@ class HiveDataBase {
     Hive.registerAdapter(GetSocietyAllowModelAdapter());
     Hive.registerAdapter(BankNameListModelAdapter());
     Hive.registerAdapter(SaveRegistrationFormModelAdapter());
+    Hive.registerAdapter(GetPremiseTypeModelAdapter());
 
     acceptConversionPolicyBox = await Hive.openBox<GetAcceptConversionPolicyModel>(HiveBoxName.AcceptConversionPolicyBox);
     acceptExtraFittingCostBox = await Hive.openBox<GetAcceptExtraFittingCostModel>(HiveBoxName.AcceptExtraFittingCostBox);
@@ -84,6 +87,7 @@ class HiveDataBase {
     societyAllowBox = await Hive.openBox<GetSocietyAllowModel>(HiveBoxName.SocietyAllowBox);
     getAllBanksBox = await Hive.openBox<String>(HiveBoxName.AllBanksBox);
     registrationFormBox = await Hive.openBox<SaveRegistrationFormModel>(HiveBoxName.registrationFormBox);
+    premiseTypeBox = await Hive.openBox<GetPremiseTypeModel>(HiveBoxName.premiseTypeBox);
 
   }
 }

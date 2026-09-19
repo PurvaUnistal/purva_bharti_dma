@@ -25,6 +25,7 @@ class AppUrl {
   static get existingCookingFuel => "getConstant?key=existingCookingFuel";
   static get residentStatus  => "getConstant?key=residentStatus";
   static get societyAllow  => "getConstant?key=societyAllow";
+  static get premiseType  => "getConstant?key=premistype";
   static get getPropertyClass  => "getPropertyClass?schema=";
   static get getPropertyCategory => "getPropertyCategory?schema=";
   static get getChargeAreaList  => "getChargeAreaList?schema=";

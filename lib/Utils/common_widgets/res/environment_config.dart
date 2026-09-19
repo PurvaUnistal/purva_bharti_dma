@@ -22,7 +22,7 @@ class EnvironmentConfig extends InheritedWidget {
       case EnvironmentFlavors.prodPBGPL:
        // return "https://pbgplc.smartgasnet.com/api/";
        // return "https://pbgpluat.smartgasnet.com/api/";
-        return "https://pbgpl.smartgasnet.com/api/";
+        return "https://pbgpluat.smartgasnet.com/api/";
       case EnvironmentFlavors.prodMGL:
       //  return "https://mgluat.smartgasnet.com/api/";
         return "https://mgl.smartgasnet.com/api/";

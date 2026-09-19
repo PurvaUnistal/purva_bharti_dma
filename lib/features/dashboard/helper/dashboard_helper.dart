@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Service/api_server_dio.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_premise_type_model.dart';
 
 class DashboardHelper {
   static Future<GetLabelModel?> getLabelApi({
@@ -414,6 +415,35 @@ class DashboardHelper {
               HiveDataBase.societyAllowBox!.isOpen) {
             await HiveDataBase.societyAllowBox!.clear();
             await HiveDataBase.societyAllowBox!.addAll(response);
+          }
+        }
+        return response;
+      }
+    } catch (e) {
+      print("GetSocietyAllowModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
+    }
+    return null;
+  }
+
+  static Future<List<GetPremiseTypeModel>?> getPremiseTypeApi({
+    required BuildContext context,
+  }) async {
+    try {
+      var res = await ApiHelperDio.getData(
+        urlEndPoint: AppUrl.premiseType,
+        context: context,
+      );
+      if (res != null) {
+        List<GetPremiseTypeModel> response = GetPremiseTypeModel.mapToList(
+          res,
+        );
+        if (response.isNotEmpty) {
+          if (HiveDataBase.premiseTypeBox != null &&
+              HiveDataBase.premiseTypeBox!.isOpen) {
+            await HiveDataBase.premiseTypeBox!.clear();
+            await HiveDataBase.premiseTypeBox!.addAll(response);
           }
         }
         return response;

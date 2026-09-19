@@ -19,30 +19,61 @@ class PopWidget{
     );
   }
 
-  static Widget itemBuilder({String? star, String? textName, String? textValue}) {
+  // static Widget itemBuilder({String? star, String? textName, String? textValue}) {
+  //   return Column(
+  //     children: [
+  //       Padding(
+  //         padding: EdgeInsets.symmetric(horizontal: 8.0),
+  //         child: Row(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Flexible(child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.start,
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 Flexible(child: Text(star??"",  style:Styles.stars)),
+  //                 Flexible(flex: 6,child: Text(textName  ?? "", style:Styles.labels),
+  //                 ),
+  //               ],
+  //             ),
+  //             ),
+  //             Flexible(child: Text(textValue ?? "-",style: Styles.label1,
+  //             )),
+  //           ],
+  //         ),
+  //       ),
+  //       divider(),
+  //
+  //     ],
+  //   );
+  // }
+
+  static Widget itemBuilder({bool isRequired = false, String? textName, required String textValue}) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text.rich(
+              TextSpan(
                 children: [
-                  Flexible(child: Text(star??"",  style:Styles.stars)),
-                  Flexible(flex: 6,child: Text(textName  ?? "", style:Styles.labels),
+                  TextSpan(
+                    text: textName ?? '',
+                    style:Styles.labels,
                   ),
+                  if (isRequired)
+                    const TextSpan(
+                      text: ' *',
+                      style: TextStyle(color: Colors.red),
+                    ),
                 ],
               ),
-              ),
-              Flexible(child: Text(textValue ?? "-",style: Styles.label1,
-              )),
-            ],
-          ),
+            ),
+            Flexible(child: Text(textValue ?? "-",style: Styles.label1,
+            )),
+          ],
         ),
         divider(),
 

@@ -21,6 +21,7 @@ class HiveBoxName {
   static String SocietyAllowBox = "societyAllowBox";
   static String AllBanksBox = "getAllBanksBox";
   static String registrationFormBox = "registrationFormBox";
+  static String premiseTypeBox = "premiseTypeBox";
 }
 
 class HiveTypeId {
@@ -55,4 +56,5 @@ class HiveTypeId {
   static const GetLabelId = 28;
   static const FileRegistrationFormId = 29;
   static const BankNameListModel = 30;
+  static const GetPremiseTypeModel = 31;
 }

@@ -1,10 +1,16 @@
 import 'app_config.dart';
+import 'enums.dart';
 
 class AppString{
 
+static const Map<Client, String> _releaseDates = {
+Client.mahaNagar: "22-07-2025",
+Client.purvaBharti: "19-09-2025",
+};
 
-  static String version = "Version : DMA-${AppConfig.instanceInit()?.buildName}-25/06/2025";
-  static String companyName = "© Unistal Systems Pvt. Ltd.";
+static String get version => "Version : 1.0.0 - LMC-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
+
+static String companyName = "© Unistal Systems Pvt. Ltd.";
   static String appName = "Purba Bharati  DMA";
   static String companyNameDesc = "Unistal Private Ltd.";
   static String appLogo = "assets/images/pbg_logo.png";
@@ -40,11 +46,16 @@ class AppString{
   static String firstName = 'First Name';
   static String middleName = 'Middle Name';
   static String lastName = 'Last Name';
+  static String dob = 'dd-mm-yyyy';
   static String guardianType = 'Guardian Type';
   static String guardianName = 'Guardian Name';
   static String emailAddress = 'Email ID';
+  static String doorNumber = 'Door Number';
+  static String floorNumber = 'Floor Number';
+  static String wardNumber = 'Ward Number';
   static String propertyCategory = 'Property Category';
   static String propertyClass = 'Property Class';
+  static String premiseType = 'Premise Type';
   static String buildingNumber =  'Building Number';
   static String houseNumber = 'House Number';
   static String colony = 'Colony/Society/Apartment';

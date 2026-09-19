@@ -1,7 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/Utils/common_widgets/res/enums.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/DepositOfflinePop.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/pop_widget.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_premise_type_model.dart';
 
 class RegistrationFormBloc
     extends Bloc<RegistrationFormEvent, RegistrationFormState> {
@@ -20,7 +24,8 @@ class RegistrationFormBloc
     on<RegistrationFormSetLocation>(_btnLocation);
     on<RegistrationFormSetResidentStatusValue>(_setResidentStatusValue);
     on<RegistrationFormSetExistingCookingFuelValue>(
-        _setExistingCookingFuelValue);
+      _setExistingCookingFuelValue,
+    );
     on<RegistrationFormSetKycDoc1Value>(_setKycDoc1Value);
     on<RegistrationFormSetKycDoc2Value>(_setKycDoc2Value);
     on<RegistrationFormSetKycDoc3Value>(_setKycDoc3Value);
@@ -28,7 +33,8 @@ class RegistrationFormBloc
     on<RegistrationFormSetCustBankNameValue>(_setCustBankNameValue);
     on<RegistrationFormSetPaymentBankNameValue>(_setPaymentBankNameValue);
     on<RegistrationFormSetInitialDepositStatusValue>(
-        _setInitialDepositStatusValue);
+      _setInitialDepositStatusValue,
+    );
     on<RegistrationFormSchemeTypeValue>(_setSchemeTypeValue);
     on<RegistrationFormSetModeDepositValue>(_setModeDepositValue);
     on<RegistrationFormSetChequeDateEvent>(_setChequeDate);
@@ -52,7 +58,9 @@ class RegistrationFormBloc
     on<RegistrationFormPreviewPageEvent>(_previewPage);
     on<RegistrationFormSaveLocalDataEvent>(_saveLocalData);
     on<UpdateLocalDataEvent>(_updateLocalDataEvent);
-   // on<UpdateLocalDataEvent>(_updateLocalData);
+    on<RegistrationFormSelectDateEvent>(_selectDate);
+    on<RegistrationFormSetPremiseTypeValue>(_premiseType);
+    // on<UpdateLocalDataEvent>(_updateLocalData);
   }
 
   bool isUpdate = false;
@@ -111,6 +119,7 @@ class RegistrationFormBloc
       GetExistingCookingFuelModel();
   GetSocietyAllowModel getSocietyAllowModel = GetSocietyAllowModel();
   BankNameListModel bankNameListModel = BankNameListModel();
+  GetPremiseTypeModel premiseTypeValue = GetPremiseTypeModel();
 
   List<GetLabelModel> listOfAllLabel = [];
   List<GetNotInterestedModel> listOfRegistrationType = [];
@@ -134,6 +143,7 @@ class RegistrationFormBloc
   List<GetAllDepositOfflineModel> listOfDepositOffline = [];
   List<String> listOfCustBankName = [];
   List<String> paymentBankNameList = [];
+  List<GetPremiseTypeModel> listOfPremiseType = [];
 
   /* SaveRegistrationFormModel saveCusRegData = SaveRegistrationFormModel();*/
 
@@ -159,6 +169,10 @@ class RegistrationFormBloc
   String firstDeposit = "";
 
   TextEditingController reasonRegistrationController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController doorNumberController = TextEditingController();
+  TextEditingController floorNumberController = TextEditingController();
+  TextEditingController wardNumberController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController altMobileController = TextEditingController();
   TextEditingController firstController = TextEditingController();
@@ -172,12 +186,15 @@ class RegistrationFormBloc
   TextEditingController streetController = TextEditingController();
   TextEditingController townController = TextEditingController();
   TextEditingController pinCodeController = TextEditingController();
-  TextEditingController numberKitchenController =
-      TextEditingController(text: "1");
-  TextEditingController numberBathroomController =
-      TextEditingController(text: "1");
-  TextEditingController familyMemberController =
-      TextEditingController(text: "4");
+  TextEditingController numberKitchenController = TextEditingController(
+    text: "1",
+  );
+  TextEditingController numberBathroomController = TextEditingController(
+    text: "1",
+  );
+  TextEditingController familyMemberController = TextEditingController(
+    text: "4",
+  );
   TextEditingController nearestLandmarkController = TextEditingController();
   TextEditingController kyc1NumberController = TextEditingController();
   TextEditingController kyc2NumberController = TextEditingController();
@@ -205,7 +222,7 @@ class RegistrationFormBloc
     _eventCompleted(emit);
   }
 
-// Helper methods
+  // Helper methods
 
   void _initializeStateVariables() {
     isUpdate = false;
@@ -240,6 +257,7 @@ class RegistrationFormBloc
     paymentBankNameValue = "";
     initialDepositStatusValue = GetInitialDepositStatusModel();
     modeDepositValue = GetModeOfDepositModel();
+    premiseTypeValue = GetPremiseTypeModel();
 
     listOfAllLabel = [];
     listOfRegistrationType = [];
@@ -263,10 +281,15 @@ class RegistrationFormBloc
     listOfDepositOffline = [];
     listOfCustBankName = [];
     paymentBankNameList = [];
+    listOfPremiseType = [];
   }
 
   void _resetControllers() {
     reasonRegistrationController.text = "";
+    dobController.text = "";
+    doorNumberController.text = "";
+    floorNumberController.text = "";
+    wardNumberController.text = "";
     mobileController.text = "";
     altMobileController.text = "";
     firstController.text = "";
@@ -320,7 +343,8 @@ class RegistrationFormBloc
 
   Future<void> _fetchHiveData() async {
     listOfAllLabel = HiveDataBase.allLabelBox?.values.toSet().toList() ?? [];
-    listOfRegistrationType = HiveDataBase.notInterestedBox?.values.toSet().toList() ?? [];
+    listOfRegistrationType =
+        HiveDataBase.notInterestedBox?.values.toSet().toList() ?? [];
     listOfInitialDepositStatus =
         HiveDataBase.initDepositStatusBox?.values.toSet().toList() ?? [];
     listOfExtraFittingCost =
@@ -353,6 +377,8 @@ class RegistrationFormBloc
         HiveDataBase.getAllBanksBox?.values.toSet().toList() ?? [];
     paymentBankNameList =
         HiveDataBase.getAllBanksBox?.values.toSet().toList() ?? [];
+    listOfPremiseType =
+        HiveDataBase.premiseTypeBox?.values.toSet().toList() ?? [];
   }
 
   void _setDependentData() {
@@ -396,9 +422,12 @@ class RegistrationFormBloc
       preferredBillValue = listOfEBilling.first;
     }
     if (propertyCategoryValue.id != null) {
-      listOfDepositOffline = HiveDataBase.allDepositOfflineBox?.values
-              .where((element) =>
-                  element.propertyCategoryId == propertyCategoryValue.id)
+      listOfDepositOffline =
+          HiveDataBase.allDepositOfflineBox?.values
+              .where(
+                (element) =>
+                    element.propertyCategoryId == propertyCategoryValue.id,
+              )
               .toSet()
               .toList() ??
           [];
@@ -411,7 +440,9 @@ class RegistrationFormBloc
   }
 
   _setConversionPolicyValue(
-      RegistrationFormSetConversionPolicyValue event, emit) {
+    RegistrationFormSetConversionPolicyValue event,
+    emit,
+  ) {
     conversionPolicyValue = event.conversionPolicyValue;
     _eventCompleted(emit);
   }
@@ -433,9 +464,10 @@ class RegistrationFormBloc
     if (chargeAreaValue.gid != null) {
       List<GetAllAreaModel> dataList =
           HiveDataBase.allAreaBox?.values.toSet().toList() ?? [];
-      listOfAllArea = dataList
-          .where((element) => chargeAreaValue.gid == element.chargeAreaId)
-          .toList();
+      listOfAllArea =
+          dataList
+              .where((element) => chargeAreaValue.gid == element.chargeAreaId)
+              .toList();
     }
     _eventCompleted(emit);
   }
@@ -451,7 +483,9 @@ class RegistrationFormBloc
   }
 
   _setPropertyCategoryValue(
-      RegistrationFormSetPropertyCategoryValue event, emit) {
+    RegistrationFormSetPropertyCategoryValue event,
+    emit,
+  ) {
     propertyCategoryValue = event.propertyCategoryValue;
     listOfDepositOffline = [];
     schemeTypeValue = GetAllDepositOfflineModel();
@@ -459,10 +493,13 @@ class RegistrationFormBloc
     if (propertyCategoryValue.id != null) {
       List<GetAllDepositOfflineModel> dataList =
           HiveDataBase.allDepositOfflineBox?.values.toSet().toList() ?? [];
-      listOfDepositOffline = dataList
-          .where((element) =>
-              propertyCategoryValue.id == element.propertyCategoryId)
-          .toList();
+      listOfDepositOffline =
+          dataList
+              .where(
+                (element) =>
+                    propertyCategoryValue.id == element.propertyCategoryId,
+              )
+              .toList();
     }
     _eventCompleted(emit);
   }
@@ -483,7 +520,9 @@ class RegistrationFormBloc
   }
 
   _setExistingCookingFuelValue(
-      RegistrationFormSetExistingCookingFuelValue event, emit) {
+    RegistrationFormSetExistingCookingFuelValue event,
+    emit,
+  ) {
     existingCookingFuelValue = event.existingCookingFuelValue;
     _eventCompleted(emit);
   }
@@ -514,13 +553,17 @@ class RegistrationFormBloc
   }
 
   _setPaymentBankNameValue(
-      RegistrationFormSetPaymentBankNameValue event, emit) {
+    RegistrationFormSetPaymentBankNameValue event,
+    emit,
+  ) {
     paymentBankNameValue = event.paymentBankNameValue;
     _eventCompleted(emit);
   }
 
   _setInitialDepositStatusValue(
-      RegistrationFormSetInitialDepositStatusValue event, emit) {
+    RegistrationFormSetInitialDepositStatusValue event,
+    emit,
+  ) {
     initialDepositStatusValue = event.initialDepositStatusValue;
     _eventCompleted(emit);
   }
@@ -538,13 +581,16 @@ class RegistrationFormBloc
   _selectSchemeTypeDetail(SchemeTypeDetailEvent event, emit) {
     if (schemeTypeValue.depositTypesId == null) {
       return Utils.errorSnackBar(
-          msg: "The New Scheme Type field is requirement",
-          context: event.context);
+        msg: "The New Scheme Type field is requirement",
+        context: event.context,
+      );
     } else if (schemeTypeValue.depositTypesId != null) {
       return showDialog(
-          context: event.context,
-          builder: (BuildContext context) =>
-              DepositPop(schemeTypeValue: schemeTypeValue));
+        context: event.context,
+        builder:
+            (BuildContext context) =>
+                DepositPop(schemeTypeValue: schemeTypeValue),
+      );
     }
   }
 
@@ -599,7 +645,9 @@ class RegistrationFormBloc
   }
 
   _selectAddFrontGalleryCapture(
-      SelectAddFrontGalleryCapture event, emit) async {
+    SelectAddFrontGalleryCapture event,
+    emit,
+  ) async {
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if (photoPath != null) {
@@ -636,7 +684,9 @@ class RegistrationFormBloc
   }
 
   _selectNocDocBackGalleryCapture(
-      SelectNocDocBackGalleryCapture event, emit) async {
+    SelectNocDocBackGalleryCapture event,
+    emit,
+  ) async {
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if (photoPath != null) {
@@ -655,7 +705,9 @@ class RegistrationFormBloc
   }
 
   _selectCustomerGalleryCapture(
-      SelectCustomerGalleryCapture event, emit) async {
+    SelectCustomerGalleryCapture event,
+    emit,
+  ) async {
     var photoPath = await DashboardHelper.galleryCapture();
     log("photo-->${photoPath}");
     if (photoPath != null) {
@@ -719,23 +771,25 @@ class RegistrationFormBloc
 
     if (await Permission.location.isGranted) {
       var getLocation = await DashboardHelper.getCurrentLocation();
-      latController =
-          TextEditingController(text: getLocation?.latitude.toString());
-      longController =
-          TextEditingController(text: getLocation?.longitude.toString());
+      latController = TextEditingController(
+        text: getLocation?.latitude.toString(),
+      );
+      longController = TextEditingController(
+        text: getLocation?.longitude.toString(),
+      );
       return getLocation;
     } else {
-      Utils.errorSnackBar(
-          msg:  "Location permission denied", context: context);
+      Utils.errorSnackBar(msg: "Location permission denied", context: context);
     }
   }
 
   _setChequeDate(RegistrationFormSetChequeDateEvent event, emit) async {
     DateTime? dateTime = await showDatePicker(
-        context: event.context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(1950),
-        lastDate: DateTime.now());
+      context: event.context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1950),
+      lastDate: DateTime.now(),
+    );
     if (dateTime != null) {
       String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
       chequeDateController.text = formattedDate.toString();
@@ -811,6 +865,11 @@ class RegistrationFormBloc
           customerConsent.path.isEmpty ? File("") : customerConsent,
       eBillingModel: preferredBillValue.key ?? "",
       residentStatus: residentStatusValue.key ?? "",
+      doorNumber: doorNumberController.text.toString(),
+      dob: dobController.text.toString(),
+      floorNumber: floorNumberController.text.toString(),
+      premiseType: premiseTypeValue.key ?? "",
+      wardNumber: wardNumberController.text.toString(),
     );
   }
 
@@ -838,19 +897,19 @@ class RegistrationFormBloc
         return Scaffold(
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
-            child: AppBarWidget(
-              boolLeading: true,
-              title: "Customer Detail",
-            ),
+            child: AppBarWidget(boolLeading: true, title: "Customer Detail"),
           ),
           body: Container(
             color: AppColor.white,
             child: Stack(
               children: [
                 SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: _buildPreviewItems(context: context),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildPreviewItems(context: context),
+                    ),
                   ),
                 ),
                 Positioned(
@@ -869,210 +928,395 @@ class RegistrationFormBloc
 
   List<Widget> _buildPreviewItems({required BuildContext context}) {
     return [
-      _buildPopItem(AppString.registrationType, registrationTypeValue.value),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.registrationType,
+        value: registrationTypeValue.value!,
+      ),
       registrationTypeValue.key == "0"
           ? PopWidget.itemBuilder(
-              textName: AppString.reasonRegistration,
-              textValue: reasonRegistrationController.text)
+            textName: AppString.reasonRegistration,
+            textValue: reasonRegistrationController.text,
+          )
           : Container(),
-      _buildPopItem(AppString.conversionPolicy, conversionPolicyValue.value),
-      _buildPopItem(AppString.fittingCost, extraFittingValue.value),
-      registrationTypeValue.key == "1"
-          ? _buildPopItem(AppString.mdpeAllow, societyAllowValue.value)
-          : Container(),
-      _buildPopItem(AppString.chargeArea, chargeAreaValue.chargeAreaName),
-      _buildPopItem(AppString.area, areaValue.areaName),
-      _buildPopItem(AppString.mobileNo, mobileController.text),
-      _buildPopItem(AppString.alternateMobileNo, altMobileController.text),
-      _buildPopItem(AppString.firstName, firstController.text),
-      _buildPopItem(AppString.middleName, middleController.text),
-      _buildPopItem(AppString.lastName, lastController.text),
-      PopWidget.itemBuilder(
-          star: registrationTypeValue.value != "Future Registration"
-              ? AppString.star
-              : "",
-          textName: AppString.guardianType,
-          textValue:
-              guardianTypeValue.key == null ? "" : guardianTypeValue.value),
-      PopWidget.itemBuilder(
-          star: registrationTypeValue.value != "Future Registration"
-              ? AppString.star
-              : "",
-          textName: AppString.guardianName,
-          textValue: guardianNameController.text.isEmpty
-              ? ""
-              : guardianNameController.text),
-      _buildPopItem(AppString.emailAddress, emailIdController.text),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.conversionPolicy,
+        value: conversionPolicyValue.value!,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.fittingCost,
+        value: extraFittingValue.value!,
+      ),
       registrationTypeValue.key == "1"
           ? _buildPopItem(
-              AppString.propertyCategory, propertyCategoryValue.name)
+            isRequired: true,
+            label: AppString.mdpeAllow,
+            value: societyAllowValue.value!,
+          )
+          : Container(),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.chargeArea,
+        value: chargeAreaValue.chargeAreaName!,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.area,
+        value: areaValue.areaName!,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.mobileNo,
+        value: mobileController.text,
+      ),
+      _buildPopItem(
+        label: AppString.alternateMobileNo,
+        value: altMobileController.text,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.firstName,
+        value: firstController.text,
+      ),
+      _buildPopItem(label: AppString.middleName, value: middleController.text),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.lastName,
+        value: lastController.text,
+      ),
+      if (AppConfig.instanceInit()!.client == Client.purvaBharti) ...[
+        _buildPopItem(label: AppString.dob, value: dobController.text),
+      ],
+      PopWidget.itemBuilder(
+        isRequired:
+            registrationTypeValue.value != "Future Registration" ? true : false,
+        textName: AppString.guardianType,
+        textValue:
+            guardianTypeValue.key == null ? "" : guardianTypeValue.value!,
+      ),
+      PopWidget.itemBuilder(
+        isRequired:
+            registrationTypeValue.value != "Future Registration" ? true : false,
+        textName: AppString.guardianName,
+        textValue:
+            guardianNameController.text.isEmpty
+                ? ""
+                : guardianNameController.text,
+      ),
+      _buildPopItem(
+        label: AppString.emailAddress,
+        value: emailIdController.text,
+      ),
+      if (AppConfig.instanceInit()!.client == Client.purvaBharti) ...[
+        _buildPopItem(
+          label: AppString.doorNumber,
+          value: doorNumberController.text,
+        ),
+        _buildPopItem(
+          label: AppString.floorNumber,
+          value: floorNumberController.text,
+        ),
+        _buildPopItem(
+          label: AppString.wardNumber,
+          value: wardNumberController.text,
+        ),
+      ],
+      registrationTypeValue.key == "1"
+          ? _buildPopItem(
+            isRequired: true,
+            label: AppString.propertyCategory,
+            value: propertyCategoryValue.name!,
+          )
           : Container(),
       registrationTypeValue.key == "1"
-          ? _buildPopItem(AppString.propertyClass, propertyClassValue.name)
+          ? _buildPopItem(
+            isRequired: true,
+            label: AppString.propertyClass,
+            value: propertyClassValue.name!,
+          )
           : Container(),
-      _buildPopItem(AppString.buildingNumber, buildingNumberController.text),
-      _buildPopItem(AppString.houseNumber, houseNumberController.text),
-      _buildPopItem(AppString.colony, colonyController.text),
-      _buildPopItem(AppString.streetName, streetController.text),
-      _buildPopItem(AppString.town, townController.text),
-      _buildPopItem(AppString.district, allDistrictValue.districtName),
-      _buildPopItem(AppString.pinCode, pinCodeController.text),
-      _buildPopItem(AppString.noOfKitchen, numberKitchenController.text),
-      _buildPopItem(AppString.noOfBathroom, numberBathroomController.text),
-      _buildPopItem(AppString.fuel, existingCookingFuelValue.value),
-      _buildPopItem(AppString.noOfFamilyMembers, familyMemberController.text),
-      _buildPopItem(AppString.locationLat, latController.text),
-      _buildPopItem(AppString.locationLong, longController.text),
-      _buildPopItem(AppString.idProof, kycDoc1Value.value),
-      _buildPopItem(AppString.idProofNo, kyc1NumberController.text),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.buildingNumber,
+        value: buildingNumberController.text,
+      ),
+      if (AppConfig.instanceInit()!.client == Client.purvaBharti) ...[
+        PopWidget.itemBuilder(
+          textName: AppString.premiseType,
+          textValue: premiseTypeValue.key == "" ? "-" : premiseTypeValue.value!,
+        ),
+      ],
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.houseNumber,
+        value: houseNumberController.text,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.colony,
+        value: colonyController.text,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.streetName,
+        value: streetController.text,
+      ),
+      _buildPopItem(label: AppString.town, value: townController.text),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.district,
+        value: allDistrictValue.districtName!,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.pinCode,
+        value: pinCodeController.text,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.noOfKitchen,
+        value: numberKitchenController.text,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.noOfBathroom,
+        value: numberBathroomController.text,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.fuel,
+        value: existingCookingFuelValue.value!,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.noOfFamilyMembers,
+        value: familyMemberController.text,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.locationLat,
+        value: latController.text,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.locationLong,
+        value: longController.text,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.idProof,
+        value: kycDoc1Value.value!,
+      ),
+      _buildPopItem(
+        isRequired: true,
+        label: AppString.idProofNo,
+        value: kyc1NumberController.text,
+      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ImageWidget(
-            star: AppString.star,
-            title: AppString.idProofFront,
-            imgFile:
-                idFrontPath.path.isEmpty ? File("") : File(idFrontPath.path),
-            onPressed: () {},
+          Flexible(
+            child: ImageWidget(
+              star: AppString.star,
+              title: AppString.idProofFront,
+              imgFile:
+                  idFrontPath.path.isEmpty ? File("") : File(idFrontPath.path),
+              onPressed: () {},
+            ),
           ),
-          ImageWidget(
-            // star: AppString.star,
-            title: AppString.idProofBack,
-            imgFile: idBackPath.path.isEmpty ? File("") : File(idBackPath.path),
-            onPressed: () {},
+          const SizedBox(width: 8),
+          Flexible(
+            child: ImageWidget(
+              // star: AppString.star,
+              title: AppString.idProofBack,
+              imgFile:
+                  idBackPath.path.isEmpty ? File("") : File(idBackPath.path),
+              onPressed: () {},
+            ),
           ),
         ],
       ),
       PopWidget.divider(),
       PopWidget.itemBuilder(
-          star: registrationTypeValue.value != "Future Registration"
-              ? AppString.star
-              : "",
-          textName: AppString.addProof,
-          textValue: kycDoc2Value.key == "" ? "-" : kycDoc2Value.value),
+        isRequired:
+            registrationTypeValue.value != "Future Registration" ? true : false,
+        textName: AppString.addProof,
+        textValue: kycDoc2Value.key == "" ? "-" : kycDoc2Value.value!,
+      ),
       PopWidget.itemBuilder(
-          star: registrationTypeValue.value != "Future Registration"
-              ? AppString.star
-              : "",
-          textName: AppString.addProofNo,
-          textValue: kyc2NumberController.text.isEmpty
-              ? ""
-              : kyc2NumberController.text),
+        isRequired:
+            registrationTypeValue.value != "Future Registration" ? true : false,
+        textName: AppString.addProofNo,
+        textValue:
+            kyc2NumberController.text.isEmpty ? "" : kyc2NumberController.text,
+      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ImageWidget(
-            star: registrationTypeValue.value != "Future Registration"
-                ? AppString.star
-                : "",
-            title: AppString.addProofFront,
-            imgFile:
-                addFrontPath.path.isEmpty ? File("") : File(addFrontPath.path),
-            onPressed: () {},
+          Flexible(
+            child: ImageWidget(
+              star:
+                  registrationTypeValue.value != "Future Registration"
+                      ? AppString.star
+                      : "",
+              title: AppString.addProofFront,
+              imgFile:
+                  addFrontPath.path.isEmpty
+                      ? File("")
+                      : File(addFrontPath.path),
+              onPressed: () {},
+            ),
           ),
-          ImageWidget(
-            title: AppString.addProofBack,
-            imgFile:
-                addBackPath.path.isEmpty ? File("") : File(addBackPath.path),
-            onPressed: () {},
+          const SizedBox(width: 8),
+          Flexible(
+            child: ImageWidget(
+              title: AppString.addProofBack,
+              imgFile:
+                  addBackPath.path.isEmpty ? File("") : File(addBackPath.path),
+              onPressed: () {},
+            ),
           ),
         ],
       ),
       PopWidget.divider(),
       if (registrationTypeValue.key != "0") ...[
         PopWidget.itemBuilder(
-            textName: AppString.ownershipProperty,
-            textValue: kycDoc3Value.key == null ? "-" : kycDoc3Value.value),
+          textName: AppString.ownershipProperty,
+          textValue: kycDoc3Value.key == null ? "-" : kycDoc3Value.value!,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ImageWidget(
-              title: AppString.customerImg,
-              imgFile: uploadCustomerPath.path.isEmpty
-                  ? File("")
-                  : File(uploadCustomerPath.path),
-              onPressed: () {},
-            ),
-            if (kycDoc3Value.value == "Rented")
-              ImageWidget(
-                star: AppString.star,
-                title: AppString.nocDoc,
+            Flexible(
+              child: ImageWidget(
+                title: AppString.customerImg,
                 imgFile:
-                    nocDocPath.path.isEmpty ? File("") : File(nocDocPath.path),
+                    uploadCustomerPath.path.isEmpty
+                        ? File("")
+                        : File(uploadCustomerPath.path),
                 onPressed: () {},
               ),
-            ImageWidget(
-              title: AppString.houseImg,
-              imgFile: uploadHousePath.path.isEmpty
-                  ? File("")
-                  : File(uploadHousePath.path),
-              onPressed: () {},
+            ),
+            const SizedBox(width: 8),
+            if (kycDoc3Value.value == "Rented") ...[
+              Flexible(
+                child: ImageWidget(
+                  star: AppString.star,
+                  title: AppString.nocDoc,
+                  imgFile:
+                      nocDocPath.path.isEmpty
+                          ? File("")
+                          : File(nocDocPath.path),
+                  onPressed: () {},
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+            Flexible(
+              child: ImageWidget(
+                title: AppString.houseImg,
+                imgFile:
+                    uploadHousePath.path.isEmpty
+                        ? File("")
+                        : File(uploadHousePath.path),
+                onPressed: () {},
+              ),
             ),
           ],
         ),
         PopWidget.divider(),
         PopWidget.itemBuilder(
-            textName: AppString.initDepositStatus,
-            textValue: initialDepositStatusValue.key == null
-                ? "-"
-                : initialDepositStatusValue.value),
+          isRequired: true,
+          textName: AppString.initDepositStatus,
+          textValue:
+              initialDepositStatusValue.key == null
+                  ? "-"
+                  : initialDepositStatusValue.value!,
+        ),
         PopWidget.itemBuilder(
-            textName: AppString.schemeType,
-            textValue: schemeTypeValue.depositTypesId == null
-                ? "-"
-                : schemeTypeValue.depositName),
+          isRequired: true,
+          textName: AppString.schemeType,
+          textValue:
+              schemeTypeValue.depositTypesId == null
+                  ? "-"
+                  : schemeTypeValue.depositName!,
+        ),
         PopWidget.itemBuilder(
-            textName: AppString.schemeAmt,
-            textValue: schemeAmountController.text.isEmpty
-                ? "-"
-                : schemeAmountController.text),
+          isRequired: true,
+          textName: AppString.schemeAmt,
+          textValue:
+              schemeAmountController.text.isEmpty
+                  ? "-"
+                  : schemeAmountController.text,
+        ),
         PopWidget.itemBuilder(
-            textName: AppString.modeDeposit,
-            textValue:
-                modeDepositValue.key == null ? "-" : modeDepositValue.value),
+          isRequired: true,
+          textName: AppString.modeDeposit,
+          textValue:
+              modeDepositValue.key == null ? "-" : modeDepositValue.value!,
+        ),
         if (modeDepositValue.key == "1") ...[
           PopWidget.itemBuilder(
-              textName: AppString.chqNo,
-              textValue: chequeNoController.text.isEmpty
-                  ? "-"
-                  : chequeNoController.text),
+            isRequired: true,
+            textName: AppString.chqNo,
+            textValue:
+                chequeNoController.text.isEmpty ? "-" : chequeNoController.text,
+          ),
           PopWidget.itemBuilder(
-              textName: AppString.chqDate,
-              textValue: chequeDateController.text.isEmpty
-                  ? ""
-                  : chequeDateController.text),
+            isRequired: true,
+            textName: AppString.chqDate,
+            textValue:
+                chequeDateController.text.isEmpty
+                    ? ""
+                    : chequeDateController.text,
+          ),
           PopWidget.itemBuilder(
-              textName: AppString.chqBank,
-              textValue: paymentBankNameValue.isEmpty
-                  ? ""
-                  : paymentBankNameValue.toString()),
+            isRequired: true,
+            textName: AppString.chqBank,
+            textValue:
+                paymentBankNameValue.isEmpty
+                    ? ""
+                    : paymentBankNameValue.toString(),
+          ),
           PopWidget.itemBuilder(
-              textName: AppString.chequeAccountNo,
-              textValue: chequeAccountNoController.text.isEmpty
-                  ? ""
-                  : chequeAccountNoController.text),
+            isRequired: true,
+            textName: AppString.chequeAccountNo,
+            textValue:
+                chequeAccountNoController.text.isEmpty
+                    ? ""
+                    : chequeAccountNoController.text,
+          ),
           PopWidget.itemBuilder(
-              textName: AppString.chequeMICRNo,
-              textValue: chequeMicrNoController.text.isEmpty
-                  ? ""
-                  : chequeMicrNoController.text),
+            isRequired: true,
+            textName: AppString.chequeMICRNo,
+            textValue:
+                chequeMicrNoController.text.isEmpty
+                    ? ""
+                    : chequeMicrNoController.text,
+          ),
           ImageWidget(
             star: AppString.star,
             title: AppString.chqPhoto,
             imgFile: chequePath.path.isEmpty ? File("") : File(chequePath.path),
             onPressed: () {},
           ),
-        ]
+        ],
       ],
       SizedBox(height: MediaQuery.of(context).size.height * 0.09),
     ];
   }
 
-  Widget _buildPopItem(String label, String? value) {
+  Widget _buildPopItem({
+    required String label,
+    required String value,
+    bool isRequired = false,
+  }) {
     return PopWidget.itemBuilder(
-      star: value?.isNotEmpty ?? false ? AppString.star : "",
+      isRequired: isRequired,
       textName: label,
-      textValue: value ?? "",
+      textValue: value,
     );
   }
 
@@ -1081,15 +1325,16 @@ class RegistrationFormBloc
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        isSaveLoader
+        isSaveLoader == true
             ? DottedLoaderWidget()
             : ButtonWidget(
-                text: AppString.save,
-                onPressed: () {
-                  BlocProvider.of<RegistrationFormBloc>(context).add(
-                      RegistrationFormSaveLocalDataEvent(context: context));
-                },
-              ),
+              text: AppString.save,
+              onPressed: () {
+                BlocProvider.of<RegistrationFormBloc>(
+                  context,
+                ).add(RegistrationFormSaveLocalDataEvent(context: context));
+              },
+            ),
         ButtonWidget(
           text: AppString.edit,
           onPressed: () {
@@ -1113,13 +1358,37 @@ class RegistrationFormBloc
       Navigator.pushAndRemoveUntil(
         event.context,
         MaterialPageRoute(builder: (_) => DashboardPage()),
-            (r) => false,
+        (r) => false,
       );
       isSaveLoader = false;
       _eventCompleted(emit);
     } catch (e) {
       log("_saveLocalData Error --> ${e.toString()}");
     }
+  }
+
+  _selectDate(RegistrationFormSelectDateEvent event, emit) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: event.context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2023),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null) {
+      String formattedDateChange = DateFormat('yyyy-MM-dd').format(pickedDate);
+      dobController.text = formattedDateChange.toString();
+      _eventCompleted(emit);
+    } else {
+      if (kDebugMode) {
+        print("Date is not selected");
+      }
+    }
+  }
+
+  _premiseType(RegistrationFormSetPremiseTypeValue event, emit) {
+    premiseTypeValue = event.premiseTypeValue;
+    _eventCompleted(emit);
   }
 
   _updateLocalDataEvent(UpdateLocalDataEvent event, emit) async {
@@ -1129,127 +1398,210 @@ class RegistrationFormBloc
     try {
       isSaveLoader = true;
       _eventCompleted(emit);
-      if(event.isUpdate) {
+      if (event.isUpdate) {
         final localData = event.updatedModel;
-        registrationTypeValue = localData.registrationType != "" ? listOfRegistrationType.firstWhere((e) => e.key == localData.registrationType) : GetNotInterestedModel();
-              conversionPolicyValue = localData.acceptConversionPolicy != null ? listOfConversionPolicy.firstWhere((e) => e.key == localData.acceptConversionPolicy) : GetAcceptConversionPolicyModel();
-              propertyClassValue = localData.propertyClassId != null ? listOfProClass.firstWhere((e) => e.id == localData.propertyClassId) : GetPropertyClassModel();
-              propertyCategoryValue = localData.propertyCategoryId != null ? listOfProCategory.firstWhere((e) => e.id == localData.propertyCategoryId) : GetPropertyCategoryModel();
-              List<GetAllDepositOfflineModel> dataList =
-                  HiveDataBase.allDepositOfflineBox?.values.toSet().toList() ?? [];
-              listOfDepositOffline = dataList
-                  .where((element) =>
-              propertyCategoryValue.id == element.propertyCategoryId)
+        registrationTypeValue =
+            localData.registrationType != ""
+                ? listOfRegistrationType.firstWhere(
+                  (e) => e.key == localData.registrationType,
+                  orElse: () => GetNotInterestedModel(),
+                )
+                : GetNotInterestedModel();
+        conversionPolicyValue =
+            localData.acceptConversionPolicy != null
+                ? listOfConversionPolicy.firstWhere(
+                  (e) => e.key == localData.acceptConversionPolicy,
+                  orElse: () => GetAcceptConversionPolicyModel(),
+                )
+                : GetAcceptConversionPolicyModel();
+        propertyClassValue =
+            localData.propertyClassId != null
+                ? listOfProClass.firstWhere(
+                  (e) => e.id == localData.propertyClassId,
+                  orElse: () => GetPropertyClassModel(),
+                )
+                : GetPropertyClassModel();
+        propertyCategoryValue =
+            localData.propertyCategoryId != null
+                ? listOfProCategory.firstWhere(
+                  (e) => e.id == localData.propertyCategoryId,
+                  orElse: () => GetPropertyCategoryModel(),
+                )
+                : GetPropertyCategoryModel();
+        List<GetAllDepositOfflineModel> dataList =
+            HiveDataBase.allDepositOfflineBox?.values.toSet().toList() ?? [];
+        listOfDepositOffline =
+            dataList
+                .where(
+                  (element) =>
+                      propertyCategoryValue.id == element.propertyCategoryId,
+                )
+                .toList();
+        extraFittingValue =
+            localData.acceptExtraFittingCost != ""
+                ? listOfExtraFittingCost.firstWhere(
+                  (e) => e.key == localData.acceptExtraFittingCost,
+                )
+                : GetAcceptExtraFittingCostModel();
+        societyAllowValue =
+            localData.societyAllowedMdpe != ""
+                ? listOfSocietyAllow.firstWhere(
+                  (e) => e.key == localData.societyAllowedMdpe,
+                )
+                : GetSocietyAllowModel();
+        guardianTypeValue =
+            localData.guardianType != ""
+                ? listOfGuardianType.firstWhere(
+                  (e) => e.key == localData.guardianType,
+                  orElse: () => GetGuardianTypeModel(),
+                )
+                : GetGuardianTypeModel();
+        preferredBillValue =
+            localData.eBillingModel != ""
+                ? listOfEBilling.firstWhere(
+                  (e) => e.key == localData.eBillingModel,
+                  orElse: () => GetEBillingModel(),
+                )
+                : GetEBillingModel();
+        allDistrictValue =
+            localData.districtId != ""
+                ? listOfAllDistrict.firstWhere(
+                  (e) => e.id == localData.districtId,
+                  orElse: () => GetAllDistrictModel(),
+                )
+                : GetAllDistrictModel();
+        initialDepositStatusValue = listOfInitialDepositStatus.firstWhere(
+          (e) => e.key == localData.initialDepositeStatus,
+        );
+        modeDepositValue =
+            localData.modeOfDeposite != ""
+                ? listOfModeOfDeposit.firstWhere(
+                  (e) => e.key == localData.modeOfDeposite,
+                  orElse: () => GetModeOfDepositModel(),
+                )
+                : GetModeOfDepositModel();
+        schemeTypeValue =
+            localData.schemeType != ""
+                ? listOfDepositOffline.firstWhere(
+                  (e) => e.depositTypesId == localData.schemeType,
+                  orElse: () => GetAllDepositOfflineModel(),
+                )
+                : GetAllDepositOfflineModel();
+        kycDoc1Value =
+            localData.kycDocument1 != ""
+                ? listOfIdentityProof.firstWhere(
+                  (e) => e.key == localData.kycDocument1,
+                  orElse: () => GetIdentityProofModel(),
+                )
+                : GetIdentityProofModel();
+        kycDoc2Value =
+            localData.kycDocument2 != ""
+                ? listOfOwnershipProof.firstWhere(
+                  (e) => e.key == localData.kycDocument2,
+                  orElse: () => GetOwnershipProofModel(),
+                )
+                : GetOwnershipProofModel();
+        kycDoc3Value =
+            localData.kycDocument3 != ""
+                ? listOfKycDoc.firstWhere(
+                  (e) => e.key == localData.kycDocument3,
+                  orElse: () => GetKycDocModel(),
+                )
+                : GetKycDocModel();
+        existingCookingFuelValue =
+            localData.existingCookingFuel != ""
+                ? listOfCookingFuel.firstWhere(
+                  (e) => e.key == localData.existingCookingFuel,
+                  orElse: () => GetExistingCookingFuelModel(),
+                )
+                : GetExistingCookingFuelModel();
+        residentStatusValue =
+            localData.residentStatus != ""
+                ? listOfResidentStatus.firstWhere(
+                  (e) => e.key == localData.residentStatus,
+                  orElse: () => GetResidentStatusModel(),
+                )
+                : GetResidentStatusModel();
+        chargeAreaValue =
+            localData.chargeArea != null
+                ? listOfChargeArea.firstWhere(
+                  (e) => e.gid == localData.chargeArea,
+                  orElse: () => GetChargeAreaListModel(),
+                )
+                : GetChargeAreaListModel();
+
+        premiseTypeValue =
+            localData.chargeArea != null
+                ? listOfPremiseType.firstWhere(
+                  (e) => e.key == localData.premiseType,
+                  orElse: () => GetPremiseTypeModel(),
+                )
+                : GetPremiseTypeModel();
+        if (localData.chargeArea != null) {
+          List<GetAllAreaModel> dataList =
+              HiveDataBase.allAreaBox?.values.toSet().toList() ?? [];
+          listOfAllArea =
+              dataList
+                  .where(
+                    (element) => chargeAreaValue.gid == element.chargeAreaId,
+                  )
                   .toList();
-              extraFittingValue = localData.acceptExtraFittingCost != ""
-                  ? listOfExtraFittingCost
-                  .firstWhere((e) => e.key == localData.acceptExtraFittingCost)
-                  : GetAcceptExtraFittingCostModel();
-              societyAllowValue = localData.societyAllowedMdpe != ""
-                  ? listOfSocietyAllow
-                  .firstWhere((e) => e.key == localData.societyAllowedMdpe)
-                  : GetSocietyAllowModel();
-              guardianTypeValue = localData.guardianType != ""
-                  ? listOfGuardianType
-                  .firstWhere((e) => e.key == localData.guardianType)
-                  : GetGuardianTypeModel();
-              preferredBillValue = localData.eBillingModel != ""
-                  ? listOfEBilling.firstWhere((e) => e.key == localData.eBillingModel)
-                  : GetEBillingModel();
-              allDistrictValue = localData.districtId != ""
-                  ? listOfAllDistrict.firstWhere((e) => e.id == localData.districtId)
-                  : GetAllDistrictModel();
-              initialDepositStatusValue = listOfInitialDepositStatus
-                  .firstWhere((e) => e.key == localData.initialDepositeStatus);
-              modeDepositValue = localData.modeOfDeposite != ""
-                  ? listOfModeOfDeposit
-                  .firstWhere((e) => e.key == localData.modeOfDeposite)
-                  : GetModeOfDepositModel();
-              schemeTypeValue = localData.schemeType != ""
-                  ? listOfDepositOffline.firstWhere(
-                    (e) => e.depositTypesId == localData.schemeType,
-                orElse: () => GetAllDepositOfflineModel(),
-              )
-                  : GetAllDepositOfflineModel();
-              kycDoc1Value = localData.kycDocument1 != ""
-                  ? listOfIdentityProof
-                  .firstWhere((e) => e.key == localData.kycDocument1)
-                  : GetIdentityProofModel();
-              kycDoc2Value = localData.kycDocument2 != ""
-                  ? listOfOwnershipProof
-                  .firstWhere((e) => e.key == localData.kycDocument2)
-                  : GetOwnershipProofModel();
-              kycDoc3Value = localData.kycDocument3 != ""
-                  ? listOfKycDoc.firstWhere((e) => e.key == localData.kycDocument3)
-                  : GetKycDocModel();
-              existingCookingFuelValue = localData.existingCookingFuel != ""
-                  ? listOfCookingFuel
-                  .firstWhere((e) => e.key == localData.existingCookingFuel)
-                  : GetExistingCookingFuelModel();
-              residentStatusValue = localData.residentStatus != ""
-                  ? listOfResidentStatus
-                  .firstWhere((e) => e.key == localData.residentStatus)
-                  : GetResidentStatusModel();
-              chargeAreaValue = localData.chargeArea != null
-                  ? listOfChargeArea.firstWhere((e) => e.gid == localData.chargeArea)
-                  : GetChargeAreaListModel();
-              if (localData.chargeArea != null) {
-                List<GetAllAreaModel> dataList =
-                    HiveDataBase.allAreaBox?.values.toSet().toList() ?? [];
-                listOfAllArea = dataList
-                    .where((element) => chargeAreaValue.gid == element.chargeAreaId)
-                    .toList();
-              }
-              areaValue = localData.areaId != null
-                  ? listOfAllArea.firstWhere((e) => e.gid == localData.areaId)
-                  : GetAllAreaModel();
+        }
+        areaValue =
+            localData.areaId != null
+                ? listOfAllArea.firstWhere((e) => e.gid == localData.areaId)
+                : GetAllAreaModel();
 
-              firstController.text = localData.firstName ?? "";
-              middleController.text = localData.middleName ?? "";
-              lastController.text = localData.lastName ?? "";
-              guardianNameController.text = localData.guardianName ?? "";
-              emailIdController.text = localData.emailId ?? "";
-              buildingNumberController.text = localData.buildingNumber ?? "";
-              houseNumberController.text = localData.houseNumber ?? "";
-              colonyController.text = localData.colonySocietyApartment ?? "";
-              streetController.text = localData.streetName ?? "";
-              townController.text = localData.town ?? "";
-              pinCodeController.text = localData.pinCode ?? "";
-              numberKitchenController.text = localData.noOfKitchen ?? "";
-              numberBathroomController.text = localData.noOfBathroom ?? "";
-              familyMemberController.text = localData.noOfFamilyMembers ?? "";
-              nearestLandmarkController.text = localData.nearestLandmark ?? "";
-              kyc1NumberController.text = localData.kycDocument1Number ?? "";
-              kyc2NumberController.text = localData.kycDocument2Number ?? "";
-              kyc3NumberController.text = localData.kycDocument3Number ?? "";
-              custBankAccNumberController.text = localData.bankAccountNumber ?? "";
-              custIfscCodeController.text = localData.bankIfscCode ?? "";
-              custBankAddController.text = localData.bankAddress ?? "";
-              schemeAmountController.text = localData.schemeTypeAmount ?? "";
-              latController.text = localData.latitude ?? "";
-              longController.text = localData.longitude ?? "";
-              chequeNoController.text = localData.chequeNumber ?? "";
-              chequeDateController.text = localData.chequeDepositDate ?? "";
-              chequeAccountNoController.text = localData.chequeBankAccount ?? "";
-              chequeMicrNoController.text = localData.chequeMicrAccount ?? "";
-              mobileController.text = localData.mobileNumber ?? "";
-              altMobileController.text = localData.alternateMobile ?? "";
-              reasonRegistrationController.text = localData.reasonRegistration ?? "";
+        firstController.text = localData.firstName ?? "";
+        middleController.text = localData.middleName ?? "";
+        lastController.text = localData.lastName ?? "";
+        guardianNameController.text = localData.guardianName ?? "";
+        emailIdController.text = localData.emailId ?? "";
+        buildingNumberController.text = localData.buildingNumber ?? "";
+        houseNumberController.text = localData.houseNumber ?? "";
+        colonyController.text = localData.colonySocietyApartment ?? "";
+        streetController.text = localData.streetName ?? "";
+        townController.text = localData.town ?? "";
+        pinCodeController.text = localData.pinCode ?? "";
+        numberKitchenController.text = localData.noOfKitchen ?? "";
+        numberBathroomController.text = localData.noOfBathroom ?? "";
+        familyMemberController.text = localData.noOfFamilyMembers ?? "";
+        nearestLandmarkController.text = localData.nearestLandmark ?? "";
+        kyc1NumberController.text = localData.kycDocument1Number ?? "";
+        kyc2NumberController.text = localData.kycDocument2Number ?? "";
+        kyc3NumberController.text = localData.kycDocument3Number ?? "";
+        custBankAccNumberController.text = localData.bankAccountNumber ?? "";
+        custIfscCodeController.text = localData.bankIfscCode ?? "";
+        custBankAddController.text = localData.bankAddress ?? "";
+        schemeAmountController.text = localData.schemeTypeAmount ?? "";
+        latController.text = localData.latitude ?? "";
+        longController.text = localData.longitude ?? "";
+        chequeNoController.text = localData.chequeNumber ?? "";
+        chequeDateController.text = localData.chequeDepositDate ?? "";
+        chequeAccountNoController.text = localData.chequeBankAccount ?? "";
+        chequeMicrNoController.text = localData.chequeMicrAccount ?? "";
+        mobileController.text = localData.mobileNumber ?? "";
+        altMobileController.text = localData.alternateMobile ?? "";
+        reasonRegistrationController.text = localData.reasonRegistration ?? "";
+        dobController.text = localData.dob ?? "";
+        doorNumberController.text = localData.doorNumber ?? "";
+        floorNumberController.text = localData.floorNumber ?? "";
+        wardNumberController.text = localData.wardNumber ?? "";
 
-              idFrontPath = File(localData.idFrontPath1 ?? "");
-              idBackPath = File(localData.idBackPath1 ?? "");
-              addFrontPath = File(localData.addFrontPath2 ?? "");
-              addBackPath = File(localData.addBackPath2 ?? "");
-              nocFrontPath = File(localData.nocFrontPath3 ?? "");
-              nocBackPath = File(localData.nocBackPath3 ?? "");
-              uploadCustomerPath = File(localData.uploadCustomerPhoto ?? "");
-              uploadHousePath = File(localData.uploadHousePhoto ?? "");
-              customerConsentPath = File(localData.customerConsentPhoto ?? "");
-              ownerConsentPath = File(localData.ownerConsent ?? "");
-              cancelChequePath = File(localData.canceledChequePhoto ?? "");
-              chequePath = File(localData.chequePhoto ?? "");
-              custBankNameValue = localData.bankNameOfBank ?? "";
-              paymentBankNameValue = localData.payementBankName ?? "";
+        idFrontPath = File(localData.idFrontPath1 ?? "");
+        idBackPath = File(localData.idBackPath1 ?? "");
+        addFrontPath = File(localData.addFrontPath2 ?? "");
+        addBackPath = File(localData.addBackPath2 ?? "");
+        nocFrontPath = File(localData.nocFrontPath3 ?? "");
+        nocBackPath = File(localData.nocBackPath3 ?? "");
+        uploadCustomerPath = File(localData.uploadCustomerPhoto ?? "");
+        uploadHousePath = File(localData.uploadHousePhoto ?? "");
+        customerConsentPath = File(localData.customerConsentPhoto ?? "");
+        ownerConsentPath = File(localData.ownerConsent ?? "");
+        cancelChequePath = File(localData.canceledChequePhoto ?? "");
+        chequePath = File(localData.chequePhoto ?? "");
+        custBankNameValue = localData.bankNameOfBank ?? "";
+        paymentBankNameValue = localData.payementBankName ?? "";
       }
       isSaveLoader = false;
       _eventCompleted(emit);
@@ -1258,116 +1610,123 @@ class RegistrationFormBloc
     }
   }
 
-
   _eventCompleted(Emitter<RegistrationFormState> emit) {
-    emit(RegistrationFormGetAllDataState(
-      isPageLoader: isPageLoader,
-      isLocationLoader: isLocationLoader,
-      isUpdate: isUpdate,
-      labelModel: getLabelModel,
-      registrationTypeValue: registrationTypeValue,
-      getNotInterestedList: listOfRegistrationType,
-      conversionPolicyValue: conversionPolicyValue,
-      conversionPolicyList: listOfConversionPolicy,
-      extraFittingValue: extraFittingValue,
-      extraFittingCostList: listOfExtraFittingCost,
-      societyAllowValue: societyAllowValue,
-      societyAllowList: listOfSocietyAllow,
-      getNotInterestedModel: getNotInterestedModel,
-      getAcceptConversionPolicyModel: getAcceptConversionPolicyModel,
-      getAcceptExtraFittingCostModel: getAcceptExtraFittingCostModel,
-      getSocietyAllowModel: getSocietyAllowModel,
-      chargeAreaValue: chargeAreaValue,
-      getChargeAreaListModel: listOfChargeArea,
-      areaValue: areaValue,
-      getAllAreaModel: listOfAllArea,
-      guardianTypeValue: guardianTypeValue,
-      getGuardianTypeList: listOfGuardianType,
-      propertyCategoryValue: propertyCategoryValue,
-      propertyClassValue: propertyClassValue,
-      identityProofValue: kycDoc1Value,
-      identityProofList: listOfIdentityProof,
-      getIdentityProofModel: getIdentityProofModel,
-      ownershipProofValue: kycDoc2Value,
-      ownershipProofList: listOfOwnershipProof,
-      getOwnershipProofModel: getOwnershipProofModel,
-      kycDoc3Value: kycDoc3Value,
-      kycDocList: listOfKycDoc,
-      getKycDocModel: getKycDocModel,
-      getGuardianTypeModel: getGuardianTypeModel,
-      existingCookingFuelValue: existingCookingFuelValue,
-      existingCookingFuelList: listOfCookingFuel,
-      getExistingCookingFuelModel: getExistingCookingFuelModel,
-      residentStatusValue: residentStatusValue,
-      getResidentStatusList: listOfResidentStatus,
-      getResidentStatusModel: getResidentStatusModel,
-      getPropertyClassModel: listOfProClass,
-      getPropertyCategoryModel: listOfProCategory,
-      eBillingValue: preferredBillValue,
-      eBillingList: listOfEBilling,
-      getEBillingModel: getEBillingModel,
-      initialDepositStatusValue: initialDepositStatusValue,
-      initialDepositStatusList: listOfInitialDepositStatus,
-      depositOfflineValue: schemeTypeValue,
-      getAllDepositOfflineModel: getAllDepositOfflineModel,
-      getAllDepositOfflineList: listOfDepositOffline,
-      modeDepositValue: modeDepositValue,
-      modeDepositList: listOfModeOfDeposit,
-      getInitialDepositStatusModel: getInitialDepositStatusModel,
-      getModeOfDepositModel: getModeOfDepositModel,
-      reasonRegistrationController: reasonRegistrationController,
-      mobileController: mobileController,
-      altMobileController: altMobileController,
-      firstController: firstController,
-      middleController: middleController,
-      lastController: lastController,
-      guardianNameController: guardianNameController,
-      emailIdController: emailIdController,
-      buildingNumberController: buildingNumberController,
-      houseNumberController: houseNumberController,
-      colonyController: colonyController,
-      streetController: streetController,
-      townController: townController,
-      pinCodeController: pinCodeController,
-      numberKitchenController: numberKitchenController,
-      numberBathroomController: numberBathroomController,
-      familyMemberController: familyMemberController,
-      nearestLandmarkController: nearestLandmarkController,
-      kyc1NumberController: kyc1NumberController,
-      kyc2NumberController: kyc2NumberController,
-      kyc3NumberController: kyc3NumberController,
-      custBankAccNumberController: custBankAccNumberController,
-      custIfscCodeController: custIfscCodeController,
-      custBankAddController: custBankAddController,
-      reasonDepositStsController: reasonDepositStsController,
-      schemeAmountController: schemeAmountController,
-      allDistrictValue: allDistrictValue,
-      getAllDistrictModel: listOfAllDistrict,
-      latitudeController: latController,
-      longitudeController: longController,
-      chequeNoController: chequeNoController,
-      chequeDateController: chequeDateController,
-      chequeAccountNoController: chequeAccountNoController,
-      chequeMicrNoController: chequeMicrNoController,
-      custBankNameValue: custBankNameValue,
-      paymentBankNameValue: paymentBankNameValue,
-      custBankNameList: listOfCustBankName,
-      paymentBankNameList: paymentBankNameList,
-      idBackFilePath: idBackPath,
-      idFrontFilePath: idFrontPath,
-      eleBillFrontPath: addFrontPath,
-      eleBillBackPath: addBackPath,
-      nocDocPath: nocDocPath,
-      nocFrontPath: nocFrontPath,
-      nocBackPath: nocBackPath,
-      uploadCustomerPath: uploadCustomerPath,
-      uploadHousePath: uploadHousePath,
-      customerConsentPath: customerConsentPath,
-      ownerConsentPath: ownerConsentPath,
-      cancelChequePath: cancelChequePath,
-      chequePath: chequePath,
-      isPreviewLoader: isPreviewLoader,
-      isSaveLoader: isSaveLoader,
-    ));
+    emit(
+      RegistrationFormGetAllDataState(
+        isPageLoader: isPageLoader,
+        isLocationLoader: isLocationLoader,
+        isUpdate: isUpdate,
+        labelModel: getLabelModel,
+        registrationTypeValue: registrationTypeValue,
+        getNotInterestedList: listOfRegistrationType,
+        conversionPolicyValue: conversionPolicyValue,
+        conversionPolicyList: listOfConversionPolicy,
+        extraFittingValue: extraFittingValue,
+        extraFittingCostList: listOfExtraFittingCost,
+        societyAllowValue: societyAllowValue,
+        societyAllowList: listOfSocietyAllow,
+        getNotInterestedModel: getNotInterestedModel,
+        getAcceptConversionPolicyModel: getAcceptConversionPolicyModel,
+        getAcceptExtraFittingCostModel: getAcceptExtraFittingCostModel,
+        getSocietyAllowModel: getSocietyAllowModel,
+        chargeAreaValue: chargeAreaValue,
+        getChargeAreaListModel: listOfChargeArea,
+        areaValue: areaValue,
+        getAllAreaModel: listOfAllArea,
+        guardianTypeValue: guardianTypeValue,
+        getGuardianTypeList: listOfGuardianType,
+        propertyCategoryValue: propertyCategoryValue,
+        propertyClassValue: propertyClassValue,
+        identityProofValue: kycDoc1Value,
+        identityProofList: listOfIdentityProof,
+        getIdentityProofModel: getIdentityProofModel,
+        ownershipProofValue: kycDoc2Value,
+        ownershipProofList: listOfOwnershipProof,
+        getOwnershipProofModel: getOwnershipProofModel,
+        kycDoc3Value: kycDoc3Value,
+        kycDocList: listOfKycDoc,
+        getKycDocModel: getKycDocModel,
+        getGuardianTypeModel: getGuardianTypeModel,
+        existingCookingFuelValue: existingCookingFuelValue,
+        existingCookingFuelList: listOfCookingFuel,
+        getExistingCookingFuelModel: getExistingCookingFuelModel,
+        residentStatusValue: residentStatusValue,
+        getResidentStatusList: listOfResidentStatus,
+        getResidentStatusModel: getResidentStatusModel,
+        getPropertyClassModel: listOfProClass,
+        getPropertyCategoryModel: listOfProCategory,
+        eBillingValue: preferredBillValue,
+        eBillingList: listOfEBilling,
+        getEBillingModel: getEBillingModel,
+        initialDepositStatusValue: initialDepositStatusValue,
+        initialDepositStatusList: listOfInitialDepositStatus,
+        depositOfflineValue: schemeTypeValue,
+        getAllDepositOfflineModel: getAllDepositOfflineModel,
+        getAllDepositOfflineList: listOfDepositOffline,
+        modeDepositValue: modeDepositValue,
+        modeDepositList: listOfModeOfDeposit,
+        getInitialDepositStatusModel: getInitialDepositStatusModel,
+        getModeOfDepositModel: getModeOfDepositModel,
+        reasonRegistrationController: reasonRegistrationController,
+        mobileController: mobileController,
+        altMobileController: altMobileController,
+        firstController: firstController,
+        middleController: middleController,
+        lastController: lastController,
+        guardianNameController: guardianNameController,
+        emailIdController: emailIdController,
+        buildingNumberController: buildingNumberController,
+        houseNumberController: houseNumberController,
+        colonyController: colonyController,
+        streetController: streetController,
+        townController: townController,
+        pinCodeController: pinCodeController,
+        numberKitchenController: numberKitchenController,
+        numberBathroomController: numberBathroomController,
+        familyMemberController: familyMemberController,
+        nearestLandmarkController: nearestLandmarkController,
+        kyc1NumberController: kyc1NumberController,
+        kyc2NumberController: kyc2NumberController,
+        kyc3NumberController: kyc3NumberController,
+        custBankAccNumberController: custBankAccNumberController,
+        custIfscCodeController: custIfscCodeController,
+        custBankAddController: custBankAddController,
+        reasonDepositStsController: reasonDepositStsController,
+        schemeAmountController: schemeAmountController,
+        allDistrictValue: allDistrictValue,
+        getAllDistrictModel: listOfAllDistrict,
+        latitudeController: latController,
+        longitudeController: longController,
+        chequeNoController: chequeNoController,
+        chequeDateController: chequeDateController,
+        chequeAccountNoController: chequeAccountNoController,
+        chequeMicrNoController: chequeMicrNoController,
+        custBankNameValue: custBankNameValue,
+        paymentBankNameValue: paymentBankNameValue,
+        custBankNameList: listOfCustBankName,
+        paymentBankNameList: paymentBankNameList,
+        idBackFilePath: idBackPath,
+        idFrontFilePath: idFrontPath,
+        eleBillFrontPath: addFrontPath,
+        eleBillBackPath: addBackPath,
+        nocDocPath: nocDocPath,
+        nocFrontPath: nocFrontPath,
+        nocBackPath: nocBackPath,
+        uploadCustomerPath: uploadCustomerPath,
+        uploadHousePath: uploadHousePath,
+        customerConsentPath: customerConsentPath,
+        ownerConsentPath: ownerConsentPath,
+        cancelChequePath: cancelChequePath,
+        chequePath: chequePath,
+        isPreviewLoader: isPreviewLoader,
+        isSaveLoader: isSaveLoader,
+        dobController: dobController,
+        doorNumberController: doorNumberController,
+        floorNumberController: floorNumberController,
+        wardNumberController: wardNumberController,
+        listOfPremiseType: listOfPremiseType,
+        premiseTypeValue: premiseTypeValue,
+      ),
+    );
   }
 }

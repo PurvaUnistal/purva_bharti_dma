@@ -6,6 +6,8 @@ import 'package:pbg_app/Service/Apis.dart';
 import 'package:pbg_app/Service/api_server_dio.dart';
 import 'package:pbg_app/Utils/Utils.dart';
 import 'package:pbg_app/Utils/common_widgets/InternetConnectivity/connectivity_helper.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/Utils/common_widgets/res/enums.dart';
 import 'package:pbg_app/features/RegistrationForm/domain/model/save_registration_form_model.dart';
 import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/send_registration_offline_model.dart';
 
@@ -72,10 +74,8 @@ class ViewSyncRecordHelper {
         "cheque_bank_account": custRegSyncData.chequeBankAccount ?? "",
         "cheque_number": custRegSyncData.chequeNumber ?? "",
         "district_id": custRegSyncData.districtId ?? "",
-        "accept_conversion_policy":
-            custRegSyncData.acceptConversionPolicy ?? "",
-        "accept_extra_fitting_cost":
-            custRegSyncData.acceptExtraFittingCost ?? "",
+        "accept_conversion_policy": custRegSyncData.acceptConversionPolicy ?? "",
+        "accept_extra_fitting_cost": custRegSyncData.acceptExtraFittingCost ?? "",
         "micr": custRegSyncData.chequeMicrAccount ?? "",
         "building_number": custRegSyncData.buildingNumber ?? "",
       };
@@ -85,6 +85,16 @@ class ViewSyncRecordHelper {
         json.remove("initial_amount");
         json.remove("accept_conversion_policy");
         json.remove("accept_extra_fitting_cost");
+      }
+      if (AppConfig.instanceInit()!.client == Client.purvaBharti) {
+        // Add new parameters only for PurvaBharti clients
+        json["client_request_id"] = custRegSyncData.clientRequestId ?? "";
+        json["door_no"] = custRegSyncData.doorNumber ?? "";
+        json["ward_no"] = custRegSyncData.wardNumber ?? "";
+        json["floor"] = custRegSyncData.floorNumber ?? "";
+        json["dob"] = custRegSyncData.dob ?? "";
+        json["landmark"] = custRegSyncData.nearestLandmark ?? "";
+        json["premise_type"] = custRegSyncData.premiseType ?? "";
       }
       log("requestBody-->${json}");
       var res = await ApiHelperDio.postDataWithFile(
