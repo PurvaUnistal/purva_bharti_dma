@@ -3,7 +3,10 @@ import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/Utils/common_widgets/background_widget.dart';
 import 'package:pbg_app/Utils/common_widgets/drop_down_search_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/Utils/common_widgets/res/enums.dart';
 import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_premise_type_model.dart';
 
 class RegistrationFormPage extends StatefulWidget {
   final bool isUpdate;
@@ -12,9 +15,9 @@ class RegistrationFormPage extends StatefulWidget {
 
   const RegistrationFormPage(
       {Key? key,
-      required this.isUpdate,
-      required this.index,
-      required this.localData})
+        required this.isUpdate,
+        required this.index,
+        required this.localData})
       : super(key: key);
 
   @override
@@ -73,11 +76,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
-            context: context,
-            builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
-                message: "Do you want to exit an Registration Form Page?",
-                okButtonText: "Exit",
-                onPressed: () => Navigator.of(context).pop(true)))) ??
+        context: context,
+        builder: (BuildContext mContext) => MessageBoxTwoButtonPopWidget(
+            message: "Do you want to exit an Registration Form Page?",
+            okButtonText: "Exit",
+            onPressed: () => Navigator.of(context).pop(true)))) ??
         false;
   }
 
@@ -101,30 +104,47 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               _firstNameWidget(stateData: stateData),
               _middleNameWidget(stateData: stateData),
               _lastNameWidget(stateData: stateData),
+              if(AppConfig.instanceInit()!.client == Client.purvaBharti
+                  || AppConfig.instanceInit()!.client == Client.hpoil
+                  || AppConfig.instanceInit()!.client == Client.hngpl)...[
+                _dobWidget(stateData: stateData),
+              ],
               _guardianDropdown(stateData: stateData),
               _guardianNameWidget(stateData: stateData),
               _emailIdWidget(stateData: stateData),
-              stateData.registrationTypeValue?.key == "1"
+              if(AppConfig.instanceInit()!.client == Client.purvaBharti
+                  || AppConfig.instanceInit()!.client == Client.hpoil
+                  || AppConfig.instanceInit()!.client == Client.hngpl)...[
+                _doorNumberWidget(stateData: stateData),
+                _floorNumberWidget(stateData: stateData),
+                _wardNumberWidget(stateData: stateData),
+              ],
+              stateData.registrationTypeValue.key == "1"
                   ? Column(
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                                flex: 3,
-                                child: _propertyCategoryDropdown(
-                                    stateData: stateData)),
-                            _widthSpace(),
-                            Flexible(
-                                flex: 3,
-                                child: _propertyClassDropdown(
-                                    stateData: stateData)),
-                          ],
-                        ),
-                        _verticalSpace(),
-                      ],
-                    )
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                          flex: 3,
+                          child: _propertyCategoryDropdown(
+                              stateData: stateData)),
+                      _widthSpace(),
+                      Flexible(
+                          flex: 3,
+                          child: _propertyClassDropdown(
+                              stateData: stateData)),
+                    ],
+                  ),
+                  _verticalSpace(),
+                ],
+              )
                   : Container(),
               _buildNumberWidget(stateData: stateData),
+              if(AppConfig.instanceInit()!.client == Client.purvaBharti || AppConfig.instanceInit()!.client == Client.hngpl)...[
+                _premiseTypeDropdown(stateData: stateData),
+              ]else if(AppConfig.instanceInit()!.client == Client.hpoil)...[
+                _premiseTypeController(stateData: stateData),
+              ],
               _houseNumberWidget(stateData: stateData),
               _colonyWidget(stateData: stateData),
               _streetNameWidget(stateData: stateData),
@@ -137,24 +157,24 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                 children: [
                   stateData.isLocationLoader == false
                       ? Flexible(
-                        child: Row(
-                            children: [
-                              Flexible(
-                                  flex: 3,
-                                  child: _latWidget(stateData: stateData)),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.02,
-                              ),
-                              Flexible(
-                                  flex: 3,
-                                  child: _longWidget(stateData: stateData)),
-                            ],
-                          ),
-                      )
+                    child: Row(
+                      children: [
+                        Flexible(
+                            flex: 3,
+                            child: _latWidget(stateData: stateData)),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.02,
+                        ),
+                        Flexible(
+                            flex: 3,
+                            child: _longWidget(stateData: stateData)),
+                      ],
+                    ),
+                  )
                       : DottedLoaderWidget(),
                   IconButton(
                     icon:
-                        Icon(Icons.location_on_outlined, color: EnvironmentConfig.of(context)!.primaryTheme),
+                    Icon(Icons.location_on_outlined, color: EnvironmentConfig.of(context)?.primaryTheme),
                     onPressed: () {
                       BlocProvider.of<RegistrationFormBloc>(context)
                           .add(RegistrationFormSetLocation(context: context));
@@ -163,7 +183,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                   ),
                 ],
               ),
-              if (stateData.registrationTypeValue?.key != "0") ...[
+              if (stateData.registrationTypeValue.key != "0") ...[
                 _verticalSpace(),
                 Row(
                   children: [
@@ -196,8 +216,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _idFrontFileImg(stateData: stateData),
-                  _idBackFileImg(context: context, stateData: stateData),
+                  Flexible(child: _idFrontFileImg(stateData: stateData)),
+                  _widthSpace(),
+                  Flexible(child: _idBackFileImg(context: context, stateData: stateData)),
                 ],
               ),
               _verticalSpace(),
@@ -206,38 +227,45 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _eleBillFrontImg(context: context, stateData: stateData),
-                  _eleBillBackImg(context: context, stateData: stateData),
+                  Flexible(child: _eleBillFrontImg(context: context, stateData: stateData)),
+                  _widthSpace(),
+                  Flexible(child: _eleBillBackImg(context: context, stateData: stateData)),
                 ],
               ),
               _verticalSpace(),
-              if (stateData.registrationTypeValue?.key != "0") ...[
+              if (stateData.registrationTypeValue.key != "0") ...[
                 _kycDoc3Dropdown(stateData: stateData),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _uploadCustomerImg(context: context, stateData: stateData),
-                    _uploadHouseImg(context: context, stateData: stateData),
-                    if (stateData.kycDoc3Value?.value == "Rented")
-                      _nocDocImg(context: context, stateData: stateData),
+                    Flexible(child: _uploadCustomerImg(context: context, stateData: stateData)),
+                    _widthSpace(),
+                    Flexible(child: _uploadHouseImg(context: context, stateData: stateData)),
+                    if (stateData.kycDoc3Value.value == "Rented")...[
+                      _widthSpace(),
+                      Flexible(child: _nocDocImg(context: context, stateData: stateData)),
+                    ],
                   ],
                 ),
                 _verticalSpace(),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Flexible(
-                        flex: 3,
-                        child: _acceptConversionPolicyDropdown(
-                            stateData: stateData)),
+                      child: _acceptConversionPolicyDropdown(
+                        stateData: stateData,
+                      ),
+                    ),
                     _widthSpace(),
                     Flexible(
-                        flex: 3,
-                        child: _acceptExtraFittingCostDropdown(
-                            stateData: stateData)),
+                      child: _acceptExtraFittingCostDropdown(
+                        stateData: stateData,
+                      ),
+                    ),
                     _widthSpace(),
                     Flexible(
-                        flex: 3,
-                        child: _societyAllowDropdown(stateData: stateData))
+                      child: _societyAllowDropdown(stateData: stateData),
+                    ),
                   ],
                 ),
                 BorderWidget(
@@ -268,7 +296,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                   ],
                 ),
                 if (stateData.modeDepositValue != null &&
-                    stateData.modeDepositValue?.value == "Cheque") ...[
+                    stateData.modeDepositValue.value == "Cheque") ...[
                   BorderWidget(
                     children: [
                       Text(
@@ -301,14 +329,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetNotInterestedModel>(
-        star: AppString.star,
-        label: stateData.labelModel.registration == null
-            ? AppString.registrationType
-            : stateData.labelModel.registration!.registrationType,
+        isRequired: true,
         hint: stateData.labelModel.registration == null
             ? AppString.registrationType
             : stateData.labelModel.registration!.registrationType,
-        dropdownValue: stateData.registrationTypeValue?.key == null
+        dropdownValue: stateData.registrationTypeValue.key == null
             ? null
             : stateData.registrationTypeValue,
         items: stateData.getNotInterestedList,
@@ -323,15 +348,14 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _reasonRegistrationController(
       {required RegistrationFormGetAllDataState stateData}) {
-    return stateData.registrationTypeValue?.key == "0"
+    return stateData.registrationTypeValue.key == "0"
         ? ColumnWidget(
-            child: TextFieldWidget(
-              label: AppString.reasonRegistration,
-              hintText: AppString.reasonRegistration,
-              controller: stateData.reasonRegistrationController,
-              keyboardType: TextInputType.text,
-            ),
-          )
+      child: TextFieldWidget(
+        labelText: AppString.reasonRegistration,
+        controller: stateData.reasonRegistrationController,
+        keyboardType: TextInputType.text,
+      ),
+    )
         : Container();
   }
 
@@ -339,9 +363,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetAcceptConversionPolicyModel>(
-        label: AppString.conversionPolicy,
         hint: AppString.conversionPolicy,
-        dropdownValue: stateData.conversionPolicyValue?.key == null
+        dropdownValue: stateData.conversionPolicyValue.key == null
             ? null
             : stateData.conversionPolicyValue,
         items: stateData.conversionPolicyList,
@@ -358,9 +381,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetAcceptExtraFittingCostModel>(
-        label: AppString.fittingCost,
         hint: AppString.fittingCost,
-        dropdownValue: stateData.extraFittingValue?.key == null
+        dropdownValue: stateData.extraFittingValue.key == null
             ? null
             : stateData.extraFittingValue,
         items: stateData.extraFittingCostList,
@@ -376,13 +398,10 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetSocietyAllowModel>(
-        label: stateData.labelModel.registration == null
-            ? AppString.mdpeAllow
-            : stateData.labelModel.registration!.mdpe,
         hint: stateData.labelModel.registration == null
             ? AppString.mdpeAllow
             : stateData.labelModel.registration!.mdpe,
-        dropdownValue: stateData.societyAllowValue?.key == null
+        dropdownValue: stateData.societyAllowValue.key == null
             ? null
             : stateData.societyAllowValue,
         items: stateData.societyAllowList,
@@ -397,14 +416,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _chargeAreaDropdown(
       {required RegistrationFormGetAllDataState stateData}) {
     return DropDownSearchWidget(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.chargeArea
-          : stateData.labelModel.registration!.chargeArea,
+      isRequired: true,
       hint: stateData.labelModel.registration == null
           ? AppString.chargeArea
           : stateData.labelModel.registration!.chargeArea,
-      dropdownValue: stateData.chargeAreaValue?.gid == null
+      dropdownValue: stateData.chargeAreaValue.gid == null
           ? null
           : stateData.chargeAreaValue,
       itemAsString: (alignmentData) => alignmentData.chargeAreaName.toString(),
@@ -418,15 +434,12 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _areaDropdown({required RegistrationFormGetAllDataState stateData}) {
     return DropDownSearchWidget(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.area
-          : stateData.labelModel.registration!.area,
+      isRequired: true,
       hint: stateData.labelModel.registration == null
           ? AppString.area
           : stateData.labelModel.registration!.area,
       dropdownValue:
-          stateData.areaValue?.gid == null ? null : stateData.areaValue,
+      stateData.areaValue.gid == null ? null : stateData.areaValue,
       itemAsString: (alignmentData) => alignmentData.areaName.toString(),
       items: stateData.getAllAreaModel,
       onChanged: (val) {
@@ -439,11 +452,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _mobileNumberWidget(
       {required RegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-        star: AppString.star,
-        hintText: stateData.labelModel.steps == null
-            ? AppString.mobileNo
-            : stateData.labelModel.steps!.mobile,
-        label: stateData.labelModel.steps == null
+        isRequired: true,
+        labelText: stateData.labelModel.steps == null
             ? AppString.mobileNo
             : stateData.labelModel.steps!.mobile,
         keyboardType: TextInputType.number,
@@ -469,8 +479,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        hintText: AppString.alternateMobileNo,
-        label: AppString.alternateMobileNo,
+        labelText: AppString.alternateMobileNo,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
         maxLength: 10,
@@ -483,11 +492,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: stateData.labelModel.steps == null
-            ? AppString.firstName
-            : stateData.labelModel.steps!.firstname,
-        hintText: stateData.labelModel.steps == null
+        isRequired: true,
+        labelText: stateData.labelModel.steps == null
             ? AppString.firstName
             : stateData.labelModel.steps!.firstname,
         controller: stateData.firstController,
@@ -517,10 +523,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        label: stateData.labelModel.steps == null
-            ? AppString.middleName
-            : stateData.labelModel.steps!.middlename,
-        hintText: stateData.labelModel.steps == null
+        labelText: stateData.labelModel.steps == null
             ? AppString.middleName
             : stateData.labelModel.steps!.middlename,
         controller: stateData.middleController,
@@ -541,11 +544,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _lastNameWidget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: stateData.labelModel.steps == null
-            ? AppString.lastName
-            : stateData.labelModel.steps!.lastname,
-        hintText: stateData.labelModel.steps == null
+        isRequired: true,
+        labelText: stateData.labelModel.steps == null
             ? AppString.lastName
             : stateData.labelModel.steps!.lastname,
         controller: stateData.lastController,
@@ -569,18 +569,33 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
+  Widget _dobWidget({required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        labelText: AppString.dob,
+        enabled: true,
+        readOnly: true,
+        controller: stateData.dobController,
+        keyboardType: TextInputType.text,
+        onTap:  (){
+          BlocProvider.of<RegistrationFormBloc>(context)
+              .add(RegistrationFormSelectDateEvent(
+            context: context,
+          ));
+        },
+      ),
+    );
+  }
+
   Widget _guardianDropdown(
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetGuardianTypeModel>(
-        star: stateData.registrationTypeValue?.key != "0" ? AppString.star : "",
-        label: stateData.labelModel.registration == null
-            ? AppString.guardianType
-            : stateData.labelModel.registration!.guardianType,
+        isRequired: stateData.registrationTypeValue.key != "0" ? true :false,
         hint: stateData.labelModel.registration == null
             ? AppString.guardianType
             : stateData.labelModel.registration!.guardianType,
-        dropdownValue: stateData.guardianTypeValue?.key == null
+        dropdownValue: stateData.guardianTypeValue.key == null
             ? null
             : stateData.guardianTypeValue,
         items: stateData.getGuardianTypeList,
@@ -596,11 +611,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: stateData.registrationTypeValue?.key != "0" ? AppString.star : "",
-        label: stateData.labelModel.registration == null
-            ? AppString.guardianName
-            : stateData.labelModel.registration!.guardian,
-        hintText: stateData.labelModel.registration == null
+        isRequired: stateData.registrationTypeValue.key != "0" ? true : false,
+        labelText: stateData.labelModel.registration == null
             ? AppString.guardianName
             : stateData.labelModel.registration!.guardian,
         controller: stateData.guardianNameController,
@@ -630,14 +642,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _emailIdWidget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        label: stateData.labelModel.registration == null
-            ? AppString.emailAddress
-            : stateData.labelModel.registration!.email,
-        hintText: stateData.labelModel.registration == null
+        labelText: stateData.labelModel.registration == null
             ? AppString.emailAddress
             : stateData.labelModel.registration!.email,
         controller: stateData.emailIdController,
-        textCapitalization: TextCapitalization.none,
+        // textCapitalization: TextCapitalization.none,
         keyboardType: TextInputType.emailAddress,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp("[a-z0-9@._-]")),
@@ -660,17 +669,41 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
+  Widget _doorNumberWidget({required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        labelText:AppString.doorNumber,
+        controller: stateData.doorNumberController,
+      ),
+    );
+  }
+
+  Widget _floorNumberWidget({required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        labelText:AppString.floorNumber,
+        controller: stateData.floorNumberController,
+      ),
+    );
+  }
+
+  Widget _wardNumberWidget({required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        labelText:AppString.wardNumber,
+        controller: stateData.wardNumberController,
+      ),
+    );
+  }
+
   Widget _propertyCategoryDropdown(
       {required RegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetPropertyCategoryModel>(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.propertyCategory
-          : stateData.labelModel.registration!.propertyCategory,
+      isRequired: true,
       hint: stateData.labelModel.registration == null
           ? AppString.propertyCategory
           : stateData.labelModel.registration!.propertyCategory,
-      dropdownValue: stateData.propertyCategoryValue?.name != null
+      dropdownValue: stateData.propertyCategoryValue.name != null
           ? stateData.propertyCategoryValue
           : null,
       items: stateData.getPropertyCategoryModel,
@@ -682,17 +715,41 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
+  Widget _premiseTypeDropdown({required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: DropdownWidget<GetPremiseTypeModel>(
+        hint: AppString.premiseType,
+        dropdownValue: stateData.premiseTypeValue.key != null
+            ? stateData.premiseTypeValue
+            : null,
+        items: stateData.listOfPremiseType,
+        onChanged: (val) {
+          BlocProvider.of<RegistrationFormBloc>(context).add(
+              RegistrationFormSetPremiseTypeValue(premiseTypeValue: val!));
+        },
+      ),
+    );
+  }
+
+  Widget _premiseTypeController(
+      {required RegistrationFormGetAllDataState stateData}) {
+    return ColumnWidget(
+      child: TextFieldWidget(
+        labelText:AppString.premiseType,
+        controller: stateData.premiseTypeController,
+        keyboardType: TextInputType.text,
+      ),
+    );
+  }
+
   Widget _propertyClassDropdown(
       {required RegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetPropertyClassModel>(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.propertyClass
-          : stateData.labelModel.registration!.propertyClass,
+      isRequired: true,
       hint: stateData.labelModel.registration == null
           ? AppString.propertyClass
           : stateData.labelModel.registration!.propertyClass,
-      dropdownValue: stateData.propertyClassValue?.name != null
+      dropdownValue: stateData.propertyClassValue.name != null
           ? stateData.propertyClassValue
           : null,
       items: stateData.getPropertyClassModel,
@@ -707,8 +764,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        label: AppString.buildingNumber,
-        hintText: AppString.buildingNumber,
+        labelText: AppString.buildingNumber,
         controller: stateData.buildingNumberController,
         keyboardType: TextInputType.text,
         validator: (value) {
@@ -730,11 +786,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: stateData.labelModel.registration == null
-            ? AppString.houseNumber
-            : stateData.labelModel.registration!.house,
-        hintText: stateData.labelModel.registration == null
+        isRequired: true,
+        labelText: stateData.labelModel.registration == null
             ? AppString.houseNumber
             : stateData.labelModel.registration!.house,
         controller: stateData.houseNumberController,
@@ -757,9 +810,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _colonyWidget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: AppString.colony,
-        hintText: AppString.colony,
+        isRequired: true,
+        labelText: AppString.colony,
         controller: stateData.colonyController,
         keyboardType: TextInputType.text,
         validator: (value) {
@@ -781,9 +833,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: AppString.streetName,
-        hintText: AppString.streetName,
+        isRequired: true,
+        labelText: AppString.streetName,
         controller: stateData.streetController,
         keyboardType: TextInputType.text,
         validator: (value) {
@@ -804,10 +855,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _townWidget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        label: stateData.labelModel.registration == null
-            ? AppString.town
-            : stateData.labelModel.registration!.town,
-        hintText: stateData.labelModel.registration == null
+        labelText: stateData.labelModel.registration == null
             ? AppString.town
             : stateData.labelModel.registration!.town,
         controller: stateData.townController,
@@ -831,14 +879,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetAllDistrictModel>(
-        star: AppString.star,
-        label: stateData.labelModel.registration == null
-            ? AppString.district
-            : stateData.labelModel.registration!.district,
+        isRequired: true,
         hint: stateData.labelModel.registration == null
             ? AppString.district
             : stateData.labelModel.registration!.district,
-        dropdownValue: stateData.allDistrictValue?.districtName != null
+        dropdownValue: stateData.allDistrictValue.districtName != null
             ? stateData.allDistrictValue
             : null,
         items: stateData.getAllDistrictModel,
@@ -853,11 +898,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _pinCodeWidget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star: AppString.star,
-          label: stateData.labelModel.registration == null
-              ? AppString.pinCode
-              : stateData.labelModel.registration!.pincode,
-          hintText: stateData.labelModel.registration == null
+          isRequired: true,
+          labelText: stateData.labelModel.registration == null
               ? AppString.pinCode
               : stateData.labelModel.registration!.pincode,
           controller: stateData.pinCodeController,
@@ -883,13 +925,10 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetResidentStatusModel>(
-        label: stateData.labelModel.registration == null
-            ? AppString.residentStatus
-            : stateData.labelModel.registration!.resident,
         hint: stateData.labelModel.registration == null
             ? AppString.residentStatus
             : stateData.labelModel.registration!.resident,
-        dropdownValue: stateData.residentStatusValue?.key == null
+        dropdownValue: stateData.residentStatusValue.key == null
             ? null
             : stateData.residentStatusValue,
         items: stateData.getResidentStatusList,
@@ -904,10 +943,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _numberKitchenWidget(
       {required RegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      label: stateData.labelModel.registration == null
-          ? AppString.noOfKitchen
-          : stateData.labelModel.registration!.kitchen,
-      hintText: stateData.labelModel.registration == null
+      labelText: stateData.labelModel.registration == null
           ? AppString.noOfKitchen
           : stateData.labelModel.registration!.kitchen,
       controller: stateData.numberKitchenController,
@@ -924,10 +960,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _numberBathroomWidget(
       {required RegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      label: stateData.labelModel.registration == null
-          ? AppString.noOfBathroom
-          : stateData.labelModel.registration!.bathroom,
-      hintText: stateData.labelModel.registration == null
+      labelText: stateData.labelModel.registration == null
           ? AppString.noOfBathroom
           : stateData.labelModel.registration!.bathroom,
       controller: stateData.numberBathroomController,
@@ -944,9 +977,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _existCookingFuelDropdown(
       {required RegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetExistingCookingFuelModel>(
-      label: AppString.fuel,
       hint: AppString.fuel,
-      dropdownValue: stateData.existingCookingFuelValue?.key == null
+      dropdownValue: stateData.existingCookingFuelValue.key == null
           ? null
           : stateData.existingCookingFuelValue,
       items: stateData.existingCookingFuelList,
@@ -961,10 +993,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _familyMemberWidget(
       {required RegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      label: stateData.labelModel.registration == null
-          ? AppString.noOfFamilyMembers
-          : stateData.labelModel.registration!.family,
-      hintText: stateData.labelModel.registration == null
+      labelText: stateData.labelModel.registration == null
           ? AppString.noOfFamilyMembers
           : stateData.labelModel.registration!.family,
       controller: stateData.familyMemberController,
@@ -980,11 +1009,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _latWidget({required RegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.locationLat
-          : stateData.labelModel.registration!.lat,
-      hintText: stateData.labelModel.registration == null
+      isRequired: true,
+      labelText: stateData.labelModel.registration == null
           ? AppString.locationLat
           : stateData.labelModel.registration!.lat,
       controller: stateData.latitudeController,
@@ -993,11 +1019,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _longWidget({required RegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      star: AppString.star,
-      label: stateData.labelModel.registration == null
-          ? AppString.locationLong
-          : stateData.labelModel.registration!.long,
-      hintText: stateData.labelModel.registration == null
+      isRequired: true,
+      labelText: stateData.labelModel.registration == null
           ? AppString.locationLong
           : stateData.labelModel.registration!.long,
       controller: stateData.longitudeController,
@@ -1008,8 +1031,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          label: AppString.nearestLandmark,
-          hintText: AppString.nearestLandmark,
+          labelText: AppString.nearestLandmark,
           controller: stateData.nearestLandmarkController,
           keyboardType: TextInputType.text,
           validator: (value) {
@@ -1028,10 +1050,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget(
-        star: AppString.star,
-        label: AppString.idProof,
+        isRequired: true,
         hint: AppString.idProof,
-        dropdownValue: stateData.identityProofValue?.key == null
+        dropdownValue: stateData.identityProofValue.key == null
             ? null
             : stateData.identityProofValue,
         items: stateData.identityProofList,
@@ -1046,9 +1067,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _kycDoc1Widget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star: AppString.star,
-          label: AppString.idProofNo,
-          hintText: AppString.idProofNo,
+          isRequired: true,
+          labelText: AppString.idProofNo,
           controller: stateData.kyc1NumberController,
           keyboardType: TextInputType.text,
           maxLength: 20,
@@ -1071,14 +1091,11 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetOwnershipProofModel>(
-        star: stateData.registrationTypeValue?.key != "0" ? AppString.star : "",
-        label: stateData.labelModel.kyc == null
-            ? AppString.addProof
-            : stateData.labelModel.kyc!.uploadDoc2,
+        isRequired: stateData.registrationTypeValue.key != "0" ? true : false,
         hint: stateData.labelModel.kyc == null
             ? AppString.addProof
             : stateData.labelModel.kyc!.uploadDoc2,
-        dropdownValue: stateData.ownershipProofValue?.key == null
+        dropdownValue: stateData.ownershipProofValue.key == null
             ? null
             : stateData.ownershipProofValue,
         items: stateData.ownershipProofList,
@@ -1093,12 +1110,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _kycDoc2Widget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star:
-              stateData.registrationTypeValue?.key != "0" ? AppString.star : "",
-          label: stateData.labelModel.kyc == null
-              ? AppString.addProofNo
-              : stateData.labelModel.kyc!.uploadDoc2No,
-          hintText: stateData.labelModel.kyc == null
+          isRequired:
+          stateData.registrationTypeValue.key != "0" ? true :false,
+          labelText: stateData.labelModel.kyc == null
               ? AppString.addProofNo
               : stateData.labelModel.kyc!.uploadDoc2No,
           controller: stateData.kyc2NumberController,
@@ -1120,11 +1134,10 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetKycDocModel>(
-        star: AppString.star,
-        label: AppString.ownershipProperty,
+        isRequired: true,
         hint: AppString.ownershipProperty,
         dropdownValue:
-            stateData.kycDoc3Value?.key == null ? null : stateData.kycDoc3Value,
+        stateData.kycDoc3Value.key == null ? null : stateData.kycDoc3Value,
         items: stateData.kycDocList,
         onChanged: (val) {
           BlocProvider.of<RegistrationFormBloc>(context)
@@ -1137,10 +1150,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _kycDoc3Widget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        label: stateData.labelModel.kyc == null
-            ? AppString.ownershipProperty
-            : stateData.labelModel.kyc!.uploadDoc3No,
-        hintText: stateData.labelModel.kyc == null
+        labelText: stateData.labelModel.kyc == null
             ? AppString.ownershipProperty
             : stateData.labelModel.kyc!.uploadDoc3No,
         controller: stateData.kyc3NumberController,
@@ -1160,13 +1170,10 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<GetEBillingModel>(
-        label: stateData.labelModel.consent == null
-            ? AppString.billingMode
-            : stateData.labelModel.consent!.preferredBilling,
         hint: stateData.labelModel.consent == null
             ? AppString.billingMode
             : stateData.labelModel.consent!.preferredBilling,
-        dropdownValue: stateData.eBillingValue?.key == null
+        dropdownValue: stateData.eBillingValue.key == null
             ? null
             : stateData.eBillingValue,
         items: stateData.eBillingList,
@@ -1181,13 +1188,10 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _custBankNameDropdown(
       {required RegistrationFormGetAllDataState stateData}) {
     return DropdownWidget(
-      label: stateData.labelModel.consent == null
-          ? AppString.customerBankName
-          : stateData.labelModel.consent!.custBank,
       hint: stateData.labelModel.consent == null
           ? AppString.customerBankName
           : stateData.labelModel.consent!.custBank,
-      dropdownValue: stateData.custBankNameValue!.isEmpty
+      dropdownValue: stateData.custBankNameValue.isEmpty
           ? null
           : stateData.custBankNameValue,
       items: stateData.custBankNameList,
@@ -1201,10 +1205,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _custBankAccNumberWidget(
       {required RegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      label: stateData.labelModel.consent == null
-          ? AppString.customerAccountNo
-          : stateData.labelModel.consent!.custAcc,
-      hintText: stateData.labelModel.consent == null
+      labelText: stateData.labelModel.consent == null
           ? AppString.customerAccountNo
           : stateData.labelModel.consent!.custAcc,
       controller: stateData.custBankAccNumberController,
@@ -1229,10 +1230,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _custIfscCodeWidget(
       {required RegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-        label: stateData.labelModel.consent == null
-            ? AppString.customerIfscCode
-            : stateData.labelModel.consent!.custIfsc,
-        hintText: stateData.labelModel.consent == null
+        labelText: stateData.labelModel.consent == null
             ? AppString.customerIfscCode
             : stateData.labelModel.consent!.custIfsc,
         controller: stateData.custIfscCodeController,
@@ -1256,10 +1254,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _custBankAddWidget(
       {required RegistrationFormGetAllDataState stateData}) {
     return TextFieldWidget(
-      label: stateData.labelModel.consent == null
-          ? AppString.customerBankAdd
-          : stateData.labelModel.consent!.custBankAdd,
-      hintText: stateData.labelModel.consent == null
+      labelText: stateData.labelModel.consent == null
           ? AppString.customerBankAdd
           : stateData.labelModel.consent!.custBankAdd,
       controller: stateData.custBankAddController,
@@ -1282,10 +1277,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget(
-        star: AppString.star,
-        label: AppString.initDepositStatus,
+        isRequired: true,
         hint: AppString.initDepositStatus,
-        dropdownValue: stateData.initialDepositStatusValue?.key == null
+        dropdownValue: stateData.initialDepositStatusValue.key == null
             ? null
             : stateData.initialDepositStatusValue,
         items: stateData.initialDepositStatusList,
@@ -1300,30 +1294,28 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _reasonDepositStatusWidget(
       {required RegistrationFormGetAllDataState stateData}) {
-    return stateData.initialDepositStatusValue?.value == "No"
+    return stateData.initialDepositStatusValue.value == "No"
         ? ColumnWidget(
-            child: TextFieldWidget(
-              label: AppString.reasonDeposit,
-              hintText: AppString.reasonDeposit,
-              controller: stateData.reasonDepositStsController,
-              keyboardType: TextInputType.text,
-            ),
-          )
+      child: TextFieldWidget(
+        labelText: AppString.reasonDeposit,
+        controller: stateData.reasonDepositStsController,
+        keyboardType: TextInputType.text,
+      ),
+    )
         : Container();
   }
 
   Widget _schemeTypeDropdown(
       {required RegistrationFormGetAllDataState stateData}) {
     return DropdownWidget<GetAllDepositOfflineModel>(
-      star: AppString.star,
-      label: AppString.schemeType,
+      isRequired: true,
       hint: AppString.schemeType,
-      dropdownValue: stateData.depositOfflineValue?.depositName == null
+      dropdownValue: stateData.depositOfflineValue.depositName == null
           ? null
           : stateData.depositOfflineValue,
       items: stateData.getAllDepositOfflineList,
       onChanged: (val) {
-        log("depositTypeValue-->${stateData.depositOfflineValue?.depositName}");
+        log("depositTypeValue-->${stateData.depositOfflineValue.depositName}");
         BlocProvider.of<RegistrationFormBloc>(context)
             .add(RegistrationFormSchemeTypeValue(schemeTypeValue: val!));
       },
@@ -1349,12 +1341,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
+        isRequired: true,
         enabled: false,
-        label: stateData.labelModel.deposit == null
-            ? AppString.schemeAmt
-            : stateData.labelModel.deposit!.depositAmt,
-        hintText: stateData.labelModel.deposit == null
+        labelText: stateData.labelModel.deposit == null
             ? AppString.schemeAmt
             : stateData.labelModel.deposit!.depositAmt,
         controller: stateData.schemeAmountController,
@@ -1373,10 +1362,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget(
-        star: AppString.star,
-        label: AppString.modeDeposit,
+        isRequired: true,
         hint: AppString.modeDeposit,
-        dropdownValue: stateData.modeDepositValue?.key == null
+        dropdownValue: stateData.modeDepositValue.key == null
             ? null
             : stateData.modeDepositValue,
         items: stateData.modeDepositList,
@@ -1391,11 +1379,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   Widget _chequeNoWidget({required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star: AppString.star,
-          label: stateData.labelModel.deposit == null
-              ? AppString.chqNo
-              : stateData.labelModel.deposit!.chqNum,
-          hintText: stateData.labelModel.deposit == null
+          isRequired: true,
+          labelText: stateData.labelModel.deposit == null
               ? AppString.chqNo
               : stateData.labelModel.deposit!.chqNum,
           controller: stateData.chequeNoController,
@@ -1421,20 +1406,17 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-        star: AppString.star,
-        label: stateData.labelModel.deposit == null
-            ? AppString.chqDate
-            : stateData.labelModel.deposit!.chqDate,
-        hintText: stateData.labelModel.deposit == null
+        isRequired: true,
+        labelText: stateData.labelModel.deposit == null
             ? AppString.chqDate
             : stateData.labelModel.deposit!.chqDate,
         suffixIcon: Icon(
           Icons.calendar_today,
-          color: EnvironmentConfig.of(context)!.primaryTheme,
+          color:  EnvironmentConfig.of(context)?.primaryTheme
         ),
         controller: stateData.chequeDateController,
         enabled: true,
-        autofocus: false,
+        //autofocus: false,
         keyboardType: TextInputType.datetime,
         onTap: () {
           BlocProvider.of<RegistrationFormBloc>(context)
@@ -1448,10 +1430,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: DropdownWidget<String>(
-        star: AppString.star,
-        label: AppString.chqBank,
+        isRequired: true,
         hint: AppString.chqBank,
-        dropdownValue: stateData.paymentBankNameValue!.isEmpty
+        dropdownValue: stateData.paymentBankNameValue.isEmpty
             ? null
             : stateData.paymentBankNameValue,
         items: stateData.paymentBankNameList,
@@ -1468,12 +1449,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star: AppString.star,
+          isRequired: true,
           maxLength: 20,
-          label: stateData.labelModel.deposit == null
-              ? AppString.chequeAccountNo
-              : stateData.labelModel.deposit!.chqNum,
-          hintText: stateData.labelModel.deposit == null
+          labelText: stateData.labelModel.deposit == null
               ? AppString.chequeAccountNo
               : stateData.labelModel.deposit!.chqNum,
           controller: stateData.chequeAccountNoController,
@@ -1498,9 +1476,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
       {required RegistrationFormGetAllDataState stateData}) {
     return ColumnWidget(
       child: TextFieldWidget(
-          star: AppString.star,
-          label: AppString.chequeMICRNo,
-          hintText: AppString.chequeMICRNo,
+          isRequired: true,
+          labelText: AppString.chequeMICRNo,
           maxLength: 9,
           controller: stateData.chequeMicrNoController,
           keyboardType: TextInputType.number,
@@ -1549,7 +1526,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _idBackFileImg(
       {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
+        required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
       title: AppString.idProofBack,
       imgFile: stateData.idBackFilePath,
@@ -1578,9 +1555,9 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _eleBillFrontImg(
       {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
+        required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
-      star: stateData.registrationTypeValue?.key != "0" ? AppString.star : "",
+      star: stateData.registrationTypeValue.key != "0" ? AppString.star : "",
       title: AppString.addProofFront,
       imgFile: stateData.eleBillFrontPath,
       onPressed: () {
@@ -1608,7 +1585,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _eleBillBackImg(
       {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
+        required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
         title: AppString.addProofBack,
         imgFile: stateData.eleBillBackPath,
@@ -1636,7 +1613,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _customerConsentImg(
       {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
+        required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
         title: AppString.idProofFront,
         imgFile: stateData.idFrontFilePath,
@@ -1664,7 +1641,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _nocDocImg(
       {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
+        required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
         star: AppString.star,
         title: AppString.nocDoc,
@@ -1697,13 +1674,13 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
         BlocProvider.of<RegistrationFormBloc>(context).add(RegistrationFormSetNocBackPath(nocBackPath: stateData.nocBackPath, context: context));
       },
       child: stateData.nocBackPath.isEmpty ? _localBorderImg() : _fileImage(fileImage: File(stateData.nocBackPath.toString())),
-      label: AppString.nocBackImgLabel,
+      labelText: AppString.nocBackImgLabel,
     );
   }*/
 
   Widget _uploadCustomerImg(
       {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
+        required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
         title: AppString.customerImg,
         imgFile: stateData.uploadCustomerPath,
@@ -1731,7 +1708,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _uploadHouseImg(
       {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
+        required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
       title: AppString.houseImg,
       imgFile: stateData.uploadHousePath,
@@ -1760,7 +1737,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _ownerConsentImg(
       {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
+        required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
       title: AppString.ownerConsentImg,
       imgFile: stateData.ownerConsentPath,
@@ -1789,7 +1766,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
 
   Widget _cancelChequeImg(
       {required BuildContext context,
-      required RegistrationFormGetAllDataState stateData}) {
+        required RegistrationFormGetAllDataState stateData}) {
     return ImageWidget(
         title: AppString.cancelChqPhoto,
         imgFile: stateData.cancelChequePath,
@@ -1843,113 +1820,6 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
     );
   }
 
-  // DOB — date field, mirrors _chequeDateWidget
-  Widget _dobWidget({required RegistrationFormGetAllDataState stateData}) {
-    return ColumnWidget(
-      child: TextFieldWidget(
-        star: AppString.star,
-        label: AppString.dob,
-        hintText: AppString.dob,
-        suffixIcon: Icon(
-          Icons.calendar_today,
-          color: EnvironmentConfig.of(context)!.primaryTheme,
-        ),
-        controller: stateData.dobController,
-        enabled: true,
-        autofocus: false,
-        keyboardType: TextInputType.datetime,
-        onTap: () {
-          BlocProvider.of<RegistrationFormBloc>(context)
-              .add(RegistrationFormSetDobEvent(context: context));
-        },
-      ),
-    );
-  }
-
-// Door Number
-  Widget _doorNumberWidget({required RegistrationFormGetAllDataState stateData}) {
-    return ColumnWidget(
-      child: TextFieldWidget(
-        label: AppString.doorNumber,
-        hintText: AppString.doorNumber,
-        controller: stateData.doorNumberController,
-        keyboardType: TextInputType.text,
-        validator: (value) {
-          if (value != stateData.doorNumberController.text.trim()) {
-            return "Blank space";
-          }
-          return null;
-        },
-        onChanged: (v) {
-          formGlobalKey.currentState?.validate();
-        },
-      ),
-    );
-  }
-
-// Floor Number — numeric
-  Widget _floorNumberWidget({required RegistrationFormGetAllDataState stateData}) {
-    return ColumnWidget(
-      child: TextFieldWidget(
-        label: AppString.floorNumber,
-        hintText: AppString.floorNumber,
-        controller: stateData.floorNumberController,
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
-        validator: (value) {
-          if (value != stateData.floorNumberController.text.trim()) {
-            return "Blank space";
-          }
-          return null;
-        },
-        onChanged: (v) {
-          formGlobalKey.currentState?.validate();
-        },
-      ),
-    );
-  }
-
-// Ward Number
-  Widget _wardNumberWidget({required RegistrationFormGetAllDataState stateData}) {
-    return ColumnWidget(
-      child: TextFieldWidget(
-        label: AppString.wardNumber,
-        hintText: AppString.wardNumber,
-        controller: stateData.wardNumberController,
-        keyboardType: TextInputType.text,
-        validator: (value) {
-          if (value != stateData.wardNumberController.text.trim()) {
-            return "Blank space";
-          }
-          return null;
-        },
-        onChanged: (v) {
-          formGlobalKey.currentState?.validate();
-        },
-      ),
-    );
-  }
-
-// Premise Type — dropdown
-  Widget _premiseTypeWidget({required RegistrationFormGetAllDataState stateData}) {
-    return ColumnWidget(
-      child: TextFieldWidget(
-        label: AppString.premiseType,
-        hintText: AppString.premiseType,
-        controller: stateData.premiseTypeController,
-        keyboardType: TextInputType.text,
-        validator: (value) {
-          if (value != stateData.premiseTypeController.text.trim()) {
-            return "Blank space";
-          }
-          return null;
-        },
-        onChanged: (v) {
-          formGlobalKey.currentState?.validate();
-        },
-      ),
-    );
-  }
   Widget _previewButton({required RegistrationFormGetAllDataState stateData}) {
     return ButtonWidget(
       text: stateData.isUpdate == true ? "Update" : AppString.preview,

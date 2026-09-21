@@ -10,37 +10,39 @@ class ImagePopWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom),
-        child:
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20),
-              topLeft: Radius.circular(20),
+    return  SafeArea(
+      child: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          child:
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+              ),
             ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Align(
-                alignment: Alignment.center,
-                child: Text('Choose One',textAlign: TextAlign.center,
-                  style: TextStyle(color: EnvironmentConfig.of(context)!.primaryTheme,fontSize: 18, fontWeight: FontWeight.bold),),
-              ),
-              TextButton(child: Text('Gallery'), onPressed: onTapGallery),
-              TextButton(child: Text('Camera',), onPressed: onTapCamera,),
-              ButtonWidget(
-                text: 'Dismiss',
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.center,
+                  child: Text('Choose One',textAlign: TextAlign.center,
+                    style: TextStyle(color: EnvironmentConfig.of(context)!.primaryTheme,fontSize: 18, fontWeight: FontWeight.bold),),
+                ),
+                TextButton(child: Text('Gallery'), onPressed: onTapGallery),
+                TextButton(child: Text('Camera',), onPressed: onTapCamera,),
+                ButtonWidget(
+                  text: 'Dismiss',
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

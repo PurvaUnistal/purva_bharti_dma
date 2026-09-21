@@ -67,203 +67,271 @@ class RegistrationFormHelper {
     required String chqBank,
     required String chequeAccountNo,
     required String chequeMICRNo,
+    required String doorNumber,
+    required String wardNumber,
+    required String floorNumber,
+    required String dob,
+    required String premiseType,
     required File chequePath,
     required File canceledCheque,
   }) async {
     try {
       if (registrationType == "") {
         Utils.errorSnackBar(
-            msg: "The Registration field is required.", context: context);
+          msg: "The Registration field is required.",
+          context: context,
+        );
         return null;
       } else if (chargeId == "") {
         Utils.errorSnackBar(
-            msg: 'The Charge Area field is required.', context: context);
+          msg: 'The Charge Area field is required.',
+          context: context,
+        );
         return null;
       } else if (areaId == "") {
         Utils.errorSnackBar(
-            msg: 'The Area field is required.', context: context);
+          msg: 'The Area field is required.',
+          context: context,
+        );
         return null;
       } else if (mobileNumber.isEmpty) {
         Utils.errorSnackBar(
-            msg: "THe Mobile Number field is required.", context: context);
+          msg: "THe Mobile Number field is required.",
+          context: context,
+        );
         return null;
       } else if (firstName.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The First Name field is required.", context: context);
+          msg: "The First Name field is required.",
+          context: context,
+        );
         return null;
       } else if (lastName.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The Last Name field is required.", context: context);
+          msg: "The Last Name field is required.",
+          context: context,
+        );
         return null;
       } else if (registrationType == "1") {
         if (guardianType == "") {
           Utils.errorSnackBar(
-              msg: "The Guardian Type field is required.", context: context);
+            msg: "The Guardian Type field is required.",
+            context: context,
+          );
           return null;
         } else if (guardianName.isEmpty) {
           Utils.errorSnackBar(
-              msg: "The Guardian Name field is required.", context: context);
+            msg: "The Guardian Name field is required.",
+            context: context,
+          );
           return null;
         } else if (propertyCategoryId == "") {
           Utils.errorSnackBar(
-              msg: "The Property Category field is required.",
-              context: context);
+            msg: "The Property Category field is required.",
+            context: context,
+          );
           return null;
         } else if (propertyClassId == "") {
           Utils.errorSnackBar(
-              msg: "The Property Class Id field is required.",
-              context: context);
+            msg: "The Property Class Id field is required.",
+            context: context,
+          );
           return null;
         }
       }
       if (houseNumber.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The House Number field is required.", context: context);
+          msg: "The House Number field is required.",
+          context: context,
+        );
         return null;
       } else if (colonySocietyApartment.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The Colony/Society/Apartment field is required.",
-            context: context);
+          msg: "The Colony/Society/Apartment field is required.",
+          context: context,
+        );
         return null;
       } else if (streetName.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The Lane/Street Name field is required.", context: context);
+          msg: "The Lane/Street Name field is required.",
+          context: context,
+        );
         return null;
       } else if (districtId == "") {
         Utils.errorSnackBar(
-            msg: "The District field is required.", context: context);
+          msg: "The District field is required.",
+          context: context,
+        );
         return null;
       } else if (pinCode.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The Pin Code field is required. ", context: context);
+          msg: "The Pin Code field is required. ",
+          context: context,
+        );
         return null;
       } else if (latitude.isEmpty && longitude.isEmpty) {
         Utils.errorSnackBar(
-            msg:
-                "Location access denied. Please enable location services and grant location permissions in app settings to proceed.",
-            context: context);
+          msg:
+          "Location access denied. Please enable location services and grant location permissions in app settings to proceed.",
+          context: context,
+        );
         return null;
       } else if (noOfKitchen.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The No. of Kitchen field is required.", context: context);
+          msg: "The No. of Kitchen field is required.",
+          context: context,
+        );
         return null;
       } else if (noOfBathroom.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The No. of Bathroom field is required.", context: context);
+          msg: "The No. of Bathroom field is required.",
+          context: context,
+        );
         return null;
       } else if (existingCookingFuel == "") {
         Utils.errorSnackBar(
-            msg: "The Cooking Fuel field is required.", context: context);
+          msg: "The Cooking Fuel field is required.",
+          context: context,
+        );
         return null;
       } else if (noOfFamilyMembers.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The No. of Family Members field is required.",
-            context: context);
+          msg: "The No. of Family Members field is required.",
+          context: context,
+        );
         return null;
       } else if (idProof == "") {
         Utils.errorSnackBar(
-            msg: "The KYC(Identification Proof) field is required.",
-            context: context);
+          msg: "The KYC(Identification Proof) field is required.",
+          context: context,
+        );
         return null;
       } else if (idProofNo.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The KYC(Identification Proof)Number field is required.",
-            context: context);
+          msg: "The KYC(Identification Proof)Number field is required.",
+          context: context,
+        );
         return null;
       } else if (idFrontPath.path.isEmpty) {
         Utils.errorSnackBar(
-            msg: "The Id Proof Front Image field is required.",
-            context: context);
+          msg: "The Id Proof Front Image field is required.",
+          context: context,
+        );
         return null;
       } else if (registrationType == "1") {
         if (addProof == "") {
           Utils.errorSnackBar(
-              msg: "The KYC (Address Proof) field is required.",
-              context: context);
+            msg: "The KYC (Address Proof) field is required.",
+            context: context,
+          );
           return null;
         } else if (addProofNo.isEmpty) {
           Utils.errorSnackBar(
-              msg: "The KYC (Address Proof)Number field is required.",
-              context: context);
+            msg: "The KYC (Address Proof)Number field is required.",
+            context: context,
+          );
           return null;
         } else if (addFrontPath.path.isEmpty) {
           Utils.errorSnackBar(
-              msg: "The Address Proof Front Image field is required.",
-              context: context);
+            msg: "The Address Proof Front Image field is required.",
+            context: context,
+          );
           return null;
         } else if (ownershipProperty == "") {
           Utils.errorSnackBar(
-              msg: "The Ownership Type Property field is required.",
-              context: context);
+            msg: "The Ownership Type Property field is required.",
+            context: context,
+          );
           return null;
         } else if (ownershipProperty == "Rented") {
           if (nocDocPath.path.isEmpty) {
             Utils.errorSnackBar(
-                msg: "The NOC Document field is required.", context: context);
+              msg: "The NOC Document field is required.",
+              context: context,
+            );
             return null;
           }
         } else if (acceptConversionPolicy == "") {
           Utils.errorSnackBar(
-              msg: "The Accept Conversion Policy field is required.",
-              context: context);
+            msg: "The Accept Conversion Policy field is required.",
+            context: context,
+          );
           return null;
         } else if (acceptExtraFittingCost == "") {
           Utils.errorSnackBar(
-              msg: "The Accept Extra Fitting Cost field is required.",
-              context: context);
+            msg: "The Accept Extra Fitting Cost field is required.",
+            context: context,
+          );
           return null;
         } else if (societyAllowedMdpe == "") {
           Utils.errorSnackBar(
-              msg: "The Society Allows MDPE field is required.",
-              context: context);
+            msg: "The Society Allows MDPE field is required.",
+            context: context,
+          );
           return null;
         } else if (depositStatus == "") {
           Utils.errorSnackBar(
-              msg: "The Deposit Status field is required.", context: context);
+            msg: "The Deposit Status field is required.",
+            context: context,
+          );
           return null;
         } else if (schemeType == "") {
           Utils.errorSnackBar(
-              msg: "The Scheme Type field is required.", context: context);
+            msg: "The Scheme Type field is required.",
+            context: context,
+          );
           return null;
         }
         if (modeDepositValue == "") {
           Utils.errorSnackBar(
-              msg: "The Mode Of Deposit field is required.", context: context);
+            msg: "The Mode Of Deposit field is required.",
+            context: context,
+          );
           return null;
         } else if (modeDepositValue == "1") {
           if (chqNo.isEmpty) {
             Utils.errorSnackBar(
-                msg: "The Cheque Number field is required.", context: context);
+              msg: "The Cheque Number field is required.",
+              context: context,
+            );
             return null;
           } else if (chqDate.isEmpty) {
             Utils.errorSnackBar(
-                msg: "The Cheque date field is required.", context: context);
+              msg: "The Cheque date field is required.",
+              context: context,
+            );
             return null;
           } else if (chqBank.isEmpty || chqBank == "") {
             Utils.errorSnackBar(
-                msg: "The Cheque Bank Name field is required.",
-                context: context);
+              msg: "The Cheque Bank Name field is required.",
+              context: context,
+            );
             return null;
           } else if (chequeAccountNo.isEmpty) {
             Utils.errorSnackBar(
-                msg: "The Cheque Bank Account Number field is required.",
-                context: context);
+              msg: "The Cheque Bank Account Number field is required.",
+              context: context,
+            );
             return null;
           } else if (chequeMICRNo.isEmpty) {
             Utils.errorSnackBar(
-                msg: "The Cheque MICR Code field is required.",
-                context: context);
+              msg: "The Cheque MICR Code field is required.",
+              context: context,
+            );
             return null;
           } else if (chequePath.path.isEmpty) {
             Utils.errorSnackBar(
-                msg: "The Cheque Image field is required.", context: context);
+              msg: "The Cheque Image field is required.",
+              context: context,
+            );
             return null;
           }
         }
       }
       String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
       String? dmaUserId = await AppConfig.instanceInit()?.loginData.user!.id!;
-      String? dmaUserName = await AppConfig.instanceInit()?.loginData.user!.name!;
+      String? dmaUserName =
+      await AppConfig.instanceInit()?.loginData.user!.name!;
       SaveRegistrationFormModel custRegSyncStore = SaveRegistrationFormModel(
         schema: schema,
         dmaUserId: dmaUserId,
@@ -332,6 +400,12 @@ class RegistrationFormHelper {
         canceledChequePhoto: canceledCheque.path,
         chequePhoto: chequePath.path,
         reasonRegistration: reasonRegistration,
+        wardNumber: wardNumber,
+        premiseType: premiseType,
+        floorNumber: floorNumber,
+        dob: dob,
+        clientRequestId: DateTime.now().microsecondsSinceEpoch.toString(),
+        doorNumber: doorNumber,
       );
       return custRegSyncStore;
     } catch (e) {
@@ -350,13 +424,16 @@ class RegistrationFormHelper {
     try {
       final hiveBox = await HiveDataBase.registrationFormBox;
       if (hiveBox == null) {
-        Utils.errorSnackBar(msg: "Local database not available", context: context);
+        Utils.errorSnackBar(
+          msg: "Local database not available",
+          context: context,
+        );
         return;
       }
       SaveRegistrationFormModel entry = SaveRegistrationFormModel(
-        clientRequestId: isUpdate
-            ? (custRegSyncStore.clientRequestId ?? const Uuid().v4())
-            : const Uuid().v4(),
+        clientRequestId:
+        isUpdate ? (custRegSyncStore.clientRequestId ?? DateTime.now().microsecondsSinceEpoch.toString())
+            : DateTime.now().microsecondsSinceEpoch.toString(),
         dmaUserName: custRegSyncStore.dmaUserName ?? "",
         dmaUserId: custRegSyncStore.dmaUserId ?? "",
         schema: custRegSyncStore.schema ?? "",
@@ -409,7 +486,8 @@ class RegistrationFormHelper {
         chequeDepositDate: custRegSyncStore.chequeDepositDate ?? "",
         payementBankName: custRegSyncStore.payementBankName ?? "",
         chequeBankAccount: custRegSyncStore.chequeBankAccount ?? "",
-        noInitialDepositStatusReason: custRegSyncStore.noInitialDepositStatusReason ?? "",
+        noInitialDepositStatusReason:
+        custRegSyncStore.noInitialDepositStatusReason ?? "",
         alternateMobile: custRegSyncStore.alternateMobile ?? "",
         chequeMicrAccount: custRegSyncStore.chequeMicrAccount ?? "",
         housePhoto: custRegSyncStore.housePhoto ?? "",
@@ -429,19 +507,31 @@ class RegistrationFormHelper {
         chequePhoto: custRegSyncStore.chequePhoto ?? "",
         customerConsentPhoto: custRegSyncStore.customerConsentPhoto ?? "",
         reasonRegistration: custRegSyncStore.reasonRegistration ?? "",
+        wardNumber: custRegSyncStore.wardNumber,
+        premiseType: custRegSyncStore.premiseType,
+        floorNumber: custRegSyncStore.floorNumber,
+        dob: custRegSyncStore.dob,
+        doorNumber: custRegSyncStore.doorNumber,
       );
       if (isUpdate) {
         await hiveBox.putAt(index, entry);
-        Utils.successSnackBar(msg: 'Record Updated Successfully', context: context);
+        Utils.successSnackBar(
+          msg: 'Record Updated Successfully',
+          context: context,
+        );
       } else {
         if (hiveBox.length < 15) {
           log("custRegSyncAdd${entry}");
           await hiveBox.add(entry);
           Utils.successSnackBar(
-              msg: "Data Saved Successfully", context: context);
+            msg: "Data Saved Successfully",
+            context: context,
+          );
         } else {
           Utils.errorSnackBar(
-              msg: 'Please upload previous records before adding more.', context: context);
+            msg: 'Please upload previous records before adding more.',
+            context: context,
+          );
         }
       }
     } catch (e) {
@@ -449,5 +539,4 @@ class RegistrationFormHelper {
       log("addCustRegSyncLocalDB Error: ${e.toString()}");
     }
   }
-
 }

@@ -90,12 +90,12 @@ class SaveRegistrationFormModelAdapter
       alternateMobile: fields[69] as String?,
       housePhoto: fields[70] as String?,
       reasonRegistration: fields[71] as String?,
-      clientRequestId: fields[72] as String?,
-      dob: fields[73] as String?,
-      doorNumber: fields[74] as String?,
-      floorNumber: fields[75] as String?,
-      wardNumber: fields[76] as String?,
-      premiseType: fields[77] as String?,
+      floorNumber: fields[74] as String?,
+      wardNumber: fields[75] as String?,
+      premiseType: fields[76] as String?,
+      dob: fields[72] as String?,
+      doorNumber: fields[73] as String?,
+      clientRequestId: fields[77] as String?,
     );
   }
 
@@ -248,17 +248,17 @@ class SaveRegistrationFormModelAdapter
       ..writeByte(71)
       ..write(obj.reasonRegistration)
       ..writeByte(72)
-      ..write(obj.clientRequestId)
-      ..writeByte(73)
       ..write(obj.dob)
-      ..writeByte(74)
+      ..writeByte(73)
       ..write(obj.doorNumber)
-      ..writeByte(75)
+      ..writeByte(74)
       ..write(obj.floorNumber)
-      ..writeByte(76)
+      ..writeByte(75)
       ..write(obj.wardNumber)
+      ..writeByte(76)
+      ..write(obj.premiseType)
       ..writeByte(77)
-      ..write(obj.premiseType);
+      ..write(obj.clientRequestId);
   }
 
   @override
@@ -267,7 +267,7 @@ class SaveRegistrationFormModelAdapter
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SaveRegistrationFormModelAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+          other is SaveRegistrationFormModelAdapter &&
+              runtimeType == other.runtimeType &&
+              typeId == other.typeId;
 }

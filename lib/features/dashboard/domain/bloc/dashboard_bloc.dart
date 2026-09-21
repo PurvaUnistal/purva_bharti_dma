@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/Utils/common_widgets/HiveDatabase/app_update_message_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/Utils/common_widgets/res/enums.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_premise_type_model.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc() : super(DashboardInitState()) {
@@ -31,6 +33,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   List<GetGuardianTypeModel> listOfGuardianType = [];
   List<GetExistingCookingFuelModel> listOfCookingFuel = [];
   List<GetSocietyAllowModel> listOfSocietyAllow = [];
+  List<GetPremiseTypeModel> listOfPremiseType = [];
   List<GetPropertyClassModel> listOfProClass = [];
   List<GetPropertyCategoryModel> listOfProCategory = [];
   List<GetAllAreaModel> listOfAllArea = [];
@@ -59,6 +62,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     listOfGuardianType = [];
     listOfCookingFuel = [];
     listOfSocietyAllow = [];
+    listOfPremiseType = [];
     listOfProClass = [];
     listOfProCategory = [];
     listOfAllArea = [];
@@ -90,6 +94,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       fetchGuardianTypeApi(context: event.context),
       fetchExistingCookingFuelApi(context: event.context),
       fetchSocietyAllowApi(context: event.context),
+      if(AppConfig.instanceInit()!.client == Client.purvaBharti || AppConfig.instanceInit()!.client == Client.hngpl)...[
+        fetchPremiseTypeApi(context: event.context),
+      ],
       fetchPropertyClassApi(context: event.context),
       fetchPropertyCategoryApi(context: event.context),
       fetchAllAreaApi(context: event.context),
@@ -127,7 +134,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   fetchInitialDepositStatusApi({required BuildContext context}) async {
     if (await DashboardHelper.isInternetConnected()) {
       var res =
-          await DashboardHelper.getInitialDepositStatusApi(context: context);
+      await DashboardHelper.getInitialDepositStatusApi(context: context);
       if (res != null) {
         listOfInitialDepositStatus = res;
       }
@@ -140,7 +147,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   fetchAcceptExtraFittingCostApi({required BuildContext context}) async {
     if (await DashboardHelper.isInternetConnected()) {
       var res =
-          await DashboardHelper.getAcceptExtraFittingCostApi(context: context);
+      await DashboardHelper.getAcceptExtraFittingCostApi(context: context);
       if (res != null) {
         listOfExtraFittingCost = res;
       }
@@ -153,7 +160,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   fetchAcceptConversionPolicyApi({required BuildContext context}) async {
     if (await DashboardHelper.isInternetConnected()) {
       var res =
-          await DashboardHelper.getAcceptConversionPolicyApi(context: context);
+      await DashboardHelper.getAcceptConversionPolicyApi(context: context);
       if (res != null) {
         listOfConversionPolicy = res;
       }
@@ -254,7 +261,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   fetchExistingCookingFuelApi({required BuildContext context}) async {
     if (await DashboardHelper.isInternetConnected()) {
       var res =
-          await DashboardHelper.getExistingCookingFuelApi(context: context);
+      await DashboardHelper.getExistingCookingFuelApi(context: context);
       if (res != null) {
         listOfCookingFuel = res;
       }
@@ -271,6 +278,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       }
     } else {
       listOfSocietyAllow = HiveDataBase.societyAllowBox!.values.toList();
+    }
+  }
+
+  fetchPremiseTypeApi({required BuildContext context}) async {
+    if (await DashboardHelper.isInternetConnected()) {
+      var res = await DashboardHelper.getPremiseTypeApi(context: context);
+      if (res != null) {
+        listOfPremiseType = res;
+      }
+    } else {
+      listOfPremiseType = HiveDataBase.premiseTypeBox!.values.toList();
     }
   }
 

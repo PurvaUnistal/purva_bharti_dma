@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/background_widget.dart';
-import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
-import 'package:pbg_app/Utils/common_widgets/res/enums.dart';
 import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class LoginView extends StatefulWidget {
@@ -140,9 +138,9 @@ class _LoginViewState extends State<LoginView> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
       child: TextFieldWidget(
-        label:  AppString.emailLabel,
-        hintText: AppString.emailLabel,
-        autofillHints: [AutofillHints.email,AutofillHints.password],
+        isRequired: true,
+        labelText: AppString.emailLabel,
+      //  autofillHints: [AutofillHints.email,AutofillHints.password],
         keyboardType: TextInputType.emailAddress,
         prefixIcon: Icon(
           Icons.email,
@@ -160,9 +158,9 @@ class _LoginViewState extends State<LoginView> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
       child: TextFieldWidget(
-        label: AppString.passwordLabel,
-        hintText: AppString.passwordLabel,
-        autofillHints: const [AutofillHints.password],
+        isRequired: true,
+        labelText: AppString.passwordLabel,
+      //  autofillHints: const [AutofillHints.password],
         keyboardType: TextInputType.visiblePassword,
         prefixIcon: Icon(
           Icons.password,

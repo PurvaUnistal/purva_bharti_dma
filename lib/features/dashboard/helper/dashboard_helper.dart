@@ -3,15 +3,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Service/api_server_dio.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/features/dashboard/domain/model/get_premise_type_model.dart';
 
 class DashboardHelper {
   static Future<GetLabelModel?> getLabelApi({
     required BuildContext context,
   }) async {
     try {
-      final res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getLabel,
-      );
+      final res = await ApiHelperDio.getData(urlEndPoint: AppUrl.getLabel);
       if (res != null) {
         GetLabelModel response = GetLabelModel.fromJson(res);
         if (HiveDataBase.allLabelBox != null &&
@@ -33,9 +32,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.notInterested,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.notInterested);
       if (res != null) {
         List<GetNotInterestedModel> response = GetNotInterestedModel.mapToList(
           res,
@@ -65,7 +62,7 @@ class DashboardHelper {
       );
       if (res != null) {
         List<GetInitialDepositStatusModel> response =
-            GetInitialDepositStatusModel.mapToList(res);
+        GetInitialDepositStatusModel.mapToList(res);
         if (response.isNotEmpty) {
           if (HiveDataBase.initDepositStatusBox != null &&
               HiveDataBase.initDepositStatusBox!.isOpen) {
@@ -83,14 +80,15 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetAcceptExtraFittingCostModel>?> getAcceptExtraFittingCostApi({required BuildContext context}) async {
+  static Future<List<GetAcceptExtraFittingCostModel>?>
+  getAcceptExtraFittingCostApi({required BuildContext context}) async {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.acceptExtraFittingCost,
       );
       if (res != null) {
         List<GetAcceptExtraFittingCostModel> response =
-            GetAcceptExtraFittingCostModel.mapToList(res);
+        GetAcceptExtraFittingCostModel.mapToList(res);
         if (response.isNotEmpty) {
           if (HiveDataBase.acceptExtraFittingCostBox != null &&
               HiveDataBase.acceptExtraFittingCostBox!.isOpen) {
@@ -108,14 +106,15 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetAcceptConversionPolicyModel>?> getAcceptConversionPolicyApi({required BuildContext context}) async {
+  static Future<List<GetAcceptConversionPolicyModel>?>
+  getAcceptConversionPolicyApi({required BuildContext context}) async {
     try {
       var res = await ApiHelperDio.getData(
         urlEndPoint: AppUrl.acceptConversionPolicy,
       );
       if (res != null) {
         List<GetAcceptConversionPolicyModel> list =
-            GetAcceptConversionPolicyModel.mapToList(res);
+        GetAcceptConversionPolicyModel.mapToList(res);
         if (res.isNotEmpty) {
           if (HiveDataBase.acceptConversionPolicyBox != null &&
               HiveDataBase.acceptConversionPolicyBox!.isOpen) {
@@ -133,7 +132,9 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi({required BuildContext context,}) async {
+  static Future<List<GetAllDistrictModel>?> getAllDistrictModelApi({
+    required BuildContext context,
+  }) async {
     String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
     try {
       var res = await ApiHelperDio.getData(
@@ -141,11 +142,11 @@ class DashboardHelper {
       );
       if (res != null) {
         List<GetAllDistrictModel> list =
-            res
-                .map<GetAllDistrictModel>(
-                  (json) => GetAllDistrictModel.fromJson(json),
-                )
-                .toList();
+        res
+            .map<GetAllDistrictModel>(
+              (json) => GetAllDistrictModel.fromJson(json),
+        )
+            .toList();
         if (HiveDataBase.allDistrictBox != null &&
             HiveDataBase.allDistrictBox!.isOpen) {
           await HiveDataBase.allDistrictBox!.clear();
@@ -166,12 +167,10 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.residentStatus,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.residentStatus);
       if (res != null) {
         List<GetResidentStatusModel> response =
-            GetResidentStatusModel.mapToList(res);
+        GetResidentStatusModel.mapToList(res);
         if (response.isNotEmpty) {
           if (HiveDataBase.resStatusBox != null &&
               HiveDataBase.resStatusBox!.isOpen) {
@@ -193,9 +192,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.modeOfDeposit,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.modeOfDeposit);
       if (res != null) {
         List<GetModeOfDepositModel> response = GetModeOfDepositModel.mapToList(
           res,
@@ -220,9 +217,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.eBilling,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.eBilling);
       if (res != null) {
         List<GetEBillingModel> response = GetEBillingModel.mapToList(res);
         if (response.isNotEmpty) {
@@ -246,15 +241,14 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.kycDoc,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.kycDoc);
       log("resKycDoc-->${res}");
       if (res != null) {
         List<GetKycDocModel> response = GetKycDocModel.mapToList(res);
         log("responseKycDoc-->${response}");
         if (response.isNotEmpty) {
-          if (HiveDataBase.kycDocBox != null && HiveDataBase.kycDocBox!.isOpen) {
+          if (HiveDataBase.kycDocBox != null &&
+              HiveDataBase.kycDocBox!.isOpen) {
             await HiveDataBase.kycDocBox!.clear();
             await HiveDataBase.kycDocBox!.addAll(response);
           }
@@ -278,7 +272,7 @@ class DashboardHelper {
       );
       if (res != null) {
         List<GetOwnershipProofModel> response =
-            GetOwnershipProofModel.mapToList(res);
+        GetOwnershipProofModel.mapToList(res);
         if (response.isNotEmpty) {
           if (HiveDataBase.ownershipProofBox != null &&
               HiveDataBase.ownershipProofBox!.isOpen) {
@@ -300,9 +294,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.identityProof,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.identityProof);
       if (res != null) {
         List<GetIdentityProofModel> response = GetIdentityProofModel.mapToList(
           res,
@@ -328,9 +320,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.guardianType,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.guardianType);
       if (res != null) {
         List<GetGuardianTypeModel> response = GetGuardianTypeModel.mapToList(
           res,
@@ -361,7 +351,7 @@ class DashboardHelper {
       );
       if (res != null) {
         List<GetExistingCookingFuelModel> response =
-            GetExistingCookingFuelModel.mapToList(res);
+        GetExistingCookingFuelModel.mapToList(res);
         if (response.isNotEmpty) {
           if (HiveDataBase.cookingFuelBox != null &&
               HiveDataBase.cookingFuelBox!.isOpen) {
@@ -383,9 +373,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.societyAllow,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.societyAllow);
       if (res != null) {
         List<GetSocietyAllowModel> response = GetSocietyAllowModel.mapToList(
           res,
@@ -395,6 +383,30 @@ class DashboardHelper {
               HiveDataBase.societyAllowBox!.isOpen) {
             await HiveDataBase.societyAllowBox!.clear();
             await HiveDataBase.societyAllowBox!.addAll(response);
+          }
+        }
+        return response;
+      }
+    } catch (e) {
+      print("GetSocietyAllowModel-->${e.toString()}");
+      Utils.errorSnackBar(msg: e.toString(), context: context);
+      return null;
+    }
+    return null;
+  }
+
+  static Future<List<GetPremiseTypeModel>?> getPremiseTypeApi({
+    required BuildContext context,
+  }) async {
+    try {
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.premiseType);
+      if (res != null) {
+        List<GetPremiseTypeModel> response = GetPremiseTypeModel.mapToList(res);
+        if (response.isNotEmpty) {
+          if (HiveDataBase.premiseTypeBox != null &&
+              HiveDataBase.premiseTypeBox!.isOpen) {
+            await HiveDataBase.premiseTypeBox!.clear();
+            await HiveDataBase.premiseTypeBox!.addAll(response);
           }
         }
         return response;
@@ -417,11 +429,11 @@ class DashboardHelper {
       );
       if (res != null) {
         List<GetPropertyClassModel> list =
-            res
-                .map<GetPropertyClassModel>(
-                  (json) => GetPropertyClassModel.fromJson(json),
-                )
-                .toList();
+        res
+            .map<GetPropertyClassModel>(
+              (json) => GetPropertyClassModel.fromJson(json),
+        )
+            .toList();
         if (res.isNotEmpty) {
           if (HiveDataBase.proClassBox != null &&
               HiveDataBase.proClassBox!.isOpen) {
@@ -449,11 +461,11 @@ class DashboardHelper {
       );
       if (res != null) {
         List<GetPropertyCategoryModel> list =
-            res
-                .map<GetPropertyCategoryModel>(
-                  (json) => GetPropertyCategoryModel.fromJson(json),
-                )
-                .toList();
+        res
+            .map<GetPropertyCategoryModel>(
+              (json) => GetPropertyCategoryModel.fromJson(json),
+        )
+            .toList();
         if (res.isNotEmpty) {
           if (HiveDataBase.proCateBox != null &&
               HiveDataBase.proCateBox!.isOpen) {
@@ -481,9 +493,9 @@ class DashboardHelper {
       );
       if (res != null) {
         List<GetAllAreaModel> list =
-            res
-                .map<GetAllAreaModel>((json) => GetAllAreaModel.fromJson(json))
-                .toList();
+        res
+            .map<GetAllAreaModel>((json) => GetAllAreaModel.fromJson(json))
+            .toList();
         if (res.isNotEmpty) {
           if (HiveDataBase.allAreaBox != null &&
               HiveDataBase.allAreaBox!.isOpen) {
@@ -511,11 +523,11 @@ class DashboardHelper {
       );
       if (res != null) {
         List<GetChargeAreaListModel> list =
-            res
-                .map<GetChargeAreaListModel>(
-                  (json) => GetChargeAreaListModel.fromJson(json),
-                )
-                .toList();
+        res
+            .map<GetChargeAreaListModel>(
+              (json) => GetChargeAreaListModel.fromJson(json),
+        )
+            .toList();
         if (res.isNotEmpty) {
           if (HiveDataBase.chargeAreaListBox != null &&
               HiveDataBase.chargeAreaListBox!.isOpen) {
@@ -543,11 +555,11 @@ class DashboardHelper {
       );
       if (res != null) {
         List<GetAllDepositOfflineModel> list =
-            res
-                .map<GetAllDepositOfflineModel>(
-                  (json) => GetAllDepositOfflineModel.fromJson(json),
-                )
-                .toList();
+        res
+            .map<GetAllDepositOfflineModel>(
+              (json) => GetAllDepositOfflineModel.fromJson(json),
+        )
+            .toList();
         if (res.isNotEmpty) {
           if (HiveDataBase.allDepositOfflineBox != null &&
               HiveDataBase.allDepositOfflineBox!.isOpen) {
@@ -569,9 +581,7 @@ class DashboardHelper {
     required BuildContext context,
   }) async {
     try {
-      var res = await ApiHelperDio.getData(
-        urlEndPoint: AppUrl.getAllBanks,
-      );
+      var res = await ApiHelperDio.getData(urlEndPoint: AppUrl.getAllBanks);
       if (res != null) {
         List<String> response = List<String>.from(res);
         if (response.isNotEmpty) {
@@ -620,9 +630,20 @@ class DashboardHelper {
     await Permission.locationAlways.request();
     if (Platform.isAndroid) {
       Position position = await Geolocator.getCurrentPosition(
+
         desiredAccuracy: LocationAccuracy.high,
         forceAndroidLocationManager: true,
         locationSettings: LocationSettings(),
+        // locationSettings:
+        //     Platform.isAndroid
+        //         ? AndroidSettings(
+        //           accuracy: LocationAccuracy.high,
+        //           forceLocationManager: true,
+        //         )
+        //         : AppleSettings(
+        //           accuracy: LocationAccuracy.high,
+        //           pauseLocationUpdatesAutomatically: true,
+        //         ),
       );
       log('latitude : ${position.latitude} longitude : ${position.longitude}');
       return position;

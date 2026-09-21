@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/Utils/common_widgets/button_widget.dart';
-import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
 class ImagePopWidget extends StatelessWidget {
   final void Function() onTapGallery, onTapCamera;
@@ -14,7 +13,7 @@ class ImagePopWidget extends StatelessWidget {
     return SingleChildScrollView(
       child: Container(
         padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: const BoxDecoration(
@@ -33,7 +32,7 @@ class ImagePopWidget extends StatelessWidget {
                   'Choose One',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: EnvironmentConfig.of(context)!.primaryTheme,
+                      color: Colors.green.shade800,
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
