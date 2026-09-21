@@ -630,16 +630,20 @@ class DashboardHelper {
     await Permission.locationAlways.request();
     if (Platform.isAndroid) {
       Position position = await Geolocator.getCurrentPosition(
-        locationSettings:
-            Platform.isAndroid
-                ? AndroidSettings(
-                  accuracy: LocationAccuracy.high,
-                  forceLocationManager: true,
-                )
-                : AppleSettings(
-                  accuracy: LocationAccuracy.high,
-                  pauseLocationUpdatesAutomatically: true,
-                ),
+
+        desiredAccuracy: LocationAccuracy.high,
+        forceAndroidLocationManager: true,
+        locationSettings: LocationSettings(),
+        // locationSettings:
+        //     Platform.isAndroid
+        //         ? AndroidSettings(
+        //           accuracy: LocationAccuracy.high,
+        //           forceLocationManager: true,
+        //         )
+        //         : AppleSettings(
+        //           accuracy: LocationAccuracy.high,
+        //           pauseLocationUpdatesAutomatically: true,
+        //         ),
       );
       log('latitude : ${position.latitude} longitude : ${position.longitude}');
       return position;
