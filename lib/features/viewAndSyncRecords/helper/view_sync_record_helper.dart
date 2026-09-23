@@ -12,21 +12,15 @@ import 'package:pbg_app/features/RegistrationForm/domain/model/save_registration
 import 'package:pbg_app/features/viewAndSyncRecords/domain/Model/send_registration_offline_model.dart';
 
 class ViewSyncRecordHelper {
-  static Future<SendRegistrationOfflineModel?> sendData({
-    required BuildContext context,
-    required SaveRegistrationFormModel custRegSyncData,
-  }) async {
+  static Future<SendRegistrationOfflineModel?> sendData(
+      {required BuildContext context,
+        required SaveRegistrationFormModel custRegSyncData}) async {
     try {
       if (!await ConnectivityHelper.checkInternetConnect(context: context)) {
         return null;
       }
       var inputFormat = DateFormat('dd-MM-yyyy');
-      var date1 = inputFormat.parse(
-        custRegSyncData.chequeDepositDate.toString().replaceAll(
-          "00:00:00.000",
-          "",
-        ),
-      );
+      var date1 = inputFormat.parse(custRegSyncData.chequeDepositDate.toString().replaceAll("00:00:00.000", ""));
       Map<String, String> json = {
         "interested": custRegSyncData.registrationType ?? "",
         "area_id": custRegSyncData.areaId ?? "",
@@ -41,11 +35,14 @@ class ViewSyncRecordHelper {
         "property_category_id": custRegSyncData.propertyCategoryId ?? "",
         "property_class_id": custRegSyncData.propertyClassId ?? "",
         "house_number": custRegSyncData.houseNumber!,
+        /*"locality": colonySocietyApartment ?? "",
+         "address2": streetName ?? "",*/
         "locality": custRegSyncData.streetName ?? "",
         "address2": custRegSyncData.colonySocietyApartment ?? "",
         "town": custRegSyncData.town ?? "",
         "pin_code": custRegSyncData.pinCode ?? "",
         "society_allowed_mdpe": custRegSyncData.societyAllowedMdpe ?? "",
+        // "resident_status": custRegSyncData.residentStatus ?? "",
         "resident_status": "Owner",
         "no_of_bathroom": custRegSyncData.noOfBathroom ?? "",
         "no_of_kitchen": custRegSyncData.noOfKitchen ?? "",
@@ -82,7 +79,6 @@ class ViewSyncRecordHelper {
         "micr": custRegSyncData.chequeMicrAccount ?? "",
         "building_number": custRegSyncData.buildingNumber ?? "",
       };
-
       if (json['interested'] == "0") {
         json.remove("initial_deposite_status");
         json.remove("deposite_type");
@@ -90,153 +86,99 @@ class ViewSyncRecordHelper {
         json.remove("accept_conversion_policy");
         json.remove("accept_extra_fitting_cost");
       }
-
       if (AppConfig.instanceInit()!.client == Client.purvaBharti
-          || AppConfig.instanceInit()!.client == Client.hpoil
-          || AppConfig.instanceInit()!.client == Client.hngpl) {
+      || AppConfig.instanceInit()!.client == Client.hngpl
+      ) {
+        // Add new parameters only for PurvaBharti clients
         json["client_request_id"] = custRegSyncData.clientRequestId ?? "";
         json["door_no"] = custRegSyncData.doorNumber ?? "";
         json["ward_no"] = custRegSyncData.wardNumber ?? "";
         json["floor"] = custRegSyncData.floorNumber ?? "";
-        json["dob"] = custRegSyncData.dob ?? "00:00:00.000";
+        json["dob"] = custRegSyncData.dob ?? "";
         json["landmark"] = custRegSyncData.nearestLandmark ?? "";
         json["premise_type"] = custRegSyncData.premiseType ?? "";
       }
       log("requestBody-->${json}");
-
       var res = await ApiHelperDio.postDataWithFile(
-        urlEndPoint: AppUrl.saveCustomerRegistrationOffline,
-        body: json,
-        imageRequestObject: [
-          ImageRequestObject(
-            key: "backside1",
-            path: custRegSyncData.idBackPath1 ?? "",
-          ),
-          ImageRequestObject(
-            key: "backside2",
-            path: custRegSyncData.addBackPath2 ?? "",
-          ),
-          ImageRequestObject(
-            key: "backside3",
-            path: custRegSyncData.nocBackPath3 ?? "",
-          ),
-          ImageRequestObject(
-            key: "document_uploads_1",
-            path: custRegSyncData.idFrontPath1 ?? "",
-          ),
-          ImageRequestObject(
-            key: "document_uploads_2",
-            path: custRegSyncData.addFrontPath2 ?? "",
-          ),
-          ImageRequestObject(
-            key: "document_uploads_3",
-            path: custRegSyncData.nocFrontPath3 ?? "",
-          ),
-          ImageRequestObject(
-            key: "upload_customer_photo",
-            path: custRegSyncData.uploadCustomerPhoto ?? "",
-          ),
-          ImageRequestObject(
-            key: "upload_house_photo",
-            path: custRegSyncData.uploadHousePhoto ?? "",
-          ),
-          ImageRequestObject(
-            key: "canceled_cheque",
-            path: custRegSyncData.canceledChequePhoto ?? "",
-          ),
-          ImageRequestObject(
-            key: "cheque_photo",
-            path: custRegSyncData.chequePhoto ?? "",
-          ),
-          ImageRequestObject(
-            key: "owner_consent",
-            path: custRegSyncData.ownerConsent ?? "",
-          ),
-          ImageRequestObject(
-            key: "customer_consent",
-            path: custRegSyncData.customerConsent ?? "",
-          ),
-        ],
-      );
-
+          urlEndPoint: AppUrl.saveCustomerRegistrationOffline,
+          body: json,
+          imageRequestObject: [
+            ImageRequestObject(
+                key: "backside1",
+                path: custRegSyncData.idBackPath1 == null
+                    ? ""
+                    : custRegSyncData.idBackPath1),
+            ImageRequestObject(
+                key: "backside2",
+                path: custRegSyncData.addBackPath2 == null
+                    ? ""
+                    : custRegSyncData.addBackPath2),
+            ImageRequestObject(
+                key: "backside3",
+                path: custRegSyncData.nocBackPath3 == null
+                    ? ""
+                    : custRegSyncData.nocBackPath3),
+            ImageRequestObject(
+                key: "document_uploads_1",
+                path: custRegSyncData.idFrontPath1 == null
+                    ? ""
+                    : custRegSyncData.idFrontPath1),
+            ImageRequestObject(
+                key: "document_uploads_2",
+                path: custRegSyncData.addFrontPath2 == null
+                    ? ""
+                    : custRegSyncData.addFrontPath2),
+            ImageRequestObject(
+                key: "document_uploads_3",
+                path: custRegSyncData.nocFrontPath3 == null
+                    ? ""
+                    : custRegSyncData.nocFrontPath3),
+            ImageRequestObject(
+                key: "upload_customer_photo",
+                path: custRegSyncData.uploadCustomerPhoto == null
+                    ? ""
+                    : custRegSyncData.uploadCustomerPhoto),
+            ImageRequestObject(
+                key: "upload_house_photo",
+                path: custRegSyncData.uploadHousePhoto == null
+                    ? ""
+                    : custRegSyncData.uploadHousePhoto),
+            ImageRequestObject(
+                key: "canceled_cheque",
+                path: custRegSyncData.canceledChequePhoto == null
+                    ? ""
+                    : custRegSyncData.canceledChequePhoto),
+            ImageRequestObject(
+                key: "cheque_photo",
+                path: custRegSyncData.chequePhoto == null
+                    ? ""
+                    : custRegSyncData.chequePhoto),
+            ImageRequestObject(
+                key: "owner_consent",
+                path: custRegSyncData.ownerConsent == null
+                    ? ""
+                    : custRegSyncData.ownerConsent),
+            ImageRequestObject(
+                key: "customer_consent",
+                path: custRegSyncData.customerConsent == null
+                    ? ""
+                    : custRegSyncData.customerConsent),
+          ]);
       log("res-->${res}");
-
-      // ✅ FIX: Proper error handling for different response types
-      if (res != null) {
-        // Check if response is a Map
-        if (res is Map<String, dynamic>) {
-          // Check for error status codes
-          if (res.containsKey('success')) {
-            final successCode = res['success'];
-
-            // If success code is not 0 or 1 (assuming 0/1 = success)
-            if (successCode != 0 && successCode != 1 && successCode != true) {
-              String errorMessage = "An error occurred";
-
-              // Extract error message safely
-              if (res.containsKey('errors')) {
-                final errors = res['errors'];
-                if (errors is List && errors.isNotEmpty) {
-                  // If errors is a list of lists, flatten it
-                  if (errors[0] is List) {
-                    errorMessage = "Validation errors: ${errors.toString()}";
-                  } else if (errors[0] is String) {
-                    errorMessage = errors[0];
-                  } else if (errors[0] is Map) {
-                    errorMessage = errors[0].toString();
-                  }
-                } else if (errors is String) {
-                  errorMessage = errors;
-                } else if (errors is Map) {
-                  errorMessage = errors.toString();
-                }
-              }
-
-              log("Error Response: $errorMessage");
-              Utils.errorSnackBar(msg: errorMessage, context: context);
-              return null;
-            }
-
-            // If success, try to parse the model
-            try {
-              return SendRegistrationOfflineModel.fromJson(res);
-            } catch (e) {
-              log("Error parsing model: $e");
-              Utils.errorSnackBar(msg: "Failed to parse response", context: context);
-              return null;
-            }
-          }
-        } else if (res is String) {
-          // If response is a string, log it
-          log("String response: $res");
-          Utils.errorSnackBar(msg: res, context: context);
-          return null;
-        }
-
-        // Default success case
-        try {
-          return SendRegistrationOfflineModel.fromJson(res);
-        } catch (e) {
-          log("Error parsing model: $e");
-          Utils.errorSnackBar(msg: "Failed to process response", context: context);
-          return null;
-        }
-      } else {
-        log("No response received");
-        Utils.errorSnackBar(msg: "No response from server", context: context);
+      if (res != null && res["success"] == 200) {
+        return SendRegistrationOfflineModel.fromJson(res);
+      }else if (res != null && res["success"] == 400) {
+        Utils.errorSnackBar(msg: res["errors"].toString(), context: context);
+      }else if (res != null && res["success"] == 415) {
+        Utils.errorSnackBar(msg: res["errors"].toString(), context: context);
+      }else if (res != null && res["success"] == 500) {
+        Utils.errorSnackBar(msg: res["errors"].toString(), context: context);
+      }else{
+        print("no response");
       }
     } catch (e) {
       log("SaveCustomerCatch-->${e.toString()}");
-
-      // Extract meaningful error message
-      String errorMsg = e.toString();
-      if (e is FormatException) {
-        errorMsg = "Invalid response format from server";
-      } else if (e is TypeError) {
-        errorMsg = "Data type error: please check server response";
-      }
-
-      Utils.errorSnackBar(msg: errorMsg, context: context);
+      Utils.errorSnackBar(msg: e.toString(), context: context);
       return null;
     }
     return null;
@@ -249,9 +191,8 @@ class ViewSyncRecordHelper {
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         isConnect = true;
       }
-    } on SocketException catch (_) {
-      isConnect = false;
-    }
+    } on SocketException catch (_) {}
+
     return isConnect;
   }
 }

@@ -863,16 +863,13 @@ class RegistrationFormBloc
       bankAddress: custBankAddController.text.trim(),
       bankIfscCode: custIfscCodeController.text.trim(),
       bankNameOfBank: custBankAccNumberController.text.trim(),
-      customerConsent:
-          customerConsent.path.isEmpty ? File("") : customerConsent,
+      customerConsent: customerConsent.path.isEmpty ? File("") : customerConsent,
       eBillingModel: preferredBillValue.key ?? "",
       residentStatus: residentStatusValue.key ?? "",
       doorNumber: doorNumberController.text.toString(),
       dob: dobController.text.toString(),
       floorNumber: floorNumberController.text.toString(),
-      premiseType:
-          AppConfig.instanceInit()!.client == Client.hpoil ||
-                  AppConfig.instanceInit()!.client == Client.hngpl
+      premiseType: AppConfig.instanceInit()!.client == Client.hpoil
               ? premiseTypeController.text.toString()
               : premiseTypeValue.key ?? "",
       wardNumber: wardNumberController.text.toString(),
@@ -1052,14 +1049,14 @@ class RegistrationFormBloc
         label: AppString.buildingNumber,
         value: buildingNumberController.text,
       ),
-      if (AppConfig.instanceInit()!.client == Client.purvaBharti) ...[
+      if (AppConfig.instanceInit()!.client == Client.purvaBharti||
+          AppConfig.instanceInit()!.client == Client.hngpl) ...[
         PopWidget.itemBuilder(
           textName: AppString.premiseType,
           textValue:
               premiseTypeValue.key == null ? "" : premiseTypeValue.value!,
         ),
-      ] else if (AppConfig.instanceInit()!.client == Client.hpoil ||
-          AppConfig.instanceInit()!.client == Client.hngpl) ...[
+      ] else if (AppConfig.instanceInit()!.client == Client.hpoil ) ...[
         _buildPopItem(
           isRequired: true,
           label: AppString.premiseType,
@@ -1556,7 +1553,7 @@ class RegistrationFormBloc
                 )
                 : GetPremiseTypeModel();
 
-        if (AppConfig.instanceInit()!.client == Client.purvaBharti) {
+        if (AppConfig.instanceInit()!.client == Client.purvaBharti|| AppConfig.instanceInit()!.client == Client.hngpl) {
           premiseTypeValue =
               localData.premiseType != null
                   ? listOfPremiseType.firstWhere(
@@ -1564,8 +1561,7 @@ class RegistrationFormBloc
                     orElse: () => GetPremiseTypeModel(),
                   )
                   : GetPremiseTypeModel();
-        } else if (AppConfig.instanceInit()!.client == Client.hpoil
-            || AppConfig.instanceInit()!.client == Client.hngpl) {
+        } else if (AppConfig.instanceInit()!.client == Client.hpoil) {
           premiseTypeController.text = localData.premiseType ?? "";
         }
         if (localData.chargeArea != null) {

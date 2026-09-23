@@ -20,37 +20,6 @@ class PopWidget{
     );
   }
 
-  // static Widget itemBuilder({String? star, String? textName, String? textValue}) {
-  //   return Column(
-  //     children: [
-  //       Padding(
-  //         padding: EdgeInsets.symmetric(horizontal: 8.0),
-  //         child: Row(
-  //           crossAxisAlignment: CrossAxisAlignment.center,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Flexible(child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //                 Flexible(child: Text(star??"",  style:Styles.stars)),
-  //                 Flexible(flex: 6,child: Text(textName  ?? "", style:Styles.labels),
-  //                 ),
-  //               ],
-  //             ),
-  //             ),
-  //             Flexible(child: Text(textValue ?? "-",style: Styles.label1,
-  //             )),
-  //           ],
-  //         ),
-  //       ),
-  //       divider(),
-  //
-  //     ],
-  //   );
-  // }
-
   static Widget itemBuilder({bool isRequired = false, String? textName, required String textValue}) {
     return Column(
       children: [
