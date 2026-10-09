@@ -9,10 +9,10 @@ class AppString{
     Client.hpoil: "12-03-2026",
     Client.vppl: "12-03-2026",
     Client.vrpl: "12-03-2026",
-    Client.hngpl: "23-09-2026",
+    Client.hngpl: "12-10-2026",
   };
 
-  static String get version => "Version : 1.0.0 - DMA-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
+  static String get date => "-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";
   static String companyName = "© Unistal Systems Pvt. Ltd.";
   static String appName = "DMA App";
   static String companyNameDesc = "Unistal Private Ltd.";

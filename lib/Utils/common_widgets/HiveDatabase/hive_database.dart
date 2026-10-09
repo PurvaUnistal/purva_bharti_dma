@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pbg_app/features/dashboard/domain/model/get_premise_type_model.dart';
@@ -89,5 +90,44 @@ class HiveDataBase {
     registrationFormBox = await Hive.openBox<SaveRegistrationFormModel>(HiveBoxName.registrationFormBox);
     premiseTypeBox = await Hive.openBox<GetPremiseTypeModel>(HiveBoxName.premiseTypeBox);
 
+  }
+
+  static List<Box?> get _allBoxes => [
+    acceptConversionPolicyBox,
+    acceptExtraFittingCostBox,
+    allAreaBox,
+    allDepositOfflineBox,
+    allDistrictBox,
+    chargeAreaListBox,
+    eBillingBox,
+    cookingFuelBox,
+    guardianTypeBox,
+    idProofBox,
+    initDepositStatusBox,
+    kycDocBox,
+    allLabelBox,
+    modeOfDepositBox,
+    notInterestedBox,
+    ownershipProofBox,
+    proCateBox,
+    proClassBox,
+    resStatusBox,
+    societyAllowBox,
+    premiseTypeBox,
+    getAllBanksBox,
+    registrationFormBox,
+  ];
+
+  /// Clears data from all boxes. Boxes stay open, so the next login works without calling init() again.
+  static Future<void> clearAllHiveData() async {
+    for (final box in _allBoxes) {
+      if (box == null || !box.isOpen) continue;
+      try {
+        await box.clear();
+      } catch (e) {
+        debugPrint("Hive clear failed for ${box.name}: $e");
+      }
+    }
+    debugPrint("Hive: all boxes cleared");
   }
 }

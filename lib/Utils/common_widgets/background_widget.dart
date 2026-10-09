@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_string.dart';
 import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 import 'package:pbg_app/Utils/common_widgets/res/styles_widget.dart';
@@ -37,7 +38,7 @@ class BackgroundWidget extends StatelessWidget {
                             style: Styles.rel,
                           )),
                       Text(
-                        AppString.version,
+                        "Version-${AppConfig.instanceInit()!.buildNumber}${AppString.date}",
                         textAlign: TextAlign.start,
                         style: Styles.rel,
                       ),

@@ -62,6 +62,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await SharedPref.setString(key: PrefsValue.userInfo, value: userJson);
           await AppConfig.instanceInit()?.setLoginData(newLoginData: loginModel);
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          String version = packageInfo.version;
+          String buildNumber = packageInfo.buildNumber;
+          AppConfig.instanceInit()?.setBuildNumber(value: "$buildNumber($version)");
           await SharedPref.setString(key: PrefsValue.buildNumber, value: packageInfo.buildNumber,);
           Navigator.pushReplacement(event.context, MaterialPageRoute(builder: (_) => DashboardPage()));
         } else {

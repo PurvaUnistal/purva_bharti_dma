@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbg_app/Utils/common_widgets/res/environment_config.dart';
 
+
 class InputDecorationStyle {
   static InputDecoration inputDecoration(
       BuildContext context, {
@@ -36,7 +37,6 @@ class InputDecorationStyle {
 
       suffixIcon: suffixIcon,
 
-      // ✅ Theme-aware label text
       label: Text.rich(
         TextSpan(
           children: [
@@ -44,8 +44,8 @@ class InputDecorationStyle {
               text: labelText ?? '',
               style: TextStyle(
                 color: textColor,
-                fontSize: fontSize ?? 14,
-                fontWeight:  fontWeight ?? FontWeight.w500,
+                fontSize: fontSize ?? 12,
+                fontWeight: fontWeight ?? FontWeight.w500,
               ),
             ),
             if (isRequired)
@@ -55,9 +55,11 @@ class InputDecorationStyle {
               ),
           ],
         ),
+        maxLines: 1,                       // ✅ never wrap
+        overflow: TextOverflow.ellipsis,   // ✅ show "..." if too long
+        softWrap: false,
       ),
 
-      // ✅ hint widget only — hintText removed to avoid assertion error
       hint: Text.rich(
         TextSpan(
           children: [
@@ -66,7 +68,7 @@ class InputDecorationStyle {
               style: TextStyle(
                 color: textColor,
                 fontSize: fontSize ?? 14,
-                fontWeight:  fontWeight ?? FontWeight.w500,
+                fontWeight: fontWeight ?? FontWeight.w500,
               ),
             ),
             if (isRequired)
@@ -76,6 +78,9 @@ class InputDecorationStyle {
               ),
           ],
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        softWrap: false,
       ),
 
       hintStyle: TextStyle(

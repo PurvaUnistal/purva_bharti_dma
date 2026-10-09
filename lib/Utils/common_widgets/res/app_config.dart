@@ -17,16 +17,16 @@ class AppConfig {
     return instance;
   }
 
-  String _buildName = "";
-  String get buildName => _buildName;
+  String buildNumber = "";
 
   static void init(BuildContext context) {
     baseUrl = EnvironmentConfig.of(context)!.generalUrlBaseFlavour;
     log("baseUrl --> $baseUrl");
   }
-  setBuildName({required String name}) {
-    _buildName = name;
+  setBuildNumber({required String value}) {
+    buildNumber = value;
   }
+
 
   setClient({required Client client}){
     this.client =  client;
@@ -49,5 +49,17 @@ class AppConfig {
     return isPortrait == true
         ? DeviceType.phone
         : DeviceType.tablet;
+  }
+
+  /// Logout pe call hota hai.
+  /// Saara user data reset ho jaata hai, lekin buildNumber aur client bache rehte hain,
+  /// kyunki ye app ke hain, user ke nahi.
+  /// NOTE: Agar client me user ka token/auth header set hota hai,
+  /// to `..client = old?.client` wali line hata do aur login ke baad naya client set karo.
+  static void reset() {
+    final old = instance;
+    instance = AppConfig()
+      ..buildNumber = old?.buildNumber ?? ""
+      ..client = old?.client;
   }
 }

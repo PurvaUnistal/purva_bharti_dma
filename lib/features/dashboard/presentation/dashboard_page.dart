@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
-import 'package:pbg_app/Utils/common_widgets/HiveDatabase/app_update_message_widget.dart';
+import 'package:pbg_app/Utils/common_widgets/app_update_message_widget.dart';
 import 'package:pbg_app/Utils/common_widgets/Loader/CircleLoader.dart';
 import 'package:pbg_app/Utils/common_widgets/background_widget.dart';
 import 'package:pbg_app/features/internet/bloc/internet_bloc.dart';
@@ -87,15 +87,9 @@ class _DashboardPageState extends State<DashboardPage> {
               title: "Dashboard",
               actions: [
                 IconButton(
-                    onPressed: () async {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (context) => const LogoutWidget());
-                    },
-                    icon: Icon(
-                      Icons.logout,
-                      color: AppColor.white,
-                    ))
+                  onPressed: () => LogoutWidget.show(context),
+                  icon: Icon(Icons.logout, color: AppColor.white),
+                ),
               ],
             ),
           ),

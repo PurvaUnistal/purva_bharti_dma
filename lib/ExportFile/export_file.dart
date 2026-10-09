@@ -63,7 +63,7 @@ export 'package:pbg_app/Utils/common_widgets/res/styles_widget.dart';
 export 'package:pbg_app/Utils/common_widgets/HiveDatabase/hive_database.dart';
 export 'package:pbg_app/Utils/common_widgets/InternetConnectivity/gps_setting_permission_pop_widget.dart';
 export 'package:pbg_app/Utils/common_widgets/InternetConnectivity/internet_connectivity_pop_widget.dart';
-export 'package:pbg_app/features/dashboard/presentation/widget/logout_widget.dart';
+export 'package:pbg_app/Utils/common_widgets/logout_widget.dart';
 export 'package:pbg_app/features/dashboard/presentation/widget/row_btn_widget.dart';
 /////////////////////////////////////////////////////////////////////////////
 export 'package:pbg_app/features/Login/domain/bloc/login_bloc.dart';

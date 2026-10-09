@@ -1382,23 +1382,64 @@ class RegistrationFormBloc
     }
   }
 
-  _selectDate(RegistrationFormSelectDateEvent event, emit) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: event.context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1880),
-      lastDate: DateTime(2780),
-    );
 
-    if (pickedDate != null) {
-      String formattedDateChange = DateFormat('yyyy-MM-dd').format(pickedDate);
-      dobController.text = formattedDateChange.toString();
-      _eventCompleted(emit);
-    } else {
-      if (kDebugMode) {
-        print("Date is not selected");
+  _selectDate(RegistrationFormSelectDateEvent event, emit) async {
+    if(AppConfig.instanceInit()!.client == Client.hngpl){
+      final DateTime now = DateTime.now();
+      // Latest allowed birth date: exactly 18 years ago today
+      final DateTime maxDob = DateTime(now.year - 18, now.month, now.day);
+
+      DateTime? pickedDate = await showDatePicker(
+        context: event.context,
+        initialDate: maxDob,          // must be <= lastDate
+        firstDate: DateTime(1900),
+        lastDate: maxDob,             // blocks dates under 18 years
+        helpText: 'Select Date of Birth',
+      );
+
+      if (pickedDate != null) {
+        if (_calculateAge(pickedDate) < 18) {
+          ScaffoldMessenger.of(event.context).showSnackBar(
+            const SnackBar(content: Text('You must be at least 18 years old')),
+          );
+          return;
+        }
+
+        dobController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+        _eventCompleted(emit);
+      } else {
+        if (kDebugMode) {
+          print("Date is not selected");
+        }
       }
+    }else{
+        DateTime? pickedDate = await showDatePicker(
+          context: event.context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1880),
+          lastDate: DateTime(2780),
+        );
+
+        if (pickedDate != null) {
+          String formattedDateChange = DateFormat('yyyy-MM-dd').format(pickedDate);
+          dobController.text = formattedDateChange.toString();
+          _eventCompleted(emit);
+        } else {
+          if (kDebugMode) {
+            print("Date is not selected");
+          }
+        }
     }
+  }
+
+  int _calculateAge(DateTime birthDate) {
+    final DateTime today = DateTime.now();
+    int age = today.year - birthDate.year;
+    if (today.month < birthDate.month ||
+        (today.month == birthDate.month && today.day < birthDate.day)) {
+      age--;
+    }
+    return age;
   }
 
   _premiseType(RegistrationFormSetPremiseTypeValue event, emit) {
