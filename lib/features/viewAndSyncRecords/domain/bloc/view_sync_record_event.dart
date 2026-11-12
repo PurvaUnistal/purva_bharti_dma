@@ -12,8 +12,6 @@ class ViewSyncRecordLoadPageEvent extends ViewSyncRecordEvent {
   List<Object?> get props => [context];
 }
 
-
-
 class DeleteLocalDataEvent extends ViewSyncRecordEvent {
   final int index;
   final BuildContext context;
@@ -37,9 +35,7 @@ class SyncRecordListServerDataEvent extends ViewSyncRecordEvent {
   });
 
   @override
-  List<Object?> get props => [
-        context,
-      ];
+  List<Object?> get props => [context];
 }
 
 class SyncRecordSingleServerDataEvent extends ViewSyncRecordEvent {
@@ -53,4 +49,14 @@ class SyncRecordSingleServerDataEvent extends ViewSyncRecordEvent {
 
   @override
   List<Object?> get props => [context, index];
+}
+
+/// Fired internally by ViewSyncRecordBloc when the Hive box changes or the
+/// background sync starts/stops, so the list and loader update by themselves.
+/// Needs no context: it only reloads data that is already in Hive.
+class ViewSyncRecordRefreshEvent extends ViewSyncRecordEvent {
+  ViewSyncRecordRefreshEvent();
+
+  @override
+  List<Object?> get props => [];
 }

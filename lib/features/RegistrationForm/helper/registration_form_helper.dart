@@ -1,7 +1,6 @@
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
-import 'package:uuid/uuid.dart';
 
 class RegistrationFormHelper {
   static Future<dynamic> textFieldValidationCheck({
@@ -96,7 +95,7 @@ class RegistrationFormHelper {
         return null;
       } else if (mobileNumber.isEmpty) {
         Utils.errorSnackBar(
-          msg: "THe Mobile Number field is required.",
+          msg: "The Mobile Number field is required.",
           context: context,
         );
         return null;
@@ -301,7 +300,7 @@ class RegistrationFormHelper {
               context: context,
             );
             return null;
-          } else if (chqBank.isEmpty || chqBank == "") {
+          } else if (chqBank.isEmpty) {
             Utils.errorSnackBar(
               msg: "The Cheque Bank Name field is required.",
               context: context,
@@ -415,9 +414,30 @@ class RegistrationFormHelper {
     }
   }
 
-  static Future<void> addCustRegSyncLocalDB({
+  /// Finds the Hive key of a queued record by its clientRequestId.
+  /// Keys stay stable when other records are deleted; indexes do not.
+  static dynamic findLocalKey(String? clientRequestId) {
+    if (clientRequestId == null || clientRequestId.isEmpty) return null;
+    final box = HiveDataBase.registrationFormBox;
+    if (box == null) return null;
+    for (final key in box.keys) {
+      if (box.get(key)?.clientRequestId == clientRequestId) return key;
+    }
+    return null;
+  }
+
+  /// Removes a queued record (used after an edited record is sent online).
+  static Future<void> deleteLocalRecord(String? clientRequestId) async {
+    final key = findLocalKey(clientRequestId);
+    if (key != null) {
+      await HiveDataBase.registrationFormBox?.delete(key);
+    }
+  }
+
+  /// Saves a record to Hive for later sync. Returns true when it was stored.
+  static Future<bool> addCustRegSyncLocalDB({
     required bool isUpdate,
-    required int index,
+    required int index, // kept so existing calls compile; no longer used
     required BuildContext context,
     required SaveRegistrationFormModel custRegSyncStore,
   }) async {
@@ -428,11 +448,13 @@ class RegistrationFormHelper {
           msg: "Local database not available",
           context: context,
         );
-        return;
+        return false;
       }
+
       SaveRegistrationFormModel entry = SaveRegistrationFormModel(
-        clientRequestId:
-        isUpdate ? (custRegSyncStore.clientRequestId ?? DateTime.now().microsecondsSinceEpoch.toString())
+        clientRequestId: isUpdate
+            ? (custRegSyncStore.clientRequestId ??
+            DateTime.now().microsecondsSinceEpoch.toString())
             : DateTime.now().microsecondsSinceEpoch.toString(),
         dmaUserName: custRegSyncStore.dmaUserName ?? "",
         dmaUserId: custRegSyncStore.dmaUserId ?? "",
@@ -513,30 +535,46 @@ class RegistrationFormHelper {
         dob: custRegSyncStore.dob,
         doorNumber: custRegSyncStore.doorNumber,
       );
-      if (isUpdate) {
-        await hiveBox.putAt(index, entry);
+
+      // Editing a record that is still queued: overwrite it by key.
+      final existingKey =
+      isUpdate ? findLocalKey(custRegSyncStore.clientRequestId) : null;
+
+      if (existingKey != null) {
+        await hiveBox.put(existingKey, entry);
         Utils.successSnackBar(
-          msg: 'Record Updated Successfully',
+          msg: "No internet. Record updated offline and will sync automatically.",
           context: context,
         );
-      } else {
-        if (hiveBox.length < 15) {
-          log("custRegSyncAdd${entry}");
-          await hiveBox.add(entry);
-          Utils.successSnackBar(
-            msg: "Data Saved Successfully",
-            context: context,
-          );
-        } else {
-          Utils.errorSnackBar(
-            msg: 'Please upload previous records before adding more.',
-            context: context,
-          );
-        }
+        return true;
       }
+
+      // New record (or the edited one was already synced meanwhile).
+      if (hiveBox.length >= 15) {
+        Utils.errorSnackBar(
+          msg: 'Please upload previous records before adding more.',
+          context: context,
+        );
+        return false;
+      }
+
+      log("custRegSyncAdd$entry");
+      await hiveBox.add(entry);
+      Utils.successSnackBar(
+        msg: "No internet. Data saved offline and will sync automatically.",
+        context: context,
+      );
+      return true;
     } catch (e) {
       Utils.errorSnackBar(msg: e.toString(), context: context);
       log("addCustRegSyncLocalDB Error: ${e.toString()}");
+      return false;
     }
+  }
+
+  static String maskAadhaar(String input) {
+    final digits = input.replaceAll(RegExp(r'\D'), '');
+    if (digits.length <= 4) return digits;
+    return '**** **** ${digits.substring(digits.length - 4)}';
   }
 }

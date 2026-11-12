@@ -45,72 +45,72 @@ android {
                     appIcon: "@mipmap/pbg_logo",
                     appIconRound: "@mipmap/pbg_logo"
             ]
-            def keystorePropertiesFile = rootProject.file('key.properties')
+            def keystorePropertiesFile = rootProject.file('pbg-dma.properties')
             if (keystorePropertiesFile.exists()) {
                 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
             }
-            versionCode 1
-            versionName "1.0.0-PBGPL"
+            versionCode 38
+            versionName "1.0.10-PBGPL"
         }
-        prodMGL {
-            dimension "app"
-            applicationIdSuffix ".unistal.mgl.dma"
-            resValue "string", "app_name", "MGL DMA"
-            manifestPlaceholders = [
-                    appIcon: "@mipmap/mgl_logo",
-                    appIconRound: "@mipmap/mgl_logo"
-            ]
-            def keystorePropertiesFile = rootProject.file('mgl_key.properties')
-            if (keystorePropertiesFile.exists()) {
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-            }
-            versionCode 1
-            versionName "1.0.0-MGL"
-        }
-        prodHPOIL {
-            dimension "app"
-            applicationIdSuffix ".unistal.hpoil.dma"
-            resValue "string", "app_name", "HPOIL DMA"
-            manifestPlaceholders = [
-                    appIcon: "@mipmap/hp_oil_logo",
-                    appIconRound: "@mipmap/hp_oil_logo"
-            ]
-            def keystorePropertiesFile = rootProject.file('hpoil.properties')
-            if (keystorePropertiesFile.exists()) {
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-            }
-            versionCode 2
-            versionName "1.0.0-HPOIL"
-        }
-        prodVPPL {
-            dimension "app"
-            applicationIdSuffix ".unistal.vppl.dma"
-            resValue "string", "app_name", "VPPL DMA"
-            manifestPlaceholders = [
-                    appIcon: "@mipmap/mgl_logo",
-                    appIconRound: "@mipmap/mgl_logo"
-            ]
-            versionCode 1
-            versionName "1.0.0-VPPL"
-        }
-        prodVRPL {
-            dimension "app"
-            applicationIdSuffix ".unistal.vrpl.dma"
-            resValue "string", "app_name", "VRPL DMA"
-            manifestPlaceholders = [
-                    appIcon: "@mipmap/mgl_logo",
-                    appIconRound: "@mipmap/mgl_logo"
-            ]
-            versionCode 1
-            versionName "1.0.0-VRPL"
-        }
+//        prodMGL {
+//            dimension "app"
+//            applicationIdSuffix ".unistal.mgl.dma"
+//            resValue "string", "app_name", "MGL DMA"
+//            manifestPlaceholders = [
+//                    appIcon: "@mipmap/mgl_logo",
+//                    appIconRound: "@mipmap/mgl_logo"
+//            ]
+//            def keystorePropertiesFile = rootProject.file('mgl_key.properties')
+//            if (keystorePropertiesFile.exists()) {
+//                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+//            }
+//            versionCode 1
+//            versionName "1.0.0-MGL"
+//        }
+//        prodHPOIL {
+//            dimension "app"
+//            applicationIdSuffix ".unistal.hpoil.dma"
+//            resValue "string", "app_name", "HPOIL DMA"
+//            manifestPlaceholders = [
+//                    appIcon: "@mipmap/hp_oil_logo",
+//                    appIconRound: "@mipmap/hp_oil_logo"
+//            ]
+//            def keystorePropertiesFile = rootProject.file('hpoil.properties')
+//            if (keystorePropertiesFile.exists()) {
+//                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+//            }
+//            versionCode 2
+//            versionName "1.0.0-HPOIL"
+//        }
+//        prodVPPL {
+//            dimension "app"
+//            applicationIdSuffix ".unistal.vppl.dma"
+//            resValue "string", "app_name", "VPPL DMA"
+//            manifestPlaceholders = [
+//                    appIcon: "@mipmap/mgl_logo",
+//                    appIconRound: "@mipmap/mgl_logo"
+//            ]
+//            versionCode 1
+//            versionName "1.0.0-VPPL"
+//        }
+//        prodVRPL {
+//            dimension "app"
+//            applicationIdSuffix ".unistal.vrpl.dma"
+//            resValue "string", "app_name", "VRPL DMA"
+//            manifestPlaceholders = [
+//                    appIcon: "@mipmap/mgl_logo",
+//                    appIconRound: "@mipmap/mgl_logo"
+//            ]
+//            versionCode 1
+//            versionName "1.0.0-VRPL"
+//        }
         prodHNGPL {
             dimension "app"
             applicationIdSuffix ".unistal.hngpl.dma"
             resValue "string", "app_name", "HNGPL DMA"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/unistal_logo",
-                    appIconRound: "@mipmap/unistal_logo"
+                    appIcon: "@mipmap/hngpl_logo",
+                    appIconRound: "@mipmap/hngpl_logo"
             ]
             def keystorePropertiesFile = rootProject.file('hngpl.properties')
             if (keystorePropertiesFile.exists()) {

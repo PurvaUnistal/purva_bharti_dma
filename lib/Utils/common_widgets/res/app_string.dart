@@ -5,11 +5,11 @@ class AppString{
 
   static const Map<Client, String> _releaseDates = {
     Client.mahaNagar: "12-03-2026",
-    Client.purvaBharti: "24-08-2026",
+    Client.purvaBharti: "12-10-2026",
     Client.hpoil: "12-03-2026",
     Client.vppl: "12-03-2026",
     Client.vrpl: "12-03-2026",
-    Client.hngpl: "12-10-2026",
+    Client.hngpl: "12-11-2026",
   };
 
   static String get date => "-${_releaseDates[AppConfig.instanceInit()!.client] ?? ""}";

@@ -111,12 +111,16 @@ class RegistrationFormSetExistingCookingFuelValue extends RegistrationFormEvent 
 }
 
 class RegistrationFormSetKycDoc1Value extends RegistrationFormEvent {
-  final dynamic kycDoc1Value;
-  RegistrationFormSetKycDoc1Value({required this.kycDoc1Value});
+  final GetIdentityProofModel identityProofValue;
+  RegistrationFormSetKycDoc1Value({required this.identityProofValue});
   @override
-  List<Object?> get props => [kycDoc1Value];
+  List<Object?> get props => [identityProofValue];
 }
-
+class RegistrationFormIsAadhaarEvent extends RegistrationFormEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
 class RegistrationFormSetKycDoc2Value extends RegistrationFormEvent {
   final dynamic kycDoc2Value;
   RegistrationFormSetKycDoc2Value({required this.kycDoc2Value});
@@ -188,83 +192,118 @@ class RegistrationFormSetChequeDateEvent extends RegistrationFormEvent {
 }
 
 class SelectIdFrontGalleryCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectIdFrontGalleryCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectIdFrontCameraCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectIdFrontCameraCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectIdBackGalleryCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectIdBackGalleryCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectIdBackCameraCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectIdBackCameraCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
+
 class SelectAddFrontGalleryCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectAddFrontGalleryCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectAddFrontCameraCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectAddFrontCameraCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 
 class SelectAddBackGalleryCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectAddBackGalleryCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectAddBackCameraCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectAddBackCameraCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectNocDocBackGalleryCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectNocDocBackGalleryCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectNocDocCameraCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectNocDocCameraCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
+
 class SelectCustomerGalleryCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectCustomerGalleryCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectCustomerCameraCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectCustomerCameraCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectHouseGalleryCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectHouseGalleryCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectHouseCameraCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectHouseCameraCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectChqGalleryCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectChqGalleryCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
 
 class SelectChqCameraCapture extends RegistrationFormEvent {
+  final BuildContext context;
+  SelectChqCameraCapture({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
 }
+
 class RegistrationFormPreviewPageEvent extends RegistrationFormEvent {
   final BuildContext context;
   RegistrationFormPreviewPageEvent({required this.context});

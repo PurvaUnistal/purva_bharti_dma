@@ -601,29 +601,29 @@ class DashboardHelper {
     return null;
   }
 
-  static Future<File?> cameraCapture() async {
-    await Permission.camera.request();
-    final XFile? file = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-      imageQuality: 50,
-      maxHeight: 900,
-      maxWidth: 1000,
-    );
-    File files = File(file!.path);
-    return files;
-  }
-
-  static Future<File?> galleryCapture() async {
-    await Permission.storage.request();
-    final XFile? file = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 50,
-      maxHeight: 900,
-      maxWidth: 1000,
-    );
-    File files = File(file!.path);
-    return files;
-  }
+  // static Future<File?> cameraCapture() async {
+  //   await Permission.camera.request();
+  //   final XFile? file = await ImagePicker().pickImage(
+  //     source: ImageSource.camera,
+  //     imageQuality: 50,
+  //     maxHeight: 900,
+  //     maxWidth: 1000,
+  //   );
+  //   File files = File(file!.path);
+  //   return files;
+  // }
+  //
+  // static Future<File?> galleryCapture() async {
+  //   await Permission.storage.request();
+  //   final XFile? file = await ImagePicker().pickImage(
+  //     source: ImageSource.gallery,
+  //     imageQuality: 50,
+  //     maxHeight: 900,
+  //     maxWidth: 1000,
+  //   );
+  //   File files = File(file!.path);
+  //   return files;
+  // }
 
   static Future<Position?> getCurrentLocation() async {
     await Geolocator.requestPermission();

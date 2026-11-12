@@ -159,7 +159,7 @@ class SaveRegistrationFormModel extends HiveObject implements Equatable {
   @HiveField(76)
   final String? premiseType;
   @HiveField(77)
-  final String? clientRequestId;
+  String? clientRequestId;
   bool isSingleServerLoader = false;
 
   SaveRegistrationFormModel({

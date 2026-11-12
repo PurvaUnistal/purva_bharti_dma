@@ -28,6 +28,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final bool isPageLoader;
   final bool isLocationLoader;
   final bool isUpdate;
+  final bool isAadhaar;
   final GetLabelModel labelModel;
   final GetNotInterestedModel registrationTypeValue;
   final List<GetNotInterestedModel> getNotInterestedList;
@@ -107,6 +108,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
   final TextEditingController familyMemberController;
   final TextEditingController nearestLandmarkController;
   final TextEditingController kyc1NumberController;
+  final TextEditingController kyc1MaskedController;
   final TextEditingController kyc2NumberController;
   final TextEditingController kyc3NumberController;
   final TextEditingController custBankAccNumberController;
@@ -144,6 +146,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     required this.isPageLoader,
     required this.isLocationLoader,
     required this.isUpdate,
+    required this.isAadhaar,
     required this.labelModel,
     required this.registrationTypeValue,
     required this.getNotInterestedList,
@@ -221,6 +224,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     required this.familyMemberController,
     required this.nearestLandmarkController,
     required this.kyc1NumberController,
+    required this.kyc1MaskedController,
     required this.kyc2NumberController,
     required this.kyc3NumberController,
     required this.custBankAccNumberController,
@@ -263,6 +267,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     isPageLoader,
     isLocationLoader,
     isUpdate,
+    isAadhaar,
     labelModel,
     registrationTypeValue,
     getNotInterestedList,
@@ -278,6 +283,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     propertyCategoryValue,
     propertyClassValue,
     premiseTypeValue,
+    identityProofValue,
     getAcceptExtraFittingCostModel,
     getAcceptConversionPolicyModel,
     areaValue,
@@ -334,6 +340,7 @@ class RegistrationFormGetAllDataState extends RegistrationFormState {
     familyMemberController,
     nearestLandmarkController,
     kyc1NumberController,
+    kyc1MaskedController,
     kyc2NumberController,
     kyc3NumberController,
     kycDoc3Value,

@@ -1,8 +1,13 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/Image/media_picker_helper.dart';
+import 'package:pbg_app/Utils/common_widgets/Image/photo_upload_widget.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_navigator.dart';
 import 'package:pbg_app/Utils/common_widgets/res/enums.dart';
+import 'package:pbg_app/features/RegistrationForm/helper/registration_sync_service.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/DepositOfflinePop.dart';
 import 'package:pbg_app/features/RegistrationForm/presentation/widgets/pop_widget.dart';
 import 'package:pbg_app/features/dashboard/domain/model/get_premise_type_model.dart';
@@ -23,18 +28,14 @@ class RegistrationFormBloc
     on<RegistrationFormSetDistrictValue>(_setDistrictValue);
     on<RegistrationFormSetLocation>(_btnLocation);
     on<RegistrationFormSetResidentStatusValue>(_setResidentStatusValue);
-    on<RegistrationFormSetExistingCookingFuelValue>(
-      _setExistingCookingFuelValue,
-    );
+    on<RegistrationFormSetExistingCookingFuelValue>(_setExistingCookingFuelValue);
     on<RegistrationFormSetKycDoc1Value>(_setKycDoc1Value);
     on<RegistrationFormSetKycDoc2Value>(_setKycDoc2Value);
     on<RegistrationFormSetKycDoc3Value>(_setKycDoc3Value);
     on<RegistrationFormSetPreferredBillValue>(_setPreferredBillValue);
     on<RegistrationFormSetCustBankNameValue>(_setCustBankNameValue);
     on<RegistrationFormSetPaymentBankNameValue>(_setPaymentBankNameValue);
-    on<RegistrationFormSetInitialDepositStatusValue>(
-      _setInitialDepositStatusValue,
-    );
+    on<RegistrationFormSetInitialDepositStatusValue>(_setInitialDepositStatusValue);
     on<RegistrationFormSchemeTypeValue>(_setSchemeTypeValue);
     on<RegistrationFormSetModeDepositValue>(_setModeDepositValue);
     on<RegistrationFormSetChequeDateEvent>(_setChequeDate);
@@ -60,6 +61,7 @@ class RegistrationFormBloc
     on<UpdateLocalDataEvent>(_updateLocalDataEvent);
     on<RegistrationFormSelectDateEvent>(_selectDate);
     on<RegistrationFormSetPremiseTypeValue>(_premiseType);
+    on<RegistrationFormIsAadhaarEvent>(_isAadhaar);
     // on<UpdateLocalDataEvent>(_updateLocalData);
   }
 
@@ -69,6 +71,12 @@ class RegistrationFormBloc
   bool isPreviewLoader = false;
   bool isSaveLoader = false;
   bool isLocationLoader = false;
+
+  /// true  -> Aadhaar number is masked (**** **** 1234)
+  /// false -> Aadhaar number is visible and editable
+  bool isAadhaar = false;
+
+  String? editingClientRequestId;
 
   SaveRegistrationFormModel localData = SaveRegistrationFormModel();
 
@@ -80,43 +88,43 @@ class RegistrationFormBloc
   GetAllDepositOfflineModel schemeTypeValue = GetAllDepositOfflineModel();
   GetNotInterestedModel registrationTypeValue = GetNotInterestedModel();
   GetAcceptConversionPolicyModel conversionPolicyValue =
-      GetAcceptConversionPolicyModel();
+  GetAcceptConversionPolicyModel();
   GetAcceptExtraFittingCostModel extraFittingValue =
-      GetAcceptExtraFittingCostModel();
+  GetAcceptExtraFittingCostModel();
   GetSocietyAllowModel societyAllowValue = GetSocietyAllowModel();
   GetGuardianTypeModel guardianTypeValue = GetGuardianTypeModel();
   GetResidentStatusModel residentStatusValue = GetResidentStatusModel();
   GetExistingCookingFuelModel existingCookingFuelValue =
-      GetExistingCookingFuelModel();
-  GetIdentityProofModel kycDoc1Value = GetIdentityProofModel();
+  GetExistingCookingFuelModel();
+  GetIdentityProofModel identityProofValue = GetIdentityProofModel();
   GetOwnershipProofModel kycDoc2Value = GetOwnershipProofModel();
   GetKycDocModel kycDoc3Value = GetKycDocModel();
   GetEBillingModel preferredBillValue = GetEBillingModel();
   String custBankNameValue = "";
   String paymentBankNameValue = "";
   GetInitialDepositStatusModel initialDepositStatusValue =
-      GetInitialDepositStatusModel();
+  GetInitialDepositStatusModel();
   GetModeOfDepositModel modeDepositValue = GetModeOfDepositModel();
 
   GetLabelModel getLabelModel = GetLabelModel();
   GetNotInterestedModel getNotInterestedModel = GetNotInterestedModel();
   GetInitialDepositStatusModel getInitialDepositStatusModel =
-      GetInitialDepositStatusModel();
+  GetInitialDepositStatusModel();
   GetAcceptExtraFittingCostModel getAcceptExtraFittingCostModel =
-      GetAcceptExtraFittingCostModel();
+  GetAcceptExtraFittingCostModel();
   GetAcceptConversionPolicyModel getAcceptConversionPolicyModel =
-      GetAcceptConversionPolicyModel();
+  GetAcceptConversionPolicyModel();
   GetResidentStatusModel getResidentStatusModel = GetResidentStatusModel();
   GetModeOfDepositModel getModeOfDepositModel = GetModeOfDepositModel();
   GetEBillingModel getEBillingModel = GetEBillingModel();
   GetAllDepositOfflineModel getAllDepositOfflineModel =
-      GetAllDepositOfflineModel();
+  GetAllDepositOfflineModel();
   GetKycDocModel getKycDocModel = GetKycDocModel();
   GetOwnershipProofModel getOwnershipProofModel = GetOwnershipProofModel();
   GetIdentityProofModel getIdentityProofModel = GetIdentityProofModel();
   GetGuardianTypeModel getGuardianTypeModel = GetGuardianTypeModel();
   GetExistingCookingFuelModel getExistingCookingFuelModel =
-      GetExistingCookingFuelModel();
+  GetExistingCookingFuelModel();
   GetSocietyAllowModel getSocietyAllowModel = GetSocietyAllowModel();
   BankNameListModel bankNameListModel = BankNameListModel();
   GetPremiseTypeModel premiseTypeValue = GetPremiseTypeModel();
@@ -144,8 +152,6 @@ class RegistrationFormBloc
   List<String> listOfCustBankName = [];
   List<String> paymentBankNameList = [];
   List<GetPremiseTypeModel> listOfPremiseType = [];
-
-  /* SaveRegistrationFormModel saveCusRegData = SaveRegistrationFormModel();*/
 
   File customerConsent = File("");
   File canceledCheque = File("");
@@ -197,7 +203,13 @@ class RegistrationFormBloc
     text: "4",
   );
   TextEditingController nearestLandmarkController = TextEditingController();
+
+  /// Real ID proof number (always send THIS to the API / Hive).
   TextEditingController kyc1NumberController = TextEditingController();
+
+  /// Display-only controller holding "**** **** 1234".
+  TextEditingController kyc1MaskedController = TextEditingController();
+
   TextEditingController kyc2NumberController = TextEditingController();
   TextEditingController kyc3NumberController = TextEditingController();
   TextEditingController custBankAccNumberController = TextEditingController();
@@ -211,6 +223,24 @@ class RegistrationFormBloc
   TextEditingController chequeMicrNoController = TextEditingController();
   TextEditingController latController = TextEditingController();
   TextEditingController longController = TextEditingController();
+
+  // ---------------------------------------------------------------------------
+  // Aadhaar masking helpers
+  // ---------------------------------------------------------------------------
+
+  /// True when the selected ID proof is Aadhaar.
+  /// Handles both "Aadhar" and "Aadhaar" spellings and any casing.
+  bool get isAadhaarSelected {
+    final value = (identityProofValue.value ?? "").toLowerCase().trim();
+    return value.startsWith("aadha");
+  }
+
+  /// "123412341234" -> "**** **** 1234"
+  static String maskAadhaar(String input) {
+    final digits = input.replaceAll(RegExp(r'\D'), '');
+    if (digits.length <= 4) return digits;
+    return '**** **** ${digits.substring(digits.length - 4)}';
+  }
 
   _pageLoad(RegistrationFormPageLoadEvent event, emit) async {
     emit(RegistrationFormInitialState());
@@ -231,6 +261,10 @@ class RegistrationFormBloc
     isPreviewLoader = false;
     isSaveLoader = false;
     isLocationLoader = false;
+    // Start visible so the user can type; they tap the eye icon to mask.
+    isAadhaar = false;
+    editingClientRequestId = null;
+    RegistrationSyncService.instance.pausedRequestId = null;
 
     schemeMonth = "";
     equipmentAmt = "";
@@ -250,7 +284,7 @@ class RegistrationFormBloc
     guardianTypeValue = GetGuardianTypeModel();
     residentStatusValue = GetResidentStatusModel();
     existingCookingFuelValue = GetExistingCookingFuelModel();
-    kycDoc1Value = GetIdentityProofModel();
+    identityProofValue = GetIdentityProofModel();
     kycDoc2Value = GetOwnershipProofModel();
     kycDoc3Value = GetKycDocModel();
     preferredBillValue = GetEBillingModel();
@@ -310,6 +344,7 @@ class RegistrationFormBloc
     familyMemberController.text = "4";
     nearestLandmarkController.text = "";
     kyc1NumberController.text = "";
+    kyc1MaskedController.text = "";
     kyc2NumberController.text = "";
     kyc3NumberController.text = "";
     custBankAccNumberController.text = "";
@@ -412,7 +447,7 @@ class RegistrationFormBloc
       existingCookingFuelValue = listOfCookingFuel.first;
     }
     if (listOfIdentityProof.isNotEmpty) {
-      kycDoc1Value = listOfIdentityProof.first;
+      identityProofValue = listOfIdentityProof.first;
     }
     if (listOfOwnershipProof.isNotEmpty) {
       kycDoc2Value = listOfOwnershipProof.first;
@@ -424,14 +459,13 @@ class RegistrationFormBloc
       preferredBillValue = listOfEBilling.first;
     }
     if (propertyCategoryValue.id != null) {
-      listOfDepositOffline =
-          HiveDataBase.allDepositOfflineBox?.values
-              .where(
-                (element) =>
-                    element.propertyCategoryId == propertyCategoryValue.id,
-              )
-              .toSet()
-              .toList() ??
+      listOfDepositOffline = HiveDataBase.allDepositOfflineBox?.values
+          .where(
+            (element) =>
+        element.propertyCategoryId == propertyCategoryValue.id,
+      )
+          .toSet()
+          .toList() ??
           [];
     }
   }
@@ -442,9 +476,9 @@ class RegistrationFormBloc
   }
 
   _setConversionPolicyValue(
-    RegistrationFormSetConversionPolicyValue event,
-    emit,
-  ) {
+      RegistrationFormSetConversionPolicyValue event,
+      emit,
+      ) {
     conversionPolicyValue = event.conversionPolicyValue;
     _eventCompleted(emit);
   }
@@ -466,10 +500,9 @@ class RegistrationFormBloc
     if (chargeAreaValue.gid != null) {
       List<GetAllAreaModel> dataList =
           HiveDataBase.allAreaBox?.values.toSet().toList() ?? [];
-      listOfAllArea =
-          dataList
-              .where((element) => chargeAreaValue.gid == element.chargeAreaId)
-              .toList();
+      listOfAllArea = dataList
+          .where((element) => chargeAreaValue.gid == element.chargeAreaId)
+          .toList();
     }
     _eventCompleted(emit);
   }
@@ -485,9 +518,9 @@ class RegistrationFormBloc
   }
 
   _setPropertyCategoryValue(
-    RegistrationFormSetPropertyCategoryValue event,
-    emit,
-  ) {
+      RegistrationFormSetPropertyCategoryValue event,
+      emit,
+      ) {
     propertyCategoryValue = event.propertyCategoryValue;
     listOfDepositOffline = [];
     schemeTypeValue = GetAllDepositOfflineModel();
@@ -495,13 +528,11 @@ class RegistrationFormBloc
     if (propertyCategoryValue.id != null) {
       List<GetAllDepositOfflineModel> dataList =
           HiveDataBase.allDepositOfflineBox?.values.toSet().toList() ?? [];
-      listOfDepositOffline =
-          dataList
-              .where(
-                (element) =>
-                    propertyCategoryValue.id == element.propertyCategoryId,
-              )
-              .toList();
+      listOfDepositOffline = dataList
+          .where(
+            (element) => propertyCategoryValue.id == element.propertyCategoryId,
+      )
+          .toList();
     }
     _eventCompleted(emit);
   }
@@ -522,15 +553,26 @@ class RegistrationFormBloc
   }
 
   _setExistingCookingFuelValue(
-    RegistrationFormSetExistingCookingFuelValue event,
-    emit,
-  ) {
+      RegistrationFormSetExistingCookingFuelValue event,
+      emit,
+      ) {
     existingCookingFuelValue = event.existingCookingFuelValue;
     _eventCompleted(emit);
   }
 
   _setKycDoc1Value(RegistrationFormSetKycDoc1Value event, emit) {
-    kycDoc1Value = event.kycDoc1Value;
+    final previousKey = identityProofValue.key;
+    identityProofValue = event.identityProofValue;
+
+    // ID proof type changed: the old number belongs to a different document,
+    // so clear it and show the field unmasked for fresh input.
+    if (previousKey != identityProofValue.key) {
+      kyc1NumberController.clear();
+      kyc1MaskedController.clear();
+      isAadhaar = false;
+    }
+
+    log("identityProofValue-- ${identityProofValue.value}");
     _eventCompleted(emit);
   }
 
@@ -555,17 +597,17 @@ class RegistrationFormBloc
   }
 
   _setPaymentBankNameValue(
-    RegistrationFormSetPaymentBankNameValue event,
-    emit,
-  ) {
+      RegistrationFormSetPaymentBankNameValue event,
+      emit,
+      ) {
     paymentBankNameValue = event.paymentBankNameValue;
     _eventCompleted(emit);
   }
 
   _setInitialDepositStatusValue(
-    RegistrationFormSetInitialDepositStatusValue event,
-    emit,
-  ) {
+      RegistrationFormSetInitialDepositStatusValue event,
+      emit,
+      ) {
     initialDepositStatusValue = event.initialDepositStatusValue;
     _eventCompleted(emit);
   }
@@ -589,9 +631,8 @@ class RegistrationFormBloc
     } else if (schemeTypeValue.depositTypesId != null) {
       return showDialog(
         context: event.context,
-        builder:
-            (BuildContext context) =>
-                DepositPop(schemeTypeValue: schemeTypeValue),
+        builder: (BuildContext context) =>
+            DepositPop(schemeTypeValue: schemeTypeValue),
       );
     }
   }
@@ -602,7 +643,8 @@ class RegistrationFormBloc
   }
 
   _selectIdFrontCameraCapture(SelectIdFrontCameraCapture event, emit) async {
-    var photoPath = await DashboardHelper.cameraCapture();
+    var photoPath =
+    await MediaPickerHelper.cameraCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       idFrontPath = photoPath;
@@ -611,7 +653,8 @@ class RegistrationFormBloc
   }
 
   _selectIdFrontGalleryCapture(SelectIdFrontGalleryCapture event, emit) async {
-    var photoPath = await DashboardHelper.galleryCapture();
+    var photoPath =
+    await MediaPickerHelper.galleryCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       idFrontPath = photoPath;
@@ -620,7 +663,8 @@ class RegistrationFormBloc
   }
 
   _selectIdBackCameraCapture(SelectIdBackCameraCapture event, emit) async {
-    var photoPath = await DashboardHelper.cameraCapture();
+    var photoPath =
+    await MediaPickerHelper.cameraCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       idBackPath = photoPath;
@@ -629,7 +673,8 @@ class RegistrationFormBloc
   }
 
   _selectIdBackGalleryCapture(SelectIdBackGalleryCapture event, emit) async {
-    var photoPath = await DashboardHelper.galleryCapture();
+    var photoPath =
+    await MediaPickerHelper.galleryCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       idBackPath = photoPath;
@@ -638,7 +683,8 @@ class RegistrationFormBloc
   }
 
   _selectAddFrontCameraCapture(SelectAddFrontCameraCapture event, emit) async {
-    var photoPath = await DashboardHelper.cameraCapture();
+    var photoPath =
+    await MediaPickerHelper.cameraCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       addFrontPath = photoPath;
@@ -647,10 +693,11 @@ class RegistrationFormBloc
   }
 
   _selectAddFrontGalleryCapture(
-    SelectAddFrontGalleryCapture event,
-    emit,
-  ) async {
-    var photoPath = await DashboardHelper.galleryCapture();
+      SelectAddFrontGalleryCapture event,
+      emit,
+      ) async {
+    var photoPath =
+    await MediaPickerHelper.galleryCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       addFrontPath = photoPath;
@@ -659,7 +706,8 @@ class RegistrationFormBloc
   }
 
   _selectAddBackCameraCapture(SelectAddBackCameraCapture event, emit) async {
-    var photoPath = await DashboardHelper.cameraCapture();
+    var photoPath =
+    await MediaPickerHelper.cameraCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       addBackPath = photoPath;
@@ -668,7 +716,8 @@ class RegistrationFormBloc
   }
 
   _selectAddBackGalleryCapture(SelectAddBackGalleryCapture event, emit) async {
-    var photoPath = await DashboardHelper.galleryCapture();
+    var photoPath =
+    await MediaPickerHelper.galleryCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       addBackPath = photoPath;
@@ -677,7 +726,8 @@ class RegistrationFormBloc
   }
 
   _selectNocDocCameraCapture(SelectNocDocCameraCapture event, emit) async {
-    var photoPath = await DashboardHelper.cameraCapture();
+    var photoPath =
+    await MediaPickerHelper.cameraCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       nocDocPath = photoPath;
@@ -686,10 +736,11 @@ class RegistrationFormBloc
   }
 
   _selectNocDocBackGalleryCapture(
-    SelectNocDocBackGalleryCapture event,
-    emit,
-  ) async {
-    var photoPath = await DashboardHelper.galleryCapture();
+      SelectNocDocBackGalleryCapture event,
+      emit,
+      ) async {
+    var photoPath =
+    await MediaPickerHelper.galleryCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       nocDocPath = photoPath;
@@ -698,7 +749,8 @@ class RegistrationFormBloc
   }
 
   _selectCustomerCameraCapture(SelectCustomerCameraCapture event, emit) async {
-    var photoPath = await DashboardHelper.cameraCapture();
+    var photoPath =
+    await MediaPickerHelper.cameraCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       uploadCustomerPath = photoPath;
@@ -707,10 +759,11 @@ class RegistrationFormBloc
   }
 
   _selectCustomerGalleryCapture(
-    SelectCustomerGalleryCapture event,
-    emit,
-  ) async {
-    var photoPath = await DashboardHelper.galleryCapture();
+      SelectCustomerGalleryCapture event,
+      emit,
+      ) async {
+    var photoPath =
+    await MediaPickerHelper.galleryCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       uploadCustomerPath = photoPath;
@@ -719,7 +772,8 @@ class RegistrationFormBloc
   }
 
   _selectHouseCameraCapture(SelectHouseCameraCapture event, emit) async {
-    var photoPath = await DashboardHelper.cameraCapture();
+    var photoPath =
+    await MediaPickerHelper.cameraCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       uploadHousePath = photoPath;
@@ -728,7 +782,8 @@ class RegistrationFormBloc
   }
 
   _selectHouseGalleryCapture(SelectHouseGalleryCapture event, emit) async {
-    var photoPath = await DashboardHelper.galleryCapture();
+    var photoPath =
+    await MediaPickerHelper.galleryCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       uploadHousePath = photoPath;
@@ -737,7 +792,8 @@ class RegistrationFormBloc
   }
 
   _selectChqCameraCapture(SelectChqCameraCapture event, emit) async {
-    var photoPath = await DashboardHelper.cameraCapture();
+    var photoPath =
+    await MediaPickerHelper.cameraCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       chequePath = photoPath;
@@ -746,7 +802,8 @@ class RegistrationFormBloc
   }
 
   _selectChqGalleryCapture(SelectChqGalleryCapture event, emit) async {
-    var photoPath = await DashboardHelper.galleryCapture();
+    var photoPath =
+    await MediaPickerHelper.galleryCapture(context: event.context);
     log("photo-->${photoPath}");
     if (photoPath != null) {
       chequePath = photoPath;
@@ -773,12 +830,9 @@ class RegistrationFormBloc
 
     if (await Permission.location.isGranted) {
       var getLocation = await DashboardHelper.getCurrentLocation();
-      latController = TextEditingController(
-        text: getLocation?.latitude.toString(),
-      );
-      longController = TextEditingController(
-        text: getLocation?.longitude.toString(),
-      );
+      // Naya controller banane ke bajay text set karo
+      latController.text = getLocation?.latitude.toString() ?? "";
+      longController.text = getLocation?.longitude.toString() ?? "";
       return getLocation;
     } else {
       Utils.errorSnackBar(msg: "Location permission denied", context: context);
@@ -830,7 +884,8 @@ class RegistrationFormBloc
       latitude: latController.text.trim(),
       longitude: longController.text.trim(),
       nearestLandmark: nearestLandmarkController.text.trim(),
-      idProof: kycDoc1Value.key ?? "",
+      idProof: identityProofValue.key ?? "",
+      // Always the REAL number, never kyc1MaskedController.
       idProofNo: kyc1NumberController.text.trim(),
       idFrontPath: idFrontPath.path.isEmpty ? File("") : idFrontPath,
       idBackPath: idBackPath.path.isEmpty ? File("") : idBackPath,
@@ -842,7 +897,7 @@ class RegistrationFormBloc
       ownerConsent: ownerConsentPath.path.isEmpty ? File("") : ownerConsentPath,
       housePath: uploadHousePath.path.isEmpty ? File("") : uploadHousePath,
       customerPath:
-          uploadCustomerPath.path.isEmpty ? File("") : uploadCustomerPath,
+      uploadCustomerPath.path.isEmpty ? File("") : uploadCustomerPath,
       nocDocPath: nocDocPath.path.isEmpty ? File("") : nocDocPath,
       acceptConversionPolicy: conversionPolicyValue.key ?? "",
       acceptExtraFittingCost: extraFittingValue.key ?? "",
@@ -863,15 +918,16 @@ class RegistrationFormBloc
       bankAddress: custBankAddController.text.trim(),
       bankIfscCode: custIfscCodeController.text.trim(),
       bankNameOfBank: custBankAccNumberController.text.trim(),
-      customerConsent: customerConsent.path.isEmpty ? File("") : customerConsent,
+      customerConsent:
+      customerConsent.path.isEmpty ? File("") : customerConsent,
       eBillingModel: preferredBillValue.key ?? "",
       residentStatus: residentStatusValue.key ?? "",
       doorNumber: doorNumberController.text.toString(),
       dob: dobController.text.toString(),
       floorNumber: floorNumberController.text.toString(),
       premiseType: AppConfig.instanceInit()!.client == Client.hpoil
-              ? premiseTypeController.text.toString()
-              : premiseTypeValue.key ?? "",
+          ? premiseTypeController.text.toString()
+          : premiseTypeValue.key ?? "",
       wardNumber: wardNumberController.text.toString(),
     );
   }
@@ -883,8 +939,14 @@ class RegistrationFormBloc
       isPreviewLoader = true;
       _eventCompleted(emit);
       localData = validationResult;
+
+      // Editing a queued record: keep its original id so the Hive copy is
+      // updated (offline) or removed (online) instead of duplicated.
+      if (isUpdate && editingClientRequestId != null) {
+        localData.clientRequestId = editingClientRequestId;
+      }
+
       log("saveCusRegData==>${localData}");
-      // Show preview dialog
       await _showPreviewDialog(event.context);
       isPreviewLoader = false;
       _eventCompleted(emit);
@@ -938,9 +1000,9 @@ class RegistrationFormBloc
       ),
       registrationTypeValue.key == "0"
           ? PopWidget.itemBuilder(
-            textName: AppString.reasonRegistration,
-            textValue: reasonRegistrationController.text,
-          )
+        textName: AppString.reasonRegistration,
+        textValue: reasonRegistrationController.text,
+      )
           : Container(),
       _buildPopItem(
         isRequired: true,
@@ -954,10 +1016,10 @@ class RegistrationFormBloc
       ),
       registrationTypeValue.key == "1"
           ? _buildPopItem(
-            isRequired: true,
-            label: AppString.mdpeAllow,
-            value: societyAllowValue.value!,
-          )
+        isRequired: true,
+        label: AppString.mdpeAllow,
+        value: societyAllowValue.value!,
+      )
           : Container(),
       _buildPopItem(
         isRequired: true,
@@ -989,34 +1051,33 @@ class RegistrationFormBloc
         label: AppString.lastName,
         value: lastController.text,
       ),
-      if (AppConfig.instanceInit()!.client == Client.purvaBharti
-          || AppConfig.instanceInit()!.client == Client.hpoil
-          || AppConfig.instanceInit()!.client == Client.hngpl) ...[
+      if (AppConfig.instanceInit()!.client == Client.purvaBharti ||
+          AppConfig.instanceInit()!.client == Client.hpoil ||
+          AppConfig.instanceInit()!.client == Client.hngpl) ...[
         _buildPopItem(label: AppString.dob, value: dobController.text),
       ],
       PopWidget.itemBuilder(
         isRequired:
-            registrationTypeValue.value != "Future Registration" ? true : false,
+        registrationTypeValue.value != "Future Registration" ? true : false,
         textName: AppString.guardianType,
         textValue:
-            guardianTypeValue.key == null ? "" : guardianTypeValue.value!,
+        guardianTypeValue.key == null ? "" : guardianTypeValue.value!,
       ),
       PopWidget.itemBuilder(
         isRequired:
-            registrationTypeValue.value != "Future Registration" ? true : false,
+        registrationTypeValue.value != "Future Registration" ? true : false,
         textName: AppString.guardianName,
-        textValue:
-            guardianNameController.text.isEmpty
-                ? ""
-                : guardianNameController.text,
+        textValue: guardianNameController.text.isEmpty
+            ? ""
+            : guardianNameController.text,
       ),
       _buildPopItem(
         label: AppString.emailAddress,
         value: emailIdController.text,
       ),
-      if (AppConfig.instanceInit()!.client == Client.purvaBharti
-          || AppConfig.instanceInit()!.client == Client.hpoil
-          || AppConfig.instanceInit()!.client == Client.hngpl) ...[
+      if (AppConfig.instanceInit()!.client == Client.purvaBharti ||
+          AppConfig.instanceInit()!.client == Client.hpoil ||
+          AppConfig.instanceInit()!.client == Client.hngpl) ...[
         _buildPopItem(
           label: AppString.doorNumber,
           value: doorNumberController.text,
@@ -1032,31 +1093,31 @@ class RegistrationFormBloc
       ],
       registrationTypeValue.key == "1"
           ? _buildPopItem(
-            isRequired: true,
-            label: AppString.propertyCategory,
-            value: propertyCategoryValue.name!,
-          )
+        isRequired: true,
+        label: AppString.propertyCategory,
+        value: propertyCategoryValue.name!,
+      )
           : Container(),
       registrationTypeValue.key == "1"
           ? _buildPopItem(
-            isRequired: true,
-            label: AppString.propertyClass,
-            value: propertyClassValue.name!,
-          )
+        isRequired: true,
+        label: AppString.propertyClass,
+        value: propertyClassValue.name!,
+      )
           : Container(),
       _buildPopItem(
         isRequired: true,
         label: AppString.buildingNumber,
         value: buildingNumberController.text,
       ),
-      if (AppConfig.instanceInit()!.client == Client.purvaBharti||
+      if (AppConfig.instanceInit()!.client == Client.purvaBharti ||
           AppConfig.instanceInit()!.client == Client.hngpl) ...[
         PopWidget.itemBuilder(
           textName: AppString.premiseType,
           textValue:
-              premiseTypeValue.key == null ? "" : premiseTypeValue.value!,
+          premiseTypeValue.key == null ? "" : premiseTypeValue.value!,
         ),
-      ] else if (AppConfig.instanceInit()!.client == Client.hpoil ) ...[
+      ] else if (AppConfig.instanceInit()!.client == Client.hpoil) ...[
         _buildPopItem(
           isRequired: true,
           label: AppString.premiseType,
@@ -1122,33 +1183,32 @@ class RegistrationFormBloc
       _buildPopItem(
         isRequired: true,
         label: AppString.idProof,
-        value: kycDoc1Value.value!,
+        value: identityProofValue.value!,
       ),
       _buildPopItem(
         isRequired: true,
         label: AppString.idProofNo,
-        value: kyc1NumberController.text,
+        // Aadhaar is always shown masked in the preview.
+        value: isAadhaarSelected
+            ? maskAadhaar(kyc1NumberController.text)
+            : kyc1NumberController.text,
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
-            child: ImageWidget(
-              star: AppString.star,
+            child: _previewPhoto(
+              isRequired: true,
               title: AppString.idProofFront,
-              imgFile:
-                  idFrontPath.path.isEmpty ? File("") : File(idFrontPath.path),
-              onPressed: () {},
+              file:
+              idFrontPath.path.isEmpty ? File("") : File(idFrontPath.path),
             ),
           ),
           const SizedBox(width: 8),
           Flexible(
-            child: ImageWidget(
-              // star: AppString.star,
+            child: _previewPhoto(
               title: AppString.idProofBack,
-              imgFile:
-                  idBackPath.path.isEmpty ? File("") : File(idBackPath.path),
-              onPressed: () {},
+              file: idBackPath.path.isEmpty ? File("") : File(idBackPath.path),
             ),
           ),
         ],
@@ -1156,41 +1216,37 @@ class RegistrationFormBloc
       PopWidget.divider(),
       PopWidget.itemBuilder(
         isRequired:
-            registrationTypeValue.value != "Future Registration" ? true : false,
+        registrationTypeValue.value != "Future Registration" ? true : false,
         textName: AppString.addProof,
         textValue: kycDoc2Value.key == "" ? "-" : kycDoc2Value.value!,
       ),
       PopWidget.itemBuilder(
         isRequired:
-            registrationTypeValue.value != "Future Registration" ? true : false,
+        registrationTypeValue.value != "Future Registration" ? true : false,
         textName: AppString.addProofNo,
         textValue:
-            kyc2NumberController.text.isEmpty ? "" : kyc2NumberController.text,
+        kyc2NumberController.text.isEmpty ? "" : kyc2NumberController.text,
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
-            child: ImageWidget(
-              star:
-                  registrationTypeValue.value != "Future Registration"
-                      ? AppString.star
-                      : "",
+            child: _previewPhoto(
+              isRequired: registrationTypeValue.value != "Future Registration"
+                  ? true
+                  : false,
               title: AppString.addProofFront,
-              imgFile:
-                  addFrontPath.path.isEmpty
-                      ? File("")
-                      : File(addFrontPath.path),
-              onPressed: () {},
+              file: addFrontPath.path.isEmpty
+                  ? File("")
+                  : File(addFrontPath.path),
             ),
           ),
           const SizedBox(width: 8),
           Flexible(
-            child: ImageWidget(
+            child: _previewPhoto(
               title: AppString.addProofBack,
-              imgFile:
-                  addBackPath.path.isEmpty ? File("") : File(addBackPath.path),
-              onPressed: () {},
+              file:
+              addBackPath.path.isEmpty ? File("") : File(addBackPath.path),
             ),
           ),
         ],
@@ -1205,38 +1261,32 @@ class RegistrationFormBloc
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              child: ImageWidget(
+              child: _previewPhoto(
                 title: AppString.customerImg,
-                imgFile:
-                    uploadCustomerPath.path.isEmpty
-                        ? File("")
-                        : File(uploadCustomerPath.path),
-                onPressed: () {},
+                file: uploadCustomerPath.path.isEmpty
+                    ? File("")
+                    : File(uploadCustomerPath.path),
               ),
             ),
             const SizedBox(width: 8),
             if (kycDoc3Value.value == "Rented") ...[
               Flexible(
-                child: ImageWidget(
-                  star: AppString.star,
+                child: _previewPhoto(
+                  isRequired: true,
                   title: AppString.nocDoc,
-                  imgFile:
-                      nocDocPath.path.isEmpty
-                          ? File("")
-                          : File(nocDocPath.path),
-                  onPressed: () {},
+                  file: nocDocPath.path.isEmpty
+                      ? File("")
+                      : File(nocDocPath.path),
                 ),
               ),
               const SizedBox(width: 8),
             ],
             Flexible(
-              child: ImageWidget(
+              child: _previewPhoto(
                 title: AppString.houseImg,
-                imgFile:
-                    uploadHousePath.path.isEmpty
-                        ? File("")
-                        : File(uploadHousePath.path),
-                onPressed: () {},
+                file: uploadHousePath.path.isEmpty
+                    ? File("")
+                    : File(uploadHousePath.path),
               ),
             ),
           ],
@@ -1245,77 +1295,69 @@ class RegistrationFormBloc
         PopWidget.itemBuilder(
           isRequired: true,
           textName: AppString.initDepositStatus,
-          textValue:
-              initialDepositStatusValue.key == null
-                  ? "-"
-                  : initialDepositStatusValue.value!,
+          textValue: initialDepositStatusValue.key == null
+              ? "-"
+              : initialDepositStatusValue.value!,
         ),
         PopWidget.itemBuilder(
           isRequired: true,
           textName: AppString.schemeType,
-          textValue:
-              schemeTypeValue.depositTypesId == null
-                  ? "-"
-                  : schemeTypeValue.depositName!,
+          textValue: schemeTypeValue.depositTypesId == null
+              ? "-"
+              : schemeTypeValue.depositName!,
         ),
         PopWidget.itemBuilder(
           isRequired: true,
           textName: AppString.schemeAmt,
-          textValue:
-              schemeAmountController.text.isEmpty
-                  ? "-"
-                  : schemeAmountController.text,
+          textValue: schemeAmountController.text.isEmpty
+              ? "-"
+              : schemeAmountController.text,
         ),
         PopWidget.itemBuilder(
           isRequired: true,
           textName: AppString.modeDeposit,
           textValue:
-              modeDepositValue.key == null ? "-" : modeDepositValue.value!,
+          modeDepositValue.key == null ? "-" : modeDepositValue.value!,
         ),
         if (modeDepositValue.key == "1") ...[
           PopWidget.itemBuilder(
             isRequired: true,
             textName: AppString.chqNo,
             textValue:
-                chequeNoController.text.isEmpty ? "-" : chequeNoController.text,
+            chequeNoController.text.isEmpty ? "-" : chequeNoController.text,
           ),
           PopWidget.itemBuilder(
             isRequired: true,
             textName: AppString.chqDate,
-            textValue:
-                chequeDateController.text.isEmpty
-                    ? ""
-                    : chequeDateController.text,
+            textValue: chequeDateController.text.isEmpty
+                ? ""
+                : chequeDateController.text,
           ),
           PopWidget.itemBuilder(
             isRequired: true,
             textName: AppString.chqBank,
-            textValue:
-                paymentBankNameValue.isEmpty
-                    ? ""
-                    : paymentBankNameValue.toString(),
+            textValue: paymentBankNameValue.isEmpty
+                ? ""
+                : paymentBankNameValue.toString(),
           ),
           PopWidget.itemBuilder(
             isRequired: true,
             textName: AppString.chequeAccountNo,
-            textValue:
-                chequeAccountNoController.text.isEmpty
-                    ? ""
-                    : chequeAccountNoController.text,
+            textValue: chequeAccountNoController.text.isEmpty
+                ? ""
+                : chequeAccountNoController.text,
           ),
           PopWidget.itemBuilder(
             isRequired: true,
             textName: AppString.chequeMICRNo,
-            textValue:
-                chequeMicrNoController.text.isEmpty
-                    ? ""
-                    : chequeMicrNoController.text,
+            textValue: chequeMicrNoController.text.isEmpty
+                ? ""
+                : chequeMicrNoController.text,
           ),
-          ImageWidget(
-            star: AppString.star,
+          _previewPhoto(
+            isRequired: true,
             title: AppString.chqPhoto,
-            imgFile: chequePath.path.isEmpty ? File("") : File(chequePath.path),
-            onPressed: () {},
+            file: chequePath.path.isEmpty ? File("") : File(chequePath.path),
           ),
         ],
       ],
@@ -1343,13 +1385,13 @@ class RegistrationFormBloc
         isSaveLoader == true
             ? DottedLoaderWidget()
             : ButtonWidget(
-              text: AppString.save,
-              onPressed: () {
-                BlocProvider.of<RegistrationFormBloc>(
-                  context,
-                ).add(RegistrationFormSaveLocalDataEvent(context: context));
-              },
-            ),
+          text: AppString.save,
+          onPressed: () {
+            BlocProvider.of<RegistrationFormBloc>(
+              context,
+            ).add(RegistrationFormSaveLocalDataEvent(context: context));
+          },
+        ),
         ButtonWidget(
           text: AppString.edit,
           onPressed: () {
@@ -1360,40 +1402,101 @@ class RegistrationFormBloc
     );
   }
 
+  /// Save button on the preview:
+  ///  - internet available -> send directly to the server
+  ///  - no internet (or it drops mid-send) -> save to Hive; the
+  ///    RegistrationSyncService uploads it automatically when internet returns
   _saveLocalData(RegistrationFormSaveLocalDataEvent event, emit) async {
+    if (isSaveLoader) return; // ignore double taps
+    isSaveLoader = true;
+    _eventCompleted(emit);
+
+    bool completed = false;
     try {
-      isSaveLoader = true;
-      _eventCompleted(emit);
-      await RegistrationFormHelper.addCustRegSyncLocalDB(
-        context: event.context,
-        custRegSyncStore: localData,
-        isUpdate: isUpdate,
-        index: index,
-      );
-      Navigator.pushAndRemoveUntil(
-        event.context,
-        MaterialPageRoute(builder: (_) => DashboardPage()),
-        (r) => false,
-      );
-      isSaveLoader = false;
-      _eventCompleted(emit);
+      final online = await RegistrationSyncService.instance.hasInternet();
+
+      if (online) {
+        // ---------- Internet available: send directly to the server ----------
+        try {
+          final res = await ViewSyncRecordHelper.sendData(
+            context: event.context,
+            custRegSyncData: localData,
+          );
+
+          if (res != null) {
+            // Editing a queued record that is now on the server: remove it.
+            if (isUpdate) {
+              await RegistrationFormHelper.deleteLocalRecord(
+                localData.clientRequestId,
+              );
+            }
+            final ctx = AppNavigator.navigatorKey.currentContext;
+            if (ctx != null) {
+              Utils.successSnackBar(
+                msg: res.message?.first.message ??
+                    "Data sent to server successfully",
+                context: ctx,
+              );
+            }
+            completed = true;
+          } else {
+            // Server replied but rejected the data. sendData already showed
+            // the error, so keep the user on the form to correct it.
+            isSaveLoader = false;
+            _eventCompleted(emit);
+            return;
+          }
+        } on SocketException catch (e) {
+          log("Send failed (no connection), saving offline --> $e");
+        } on TimeoutException catch (e) {
+          log("Send timed out, saving offline --> $e");
+        } on DioException catch (e) {
+          final isNetworkError = e.type == DioExceptionType.connectionError ||
+              e.type == DioExceptionType.connectionTimeout ||
+              e.type == DioExceptionType.sendTimeout ||
+              e.type == DioExceptionType.receiveTimeout;
+          if (!isNetworkError) rethrow;
+          log("Send failed (network), saving offline --> $e");
+        }
+      }
+
+      // ---------- No internet (or it dropped mid-send): save to Hive ----------
+      if (!completed) {
+        completed = await RegistrationFormHelper.addCustRegSyncLocalDB(
+          context: event.context,
+          custRegSyncStore: localData,
+          isUpdate: isUpdate,
+          index: index,
+        );
+      }
     } catch (e) {
       log("_saveLocalData Error --> ${e.toString()}");
+      final ctx = AppNavigator.navigatorKey.currentContext;
+      if (ctx != null) Utils.errorSnackBar(msg: e.toString(), context: ctx);
+    }
+
+    isSaveLoader = false;
+    _eventCompleted(emit);
+
+    if (completed) {
+      editingClientRequestId = null;
+      RegistrationSyncService.instance.pausedRequestId = null;
+      AppNavigator.pushAndRemoveUntil(DashboardPage());
     }
   }
 
-
   _selectDate(RegistrationFormSelectDateEvent event, emit) async {
-    if(AppConfig.instanceInit()!.client == Client.hngpl){
+    if (AppConfig.instanceInit()!.client == Client.hngpl ||
+        AppConfig.instanceInit()!.client == Client.purvaBharti) {
       final DateTime now = DateTime.now();
       // Latest allowed birth date: exactly 18 years ago today
       final DateTime maxDob = DateTime(now.year - 18, now.month, now.day);
 
       DateTime? pickedDate = await showDatePicker(
         context: event.context,
-        initialDate: maxDob,          // must be <= lastDate
+        initialDate: maxDob,
         firstDate: DateTime(1900),
-        lastDate: maxDob,             // blocks dates under 18 years
+        lastDate: maxDob,
         helpText: 'Select Date of Birth',
       );
 
@@ -1412,23 +1515,24 @@ class RegistrationFormBloc
           print("Date is not selected");
         }
       }
-    }else{
-        DateTime? pickedDate = await showDatePicker(
-          context: event.context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(1880),
-          lastDate: DateTime(2780),
-        );
+    } else {
+      DateTime? pickedDate = await showDatePicker(
+        context: event.context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1880),
+        lastDate: DateTime(2780),
+      );
 
-        if (pickedDate != null) {
-          String formattedDateChange = DateFormat('yyyy-MM-dd').format(pickedDate);
-          dobController.text = formattedDateChange.toString();
-          _eventCompleted(emit);
-        } else {
-          if (kDebugMode) {
-            print("Date is not selected");
-          }
+      if (pickedDate != null) {
+        String formattedDateChange =
+        DateFormat('yyyy-MM-dd').format(pickedDate);
+        dobController.text = formattedDateChange.toString();
+        _eventCompleted(emit);
+      } else {
+        if (kDebugMode) {
+          print("Date is not selected");
         }
+      }
     }
   }
 
@@ -1447,178 +1551,170 @@ class RegistrationFormBloc
     _eventCompleted(emit);
   }
 
+  /// Eye icon: toggles between masked (**** **** 1234) and visible.
+  _isAadhaar(RegistrationFormIsAadhaarEvent event, emit) {
+    isAadhaar = !isAadhaar;
+    kyc1MaskedController.text = maskAadhaar(kyc1NumberController.text);
+    _eventCompleted(emit);
+  }
+
   _updateLocalDataEvent(UpdateLocalDataEvent event, emit) async {
     isUpdate = event.isUpdate;
     index = event.index;
     localData = event.updatedModel;
+
+    // Remember which queued record is being edited and stop the auto-sync
+    // from uploading it until the user saves or leaves.
+    editingClientRequestId = event.updatedModel.clientRequestId;
+    RegistrationSyncService.instance.pausedRequestId = editingClientRequestId;
+
     try {
       isSaveLoader = true;
       _eventCompleted(emit);
       if (event.isUpdate) {
         final localData = event.updatedModel;
-        registrationTypeValue =
-            localData.registrationType != ""
-                ? listOfRegistrationType.firstWhere(
-                  (e) => e.key == localData.registrationType,
-                  orElse: () => GetNotInterestedModel(),
-                )
-                : GetNotInterestedModel();
-        conversionPolicyValue =
-            localData.acceptConversionPolicy != null
-                ? listOfConversionPolicy.firstWhere(
-                  (e) => e.key == localData.acceptConversionPolicy,
-                  orElse: () => GetAcceptConversionPolicyModel(),
-                )
-                : GetAcceptConversionPolicyModel();
-        propertyClassValue =
-            localData.propertyClassId != null
-                ? listOfProClass.firstWhere(
-                  (e) => e.id == localData.propertyClassId,
-                  orElse: () => GetPropertyClassModel(),
-                )
-                : GetPropertyClassModel();
-        propertyCategoryValue =
-            localData.propertyCategoryId != null
-                ? listOfProCategory.firstWhere(
-                  (e) => e.id == localData.propertyCategoryId,
-                  orElse: () => GetPropertyCategoryModel(),
-                )
-                : GetPropertyCategoryModel();
+        registrationTypeValue = localData.registrationType != ""
+            ? listOfRegistrationType.firstWhere(
+              (e) => e.key == localData.registrationType,
+          orElse: () => GetNotInterestedModel(),
+        )
+            : GetNotInterestedModel();
+        conversionPolicyValue = localData.acceptConversionPolicy != null
+            ? listOfConversionPolicy.firstWhere(
+              (e) => e.key == localData.acceptConversionPolicy,
+          orElse: () => GetAcceptConversionPolicyModel(),
+        )
+            : GetAcceptConversionPolicyModel();
+        propertyClassValue = localData.propertyClassId != null
+            ? listOfProClass.firstWhere(
+              (e) => e.id == localData.propertyClassId,
+          orElse: () => GetPropertyClassModel(),
+        )
+            : GetPropertyClassModel();
+        propertyCategoryValue = localData.propertyCategoryId != null
+            ? listOfProCategory.firstWhere(
+              (e) => e.id == localData.propertyCategoryId,
+          orElse: () => GetPropertyCategoryModel(),
+        )
+            : GetPropertyCategoryModel();
         List<GetAllDepositOfflineModel> dataList =
             HiveDataBase.allDepositOfflineBox?.values.toSet().toList() ?? [];
-        listOfDepositOffline =
-            dataList
-                .where(
-                  (element) =>
-                      propertyCategoryValue.id == element.propertyCategoryId,
-                )
-                .toList();
-        extraFittingValue =
-            localData.acceptExtraFittingCost != ""
-                ? listOfExtraFittingCost.firstWhere(
-                  (e) => e.key == localData.acceptExtraFittingCost,
-                )
-                : GetAcceptExtraFittingCostModel();
-        societyAllowValue =
-            localData.societyAllowedMdpe != ""
-                ? listOfSocietyAllow.firstWhere(
-                  (e) => e.key == localData.societyAllowedMdpe,
-                )
-                : GetSocietyAllowModel();
-        guardianTypeValue =
-            localData.guardianType != ""
-                ? listOfGuardianType.firstWhere(
-                  (e) => e.key == localData.guardianType,
-                  orElse: () => GetGuardianTypeModel(),
-                )
-                : GetGuardianTypeModel();
-        preferredBillValue =
-            localData.eBillingModel != ""
-                ? listOfEBilling.firstWhere(
-                  (e) => e.key == localData.eBillingModel,
-                  orElse: () => GetEBillingModel(),
-                )
-                : GetEBillingModel();
-        allDistrictValue =
-            localData.districtId != ""
-                ? listOfAllDistrict.firstWhere(
-                  (e) => e.id == localData.districtId,
-                  orElse: () => GetAllDistrictModel(),
-                )
-                : GetAllDistrictModel();
+        listOfDepositOffline = dataList
+            .where(
+              (element) =>
+          propertyCategoryValue.id == element.propertyCategoryId,
+        )
+            .toList();
+        extraFittingValue = localData.acceptExtraFittingCost != ""
+            ? listOfExtraFittingCost.firstWhere(
+              (e) => e.key == localData.acceptExtraFittingCost,
+          orElse: () => GetAcceptExtraFittingCostModel(),
+        )
+            : GetAcceptExtraFittingCostModel();
+        societyAllowValue = localData.societyAllowedMdpe != ""
+            ? listOfSocietyAllow.firstWhere(
+              (e) => e.key == localData.societyAllowedMdpe,
+          orElse: () => GetSocietyAllowModel(),
+        )
+            : GetSocietyAllowModel();
+        guardianTypeValue = localData.guardianType != ""
+            ? listOfGuardianType.firstWhere(
+              (e) => e.key == localData.guardianType,
+          orElse: () => GetGuardianTypeModel(),
+        )
+            : GetGuardianTypeModel();
+        preferredBillValue = localData.eBillingModel != ""
+            ? listOfEBilling.firstWhere(
+              (e) => e.key == localData.eBillingModel,
+          orElse: () => GetEBillingModel(),
+        )
+            : GetEBillingModel();
+        allDistrictValue = localData.districtId != ""
+            ? listOfAllDistrict.firstWhere(
+              (e) => e.id == localData.districtId,
+          orElse: () => GetAllDistrictModel(),
+        )
+            : GetAllDistrictModel();
         initialDepositStatusValue = listOfInitialDepositStatus.firstWhere(
-          (e) => e.key == localData.initialDepositeStatus,
+              (e) => e.key == localData.initialDepositeStatus,
+          orElse: () => GetInitialDepositStatusModel(),
         );
-        modeDepositValue =
-            localData.modeOfDeposite != ""
-                ? listOfModeOfDeposit.firstWhere(
-                  (e) => e.key == localData.modeOfDeposite,
-                  orElse: () => GetModeOfDepositModel(),
-                )
-                : GetModeOfDepositModel();
-        schemeTypeValue =
-            localData.schemeType != ""
-                ? listOfDepositOffline.firstWhere(
-                  (e) => e.depositTypesId == localData.schemeType,
-                  orElse: () => GetAllDepositOfflineModel(),
-                )
-                : GetAllDepositOfflineModel();
-        kycDoc1Value =
-            localData.kycDocument1 != ""
-                ? listOfIdentityProof.firstWhere(
-                  (e) => e.key == localData.kycDocument1,
-                  orElse: () => GetIdentityProofModel(),
-                )
-                : GetIdentityProofModel();
-        kycDoc2Value =
-            localData.kycDocument2 != ""
-                ? listOfOwnershipProof.firstWhere(
-                  (e) => e.key == localData.kycDocument2,
-                  orElse: () => GetOwnershipProofModel(),
-                )
-                : GetOwnershipProofModel();
-        kycDoc3Value =
-            localData.kycDocument3 != ""
-                ? listOfKycDoc.firstWhere(
-                  (e) => e.key == localData.kycDocument3,
-                  orElse: () => GetKycDocModel(),
-                )
-                : GetKycDocModel();
-        existingCookingFuelValue =
-            localData.existingCookingFuel != ""
-                ? listOfCookingFuel.firstWhere(
-                  (e) => e.key == localData.existingCookingFuel,
-                  orElse: () => GetExistingCookingFuelModel(),
-                )
-                : GetExistingCookingFuelModel();
-        residentStatusValue =
-            localData.residentStatus != ""
-                ? listOfResidentStatus.firstWhere(
-                  (e) => e.key == localData.residentStatus,
-                  orElse: () => GetResidentStatusModel(),
-                )
-                : GetResidentStatusModel();
-        chargeAreaValue =
-            localData.chargeArea != null
-                ? listOfChargeArea.firstWhere(
-                  (e) => e.gid == localData.chargeArea,
-                  orElse: () => GetChargeAreaListModel(),
-                )
-                : GetChargeAreaListModel();
+        modeDepositValue = localData.modeOfDeposite != ""
+            ? listOfModeOfDeposit.firstWhere(
+              (e) => e.key == localData.modeOfDeposite,
+          orElse: () => GetModeOfDepositModel(),
+        )
+            : GetModeOfDepositModel();
+        schemeTypeValue = localData.schemeType != ""
+            ? listOfDepositOffline.firstWhere(
+              (e) => e.depositTypesId == localData.schemeType,
+          orElse: () => GetAllDepositOfflineModel(),
+        )
+            : GetAllDepositOfflineModel();
+        identityProofValue = localData.kycDocument1 != ""
+            ? listOfIdentityProof.firstWhere(
+              (e) => e.key == localData.kycDocument1,
+          orElse: () => GetIdentityProofModel(),
+        )
+            : GetIdentityProofModel();
+        kycDoc2Value = localData.kycDocument2 != ""
+            ? listOfOwnershipProof.firstWhere(
+              (e) => e.key == localData.kycDocument2,
+          orElse: () => GetOwnershipProofModel(),
+        )
+            : GetOwnershipProofModel();
+        kycDoc3Value = localData.kycDocument3 != ""
+            ? listOfKycDoc.firstWhere(
+              (e) => e.key == localData.kycDocument3,
+          orElse: () => GetKycDocModel(),
+        )
+            : GetKycDocModel();
+        existingCookingFuelValue = localData.existingCookingFuel != ""
+            ? listOfCookingFuel.firstWhere(
+              (e) => e.key == localData.existingCookingFuel,
+          orElse: () => GetExistingCookingFuelModel(),
+        )
+            : GetExistingCookingFuelModel();
+        residentStatusValue = localData.residentStatus != ""
+            ? listOfResidentStatus.firstWhere(
+              (e) => e.key == localData.residentStatus,
+          orElse: () => GetResidentStatusModel(),
+        )
+            : GetResidentStatusModel();
+        chargeAreaValue = localData.chargeArea != null
+            ? listOfChargeArea.firstWhere(
+              (e) => e.gid == localData.chargeArea,
+          orElse: () => GetChargeAreaListModel(),
+        )
+            : GetChargeAreaListModel();
 
-        premiseTypeValue =
-            localData.premiseType != null
-                ? listOfPremiseType.firstWhere(
-                  (e) => e.key == localData.premiseType,
-                  orElse: () => GetPremiseTypeModel(),
-                )
-                : GetPremiseTypeModel();
-
-        if (AppConfig.instanceInit()!.client == Client.purvaBharti|| AppConfig.instanceInit()!.client == Client.hngpl) {
-          premiseTypeValue =
-              localData.premiseType != null
-                  ? listOfPremiseType.firstWhere(
-                    (e) => e.key == localData.premiseType,
-                    orElse: () => GetPremiseTypeModel(),
-                  )
-                  : GetPremiseTypeModel();
+        if (AppConfig.instanceInit()!.client == Client.purvaBharti ||
+            AppConfig.instanceInit()!.client == Client.hngpl) {
+          premiseTypeValue = localData.premiseType != null
+              ? listOfPremiseType.firstWhere(
+                (e) => e.key == localData.premiseType,
+            orElse: () => GetPremiseTypeModel(),
+          )
+              : GetPremiseTypeModel();
         } else if (AppConfig.instanceInit()!.client == Client.hpoil) {
           premiseTypeController.text = localData.premiseType ?? "";
         }
+
         if (localData.chargeArea != null) {
-          List<GetAllAreaModel> dataList =
+          List<GetAllAreaModel> areaList =
               HiveDataBase.allAreaBox?.values.toSet().toList() ?? [];
-          listOfAllArea =
-              dataList
-                  .where(
-                    (element) => chargeAreaValue.gid == element.chargeAreaId,
-                  )
-                  .toList();
+          listOfAllArea = areaList
+              .where(
+                (element) => chargeAreaValue.gid == element.chargeAreaId,
+          )
+              .toList();
         }
-        areaValue =
-            localData.areaId != null
-                ? listOfAllArea.firstWhere((e) => e.gid == localData.areaId)
-                : GetAllAreaModel();
+        areaValue = localData.areaId != null
+            ? listOfAllArea.firstWhere(
+              (e) => e.gid == localData.areaId,
+          orElse: () => GetAllAreaModel(),
+        )
+            : GetAllAreaModel();
 
         firstController.text = localData.firstName ?? "";
         middleController.text = localData.middleName ?? "";
@@ -1656,10 +1752,15 @@ class RegistrationFormBloc
         floorNumberController.text = localData.floorNumber ?? "";
         wardNumberController.text = localData.wardNumber ?? "";
 
+        // Saved Aadhaar opens masked: **** **** 1234
+        isAadhaar =
+            isAadhaarSelected && kyc1NumberController.text.trim().isNotEmpty;
+
         idFrontPath = File(localData.idFrontPath1 ?? "");
         idBackPath = File(localData.idBackPath1 ?? "");
         addFrontPath = File(localData.addFrontPath2 ?? "");
         addBackPath = File(localData.addBackPath2 ?? "");
+        nocDocPath = File(localData.nocFrontPath3 ?? "");
         nocFrontPath = File(localData.nocFrontPath3 ?? "");
         nocBackPath = File(localData.nocBackPath3 ?? "");
         uploadCustomerPath = File(localData.uploadCustomerPhoto ?? "");
@@ -1674,11 +1775,15 @@ class RegistrationFormBloc
       isSaveLoader = false;
       _eventCompleted(emit);
     } catch (e) {
+      isSaveLoader = false;
+      _eventCompleted(emit);
       log("_updateLocalDataEvent Error --> ${e.toString()}");
     }
   }
 
   _eventCompleted(Emitter<RegistrationFormState> emit) {
+    kyc1MaskedController.text = maskAadhaar(kyc1NumberController.text);
+
     emit(
       RegistrationFormGetAllDataState(
         isPageLoader: isPageLoader,
@@ -1705,7 +1810,7 @@ class RegistrationFormBloc
         getGuardianTypeList: listOfGuardianType,
         propertyCategoryValue: propertyCategoryValue,
         propertyClassValue: propertyClassValue,
-        identityProofValue: kycDoc1Value,
+        identityProofValue: identityProofValue,
         identityProofList: listOfIdentityProof,
         getIdentityProofModel: getIdentityProofModel,
         ownershipProofValue: kycDoc2Value,
@@ -1754,6 +1859,7 @@ class RegistrationFormBloc
         familyMemberController: familyMemberController,
         nearestLandmarkController: nearestLandmarkController,
         kyc1NumberController: kyc1NumberController,
+        kyc1MaskedController: kyc1MaskedController,
         kyc2NumberController: kyc2NumberController,
         kyc3NumberController: kyc3NumberController,
         custBankAccNumberController: custBankAccNumberController,
@@ -1795,7 +1901,21 @@ class RegistrationFormBloc
         listOfPremiseType: listOfPremiseType,
         premiseTypeValue: premiseTypeValue,
         premiseTypeController: premiseTypeController,
+        isAadhaar: isAadhaar,
       ),
+    );
+  }
+
+  Widget _previewPhoto({
+    required String title,
+    required File file,
+    bool isRequired = false,
+  }) {
+    return PhotoUploadWidget(
+      isRequired: isRequired,
+      title: title,
+      imagePath: file,
+      onTap: () {},
     );
   }
 }

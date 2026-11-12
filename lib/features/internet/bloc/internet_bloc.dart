@@ -16,20 +16,15 @@ class InternetBloc extends Bloc<InternetEvent, InternetState> {
     on<NotConnectedEvent>(_notConnected);
 
     subscription = Connectivity().onConnectivityChanged.listen((results) {
-      bool hasWifi = results.contains(ConnectivityResult.wifi);
-      bool hasMobile = results.contains(ConnectivityResult.mobile);
-      bool hasNone = results.contains(ConnectivityResult.none);
-
-      isConnected = !hasNone;
-      isWifi = hasWifi;
-      isMobile = hasMobile;
-
-      if (isConnected) {
-        add(OnConnectedEvent());
-      } else {
-        add(NotConnectedEvent());
-      }
+      _update(results);
+      add(isConnected ? OnConnectedEvent() : NotConnectedEvent());
     });
+  }
+
+  void _update(List<ConnectivityResult> results) {
+    isWifi = results.contains(ConnectivityResult.wifi);
+    isMobile = results.contains(ConnectivityResult.mobile);
+    isConnected = results.any((r) => r != ConnectivityResult.none);
   }
 
   @override
@@ -38,16 +33,27 @@ class InternetBloc extends Bloc<InternetEvent, InternetState> {
     return super.close();
   }
 
-  void _connected(OnConnectedEvent event, Emitter<InternetState> emit) {
-    emit(ConnectedState(
-      msg: isConnected ? "Connected" : "Not Connected",
-      isConnected: isConnected,
-      isWifi: isWifi,
-      isMobile: isMobile,
-    ));
+  /// Dashboard se call hota hai — yahan khud current status check karo
+  Future<void> _connected(
+      OnConnectedEvent event, Emitter<InternetState> emit) async {
+    _update(await Connectivity().checkConnectivity());
+
+    if (isConnected) {
+      emit(ConnectedState(
+        msg: "Connected",
+        isConnected: true,
+        isWifi: isWifi,
+        isMobile: isMobile,
+      ));
+    } else {
+      emit(NotConnectedState(msg: "No internet available"));
+    }
   }
 
   void _notConnected(NotConnectedEvent event, Emitter<InternetState> emit) {
-    emit(NotConnectedState(msg: "Not Connected"));
+    isConnected = false;
+    isWifi = false;
+    isMobile = false;
+    emit(NotConnectedState(msg: "No internet available"));
   }
 }

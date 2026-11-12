@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'input_decoration_style.dart';
@@ -13,7 +11,6 @@ class TextFieldWidget extends StatelessWidget {
   final bool readOnly;
   final bool obscureText;
   final ValueChanged<String>? onChanged;
-  final TextInputType? textInputType;
   final int? maxLength;
   final int maxLine;
   final Widget? suffixIcon;
@@ -38,7 +35,6 @@ class TextFieldWidget extends StatelessWidget {
     this.initialValue,
     this.onTap,
     this.onChanged,
-    this.textInputType,
     this.maxLength,
     this.suffixIcon,
     this.prefixIcon,
@@ -52,7 +48,6 @@ class TextFieldWidget extends StatelessWidget {
     this.autofillHints,
   });
 
-  @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = Theme.of(context).colorScheme.onSurface;
@@ -85,6 +80,11 @@ class TextFieldWidget extends StatelessWidget {
       textCapitalization: (keyboardType ?? TextInputType.text) == TextInputType.text
           ? TextCapitalization.words
           : TextCapitalization.none,
+      maxLength: maxLength,
+      maxLines: maxLine,
+      validator:validator,
+      inputFormatters: inputFormatters,
+      obscureText: obscureText,
       onChanged: (value) {
         final state = fieldKey?.currentState;
         if (state != null && state.hasError) {
@@ -92,11 +92,6 @@ class TextFieldWidget extends StatelessWidget {
         }
         onChanged?.call(value);
       },
-      maxLength: maxLength,
-      maxLines: maxLine,
-      validator: validator,
-      inputFormatters: inputFormatters,
-      obscureText: obscureText,
       style: TextStyle(
         fontSize: 14,
         color: textColor,

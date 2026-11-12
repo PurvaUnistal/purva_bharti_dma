@@ -3,6 +3,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 import 'package:pbg_app/Utils/common_widgets/res/enums.dart';
+import 'package:pbg_app/features/dashboard/presentation/widget/AppUpdateCleaner.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -40,7 +41,7 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
     try {
       String? userJson = await SharedPref.getString(key: PrefsValue.userInfo ?? "");
       if (userJson != '') {
-        Map<String, dynamic> userMap = jsonDecode(userJson!);
+        Map<String, dynamic> userMap = jsonDecode(userJson);
         LoginModel loginModel = LoginModel.fromJson(userMap);
         final appConfig = AppConfig.instanceInit();
         if (appConfig != null) {
@@ -72,6 +73,7 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => DashboardPage()));
             }
           } else {
+            await AppUpdateCleaner.run();
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginView()));
           }
         },
