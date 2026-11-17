@@ -3,6 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 
 class RegistrationFormHelper {
+  /// Creates a new clientRequestId. Called only for a NEW record.
+  static String newClientRequestId() =>
+      DateTime.now().microsecondsSinceEpoch.toString();
+
+  /// Shows the error and returns null, so every check can be one line.
+  static Null _fail(BuildContext context, String msg) {
+    Utils.errorSnackBar(msg: msg, context: context);
+    return null;
+  }
+
   static Future<dynamic> textFieldValidationCheck({
     required BuildContext context,
     required String registrationType,
@@ -73,268 +83,173 @@ class RegistrationFormHelper {
     required String premiseType,
     required File chequePath,
     required File canceledCheque,
+    // NEW: editing keeps the record's original id.
+    bool isUpdate = false,
+    String? clientRequestId,
   }) async {
     try {
-      if (registrationType == "") {
-        Utils.errorSnackBar(
-          msg: "The Registration field is required.",
-          context: context,
-        );
-        return null;
-      } else if (chargeId == "") {
-        Utils.errorSnackBar(
-          msg: 'The Charge Area field is required.',
-          context: context,
-        );
-        return null;
-      } else if (areaId == "") {
-        Utils.errorSnackBar(
-          msg: 'The Area field is required.',
-          context: context,
-        );
-        return null;
-      } else if (mobileNumber.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The Mobile Number field is required.",
-          context: context,
-        );
-        return null;
-      } else if (firstName.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The First Name field is required.",
-          context: context,
-        );
-        return null;
-      } else if (lastName.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The Last Name field is required.",
-          context: context,
-        );
-        return null;
-      } else if (registrationType == "1") {
-        if (guardianType == "") {
-          Utils.errorSnackBar(
-            msg: "The Guardian Type field is required.",
-            context: context,
-          );
-          return null;
-        } else if (guardianName.isEmpty) {
-          Utils.errorSnackBar(
-            msg: "The Guardian Name field is required.",
-            context: context,
-          );
-          return null;
-        } else if (propertyCategoryId == "") {
-          Utils.errorSnackBar(
-            msg: "The Property Category field is required.",
-            context: context,
-          );
-          return null;
-        } else if (propertyClassId == "") {
-          Utils.errorSnackBar(
-            msg: "The Property Class Id field is required.",
-            context: context,
-          );
-          return null;
+      // ---------------- Basic details ----------------
+      if (registrationType.isEmpty) {
+        return _fail(context, "The Registration field is required.");
+      }
+      if (chargeId.isEmpty) {
+        return _fail(context, "The Charge Area field is required.");
+      }
+      if (areaId.isEmpty) {
+        return _fail(context, "The Area field is required.");
+      }
+      if (mobileNumber.isEmpty) {
+        return _fail(context, "The Mobile Number field is required.");
+      }
+      if (firstName.isEmpty) {
+        return _fail(context, "The First Name field is required.");
+      }
+      if (lastName.isEmpty) {
+        return _fail(context, "The Last Name field is required.");
+      }
+
+      if (registrationType == "1") {
+        if (guardianType.isEmpty) {
+          return _fail(context, "The Guardian Type field is required.");
+        }
+        if (guardianName.isEmpty) {
+          return _fail(context, "The Guardian Name field is required.");
+        }
+        if (propertyCategoryId.isEmpty) {
+          return _fail(context, "The Property Category field is required.");
+        }
+        if (propertyClassId.isEmpty) {
+          return _fail(context, "The Property Class Id field is required.");
         }
       }
+
+      // ---------------- Address ----------------
       if (houseNumber.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The House Number field is required.",
-          context: context,
+        return _fail(context, "The House Number field is required.");
+      }
+      if (colonySocietyApartment.isEmpty) {
+        return _fail(context, "The Colony/Society/Apartment field is required.");
+      }
+      if (streetName.isEmpty) {
+        return _fail(context, "The Lane/Street Name field is required.");
+      }
+      if (districtId.isEmpty) {
+        return _fail(context, "The District field is required.");
+      }
+      if (pinCode.isEmpty) {
+        return _fail(context, "The Pin Code field is required.");
+      }
+      // FIX: was `&&`, so a missing latitude OR longitude alone passed.
+      if (latitude.isEmpty || longitude.isEmpty) {
+        return _fail(
+          context,
+          "Location access denied. Please enable location services and grant "
+              "location permissions in app settings to proceed.",
         );
-        return null;
-      } else if (colonySocietyApartment.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The Colony/Society/Apartment field is required.",
-          context: context,
-        );
-        return null;
-      } else if (streetName.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The Lane/Street Name field is required.",
-          context: context,
-        );
-        return null;
-      } else if (districtId == "") {
-        Utils.errorSnackBar(
-          msg: "The District field is required.",
-          context: context,
-        );
-        return null;
-      } else if (pinCode.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The Pin Code field is required. ",
-          context: context,
-        );
-        return null;
-      } else if (latitude.isEmpty && longitude.isEmpty) {
-        Utils.errorSnackBar(
-          msg:
-          "Location access denied. Please enable location services and grant location permissions in app settings to proceed.",
-          context: context,
-        );
-        return null;
-      } else if (noOfKitchen.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The No. of Kitchen field is required.",
-          context: context,
-        );
-        return null;
-      } else if (noOfBathroom.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The No. of Bathroom field is required.",
-          context: context,
-        );
-        return null;
-      } else if (existingCookingFuel == "") {
-        Utils.errorSnackBar(
-          msg: "The Cooking Fuel field is required.",
-          context: context,
-        );
-        return null;
-      } else if (noOfFamilyMembers.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The No. of Family Members field is required.",
-          context: context,
-        );
-        return null;
-      } else if (idProof == "") {
-        Utils.errorSnackBar(
-          msg: "The KYC(Identification Proof) field is required.",
-          context: context,
-        );
-        return null;
-      } else if (idProofNo.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The KYC(Identification Proof)Number field is required.",
-          context: context,
-        );
-        return null;
-      } else if (idFrontPath.path.isEmpty) {
-        Utils.errorSnackBar(
-          msg: "The Id Proof Front Image field is required.",
-          context: context,
-        );
-        return null;
-      } else if (registrationType == "1") {
-        if (addProof == "") {
-          Utils.errorSnackBar(
-            msg: "The KYC (Address Proof) field is required.",
-            context: context,
-          );
-          return null;
-        } else if (addProofNo.isEmpty) {
-          Utils.errorSnackBar(
-            msg: "The KYC (Address Proof)Number field is required.",
-            context: context,
-          );
-          return null;
-        } else if (addFrontPath.path.isEmpty) {
-          Utils.errorSnackBar(
-            msg: "The Address Proof Front Image field is required.",
-            context: context,
-          );
-          return null;
-        } else if (ownershipProperty == "") {
-          Utils.errorSnackBar(
-            msg: "The Ownership Type Property field is required.",
-            context: context,
-          );
-          return null;
-        } else if (ownershipProperty == "Rented") {
-          if (nocDocPath.path.isEmpty) {
-            Utils.errorSnackBar(
-              msg: "The NOC Document field is required.",
-              context: context,
-            );
-            return null;
-          }
-        } else if (acceptConversionPolicy == "") {
-          Utils.errorSnackBar(
-            msg: "The Accept Conversion Policy field is required.",
-            context: context,
-          );
-          return null;
-        } else if (acceptExtraFittingCost == "") {
-          Utils.errorSnackBar(
-            msg: "The Accept Extra Fitting Cost field is required.",
-            context: context,
-          );
-          return null;
-        } else if (societyAllowedMdpe == "") {
-          Utils.errorSnackBar(
-            msg: "The Society Allows MDPE field is required.",
-            context: context,
-          );
-          return null;
-        } else if (depositStatus == "") {
-          Utils.errorSnackBar(
-            msg: "The Deposit Status field is required.",
-            context: context,
-          );
-          return null;
-        } else if (schemeType == "") {
-          Utils.errorSnackBar(
-            msg: "The Scheme Type field is required.",
-            context: context,
-          );
-          return null;
+      }
+      if (noOfKitchen.isEmpty) {
+        return _fail(context, "The No. of Kitchen field is required.");
+      }
+      if (noOfBathroom.isEmpty) {
+        return _fail(context, "The No. of Bathroom field is required.");
+      }
+      if (existingCookingFuel.isEmpty) {
+        return _fail(context, "The Cooking Fuel field is required.");
+      }
+      if (noOfFamilyMembers.isEmpty) {
+        return _fail(context, "The No. of Family Members field is required.");
+      }
+
+      // ---------------- KYC 1 ----------------
+      if (idProof.isEmpty) {
+        return _fail(context, "The KYC(Identification Proof) field is required.");
+      }
+      if (idProofNo.isEmpty) {
+        return _fail(
+            context, "The KYC(Identification Proof)Number field is required.");
+      }
+      if (idFrontPath.path.isEmpty) {
+        return _fail(context, "The Id Proof Front Image field is required.");
+      }
+
+      // ---------------- Registration-only checks ----------------
+      if (registrationType == "1") {
+        if (addProof.isEmpty) {
+          return _fail(context, "The KYC (Address Proof) field is required.");
         }
-        if (modeDepositValue == "") {
-          Utils.errorSnackBar(
-            msg: "The Mode Of Deposit field is required.",
-            context: context,
-          );
-          return null;
-        } else if (modeDepositValue == "1") {
+        if (addProofNo.isEmpty) {
+          return _fail(
+              context, "The KYC (Address Proof)Number field is required.");
+        }
+        if (addFrontPath.path.isEmpty) {
+          return _fail(
+              context, "The Address Proof Front Image field is required.");
+        }
+        if (ownershipProperty.isEmpty) {
+          return _fail(
+              context, "The Ownership Type Property field is required.");
+        }
+        // FIX: this used to be an `else if` in the chain, so choosing
+        // "Rented" (with a NOC) skipped ALL the checks below it.
+        if (ownershipProperty == "Rented" && nocDocPath.path.isEmpty) {
+          return _fail(context, "The NOC Document field is required.");
+        }
+        if (acceptConversionPolicy.isEmpty) {
+          return _fail(
+              context, "The Accept Conversion Policy field is required.");
+        }
+        if (acceptExtraFittingCost.isEmpty) {
+          return _fail(
+              context, "The Accept Extra Fitting Cost field is required.");
+        }
+        if (societyAllowedMdpe.isEmpty) {
+          return _fail(context, "The Society Allows MDPE field is required.");
+        }
+        if (depositStatus.isEmpty) {
+          return _fail(context, "The Deposit Status field is required.");
+        }
+        if (schemeType.isEmpty) {
+          return _fail(context, "The Scheme Type field is required.");
+        }
+        if (modeDepositValue.isEmpty) {
+          return _fail(context, "The Mode Of Deposit field is required.");
+        }
+        if (modeDepositValue == "1") {
           if (chqNo.isEmpty) {
-            Utils.errorSnackBar(
-              msg: "The Cheque Number field is required.",
-              context: context,
-            );
-            return null;
-          } else if (chqDate.isEmpty) {
-            Utils.errorSnackBar(
-              msg: "The Cheque date field is required.",
-              context: context,
-            );
-            return null;
-          } else if (chqBank.isEmpty) {
-            Utils.errorSnackBar(
-              msg: "The Cheque Bank Name field is required.",
-              context: context,
-            );
-            return null;
-          } else if (chequeAccountNo.isEmpty) {
-            Utils.errorSnackBar(
-              msg: "The Cheque Bank Account Number field is required.",
-              context: context,
-            );
-            return null;
-          } else if (chequeMICRNo.isEmpty) {
-            Utils.errorSnackBar(
-              msg: "The Cheque MICR Code field is required.",
-              context: context,
-            );
-            return null;
-          } else if (chequePath.path.isEmpty) {
-            Utils.errorSnackBar(
-              msg: "The Cheque Image field is required.",
-              context: context,
-            );
-            return null;
+            return _fail(context, "The Cheque Number field is required.");
+          }
+          if (chqDate.isEmpty) {
+            return _fail(context, "The Cheque date field is required.");
+          }
+          if (chqBank.isEmpty) {
+            return _fail(context, "The Cheque Bank Name field is required.");
+          }
+          if (chequeAccountNo.isEmpty) {
+            return _fail(
+                context, "The Cheque Bank Account Number field is required.");
+          }
+          if (chequeMICRNo.isEmpty) {
+            return _fail(context, "The Cheque MICR Code field is required.");
+          }
+          if (chequePath.path.isEmpty) {
+            return _fail(context, "The Cheque Image field is required.");
           }
         }
       }
-      String? schema = await AppConfig.instanceInit()?.loginData.user!.schema!;
-      String? dmaUserId = await AppConfig.instanceInit()?.loginData.user!.id!;
-      String? dmaUserName =
-      await AppConfig.instanceInit()?.loginData.user!.name!;
-      SaveRegistrationFormModel custRegSyncStore = SaveRegistrationFormModel(
-        schema: schema,
-        dmaUserId: dmaUserId,
-        dmaUserName: dmaUserName,
+
+      final user = AppConfig.instanceInit()?.loginData.user;
+
+      // Edit -> keep the original id. New -> create it once, here.
+      final String requestId =
+      (isUpdate && (clientRequestId ?? "").isNotEmpty)
+          ? clientRequestId!
+          : newClientRequestId();
+
+      return SaveRegistrationFormModel(
+        clientRequestId: requestId,
+        schema: user?.schema,
+        dmaUserId: user?.id,
+        dmaUserName: user?.name,
         registrationType: registrationType,
         acceptConversionPolicy: acceptConversionPolicy,
         acceptExtraFittingCost: acceptExtraFittingCost,
@@ -386,12 +301,12 @@ class RegistrationFormHelper {
         payementBankName: chqBank,
         chequeBankAccount: chequeAccountNo,
         chequeMicrAccount: chequeMICRNo,
-        idBackPath1: idBackPath.path,
-        addBackPath2: addBackPath.path,
-        nocBackPath3: nocDocPath.path,
         idFrontPath1: idFrontPath.path,
+        idBackPath1: idBackPath.path,
         addFrontPath2: addFrontPath.path,
+        addBackPath2: addBackPath.path,
         nocFrontPath3: nocDocPath.path,
+        nocBackPath3: nocDocPath.path,
         uploadHousePhoto: housePath.path,
         uploadCustomerPhoto: customerPath.path,
         customerConsent: customerConsent.path,
@@ -403,10 +318,8 @@ class RegistrationFormHelper {
         premiseType: premiseType,
         floorNumber: floorNumber,
         dob: dob,
-        clientRequestId: DateTime.now().microsecondsSinceEpoch.toString(),
         doorNumber: doorNumber,
       );
-      return custRegSyncStore;
     } catch (e) {
       log("textFieldValidationCheck-->${e.toString()}");
       Utils.errorSnackBar(msg: e.toString(), context: context);
@@ -435,14 +348,16 @@ class RegistrationFormHelper {
   }
 
   /// Saves a record to Hive for later sync. Returns true when it was stored.
+  ///  - Edit: same clientRequestId, overwrites the queued record by key.
+  ///  - New:  keeps the id created in textFieldValidationCheck (never re-created).
   static Future<bool> addCustRegSyncLocalDB({
     required bool isUpdate,
-    required int index, // kept so existing calls compile; no longer used
+    required int index, // kept so existing calls compile; not used
     required BuildContext context,
     required SaveRegistrationFormModel custRegSyncStore,
   }) async {
     try {
-      final hiveBox = await HiveDataBase.registrationFormBox;
+      final hiveBox = HiveDataBase.registrationFormBox;
       if (hiveBox == null) {
         Utils.errorSnackBar(
           msg: "Local database not available",
@@ -451,96 +366,27 @@ class RegistrationFormHelper {
         return false;
       }
 
-      SaveRegistrationFormModel entry = SaveRegistrationFormModel(
-        clientRequestId: isUpdate
-            ? (custRegSyncStore.clientRequestId ??
-            DateTime.now().microsecondsSinceEpoch.toString())
-            : DateTime.now().microsecondsSinceEpoch.toString(),
-        dmaUserName: custRegSyncStore.dmaUserName ?? "",
-        dmaUserId: custRegSyncStore.dmaUserId ?? "",
-        schema: custRegSyncStore.schema ?? "",
-        registrationType: custRegSyncStore.registrationType ?? "",
-        acceptConversionPolicy: custRegSyncStore.acceptConversionPolicy ?? "",
-        acceptExtraFittingCost: custRegSyncStore.acceptExtraFittingCost ?? "",
-        societyAllowedMdpe: custRegSyncStore.societyAllowedMdpe ?? "",
-        chargeArea: custRegSyncStore.chargeArea ?? "",
-        areaId: custRegSyncStore.areaId ?? "",
-        mobileNumber: custRegSyncStore.mobileNumber ?? "",
-        firstName: custRegSyncStore.firstName ?? "",
-        middleName: custRegSyncStore.middleName ?? "",
-        lastName: custRegSyncStore.lastName ?? "",
-        guardianType: custRegSyncStore.guardianType ?? "",
-        guardianName: custRegSyncStore.guardianName ?? "",
-        emailId: custRegSyncStore.emailId ?? "",
-        propertyCategoryId: custRegSyncStore.propertyCategoryId ?? "",
-        propertyClassId: custRegSyncStore.propertyClassId ?? "",
-        buildingNumber: custRegSyncStore.buildingNumber ?? "",
-        houseNumber: custRegSyncStore.houseNumber ?? "",
-        colonySocietyApartment: custRegSyncStore.colonySocietyApartment ?? "",
-        streetName: custRegSyncStore.streetName ?? "",
-        town: custRegSyncStore.town ?? "",
-        districtId: custRegSyncStore.districtId ?? "",
-        pinCode: custRegSyncStore.pinCode ?? "",
-        residentStatus: custRegSyncStore.residentStatus ?? "",
-        noOfKitchen: custRegSyncStore.noOfKitchen ?? "",
-        noOfBathroom: custRegSyncStore.noOfBathroom ?? "",
-        noOfFamilyMembers: custRegSyncStore.noOfFamilyMembers ?? "",
-        existingCookingFuel: custRegSyncStore.existingCookingFuel ?? "",
-        latitude: custRegSyncStore.latitude ?? "",
-        longitude: custRegSyncStore.longitude ?? "",
-        nearestLandmark: custRegSyncStore.nearestLandmark ?? "",
-        kycDocument1: custRegSyncStore.kycDocument1 ?? "",
-        kycDocument1Number: custRegSyncStore.kycDocument1Number ?? "",
-        kycDocument2: custRegSyncStore.kycDocument2 ?? "",
-        kycDocument2Number: custRegSyncStore.kycDocument2Number ?? "",
-        kycDocument3: custRegSyncStore.kycDocument3 ?? "",
-        kycDocument3Number: custRegSyncStore.kycDocument3Number ?? "",
-        eBillingModel: custRegSyncStore.eBillingModel ?? "",
-        bankNameOfBank: custRegSyncStore.bankNameOfBank ?? "",
-        bankAccountNumber: custRegSyncStore.bankAccountNumber ?? "",
-        bankIfscCode: custRegSyncStore.bankIfscCode ?? "",
-        bankAddress: custRegSyncStore.bankAddress ?? "",
-        initialDepositeStatus: custRegSyncStore.initialDepositeStatus ?? "",
-        schemeType: custRegSyncStore.schemeType ?? "",
-        schemeTypeAmount: custRegSyncStore.schemeTypeAmount ?? "",
-        modeOfDeposite: custRegSyncStore.modeOfDeposite ?? "",
-        chequeNumber: custRegSyncStore.chequeNumber ?? "",
-        chequeDepositDate: custRegSyncStore.chequeDepositDate ?? "",
-        payementBankName: custRegSyncStore.payementBankName ?? "",
-        chequeBankAccount: custRegSyncStore.chequeBankAccount ?? "",
-        noInitialDepositStatusReason:
-        custRegSyncStore.noInitialDepositStatusReason ?? "",
-        alternateMobile: custRegSyncStore.alternateMobile ?? "",
-        chequeMicrAccount: custRegSyncStore.chequeMicrAccount ?? "",
-        housePhoto: custRegSyncStore.housePhoto ?? "",
-        ownerConsentText: custRegSyncStore.ownerConsentText ?? "",
-        reasonForHold: custRegSyncStore.reasonForHold ?? "",
-        idFrontPath1: custRegSyncStore.idFrontPath1 ?? "",
-        idBackPath1: custRegSyncStore.idBackPath1 ?? "",
-        addFrontPath2: custRegSyncStore.addFrontPath2 ?? "",
-        addBackPath2: custRegSyncStore.addBackPath2 ?? "",
-        nocFrontPath3: custRegSyncStore.nocFrontPath3 ?? "",
-        nocBackPath3: custRegSyncStore.nocBackPath3 ?? "",
-        uploadCustomerPhoto: custRegSyncStore.uploadCustomerPhoto ?? "",
-        uploadHousePhoto: custRegSyncStore.uploadHousePhoto ?? "",
-        customerConsent: custRegSyncStore.customerConsent ?? "",
-        ownerConsent: custRegSyncStore.ownerConsent ?? "",
-        canceledChequePhoto: custRegSyncStore.canceledChequePhoto ?? "",
-        chequePhoto: custRegSyncStore.chequePhoto ?? "",
-        customerConsentPhoto: custRegSyncStore.customerConsentPhoto ?? "",
-        reasonRegistration: custRegSyncStore.reasonRegistration ?? "",
-        wardNumber: custRegSyncStore.wardNumber,
-        premiseType: custRegSyncStore.premiseType,
-        floorNumber: custRegSyncStore.floorNumber,
-        dob: custRegSyncStore.dob,
-        doorNumber: custRegSyncStore.doorNumber,
-      );
+      // FIX: a NEW record used to get a second, different id here. The id
+      // is now created once (in textFieldValidationCheck) and reused.
+      final String requestId = (custRegSyncStore.clientRequestId ?? "").isNotEmpty
+          ? custRegSyncStore.clientRequestId!
+          : newClientRequestId();
+
+      final existingKey = findLocalKey(requestId);
+
+      // A NEW record must not reuse an id that is already queued.
+      if (!isUpdate && existingKey != null) {
+        Utils.errorSnackBar(
+          msg: "This record is already saved offline.",
+          context: context,
+        );
+        return false;
+      }
+
+      final entry = _buildEntry(custRegSyncStore, requestId);
 
       // Editing a record that is still queued: overwrite it by key.
-      final existingKey =
-      isUpdate ? findLocalKey(custRegSyncStore.clientRequestId) : null;
-
-      if (existingKey != null) {
+      if (isUpdate && existingKey != null) {
         await hiveBox.put(existingKey, entry);
         Utils.successSnackBar(
           msg: "No internet. Record updated offline and will sync automatically.",
@@ -549,8 +395,9 @@ class RegistrationFormHelper {
         return true;
       }
 
-      // New record (or the edited one was already synced meanwhile).
-      if (hiveBox.length >= 15) {
+      // New record (or an edited one that was already synced meanwhile).
+      // The limit applies only to new records, so an edit is never blocked.
+      if (!isUpdate && hiveBox.length >= 15) {
         Utils.errorSnackBar(
           msg: 'Please upload previous records before adding more.',
           context: context,
@@ -570,6 +417,93 @@ class RegistrationFormHelper {
       log("addCustRegSyncLocalDB Error: ${e.toString()}");
       return false;
     }
+  }
+
+  /// Fresh copy for Hive (a HiveObject instance can't live under two keys).
+  static SaveRegistrationFormModel _buildEntry(
+      SaveRegistrationFormModel s,
+      String requestId,
+      ) {
+    return SaveRegistrationFormModel(
+      clientRequestId: requestId,
+      dmaUserName: s.dmaUserName ?? "",
+      dmaUserId: s.dmaUserId ?? "",
+      schema: s.schema ?? "",
+      registrationType: s.registrationType ?? "",
+      acceptConversionPolicy: s.acceptConversionPolicy ?? "",
+      acceptExtraFittingCost: s.acceptExtraFittingCost ?? "",
+      societyAllowedMdpe: s.societyAllowedMdpe ?? "",
+      chargeArea: s.chargeArea ?? "",
+      areaId: s.areaId ?? "",
+      mobileNumber: s.mobileNumber ?? "",
+      alternateMobile: s.alternateMobile ?? "",
+      firstName: s.firstName ?? "",
+      middleName: s.middleName ?? "",
+      lastName: s.lastName ?? "",
+      guardianType: s.guardianType ?? "",
+      guardianName: s.guardianName ?? "",
+      emailId: s.emailId ?? "",
+      propertyCategoryId: s.propertyCategoryId ?? "",
+      propertyClassId: s.propertyClassId ?? "",
+      buildingNumber: s.buildingNumber ?? "",
+      houseNumber: s.houseNumber ?? "",
+      colonySocietyApartment: s.colonySocietyApartment ?? "",
+      streetName: s.streetName ?? "",
+      town: s.town ?? "",
+      districtId: s.districtId ?? "",
+      pinCode: s.pinCode ?? "",
+      residentStatus: s.residentStatus ?? "",
+      noOfKitchen: s.noOfKitchen ?? "",
+      noOfBathroom: s.noOfBathroom ?? "",
+      noOfFamilyMembers: s.noOfFamilyMembers ?? "",
+      existingCookingFuel: s.existingCookingFuel ?? "",
+      latitude: s.latitude ?? "",
+      longitude: s.longitude ?? "",
+      nearestLandmark: s.nearestLandmark ?? "",
+      kycDocument1: s.kycDocument1 ?? "",
+      kycDocument1Number: s.kycDocument1Number ?? "",
+      kycDocument2: s.kycDocument2 ?? "",
+      kycDocument2Number: s.kycDocument2Number ?? "",
+      kycDocument3: s.kycDocument3 ?? "",
+      kycDocument3Number: s.kycDocument3Number ?? "",
+      eBillingModel: s.eBillingModel ?? "",
+      bankNameOfBank: s.bankNameOfBank ?? "",
+      bankAccountNumber: s.bankAccountNumber ?? "",
+      bankIfscCode: s.bankIfscCode ?? "",
+      bankAddress: s.bankAddress ?? "",
+      initialDepositeStatus: s.initialDepositeStatus ?? "",
+      noInitialDepositStatusReason: s.noInitialDepositStatusReason ?? "",
+      schemeType: s.schemeType ?? "",
+      schemeTypeAmount: s.schemeTypeAmount ?? "",
+      modeOfDeposite: s.modeOfDeposite ?? "",
+      chequeNumber: s.chequeNumber ?? "",
+      chequeDepositDate: s.chequeDepositDate ?? "",
+      payementBankName: s.payementBankName ?? "",
+      chequeBankAccount: s.chequeBankAccount ?? "",
+      chequeMicrAccount: s.chequeMicrAccount ?? "",
+      housePhoto: s.housePhoto ?? "",
+      ownerConsentText: s.ownerConsentText ?? "",
+      reasonForHold: s.reasonForHold ?? "",
+      idFrontPath1: s.idFrontPath1 ?? "",
+      idBackPath1: s.idBackPath1 ?? "",
+      addFrontPath2: s.addFrontPath2 ?? "",
+      addBackPath2: s.addBackPath2 ?? "",
+      nocFrontPath3: s.nocFrontPath3 ?? "",
+      nocBackPath3: s.nocBackPath3 ?? "",
+      uploadCustomerPhoto: s.uploadCustomerPhoto ?? "",
+      uploadHousePhoto: s.uploadHousePhoto ?? "",
+      customerConsent: s.customerConsent ?? "",
+      ownerConsent: s.ownerConsent ?? "",
+      canceledChequePhoto: s.canceledChequePhoto ?? "",
+      chequePhoto: s.chequePhoto ?? "",
+      customerConsentPhoto: s.customerConsentPhoto ?? "",
+      reasonRegistration: s.reasonRegistration ?? "",
+      wardNumber: s.wardNumber ?? "",
+      premiseType: s.premiseType ?? "",
+      floorNumber: s.floorNumber ?? "",
+      dob: s.dob ?? "",
+      doorNumber: s.doorNumber ?? "",
+    );
   }
 
   static String maskAadhaar(String input) {

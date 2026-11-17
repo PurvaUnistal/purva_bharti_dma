@@ -27,26 +27,28 @@ class RegistrationFormPage extends StatefulWidget {
   State<RegistrationFormPage> createState() => _RegistrationFormPageState();
 }
 
+class _UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return newValue.copyWith(text: newValue.text.toUpperCase());
+  }
+}
+
 class _RegistrationFormPageState extends State<RegistrationFormPage> {
   final formGlobalKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-
-    final bloc = BlocProvider.of<RegistrationFormBloc>(context);
-    bloc.add(RegistrationFormPageLoadEvent(context: context));
-
-    if (widget.isUpdate) {
-      bloc.add(
-        UpdateLocalDataEvent(
-          context: context,
-          isUpdate: true,
-          index: widget.index,
-          updatedModel: widget.localData,
-        ),
-      );
-    }
+    BlocProvider.of<RegistrationFormBloc>(context).add(
+      RegistrationFormPageLoadEvent(
+        context: context,
+        isUpdate: widget.isUpdate,
+        index: widget.index,
+        updatedModel: widget.isUpdate ? widget.localData : null,
+      ),
+    );
   }
 
   @override
@@ -778,6 +780,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   }) {
     return ColumnWidget(
       child: DropdownWidget<GetPremiseTypeModel>(
+        isRequired: true,
         hint: AppString.premiseType,
         dropdownValue: dataState.premiseTypeValue.key != null
             ? dataState.premiseTypeValue
@@ -1098,8 +1101,12 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
             : dataState.identityProofValue,
         items: dataState.identityProofList,
         onChanged: (val) {
-          print("dataState.identityProofValue.value-->${dataState.identityProofValue.value}");
-          formGlobalKey.currentState?.validate();
+          // Reset the number when the ID type changes so Aadhaar digits
+          // don't carry over into PAN/Passport.
+          if (val?.key != dataState.identityProofValue.key) {
+            dataState.kyc1NumberController.clear();
+            dataState.kyc1MaskedController.clear();
+          }
           BlocProvider.of<RegistrationFormBloc>(context)
               .add(RegistrationFormSetKycDoc1Value(identityProofValue: val));
         },
@@ -1108,49 +1115,79 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   }
 
   Widget _kycDoc1Widget({required RegistrationFormGetAllDataState dataState}) {
-    final idValue = (dataState.identityProofValue.value ?? "").toLowerCase().trim();
+    final idValue =
+    (dataState.identityProofValue.value ?? "").toLowerCase().trim();
     final isAadhaarSelected = idValue.startsWith("aadha");
+    final isPan = idValue.contains("pan");
+    final isPassport = idValue.contains("passport");
     final showMasked = isAadhaarSelected && dataState.isAadhaar;
+
+    final List<TextInputFormatter> formatters = isAadhaarSelected
+        ? [FilteringTextInputFormatter.digitsOnly]
+        : [
+      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
+      _UpperCaseTextFormatter(),
+    ];
+
+    final int? maxLen = showMasked
+        ? null
+        : isAadhaarSelected
+        ? 12
+        : isPan
+        ? 10
+        : isPassport
+        ? 8
+        : 20;
 
     return ColumnWidget(
       child: TextFieldWidget(
-          key: ValueKey("kyc1_$showMasked"),
-          isRequired: true,
-          obscureText: false,                 // never true
-          readOnly: showMasked,               // can't type into "****"
-          labelText: AppString.idProofNo,
-          controller: showMasked
-              ? dataState.kyc1MaskedController
-              : dataState.kyc1NumberController,
-          keyboardType:
-          isAadhaarSelected ? TextInputType.number : TextInputType.text,
-          maxLength: showMasked ? null : (isAadhaarSelected ? 12 : 20),
-          suffixIcon: isAadhaarSelected ? IconButton(
-            icon: Icon(
-              showMasked ? Icons.visibility_off : Icons.visibility,
-              color: EnvironmentConfig.of(context)!.primaryTheme,
-            ),
-            onPressed: () {
-              BlocProvider.of<RegistrationFormBloc>(context).add(
-                RegistrationFormIsAadhaarEvent(),
-              );
-            },
-          ) : null,
-          validator: (value) {
-            final real = dataState.kyc1NumberController.text;
-            if (real != real.trim()) {
-              return "Blank space";
-            }
-            return null;
+        // ID type in the key forces a fresh field when the type changes.
+        key: ValueKey("kyc1_${idValue}_$showMasked"),
+        isRequired: true,
+        obscureText: false,
+        readOnly: showMasked,
+        labelText: AppString.idProofNo,
+        controller: showMasked
+            ? dataState.kyc1MaskedController
+            : dataState.kyc1NumberController,
+        keyboardType:
+        isAadhaarSelected ? TextInputType.number : TextInputType.text,
+        // Always pass a list so TextFieldWidget can't fall back to a default.
+        inputFormatters: showMasked ? [] : formatters,
+        maxLength: maxLen,
+        suffixIcon: isAadhaarSelected
+            ? IconButton(
+          icon: Icon(
+            showMasked ? Icons.visibility_off : Icons.visibility,
+            color: EnvironmentConfig.of(context)!.primaryTheme,
+          ),
+          onPressed: () {
+            BlocProvider.of<RegistrationFormBloc>(context)
+                .add(RegistrationFormIsAadhaarEvent());
           },
-          onChanged: (v) {
-            formGlobalKey.currentState?.validate();
-          }),
+        )
+            : null,
+        validator: (value) {
+          final real = dataState.kyc1NumberController.text;
+          if (real.isEmpty) return "${AppString.idProofNo}";
+          if (real != real.trim()) return "Blank space";
+          if (isAadhaarSelected && !RegExp(r'^\d{12}$').hasMatch(real)) {
+            return "Aadhaar must be 12 digits";
+          }
+          if (isPan && !RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]$').hasMatch(real)) {
+            return "Invalid PAN (e.g. ABCDE1234F)";
+          }
+          if (isPassport && !RegExp(r'^[A-Z][0-9]{7}$').hasMatch(real)) {
+            return "Invalid Passport No. (e.g. A1234567)";
+          }
+          return null;
+        },
+        onChanged: (v) => formGlobalKey.currentState?.validate(),
+      ),
     );
   }
 
-  Widget _kycDoc2Dropdown(
-      {required RegistrationFormGetAllDataState dataState}) {
+  Widget _kycDoc2Dropdown({required RegistrationFormGetAllDataState dataState}) {
     return ColumnWidget(
       child: DropdownWidget<GetOwnershipProofModel>(
         isRequired: dataState.registrationTypeValue.key != "0" ? true : false,
@@ -1181,7 +1218,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
         maxLength: 20,
         validator: (value) {
           if (value != dataState.kyc2NumberController.text.trim()) {
-            return "Blank space";
+            return "${AppString.addProofNo}";
           }
           return null;
         },

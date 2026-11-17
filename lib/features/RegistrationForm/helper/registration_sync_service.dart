@@ -2,92 +2,101 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pbg_app/ExportFile/export_file.dart';
+import 'package:pbg_app/Utils/common_widgets/res/app_config.dart';
 import 'package:pbg_app/Utils/common_widgets/res/app_navigator.dart';
+import 'package:pbg_app/features/RegistrationForm/helper/registration_form_helper.dart';
 
-/// Background sync uses the app's existing navigator key (set on MaterialApp
-/// in Root) to get a BuildContext for sendData and snackbars.
-GlobalKey<NavigatorState> get navigatorKey => AppNavigator.navigatorKey;
-
-class RegistrationSyncService with WidgetsBindingObserver {
+/// Uploads registration records saved offline (Hive) automatically as soon
+/// as the internet comes back, from ANY screen.
+///
+/// Triggers:
+///   1. Network change (Wi-Fi / mobile data on)
+///   2. App back in foreground (Root calls trigger())
+///   3. Internet back on the Dashboard (InternetBloc -> trigger())
+///   4. Periodic check every [_retryInterval]
+///
+/// API used by ViewSyncRecordBloc:
+///   isSyncing, syncState, syncPending(), sendOne(key, context:),
+///   pausedRequestId
+class RegistrationSyncService {
   RegistrationSyncService._();
   static final RegistrationSyncService instance = RegistrationSyncService._();
 
-  StreamSubscription<List<ConnectivityResult>>? _connSub;
-  Timer? _debounce;
-  bool _isSyncing = false;
-  bool _started = false;
+  static const Duration _retryInterval = Duration(minutes: 1);
+  static const Duration _debounce = Duration(seconds: 3);
 
-  bool get isSyncing => _isSyncing;
-
-  /// clientRequestId of the queued record currently open in the edit form.
-  /// Auto-sync skips it so it is not sent while the user is changing it.
+  /// Record currently open in the edit form: never auto-upload it.
   String? pausedRequestId;
 
-  /// Sends one queued record (manual sync button). Uses the same lock as
-  /// syncPending so the same record is never sent twice at once.
-  /// Returns the server response, or null if the server rejected it.
-  Future<dynamic> sendOne(dynamic key, {required BuildContext context}) async {
-    if (_isSyncing) {
-      throw Exception("Sync already in progress, please wait.");
-    }
-    final box = await HiveDataBase.registrationFormBox;
-    final record = box?.get(key);
-    if (box == null || record == null) return null;
+  // ---------------------------------------------------------------------------
+  // State streams
+  // ---------------------------------------------------------------------------
 
-    _isSyncing = true;
-    try {
-      final res = await ViewSyncRecordHelper.sendData(
-        context: context,
-        custRegSyncData: record,
-      );
-      if (res != null) await box.delete(key);
-      return res;
-    } finally {
-      _isSyncing = false;
-    }
-  }
+  bool get isSyncing => _isSyncing;
+  bool _isSyncing = false;
 
-  /// Emits true when a sync starts and false when it ends (for loaders).
+  /// true when an upload run starts, false when it ends (drives the loader).
+  Stream<bool> get syncState => _syncStateController.stream;
   final StreamController<bool> _syncStateController =
   StreamController<bool>.broadcast();
-  Stream<bool> get syncState => _syncStateController.stream;
 
-  /// Call once after Hive is initialised (in main.dart).
+  /// Number of records uploaded in a run (for screens that want to react).
+  Stream<int> get onRecordsSynced => _syncedController.stream;
+  final StreamController<int> _syncedController =
+  StreamController<int>.broadcast();
+
+  void _setSyncing(bool value) {
+    if (_isSyncing == value) return;
+    _isSyncing = value;
+    _syncStateController.add(value);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Lifecycle
+  // ---------------------------------------------------------------------------
+
+  StreamSubscription<dynamic>? _connectivitySub;
+  Timer? _retryTimer;
+  Timer? _debounceTimer;
+  bool _started = false;
+
+  /// Safe to call many times (Root and Dashboard both call it).
   void start() {
     if (_started) return;
     _started = true;
-    WidgetsBinding.instance.addObserver(this);
 
-    // connectivity_plus >= 6.0 emits List<ConnectivityResult>.
-    _connSub = Connectivity().onConnectivityChanged.listen((results) {
-      final connected = results.any((r) => r != ConnectivityResult.none);
-      if (connected) {
-        // Network often flaps when it comes back; wait a moment before syncing.
-        _debounce?.cancel();
-        _debounce = Timer(const Duration(seconds: 3), () => syncPending());
-      }
-    });
-
-    // Sync anything left over from a previous session.
-    syncPending();
+    // Value type differs between connectivity_plus versions; only the event
+    // itself matters.
+    _connectivitySub =
+        Connectivity().onConnectivityChanged.listen((_) => trigger());
+    _retryTimer = Timer.periodic(_retryInterval, (_) => trigger());
+    trigger();
   }
 
   void dispose() {
-    _debounce?.cancel();
-    _connSub?.cancel();
-    WidgetsBinding.instance.removeObserver(this);
+    _connectivitySub?.cancel();
+    _retryTimer?.cancel();
+    _debounceTimer?.cancel();
+    _connectivitySub = null;
+    _retryTimer = null;
+    _debounceTimer = null;
     _started = false;
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) syncPending();
+  /// Schedules a background sync; quick repeated triggers become one run.
+  void trigger() {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(_debounce, () => syncPending());
   }
 
-  /// Wi-Fi/mobile "connected" does not always mean the internet works,
-  /// so do a real DNS lookup.
+  // ---------------------------------------------------------------------------
+  // Checks
+  // ---------------------------------------------------------------------------
+
+  /// Real internet check (DNS lookup), not just "Wi-Fi is on".
   Future<bool> hasInternet() async {
     try {
       final result = await InternetAddress.lookup('google.com')
@@ -98,61 +107,164 @@ class RegistrationSyncService with WidgetsBindingObserver {
     }
   }
 
-  /// Sends every queued record to the server and removes the ones that
-  /// succeed. Returns how many were sent. Safe to call from anywhere:
-  /// a second call while a sync is running is ignored.
-  Future<int> syncPending({bool showMessage = true}) async {
+  bool get _isLoggedIn {
+    try {
+      return AppConfig.instanceInit()?.loginData.user?.id != null;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  static bool _isNetworkError(Object e) {
+    if (e is SocketException || e is TimeoutException) return true;
+    if (e is DioException) {
+      return e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout;
+    }
+    return false;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Upload all queued records
+  // ---------------------------------------------------------------------------
+
+  /// Uploads every queued record. Returns how many were uploaded.
+  /// Only one run at a time; a second call while syncing returns 0.
+  Future<int> syncPending() async {
     if (_isSyncing) return 0;
 
-    final box = await HiveDataBase.registrationFormBox;
-    if (box == null || box.isEmpty) return 0;
-    if (!await hasInternet()) return 0;
+    final box = HiveDataBase.registrationFormBox;
+    if (box == null) {
+      log("Auto-sync skipped: registration Hive box is not open yet");
+      return 0;
+    }
+    if (box.isEmpty) return 0;
+    if (!_isLoggedIn) {
+      log("Auto-sync skipped: user not logged in yet");
+      return 0;
+    }
+    if (AppNavigator.navigatorKey.currentContext == null) {
+      log("Auto-sync skipped: navigator not ready");
+      return 0;
+    }
+    if (!await hasInternet()) {
+      log("Auto-sync skipped: no internet");
+      return 0;
+    }
 
-    _isSyncing = true;
-    _syncStateController.add(true);
-    int sent = 0;
+    log("Auto-sync: uploading ${box.length} queued record(s)");
+    _setSyncing(true);
+    int uploaded = 0;
 
     try {
-      // Use keys, not indexes: deleting while looping shifts indexes.
-      final keys = box.keys.toList();
-      for (final key in keys) {
+      // Snapshot: the box changes as synced records are deleted.
+      for (final key in box.keys.toList()) {
         final record = box.get(key);
         if (record == null) continue;
-        if (pausedRequestId != null &&
-            record.clientRequestId == pausedRequestId) {
-          continue; // being edited right now
-        }
-
-        final ctx = navigatorKey.currentContext;
-        if (ctx == null) break;
+        if (_isPaused(record)) continue; // open in the edit form
 
         try {
-          final res = await ViewSyncRecordHelper.sendData(
-            context: ctx,
-            custRegSyncData: record,
-          );
+          final res = await _send(record);
           if (res != null) {
-            await box.delete(key);
-            sent++;
+            await _removeIfNotPaused(key, record);
+            uploaded++;
           }
+          // res == null -> server rejected it; keep it so the user can fix it.
         } catch (e) {
-          // Leave the record in Hive; it will retry on the next trigger.
-          log("Auto sync failed for key $key --> $e");
-          if (!await hasInternet()) break; // connection dropped mid-sync
+          if (_isNetworkError(e)) {
+            log("Auto-sync: internet dropped, will retry later --> $e");
+            break;
+          }
+          log("Auto-sync: record ${record.clientRequestId} failed --> $e");
         }
       }
     } finally {
-      _isSyncing = false;
-      _syncStateController.add(false);
+      _setSyncing(false);
     }
 
-    final ctx = navigatorKey.currentContext;
-    if (sent > 0 && showMessage && ctx != null && ctx.mounted) {
-      Utils.successSnackBar(
-        msg: "$sent pending record(s) synced to server.",
-        context: ctx,
-      );
+    if (uploaded > 0) {
+      _syncedController.add(uploaded);
+      final ctx = AppNavigator.navigatorKey.currentContext;
+      if (ctx != null) {
+        Utils.successSnackBar(
+          msg: uploaded == 1
+              ? "1 offline record synced successfully"
+              : "$uploaded offline records synced successfully",
+          context: ctx,
+        );
+      }
     }
-    return sent;
+    return uploaded;
+  }
+
+  /// Backward-compatible name.
+  Future<int> syncNow() => syncPending();
+
+  // ---------------------------------------------------------------------------
+  // Upload one record (sync icon on a single card)
+  // ---------------------------------------------------------------------------
+
+  /// Sends the record stored under [key]. Returns the server response, or
+  /// null if the server rejected it. Throws on network errors.
+  Future<dynamic> sendOne(dynamic key, {required BuildContext context}) async {
+    // Never send the same record twice at once.
+    if (_isSyncing) {
+      throw Exception("Sync already in progress, please wait.");
+    }
+
+    final box = HiveDataBase.registrationFormBox;
+    final record = box?.get(key);
+    if (record == null) {
+      throw Exception("Record not found. It may already be synced.");
+    }
+
+    _setSyncing(true);
+    try {
+      final res = await _send(record, context: context);
+      if (res != null) {
+        await _removeIfNotPaused(key, record);
+        _syncedController.add(1);
+      }
+      return res;
+    } finally {
+      _setSyncing(false);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Internals
+  // ---------------------------------------------------------------------------
+
+  bool _isPaused(SaveRegistrationFormModel record) =>
+      record.clientRequestId != null &&
+          record.clientRequestId == pausedRequestId;
+
+  Future<dynamic> _send(
+      SaveRegistrationFormModel record, {
+        BuildContext? context,
+      }) {
+    final ctx = context ?? AppNavigator.navigatorKey.currentContext;
+    if (ctx == null) throw Exception("App not ready");
+    return ViewSyncRecordHelper.sendData(
+      context: ctx,
+      custRegSyncData: record,
+    );
+  }
+
+  /// Deletes the uploaded record unless the user opened it for editing
+  /// while it was being sent.
+  Future<void> _removeIfNotPaused(
+      dynamic key,
+      SaveRegistrationFormModel record,
+      ) async {
+    if (_isPaused(record)) return;
+    final box = HiveDataBase.registrationFormBox;
+    if (box != null && box.containsKey(key)) {
+      await box.delete(key);
+    } else {
+      await RegistrationFormHelper.deleteLocalRecord(record.clientRequestId);
+    }
   }
 }

@@ -6,9 +6,19 @@ abstract class RegistrationFormEvent extends Equatable {}
 
 class RegistrationFormPageLoadEvent extends RegistrationFormEvent {
   final BuildContext context;
-  RegistrationFormPageLoadEvent({required this.context});
+  final bool isUpdate;
+  final int index;
+  final SaveRegistrationFormModel? updatedModel;
+
+  RegistrationFormPageLoadEvent({
+    required this.context,
+    this.isUpdate = false,
+    this.index = 0,
+    this.updatedModel,
+  });
+
   @override
-  List<Object?> get props => [context];
+  List<Object?> get props => [context, isUpdate, index, updatedModel];
 }
 
 class RegistrationFormSetInterestValue extends RegistrationFormEvent {
